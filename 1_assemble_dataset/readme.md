@@ -1,1 +1,0 @@
-This folder contains scripts related to data preparation, including cleaning and exploratory analysis.

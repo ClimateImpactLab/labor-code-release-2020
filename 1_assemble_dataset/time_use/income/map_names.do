@@ -3,15 +3,18 @@
 
 * Author: Simon Greenhill, sgreenhill@uchicago.edu
 * Date: 10/2/2019
+* Updated 2/29/2020 to work with replicated labor dataset.
+* For orginal version, see gcp-labor/1_preparation/income/map_names.do
 
 clear all
 set more off 
 pause off
+cap ssc install reclink
 
 cilpath
 
-loc lab "$DB/Global ACP/labor/1_preparation/"
-loc mig "$DB/Wilkes_InternalMigrationGlobal/"
+loc lab "$SAC_SHARES/estimation/labor/time_use_data/intermediate/"
+loc lab_db "$DB/Global ACP/labor/replication"
 loc Inc_DATA "$DB/Global ACP/MORTALITY/Replication_2018/2_Data"
 
 ****************************
@@ -26,8 +29,7 @@ program better_reclink
 
 	use `ds1', clear
 	keep if iso  == "`country'"
-	reclink iso admin_name using `ds2', ///
-		 idmaster(`idmaster') idusing(`idusing') gen(score_getal) minscore(0.6) required(iso)
+	reclink iso admin_name using `ds2', idmaster(`idmaster') idusing(`idusing') gen(score_getal) minscore(0.6) required(iso)
 	drop _merge
 	preserve
 		use `ds2', clear
@@ -43,28 +45,39 @@ program better_reclink
 	format %24s admin_name Uadmin_name
 end
 
-* get list of countries in labor data (China handled separately because it was added in Dec. 2019)
-use "`lab'/crosswalks/GMFD_Labor_merging_crosswalk_0919.dta", clear
-drop id cluster dow_week location_id2 lgdppc gdppcstate country
-duplicates drop
-rename location_1_string admin_name
+* combine all the crosswalks into one
+loc isos "BRA" "CHN" "ESP" "FRA" "GBR" "IND" "MEX" "USA"
 
-tempfile main
-save `main'
+foreach iso in "`isos'" {
+	qui import delim `lab'/shapefile_to_timeuse_crosswalk_`iso'.csv, clear
+	
+	if "`iso'" == "GBR" {
+		rename admin_name name_1
+	}
+	if "`iso'" == "MEX" {
+		rename state_name name_1
+	}
+	if "`iso'" == "BRA" {
+		rename name_1_adm1 name_1
+	}
+	keep iso adm0_id name_1 adm1_id
+	qui duplicates drop
 
-import delim "`lab'/crosswalks/timeuse_climate_crosswalk_CHN.csv", clear
+	rename name_1 admin_name
 
-gen iso = "CHN"
-rename name_1 admin_name
-gen location_id1 = floor(commid/10000)
+	cap confirm file `cw'
+	if _rc == 0 & iso != "`BRA'" {
+		qui append using `cw'
+		tempfile cw
+		qui save `cw'
+	}
+	else {
+		tempfile cw
+		qui save `cw'
+	}	
+}
 
-drop v1 commid name_2
-duplicates drop
-
-append using `main'
-
-tempfile cw
-save `cw'
+use `cw', clear
 
 keep iso
 duplicates drop
@@ -73,7 +86,7 @@ tempfile countnames
 save `countnames'
 
 * load getal data and subset to countries we want
-use "`mig'/internal/Data/Intermediate/income/adm1_cleaning/pwt_income_adm1.dta", clear
+use "`lab_db'/1_preparation/covariates/income/pwt_income_adm1.dta", clear
 keep region countrycode
 rename countrycode iso
 duplicates drop
@@ -87,16 +100,17 @@ keep if regexm(region, "[A-Z][A-Z][A-Z]") | !inlist(iso, "GBR")
 rename region admin_name
 egen getal_id = group(iso admin_name)
 
+drop if mi(getal_id)
+
 tempfile insample
 save `insample'
 
 * load population data and subset to countries we want
-use "`lab'/covariates/population/adm2_pop_mortality.dta", clear
-
-keep if inlist(iso, "BRA", "CHN", "ESP","FRA","GBR","IND","MEX","USA")
+use "${DB}/Global ACP/labor/1_preparation/covariates/population/adm2_pop_mortality.dta", clear
 
 * NOTE: Missing a few years of China data here. Interpolate (linearly in-sample, log out of sample)
 egen adm2_id_unique = group(iso adm1_id adm2_id)
+drop if mi(adm2_id_unique)
 xtset adm2_id_unique year
 tsfill
 
@@ -246,10 +260,6 @@ save `FRA'
 better_reclink "IND" `insample' `pop_names' getal_id id
 
 replace Uadmin_name = "" if !inlist(admin_name, "Gujarat", "Haryana", "Madhya Pradesh", "Meghalaya", "Orissa", "Tamil Nadu")
-/* replace Uadmin_name = "assam" if admin_name == "Assam w/ Mizoram"
-replace Uadmin_name = "north east frontier agency" if admin_name == "Arunachal Pradesh"
-
-drop if inlist(Uadmin_name, "assam", "north east frontier agency") & mi(getal_id) */
 drop if mi(admin_name)
 replace iso = "IND" if mi(iso)
 
@@ -264,37 +274,8 @@ replace iso = "MEX" if mi(iso)
 tempfile MEX
 save `MEX'
 
-* Espain
+* Spain
 better_reclink "ESP" `insample' `pop_names' getal_id id
-
-* match to NUTS codes
-* North West: Galicia, Asturias, Cantabria
-/* replace Uadmin_name = "ES1" if inlist(admin_name, "Asturias", "Cantabria", "CoruÃ±a (A)", "Lugo", "Ourense", "Pontevedra")
-
-* North East: Basque Community, Navarre, La Rioja, Aragon
-replace Uadmin_name = "ES2" if inlist(admin_name, "Huesca", "GuipÃºzcoa", "Navarra", "Rioja, La", "Teruel", "Vizcaya", "Zaragoza")
-replace Uadmin_name = "ES2" if regexm(admin_name, ".+lava")
-
-* Community of Madrid:	Community of Madrid
-replace Uadmin_name = "ES3" if (admin_name == "Madrid")
-
-* Centro
-replace Uadmin_name = "ES4" if inlist(admin_name, "Albacete", "Badajoz", "Burgos", "Ciudad Real", "Guadalajara", "LeÃ³n", "Palencia", "Salamanca")
-replace Uadmin_name = "ES4" if inlist(admin_name, "Segovia", "Soria", "Toledo", "Valladolid", "Zamora")
-replace Uadmin_name = "ES4" if regexm(admin_name, ".+vila")
-
-* East:	Catalonia, Valencian Community, Balearic Islands
-replace Uadmin_name = "ES5" if inlist(admin_name, "Alicante/Alacant", "Balears, Illes", "Barcelona", "CastellÃ³n/CastellÃ³", "CÃ¡ceres", "Cuenca", "Girona", "Lleida")
-replace Uadmin_name = "ES5" if inlist(admin_name, "Tarragona", "Valencia/ValÃ¨ncia")
-
-* South: Andalusia, Region of Murcia, Ceuta, Melilla
-replace Uadmin_name = "ES6" if inlist(admin_name, "AlmerÃ­a", "CÃ¡diz", "CÃ³rdoba", "Ceuta y Melilla", "Granada", "Huelva", "JaÃ©n", "MÃ¡laga", "Murcia")
-replace Uadmin_name = "ES6" if inlist(admin_name, "Sevilla")
-
-* Canary Islands	Canary Islands
-replace Uadmin_name = "ES7" if inlist(admin_name, "Palmas, Las")
-
-drop if mi(getal_id) */
 
 replace iso = "ESP" if mi(iso)
 
@@ -304,22 +285,6 @@ save `ESP'
 * United Kingdom
 better_reclink "GBR" `insample' `pop_names' getal_id id
 
-* match to NUTS codes
-/* gen Uadmin_name2 = ""
-replace Uadmin_name = "UKC" if admin_name == "North"
-replace Uadmin_name = "UKD" if admin_name == "North West"
-replace Uadmin_name = "UKE" if admin_name == "Yorkshire"
-replace Uadmin_name = "UKF" if admin_name == "Midlands"
-replace Uadmin_name2 = "UKG" if admin_name == "Midlands"
-replace Uadmin_name = "UKH" if admin_name == "East Anglia"
-replace Uadmin_name = "UKN" if admin_name == "Northern Ireland"
-replace Uadmin_name = "UKM" if admin_name == "Scotland"
-replace Uadmin_name = "UKJ" if admin_name == "South East w/ London"
-replace Uadmin_name2 = "UKI" if admin_name == "South East w/ London"
-replace Uadmin_name = "UKK" if admin_name == "South West"
-replace Uadmin_name = "UKL" if admin_name == "Wales" */
-
-* drop if mi(getal_id)
 
 replace iso = "GBR" if mi(iso)
 
@@ -422,15 +387,6 @@ drop population*
 egen pop_adm_name = concat(pop_admin_name*), punct(" ")
 drop pop_admin_name*
 
-* reshape so pop_adm_name identifies obs
-/* replace admin_name = "missing" if admin_name == ""
-egen admin_name_id = group(iso pop_admin_name)
-encode pop_adm_name, gen(pop_adm_name_id)
-
-by pop_adm_name year, sort: gen count = _n
-
-reshape wide admin_name, i(pop_adm_name year) j(count) */
-
 
 tempfile main
 save `main'
@@ -440,19 +396,16 @@ save `main'
 ************************************************
 
 * Brazil
-better_reclink "BRA" `cw' `insample' location_id1 getal_id
+better_reclink "BRA" `cw' `insample' adm1_id getal_id
 
-replace Uadmin_name = "Rio Grande do Sul" if admin_name == "rio_grande_do_sul"
-replace Uadmin_name = "SÃ£o Paulo" if admin_name == "sao_paulo"
-
-drop if inlist(Uadmin_name, "Rio Grande do Sul", "SÃ£o Paulo") & mi(location_id1)
+drop if inlist(Uadmin_name, "Rio Grande do Sul", "SÃ£o Paulo") & mi(adm1_id)
 replace iso = "BRA" if mi(iso)
 
 tempfile BRA
 save `BRA'
 
 * China
-better_reclink "CHN" `cw' `insample' location_id1 getal_id
+better_reclink "CHN" `cw' `insample' adm1_id getal_id
 
 replace iso = "CHN" if mi(iso)
 
@@ -460,109 +413,99 @@ tempfile CHN
 save `CHN'
 
 * France
-better_reclink "FRA" `cw' `insample' location_id1 getal_id
+better_reclink "FRA" `cw' `insample' adm1_id getal_id
 
 * match to NUTS codes
-replace Uadmin_name = "FR1" if inlist(admin_name, "le-de-france")
-replace Uadmin_name = "FR2" if inlist(admin_name, "champagne-ardenne", "picardie", "haute-normandie", "centre", "basse-normandie", "bourgogne")
-replace Uadmin_name = "FR3" if inlist(admin_name, "nord-pas-de-calais")
-replace Uadmin_name = "FR4" if inlist(admin_name, "lorraine", "alsace", "franche-comt")
-replace Uadmin_name = "FR5" if inlist(admin_name, "paysdelaloire", "bretagne", "poitou-charentes")
-replace Uadmin_name = "FR6" if inlist(admin_name, "aquitaine", "limousin", "midi-pyrnes")
-replace Uadmin_name = "FR7" if inlist(admin_name, "auvergne", "rhne-alpes")
-replace Uadmin_name = "FR8" if inlist(admin_name, "languedoc-roussillon", "provence-cted'azur-corse", "corse")
+replace Uadmin_name = "FR1" if regexm(admin_name, "le-de-France")
+replace Uadmin_name = "FR2" if inlist(admin_name, "Champagne-Ardenne", "Picardie", "Haute-Normandie", "Centre", "Basse-Normandie", "Bourgogne")
+replace Uadmin_name = "FR3" if inlist(admin_name, "Nord-Pas-de-Calais")
+replace Uadmin_name = "FR4" if inlist(admin_name, "Lorraine", "Alsace") 
+replace Uadmin_name = "FR4" if regexm(admin_name, "Franche-Comt")
+replace Uadmin_name = "FR5" if inlist(admin_name, "Pays de la Loire", "Bretagne", "Poitou-Charentes")
+replace Uadmin_name = "FR6" if inlist(admin_name, "Aquitaine", "Limousin")
+replace Uadmin_name = "FR6" if regexm(admin_name, "Midi-Pyr")
+replace Uadmin_name = "FR7" if inlist(admin_name, "Auvergne")
+replace Uadmin_name = "FR7" if regexm(admin_name, "ne-Alpes$")
+replace Uadmin_name = "FR8" if inlist(admin_name, "Languedoc-Roussillon", "Corse")
+replace Uadmin_name = "FR8" if regexm(admin_name, "Provence-Alpes-C")
 
-drop if mi(location_id1)
+drop if mi(adm1_id)
 replace iso = "FRA" if mi(iso)
 
 tempfile FRA
 save `FRA'
 
 * India
-better_reclink "IND" `cw' `insample' location_id1 getal_id
-
-replace Uadmin_name = "Gujarat" if admin_name == "GUJARAT"
-replace Uadmin_name = "Haryana" if admin_name == "HARYANA"
-replace Uadmin_name = "Madhya Pradesh" if admin_name == "MADHYA PRADESH"
-replace Uadmin_name = "Meghalaya" if admin_name == "MEGHALAYA"
-replace Uadmin_name = "Orissa" if admin_name == "ORISSA"
-replace Uadmin_name = "Tamil Nadu" if admin_name == "TAMIL NADU"
-
-drop if inlist(Uadmin_name, "Gujarat", "Haryana", "Madhya Pradesh", "Meghalaya", "Orissa", "Tamil Nadu") & mi(location_id1)
+better_reclink "IND" `cw' `insample' adm1_id getal_id
 
 replace iso = "IND" if mi(iso)
 tempfile IND
 save `IND'
 
 * Mexico
-better_reclink "MEX" `cw' `insample' location_id1 getal_id
-
-replace Uadmin_name = "Baja California Norte" if admin_name == "baja california"
-replace Uadmin_name = "Veracruz" if admin_name == "veracruz de ignacio de la llave"
-replace Uadmin_name = "Coahuila" if admin_name == "coahuila de zaragoza"
-
-drop if mi(location_id1) & inlist(Uadmin_name, "Baja California Norte", "Veracruz", "Coahuila")
-replace iso = "MEX" if mi(iso)
-
+better_reclink "MEX" `cw' `insample' adm1_id getal_id
+* a perfect match!
 tempfile MEX
 save `MEX'
 
 * Spain
-better_reclink "ESP" `cw' `insample' location_id1 getal_id
+better_reclink "ESP" `cw' `insample' adm1_id getal_id
 
 * match to NUTS codes
 * North West: Galicia, Asturias, Cantabria
-replace Uadmin_name = "ES1" if inlist(admin_name, "asturias", "cantabria", "corua(a)")
-
+replace Uadmin_name = "ES1" if inlist(admin_name, "Principado de Asturias", "Cantabria", "Galicia")
 * North East: Basque Community, Navarre, La Rioja, Aragon
-replace Uadmin_name = "ES2" if inlist(admin_name, "huesca", "guipzcoa", "navarra", "rioja,la")
-
+replace Uadmin_name = "ES2" if inlist(admin_name, "Comunidad Foral de Navarra", "La Rioja")
+replace Uadmin_name = "ES2" if regexm(admin_name, "Vasco") | regexm(admin_name, "Arag")
 * Community of Madrid:	Community of Madrid
-replace Uadmin_name = "ES3" if (admin_name == "madrid")
-
+replace Uadmin_name = "ES3" if (admin_name == "Comunidad de Madrid")
 * Centro
-replace Uadmin_name = "ES4" if inlist(admin_name, "albacete", "badajoz", "burgos")
+replace Uadmin_name = "ES4" if inlist(admin_name, "Castilla-La Mancha", "Extremadura")
+replace Uadmin_name = "ES4" if regexm(admin_name, "Castilla y Le")
 
 * East:	Catalonia, Valencian Community, Balearic Islands
-replace Uadmin_name = "ES5" if inlist(admin_name, "alicante/alacant", "balears,illes", "barcelona")
+replace Uadmin_name = "ES5" if inlist(admin_name, "Comunidad Valenciana", "Islas Baleares")
+replace Uadmin_name = "ES5" if regexm(admin_name, "Catalu")
 
 * South: Andalusia, Region of Murcia, Ceuta, Melilla
-replace Uadmin_name = "ES6" if inlist(admin_name, "ceutaymelilla", "murcia", "almera")
+replace Uadmin_name = "ES6" if inlist(admin_name, "Ceuta y Melilla")
+replace Uadmin_name = "ES6" if regexm(admin_name, "Andaluc") | regexm(admin_name, "Murcia")
 
 * Canary Islands	Canary Islands
-replace Uadmin_name = "ES7" if inlist(admin_name, "palmas,las")
+replace Uadmin_name = "ES7" if inlist(admin_name, "Islas Canarias")
 
-drop if mi(location_id1)
+drop if mi(adm1_id)
 replace iso = "ESP" if mi(iso)
 
 tempfile ESP
 save `ESP'
 
 * United Kingdom
-better_reclink "GBR" `cw' `insample' location_id1 getal_id
+* come back to this
+better_reclink "GBR" `cw' `insample' adm1_id getal_id
 
 * match to NUTS codes
 gen Uadmin_name2 = ""
-replace Uadmin_name = "UKC" if admin_name == "north"
-replace Uadmin_name2 = "UKD" if admin_name == "north"
-replace Uadmin_name = "UKF" if admin_name == "midlands"
-replace Uadmin_name2 = "UKG" if admin_name == "midlands"
-replace Uadmin_name = "UKH" if admin_name == "eastanglia"
-replace Uadmin_name = "UKN" if admin_name == "northernireland"
-replace Uadmin_name = "UKM" if admin_name == "scotland"
-replace Uadmin_name = "UKJ" if admin_name == "southeastw/london"
-replace Uadmin_name2 = "UKI" if admin_name == "southeastw/london"
-replace Uadmin_name = "UKK" if admin_name == "southwest"
-replace Uadmin_name = "UKL" if admin_name == "wales"
+replace Uadmin_name = "UKC" if admin_name == "North East"
+replace Uadmin_name = "UKE" if admin_name == "Yorkshire and the Humber"
+replace Uadmin_name = "UKF" if admin_name == "East Midlands"
+replace Uadmin_name = "UKG" if admin_name == "West Midlands"
+replace Uadmin_name = "UKH" if admin_name == "East of England"
+replace Uadmin_name = "UKI" if admin_name == "South East and London"
+replace Uadmin_name2 = "UKJ" if admin_name == "South East and London"
+replace Uadmin_name = "UKK" if admin_name == "South West"
+replace Uadmin_name = "UKL" if admin_name == "Wales"
+replace Uadmin_name = "UKM" if admin_name == "Scotland"
+replace Uadmin_name = "UKN" if admin_name == "Northern Ireland"
 
-drop if Uadmin_name != "UKE" & mi(location_id1)
+drop if mi(adm1_id)
 replace iso = "GBR" if mi(iso)
 
 tempfile GBR
 save `GBR'
 
 * United States
-better_reclink "USA" `cw' `insample' location_id1 getal_id
+better_reclink "USA" `cw' `insample' adm1_id getal_id
 
 replace iso = "USA" if mi(iso)
 tempfile USA
@@ -625,13 +568,11 @@ foreach c in `countries' {
 	qui gen year = `min' + counter - 1
 
 	qui drop dup counter
-	order year
+	order iso year
 
 	qui append using `all'
 	qui save `all', replace	
 }
-
-pause
 
 * clean up
 drop score_getal dup_getal getal_id Uiso
@@ -646,11 +587,9 @@ rename Uadmin_name Uadmin_name1
 
 replace admin_name = "missing" if admin_name == ""
 
-pause
-
 forvalues j  = 1(1)2 {
 	preserve
-		use "`mig'/internal/Data/Intermediate/income/adm1_cleaning/pwt_income_adm1.dta", clear
+		use "`lab_db'/1_preparation/covariates/income/pwt_income_adm1.dta", clear
 		rename (region *gdppc*) (Uadmin_name`j' *gdppc*_`j')
 		rename countrycode iso
 
@@ -675,13 +614,14 @@ forvalues j  = 1(1)2 {
 		save `pop_merge'
 	restore
 
-	merge m:1 iso getal_admin_name`j' year using `pop_merge', keep(1 3) nogen // problem here -- the missings merge incorrectly (we want this to be a 1:1 merge, not m:1)
+	merge m:1 iso getal_admin_name`j' year using `pop_merge', keep(1 3) nogen
 	replace pop_tot`j' = . if pop_tot`j' == 0
-
-	pause
 }
+
+* rename population population1
+* drop gdppcstate country
 
 * make a new grouping id var
 egen match_id = group(iso admin_name getal_admin_name* pop_adm_name*), missing
 
-export delimited using "`lab'/covariates/income/income_pop_merged.csv", replace
+export delimited using "$DB/Global ACP/labor/replication/1_preparation/covariates/income/income_pop_merged.csv", replace
