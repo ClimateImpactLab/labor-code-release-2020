@@ -1,0 +1,16 @@
+{
+    'run_location': 'sacagawea',
+    'input_file': '/shares/gcp/estimation/labor/employment_shares_data/climate_data/1_raw/Colombia_adm1/shapefile/segment_weights/Colombia_adm1_shp_GMFD_grid_segment_weights_area_pop.csv',
+    'output_dir': '/shares/gcp/estimation/labor/employment_shares_data/climate_data/1_raw/Colombia_adm1/climate',
+    'region_columns': ['GEOLEVEL1'],
+    'group_by_column': None,
+    'weight_columns': ['popwt'],
+    'climate_source': ['GMFD'],
+    'parameters': ['prcp', 'tavg'],
+    'transforms': {'poly': 4},
+    'collapse_as': 'sum',
+    'collapse_to': 'month',
+    'year_block_size': 5,
+    'first_year': 1948,
+    'last_year': 2010
+}

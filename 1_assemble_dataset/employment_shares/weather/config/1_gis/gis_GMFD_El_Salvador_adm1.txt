@@ -1,0 +1,16 @@
+{
+    'run_location': 'sacagawea',
+    'n_jobs': 12,
+    'verbose': 2,
+    'clim': 'GMFD',
+    'shapefile_location': '/shares/gcp/estimation/labor/employment_shares_data/climate_data/1_raw/El_Salvador_adm1/shapefile',
+    'shapefile_name': 'El_Salvador_adm1_shp',
+    'shp_id': 'El_Salvador_adm1',
+    'numeric_id_fields': [],
+    'string_id_fields': ['GEOLEVEL1'],
+    'weightlist': ['pop'],
+    'use_existing_segment_shp': False,
+    'filter_ocean_pixels': False,
+    'keep_features': None,
+    'drop_features': None
+}

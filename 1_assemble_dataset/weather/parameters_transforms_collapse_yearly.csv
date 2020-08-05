@@ -1,0 +1,3 @@
+parameters,transforms,collapse_as,prefix_config
+tmax,"'hdd' : [10, 20, 5], 'cdd' : [30, 30, 5]",sum,degree_days
+tmax,'poly' : 1,avg,lrtmax
