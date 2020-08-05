@@ -18,7 +18,6 @@ library(data.table)
 
 source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R"))
 
-lab = glue("{DB}/Global ACP/labor/replication/")
 source(glue("{DIR_REPO_POST_PROJ}/downscale_function.R"))
 
 
