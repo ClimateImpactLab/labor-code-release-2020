@@ -11,7 +11,7 @@ set more off
 pause off
 cap ssc install reclink
 
-stata do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
+do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
 
 ****************************
 * 1. set up tools and data *
