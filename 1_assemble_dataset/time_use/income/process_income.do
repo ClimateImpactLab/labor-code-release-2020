@@ -101,7 +101,7 @@ save `laporta'
 * EU
 ****
 * import iso-2 to iso-3 crosswalk
-import delimited "${DIR_EXT_DATA}/misc/countries_codes_and_coordinates.csv", clear varnames(1)
+import delimited "${DIR_EXT_DATA}/misc/EU_countries_codes_and_coordinates.csv", clear varnames(1)
 foreach var in alpha2code alpha3code {
 	replace `var' = subinstr(`var',`"""',"",.)
 	replace `var' = subinstr(`var'," ","",.)
@@ -122,7 +122,7 @@ save `iso_xwalk'
 
 * import NUTS_2 gdppd and create downscaling factor to 
 * 	apply to Penn world tables national figures
-import delimited "${DIR_EXT_DATA}/EU_nama_10r_2gdp.tsv", delimit(tab) clear
+import delimited "${DIR_EXT_DATA}/misc/EU_nama_10r_2gdp.tsv", delimit(tab) clear
 
 * rename year columns
 forvalues ii = 2/18 {

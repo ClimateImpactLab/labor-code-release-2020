@@ -16,14 +16,14 @@ library(cilpath.r)
 library(data.table)
 
 
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R"))
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R")
 
-source(glue("{DIR_REPO_POST_PROJ}/downscale_function.R"))
+source(glue("{DIR_REPO_POST_PROJ}/income/downscale_function.R"))
 
 
 # need to think about what to do about places that have 2 population matches and 2 corresponding gdps.
 # want to be able to use gdp for these places
-d = fread(glue("{lab}/1_preparation/covariates/income/income_pop_merged.csv")) %>%
+d = fread(glue("{DIR_EXT_DATA}/misc/income_pop_merged.csv")) %>%
 	data.frame() %>%
 	filter(!(year < 1990 & iso == "GBR")) %>%
 	mutate_at(vars(-iso, -contains("admin_name"), -contains("adm_name")),
@@ -94,7 +94,7 @@ downscaled = downscale(ds=prepped, cntry_id = quo(iso)) %>%
 	right_join(cw, by=c("iso", "getal_admin_name")) %>%
 	dplyr::select(year, iso, adm1_id, getal_admin_name, gdppc_adm0_PWT, gdppc_adm1_PWT_downscaled, adm0_pop)
 
-write_csv(downscaled, glue("{lab}/1_preparation/covariates/income/income_downscaled.csv"))
+write_csv(downscaled, glue("{DIR_EXT_DATA}/misc/income_downscaled.csv"))
 
 
 
