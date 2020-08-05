@@ -1,0 +1,1208 @@
+,iso,adm0_id,adm1_id,adm2_id,state_name,municipality_name,NOM_ENT_adm1,NOM_ENT_adm2,NOM_MUN
+0,MEX,70000000,70000000,70000025,Aguascalientes,Aguascalientes,Aguascalientes,Aguascalientes,Aguascalientes
+1,MEX,70000000,70000000,70000078,Aguascalientes,Asientos,Aguascalientes,Aguascalientes,Asientos
+2,MEX,70000000,70000000,70000134,Aguascalientes,Calvillo,Aguascalientes,Aguascalientes,Calvillo
+3,MEX,70000000,70000000,70000234,Aguascalientes,Cosío,Aguascalientes,Aguascalientes,Cosío
+4,MEX,70000000,70000000,70000432,Aguascalientes,Jesús María,Aguascalientes,Aguascalientes,Jesús María
+5,MEX,70000000,70000000,70000612,Aguascalientes,Pabellón de Arteaga,Aguascalientes,Aguascalientes,Pabellón de Arteaga
+6,MEX,70000000,70000000,70000673,Aguascalientes,Rincón de Romos,Aguascalientes,Aguascalientes,Rincón de Romos
+7,MEX,70000000,70000000,70000746,Aguascalientes,San José de Gracia,Aguascalientes,Aguascalientes,San José de Gracia
+8,MEX,70000000,70000000,70000954,Aguascalientes,Tepezalá,Aguascalientes,Aguascalientes,Tepezalá
+9,MEX,70000000,70000000,70000286,Aguascalientes,El Llano,Aguascalientes,Aguascalientes,El Llano
+10,MEX,70000000,70000000,70000734,Aguascalientes,San Francisco de los Romo,Aguascalientes,Aguascalientes,San Francisco de los Romo
+11,MEX,70000000,70010000,70010299,Baja California,Ensenada,Baja California,Baja California,Ensenada
+12,MEX,70000000,70010000,70010525,Baja California,Mexicali,Baja California,Baja California,Mexicali
+13,MEX,70000000,70010000,70010905,Baja California,Tecate,Baja California,Baja California,Tecate
+14,MEX,70000000,70010000,70010976,Baja California,Tijuana,Baja California,Baja California,Tijuana
+15,MEX,70000000,70010000,70010642,Baja California,Playas de Rosarito,Baja California,Baja California,Playas de Rosarito
+16,MEX,70000000,70020000,70020216,Baja California Sur,Comondú,Baja California Sur,Baja California Sur,Comondú
+17,MEX,70000000,70020000,70020558,Baja California Sur,Mulegé,Baja California Sur,Baja California Sur,Mulegé
+18,MEX,70000000,70020000,70020466,Baja California Sur,La Paz,Baja California Sur,Baja California Sur,La Paz
+19,MEX,70000000,70020000,70020487,Baja California Sur,Los Cabos,Baja California Sur,Baja California Sur,Los Cabos
+20,MEX,70000000,70020000,70020485,Baja California Sur,Loreto,Baja California Sur,Baja California Sur,Loreto
+21,MEX,70000000,70030000,70030131,Campeche,Calkiní,Campeche,Campeche,Calkiní
+22,MEX,70000000,70030000,70030137,Campeche,Campeche,Campeche,Campeche,Campeche
+23,MEX,70000000,70030000,70030144,Campeche,Carmen,Campeche,Campeche,Carmen
+24,MEX,70000000,70030000,70030162,Campeche,Champotón,Campeche,Campeche,Champotón
+25,MEX,70000000,70030000,70030349,Campeche,Hecelchakán,Campeche,Campeche,Hecelchakán
+26,MEX,70000000,70030000,70030360,Campeche,Hopelchén,Campeche,Campeche,Hopelchén
+27,MEX,70000000,70030000,70030615,Campeche,Palizada,Campeche,Campeche,Palizada
+28,MEX,70000000,70030000,70030927,Campeche,Tenabo,Campeche,Campeche,Tenabo
+29,MEX,70000000,70030000,70030302,Campeche,Escárcega,Campeche,Campeche,Escárcega
+30,MEX,70000000,70030000,70030128,Campeche,Calakmul,Campeche,Campeche,Calakmul
+31,MEX,70000000,70030000,70030140,Campeche,Candelaria,Campeche,Campeche,Candelaria
+32,MEX,70000000,70060000,70060001,Coahuila de Zaragoza,Abasolo,Coahuila de Zaragoza,Coahuila de Zaragoza,Abasolo
+33,MEX,70000000,70060000,70060019,Coahuila de Zaragoza,Acuña,Coahuila de Zaragoza,Coahuila de Zaragoza,Acuña
+34,MEX,70000000,70060000,70060076,Coahuila de Zaragoza,Arteaga,Coahuila de Zaragoza,Coahuila de Zaragoza,Arteaga
+35,MEX,70000000,70060000,70060146,Coahuila de Zaragoza,Castaños,Coahuila de Zaragoza,Coahuila de Zaragoza,Castaños
+36,MEX,70000000,70060000,70060300,Coahuila de Zaragoza,Escobedo,Coahuila de Zaragoza,Coahuila de Zaragoza,Escobedo
+37,MEX,70000000,70060000,70060312,Coahuila de Zaragoza,Francisco I. Madero,Coahuila de Zaragoza,Coahuila de Zaragoza,Francisco I. Madero
+38,MEX,70000000,70060000,70060315,Coahuila de Zaragoza,Frontera,Coahuila de Zaragoza,Coahuila de Zaragoza,Frontera
+39,MEX,70000000,70060000,70060321,Coahuila de Zaragoza,General Cepeda,Coahuila de Zaragoza,Coahuila de Zaragoza,General Cepeda
+40,MEX,70000000,70060000,70060342,Coahuila de Zaragoza,Guerrero,Coahuila de Zaragoza,Coahuila de Zaragoza,Guerrero
+41,MEX,70000000,70060000,70060435,Coahuila de Zaragoza,Jiménez,Coahuila de Zaragoza,Coahuila de Zaragoza,Jiménez
+42,MEX,70000000,70060000,70060471,Coahuila de Zaragoza,Lamadrid,Coahuila de Zaragoza,Coahuila de Zaragoza,Lamadrid
+43,MEX,70000000,70060000,70060511,Coahuila de Zaragoza,Matamoros,Coahuila de Zaragoza,Coahuila de Zaragoza,Matamoros
+44,MEX,70000000,70060000,70060549,Coahuila de Zaragoza,Monclova,Coahuila de Zaragoza,Coahuila de Zaragoza,Monclova
+45,MEX,70000000,70060000,70060553,Coahuila de Zaragoza,Morelos,Coahuila de Zaragoza,Coahuila de Zaragoza,Morelos
+46,MEX,70000000,70060000,70060566,Coahuila de Zaragoza,Múzquiz,Coahuila de Zaragoza,Coahuila de Zaragoza,Múzquiz
+47,MEX,70000000,70060000,70060569,Coahuila de Zaragoza,Nadadores,Coahuila de Zaragoza,Coahuila de Zaragoza,Nadadores
+48,MEX,70000000,70060000,70060591,Coahuila de Zaragoza,Ocampo,Coahuila de Zaragoza,Coahuila de Zaragoza,Ocampo
+49,MEX,70000000,70060000,70060625,Coahuila de Zaragoza,Parras,Coahuila de Zaragoza,Coahuila de Zaragoza,Parras
+50,MEX,70000000,70060000,70060637,Coahuila de Zaragoza,Piedras Negras,Coahuila de Zaragoza,Coahuila de Zaragoza,Piedras Negras
+51,MEX,70000000,70060000,70060670,Coahuila de Zaragoza,Ramos Arizpe,Coahuila de Zaragoza,Coahuila de Zaragoza,Ramos Arizpe
+52,MEX,70000000,70060000,70060684,Coahuila de Zaragoza,Sabinas,Coahuila de Zaragoza,Coahuila de Zaragoza,Sabinas
+53,MEX,70000000,70060000,70060694,Coahuila de Zaragoza,Saltillo,Coahuila de Zaragoza,Coahuila de Zaragoza,Saltillo
+54,MEX,70000000,70060000,70060756,Coahuila de Zaragoza,San Juan de Sabinas,Coahuila de Zaragoza,Coahuila de Zaragoza,San Juan de Sabinas
+55,MEX,70000000,70060000,70060788,Coahuila de Zaragoza,San Pedro,Coahuila de Zaragoza,Coahuila de Zaragoza,San Pedro
+56,MEX,70000000,70060000,70060867,Coahuila de Zaragoza,Sierra Mojada,Coahuila de Zaragoza,Coahuila de Zaragoza,Sierra Mojada
+57,MEX,70000000,70060000,70061014,Coahuila de Zaragoza,Torreón,Coahuila de Zaragoza,Coahuila de Zaragoza,Torreón
+58,MEX,70000000,70060000,70061056,Coahuila de Zaragoza,Viesca,Coahuila de Zaragoza,Coahuila de Zaragoza,Viesca
+59,MEX,70000000,70060000,70061064,Coahuila de Zaragoza,Villa Unión,Coahuila de Zaragoza,Coahuila de Zaragoza,Villa Unión
+60,MEX,70000000,70060000,70061125,Coahuila de Zaragoza,Zaragoza,Coahuila de Zaragoza,Coahuila de Zaragoza,Zaragoza
+61,MEX,70000000,70070000,70070073,Colima,Armería,Colima,Colima,Armería
+62,MEX,70000000,70070000,70070211,Colima,Colima,Colima,Colima,Colima
+63,MEX,70000000,70070000,70070213,Colima,Comala,Colima,Colima,Comala
+64,MEX,70000000,70070000,70070226,Colima,Coquimatlán,Colima,Colima,Coquimatlán
+65,MEX,70000000,70070000,70070247,Colima,Cuauhtémoc,Colima,Colima,Cuauhtémoc
+66,MEX,70000000,70070000,70070411,Colima,Ixtlahuacán,Colima,Colima,Ixtlahuacán
+67,MEX,70000000,70070000,70070502,Colima,Manzanillo,Colima,Colima,Manzanillo
+68,MEX,70000000,70070000,70070535,Colima,Minatitlán,Colima,Colima,Minatitlán
+69,MEX,70000000,70070000,70070909,Colima,Tecomán,Colima,Colima,Tecomán
+70,MEX,70000000,70070000,70071074,Colima,Villa de Álvarez,Colima,Colima,Villa de Álvarez
+71,MEX,70000000,70040000,70040003,Chiapas,Acala,Chiapas,Chiapas,Acala
+72,MEX,70000000,70040000,70040041,Chiapas,Altamirano,Chiapas,Chiapas,Altamirano
+73,MEX,70000000,70040000,70040074,Chiapas,Arriaga,Chiapas,Chiapas,Arriaga
+74,MEX,70000000,70040000,70040113,Chiapas,Berriozábal,Chiapas,Chiapas,Berriozábal
+75,MEX,70000000,70040000,70040115,Chiapas,Bochil,Chiapas,Chiapas,Bochil
+76,MEX,70000000,70040000,70040282,Chiapas,El Bosque,Chiapas,Chiapas,El Bosque
+77,MEX,70000000,70040000,70040194,Chiapas,Cintalapa,Chiapas,Chiapas,Cintalapa
+78,MEX,70000000,70040000,70040203,Chiapas,Coapilla,Chiapas,Chiapas,Coapilla
+79,MEX,70000000,70040000,70040215,Chiapas,Comitán de Domínguez,Chiapas,Chiapas,Comitán de Domínguez
+80,MEX,70000000,70040000,70040460,Chiapas,La Concordia,Chiapas,Chiapas,La Concordia
+81,MEX,70000000,70040000,70040223,Chiapas,Copainalá,Chiapas,Chiapas,Copainalá
+82,MEX,70000000,70040000,70040163,Chiapas,Chamula,Chiapas,Chiapas,Chamula
+83,MEX,70000000,70040000,70040169,Chiapas,Chenalhó,Chiapas,Chiapas,Chenalhó
+84,MEX,70000000,70040000,70040171,Chiapas,Chiapa de Corzo,Chiapas,Chiapas,Chiapa de Corzo
+85,MEX,70000000,70040000,70040176,Chiapas,Chicomuselo,Chiapas,Chiapas,Chicomuselo
+86,MEX,70000000,70040000,70040316,Chiapas,Frontera Comalapa,Chiapas,Chiapas,Frontera Comalapa
+87,MEX,70000000,70040000,70040373,Chiapas,Huehuetán,Chiapas,Chiapas,Huehuetán
+88,MEX,70000000,70040000,70040383,Chiapas,Huitiupán,Chiapas,Chiapas,Huitiupán
+89,MEX,70000000,70040000,70040387,Chiapas,Huixtla,Chiapas,Chiapas,Huixtla
+90,MEX,70000000,70040000,70040462,Chiapas,La Independencia,Chiapas,Chiapas,La Independencia
+91,MEX,70000000,70040000,70040406,Chiapas,Ixtapa,Chiapas,Chiapas,Ixtapa
+92,MEX,70000000,70040000,70040409,Chiapas,Ixtapangajoya,Chiapas,Chiapas,Ixtapangajoya
+93,MEX,70000000,70040000,70040436,Chiapas,Jiquipilas,Chiapas,Chiapas,Jiquipilas
+94,MEX,70000000,70040000,70040437,Chiapas,Jitotol,Chiapas,Chiapas,Jitotol
+95,MEX,70000000,70040000,70040454,Chiapas,Juárez,Chiapas,Chiapas,Juárez
+96,MEX,70000000,70040000,70040503,Chiapas,Mapastepec,Chiapas,Chiapas,Mapastepec
+97,MEX,70000000,70040000,70040474,Chiapas,Las Margaritas,Chiapas,Chiapas,Las Margaritas
+98,MEX,70000000,70040000,70040523,Chiapas,Metapa,Chiapas,Chiapas,Metapa
+99,MEX,70000000,70040000,70040540,Chiapas,Mitontic,Chiapas,Chiapas,Mitontic
+100,MEX,70000000,70040000,70040556,Chiapas,Motozintla,Chiapas,Chiapas,Motozintla
+101,MEX,70000000,70040000,70040592,Chiapas,Ocosingo,Chiapas,Chiapas,Ocosingo
+102,MEX,70000000,70040000,70040597,Chiapas,Ocozocoautla de Espinosa,Chiapas,Chiapas,Ocozocoautla de Espinosa
+103,MEX,70000000,70040000,70040606,Chiapas,Osumacinta,Chiapas,Chiapas,Osumacinta
+104,MEX,70000000,70040000,70040609,Chiapas,Oxchuc,Chiapas,Chiapas,Oxchuc
+105,MEX,70000000,70040000,70040614,Chiapas,Palenque,Chiapas,Chiapas,Palenque
+106,MEX,70000000,70040000,70040620,Chiapas,Pantelhó,Chiapas,Chiapas,Pantelhó
+107,MEX,70000000,70040000,70040636,Chiapas,Pichucalco,Chiapas,Chiapas,Pichucalco
+108,MEX,70000000,70040000,70040638,Chiapas,Pijijiapan,Chiapas,Chiapas,Pijijiapan
+109,MEX,70000000,70040000,70041057,Chiapas,Villa Comaltitlán,Chiapas,Chiapas,Villa Comaltitlán
+110,MEX,70000000,70040000,70040671,Chiapas,Rayón,Chiapas,Chiapas,Rayón
+111,MEX,70000000,70040000,70040475,Chiapas,Las Rosas,Chiapas,Chiapas,Las Rosas
+112,MEX,70000000,70040000,70040695,Chiapas,Salto de Agua,Chiapas,Chiapas,Salto de Agua
+113,MEX,70000000,70040000,70040717,Chiapas,San Cristóbal de las Casas,Chiapas,Chiapas,San Cristóbal de las Casas
+114,MEX,70000000,70040000,70040870,Chiapas,Sitalá,Chiapas,Chiapas,Sitalá
+115,MEX,70000000,70040000,70040871,Chiapas,Socoltenango,Chiapas,Chiapas,Socoltenango
+116,MEX,70000000,70040000,70040878,Chiapas,Soyaló,Chiapas,Chiapas,Soyaló
+117,MEX,70000000,70040000,70040879,Chiapas,Suchiapa,Chiapas,Chiapas,Suchiapa
+118,MEX,70000000,70040000,70040880,Chiapas,Suchiate,Chiapas,Chiapas,Suchiate
+119,MEX,70000000,70040000,70040898,Chiapas,Tapachula,Chiapas,Chiapas,Tapachula
+120,MEX,70000000,70040000,70040911,Chiapas,Tecpatán,Chiapas,Chiapas,Tecpatán
+121,MEX,70000000,70040000,70040935,Chiapas,Teopisca,Chiapas,Chiapas,Teopisca
+122,MEX,70000000,70040000,70041012,Chiapas,Tonalá,Chiapas,Chiapas,Tonalá
+123,MEX,70000000,70040000,70041016,Chiapas,Totolapa,Chiapas,Chiapas,Totolapa
+124,MEX,70000000,70040000,70040468,Chiapas,La Trinitaria,Chiapas,Chiapas,La Trinitaria
+125,MEX,70000000,70040000,70041025,Chiapas,Tumbalá,Chiapas,Chiapas,Tumbalá
+126,MEX,70000000,70040000,70041028,Chiapas,Tuxtla Gutiérrez,Chiapas,Chiapas,Tuxtla Gutiérrez
+127,MEX,70000000,70040000,70041052,Chiapas,Venustiano Carranza,Chiapas,Chiapas,Venustiano Carranza
+128,MEX,70000000,70040000,70041058,Chiapas,Villa Corzo,Chiapas,Chiapas,Villa Corzo
+129,MEX,70000000,70040000,70041076,Chiapas,Villaflores,Chiapas,Chiapas,Villaflores
+130,MEX,70000000,70040000,70041135,Chiapas,Zinacantán,Chiapas,Chiapas,Zinacantán
+131,MEX,70000000,70040000,70040703,Chiapas,San Andrés Duraznal,Chiapas,Chiapas,San Andrés Duraznal
+132,MEX,70000000,70040000,70040857,Chiapas,Santiago el Pinar,Chiapas,Chiapas,Santiago el Pinar
+133,MEX,70000000,70050000,70050030,Chihuahua,Ahumada,Chihuahua,Chihuahua,Ahumada
+134,MEX,70000000,70050000,70050035,Chihuahua,Aldama,Chihuahua,Chihuahua,Aldama
+135,MEX,70000000,70050000,70050036,Chihuahua,Allende,Chihuahua,Chihuahua,Allende
+136,MEX,70000000,70050000,70050068,Chihuahua,Aquiles Serdán,Chihuahua,Chihuahua,Aquiles Serdán
+137,MEX,70000000,70050000,70050077,Chihuahua,Ascensión,Chihuahua,Chihuahua,Ascensión
+138,MEX,70000000,70050000,70050108,Chihuahua,Balleza,Chihuahua,Chihuahua,Balleza
+139,MEX,70000000,70050000,70050116,Chihuahua,Bocoyna,Chihuahua,Chihuahua,Bocoyna
+140,MEX,70000000,70050000,70050120,Chihuahua,Buenaventura,Chihuahua,Chihuahua,Buenaventura
+141,MEX,70000000,70050000,70050135,Chihuahua,Camargo,Chihuahua,Chihuahua,Camargo
+142,MEX,70000000,70050000,70050143,Chihuahua,Carichí,Chihuahua,Chihuahua,Carichí
+143,MEX,70000000,70050000,70050227,Chihuahua,Coronado,Chihuahua,Chihuahua,Coronado
+144,MEX,70000000,70050000,70050247,Chihuahua,Cuauhtémoc,Chihuahua,Chihuahua,Cuauhtémoc
+145,MEX,70000000,70050000,70050263,Chihuahua,Cusihuiriachi,Chihuahua,Chihuahua,Cusihuiriachi
+146,MEX,70000000,70050000,70050182,Chihuahua,Chihuahua,Chihuahua,Chihuahua,Chihuahua
+147,MEX,70000000,70050000,70050269,Chihuahua,Delicias,Chihuahua,Chihuahua,Delicias
+148,MEX,70000000,70050000,70050273,Chihuahua,Dr. Belisario Domínguez,Chihuahua,Chihuahua,Dr. Belisario Domínguez
+149,MEX,70000000,70050000,70050346,Chihuahua,Gómez Farías,Chihuahua,Chihuahua,Gómez Farías
+150,MEX,70000000,70050000,70050332,Chihuahua,Guachochi,Chihuahua,Chihuahua,Guachochi
+151,MEX,70000000,70050000,70050334,Chihuahua,Guadalupe,Chihuahua,Chihuahua,Guadalupe
+152,MEX,70000000,70050000,70050336,Chihuahua,Guadalupe y Calvo,Chihuahua,Chihuahua,Guadalupe y Calvo
+153,MEX,70000000,70050000,70050341,Chihuahua,Guazapares,Chihuahua,Chihuahua,Guazapares
+154,MEX,70000000,70050000,70050342,Chihuahua,Guerrero,Chihuahua,Chihuahua,Guerrero
+155,MEX,70000000,70050000,70050356,Chihuahua,Hidalgo del Parral,Chihuahua,Chihuahua,Hidalgo del Parral
+156,MEX,70000000,70050000,70050428,Chihuahua,Janos,Chihuahua,Chihuahua,Janos
+157,MEX,70000000,70050000,70050435,Chihuahua,Jiménez,Chihuahua,Chihuahua,Jiménez
+158,MEX,70000000,70050000,70050454,Chihuahua,Juárez,Chihuahua,Chihuahua,Juárez
+159,MEX,70000000,70050000,70050452,Chihuahua,Julimes,Chihuahua,Chihuahua,Julimes
+160,MEX,70000000,70050000,70050494,Chihuahua,Madera,Chihuahua,Chihuahua,Madera
+161,MEX,70000000,70050000,70050500,Chihuahua,Manuel Benavides,Chihuahua,Chihuahua,Manuel Benavides
+162,MEX,70000000,70050000,70050510,Chihuahua,Matachí,Chihuahua,Chihuahua,Matachí
+163,MEX,70000000,70050000,70050522,Chihuahua,Meoqui,Chihuahua,Chihuahua,Meoqui
+164,MEX,70000000,70050000,70050553,Chihuahua,Morelos,Chihuahua,Chihuahua,Morelos
+165,MEX,70000000,70050000,70050554,Chihuahua,Moris,Chihuahua,Chihuahua,Moris
+166,MEX,70000000,70050000,70050570,Chihuahua,Namiquipa,Chihuahua,Chihuahua,Namiquipa
+167,MEX,70000000,70050000,70050586,Chihuahua,Nuevo Casas Grandes,Chihuahua,Chihuahua,Nuevo Casas Grandes
+168,MEX,70000000,70050000,70050600,Chihuahua,Ojinaga,Chihuahua,Chihuahua,Ojinaga
+169,MEX,70000000,70050000,70050647,Chihuahua,Praxedis G. Guerrero,Chihuahua,Chihuahua,Praxedis G. Guerrero
+170,MEX,70000000,70050000,70050675,Chihuahua,Riva Palacio,Chihuahua,Chihuahua,Riva Palacio
+171,MEX,70000000,70050000,70050677,Chihuahua,Rosales,Chihuahua,Chihuahua,Rosales
+172,MEX,70000000,70050000,70050863,Chihuahua,Saucillo,Chihuahua,Chihuahua,Saucillo
+173,MEX,70000000,70050000,70050293,Chihuahua,El Tule,Chihuahua,Chihuahua,El Tule
+174,MEX,70000000,70050000,70051039,Chihuahua,Urique,Chihuahua,Chihuahua,Urique
+175,MEX,70000000,70050000,70051041,Chihuahua,Uruachi,Chihuahua,Chihuahua,Uruachi
+176,MEX,70000000,70080000,70080103,Distrito Federal,Azcapotzalco,Distrito Federal,Distrito Federal,Azcapotzalco
+177,MEX,70000000,70080000,70080237,Distrito Federal,Coyoacán,Distrito Federal,Distrito Federal,Coyoacán
+178,MEX,70000000,70080000,70080243,Distrito Federal,Cuajimalpa de Morelos,Distrito Federal,Distrito Federal,Cuajimalpa de Morelos
+179,MEX,70000000,70080000,70080344,Distrito Federal,Gustavo A. Madero,Distrito Federal,Distrito Federal,Gustavo A. Madero
+180,MEX,70000000,70080000,70080416,Distrito Federal,Iztacalco,Distrito Federal,Distrito Federal,Iztacalco
+181,MEX,70000000,70080000,70080417,Distrito Federal,Iztapalapa,Distrito Federal,Distrito Federal,Iztapalapa
+182,MEX,70000000,70080000,70080463,Distrito Federal,La Magdalena Contreras,Distrito Federal,Distrito Federal,La Magdalena Contreras
+183,MEX,70000000,70080000,70080533,Distrito Federal,Milpa Alta,Distrito Federal,Distrito Federal,Milpa Alta
+184,MEX,70000000,70080000,70081145,Distrito Federal,Álvaro Obregón,Distrito Federal,Distrito Federal,Álvaro Obregón
+185,MEX,70000000,70080000,70081007,Distrito Federal,Tláhuac,Distrito Federal,Distrito Federal,Tláhuac
+186,MEX,70000000,70080000,70080993,Distrito Federal,Tlalpan,Distrito Federal,Distrito Federal,Tlalpan
+187,MEX,70000000,70080000,70081096,Distrito Federal,Xochimilco,Distrito Federal,Distrito Federal,Xochimilco
+188,MEX,70000000,70080000,70080112,Distrito Federal,Benito Juárez,Distrito Federal,Distrito Federal,Benito Juárez
+189,MEX,70000000,70080000,70080247,Distrito Federal,Cuauhtémoc,Distrito Federal,Distrito Federal,Cuauhtémoc
+190,MEX,70000000,70080000,70080532,Distrito Federal,Miguel Hidalgo,Distrito Federal,Distrito Federal,Miguel Hidalgo
+191,MEX,70000000,70080000,70081052,Distrito Federal,Venustiano Carranza,Distrito Federal,Distrito Federal,Venustiano Carranza
+192,MEX,70000000,70090000,70090139,Durango,Canatlán,Durango,Durango,Canatlán
+193,MEX,70000000,70090000,70090141,Durango,Canelas,Durango,Durango,Canelas
+194,MEX,70000000,70090000,70090220,Durango,Coneto de Comonfort,Durango,Durango,Coneto de Comonfort
+195,MEX,70000000,70090000,70090255,Durango,Cuencamé,Durango,Durango,Cuencamé
+196,MEX,70000000,70090000,70090275,Durango,Durango,Durango,Durango,Durango
+197,MEX,70000000,70090000,70090325,Durango,General Simón Bolívar,Durango,Durango,General Simón Bolívar
+198,MEX,70000000,70090000,70090347,Durango,Gómez Palacio,Durango,Durango,Gómez Palacio
+199,MEX,70000000,70090000,70090335,Durango,Guadalupe Victoria,Durango,Durango,Guadalupe Victoria
+200,MEX,70000000,70090000,70090337,Durango,Guanaceví,Durango,Durango,Guanaceví
+201,MEX,70000000,70090000,70090477,Durango,Lerdo,Durango,Durango,Lerdo
+202,MEX,70000000,70090000,70090504,Durango,Mapimí,Durango,Durango,Mapimí
+203,MEX,70000000,70090000,70090584,Durango,Nombre de Dios,Durango,Durango,Nombre de Dios
+204,MEX,70000000,70090000,70090290,Durango,El Oro,Durango,Durango,El Oro
+205,MEX,70000000,70090000,70090661,Durango,Pánuco de Coronado,Durango,Durango,Pánuco de Coronado
+206,MEX,70000000,70090000,70090635,Durango,Peñón Blanco,Durango,Durango,Peñón Blanco
+207,MEX,70000000,70090000,70090643,Durango,Poanas,Durango,Durango,Poanas
+208,MEX,70000000,70090000,70090651,Durango,Pueblo Nuevo,Durango,Durango,Pueblo Nuevo
+209,MEX,70000000,70090000,70090676,Durango,Rodeo,Durango,Durango,Rodeo
+210,MEX,70000000,70090000,70090720,Durango,San Dimas,Durango,Durango,San Dimas
+211,MEX,70000000,70090000,70090755,Durango,San Juan de Guadalupe,Durango,Durango,San Juan de Guadalupe
+212,MEX,70000000,70090000,70090758,Durango,San Juan del Río,Durango,Durango,San Juan del Río
+213,MEX,70000000,70090000,70090815,Durango,Santa Clara,Durango,Durango,Santa Clara
+214,MEX,70000000,70090000,70090852,Durango,Santiago Papasquiaro,Durango,Durango,Santiago Papasquiaro
+215,MEX,70000000,70090000,70090946,Durango,Tepehuanes,Durango,Durango,Tepehuanes
+216,MEX,70000000,70090000,70090987,Durango,Tlahualilo,Durango,Durango,Tlahualilo
+217,MEX,70000000,70090000,70091054,Durango,Vicente Guerrero,Durango,Durango,Vicente Guerrero
+218,MEX,70000000,70090000,70090587,Durango,Nuevo Ideal,Durango,Durango,Nuevo Ideal
+219,MEX,70000000,70100000,70100001,Guanajuato,Abasolo,Guanajuato,Guanajuato,Abasolo
+220,MEX,70000000,70100000,70100020,Guanajuato,Acámbaro,Guanajuato,Guanajuato,Acámbaro
+221,MEX,70000000,70100000,70100780,Guanajuato,San Miguel de Allende,Guanajuato,Guanajuato,San Miguel de Allende
+222,MEX,70000000,70100000,70100060,Guanajuato,Apaseo el Grande,Guanajuato,Guanajuato,Apaseo el Grande
+223,MEX,70000000,70100000,70100080,Guanajuato,Atarjea,Guanajuato,Guanajuato,Atarjea
+224,MEX,70000000,70100000,70100152,Guanajuato,Celaya,Guanajuato,Guanajuato,Celaya
+225,MEX,70000000,70100000,70100501,Guanajuato,Manuel Doblado,Guanajuato,Guanajuato,Manuel Doblado
+226,MEX,70000000,70100000,70100217,Guanajuato,Comonfort,Guanajuato,Guanajuato,Comonfort
+227,MEX,70000000,70100000,70100230,Guanajuato,Cortazar,Guanajuato,Guanajuato,Cortazar
+228,MEX,70000000,70100000,70100257,Guanajuato,Cuerámaro,Guanajuato,Guanajuato,Cuerámaro
+229,MEX,70000000,70100000,70100270,Guanajuato,Dolores Hidalgo Cuna de la Independencia Nacional,Guanajuato,Guanajuato,Dolores Hidalgo Cuna de la Independencia Nacional
+230,MEX,70000000,70100000,70100338,Guanajuato,Guanajuato,Guanajuato,Guanajuato,Guanajuato
+231,MEX,70000000,70100000,70100394,Guanajuato,Irapuato,Guanajuato,Guanajuato,Irapuato
+232,MEX,70000000,70100000,70100480,Guanajuato,León,Guanajuato,Guanajuato,León
+233,MEX,70000000,70100000,70100555,Guanajuato,Moroleón,Guanajuato,Guanajuato,Moroleón
+234,MEX,70000000,70100000,70100663,Guanajuato,Pénjamo,Guanajuato,Guanajuato,Pénjamo
+235,MEX,70000000,70100000,70100659,Guanajuato,Purísima del Rincón,Guanajuato,Guanajuato,Purísima del Rincón
+236,MEX,70000000,70100000,70100690,Guanajuato,Salamanca,Guanajuato,Guanajuato,Salamanca
+237,MEX,70000000,70100000,70100698,Guanajuato,Salvatierra,Guanajuato,Guanajuato,Salvatierra
+238,MEX,70000000,70100000,70100719,Guanajuato,San Diego de la Unión,Guanajuato,Guanajuato,San Diego de la Unión
+239,MEX,70000000,70100000,70100722,Guanajuato,San Felipe,Guanajuato,Guanajuato,San Felipe
+240,MEX,70000000,70100000,70100735,Guanajuato,San Francisco del Rincón,Guanajuato,Guanajuato,San Francisco del Rincón
+241,MEX,70000000,70100000,70100744,Guanajuato,San José Iturbide,Guanajuato,Guanajuato,San José Iturbide
+242,MEX,70000000,70100000,70100765,Guanajuato,San Luis de la Paz,Guanajuato,Guanajuato,San Luis de la Paz
+243,MEX,70000000,70100000,70100823,Guanajuato,Santa Cruz de Juventino Rosas,Guanajuato,Guanajuato,Santa Cruz de Juventino Rosas
+244,MEX,70000000,70100000,70100868,Guanajuato,Silao,Guanajuato,Guanajuato,Silao
+245,MEX,70000000,70100000,70100899,Guanajuato,Tarimoro,Guanajuato,Guanajuato,Tarimoro
+246,MEX,70000000,70100000,70101038,Guanajuato,Uriangato,Guanajuato,Guanajuato,Uriangato
+247,MEX,70000000,70100000,70101047,Guanajuato,Valle de Santiago,Guanajuato,Guanajuato,Valle de Santiago
+248,MEX,70000000,70100000,70101077,Guanajuato,Villagrán,Guanajuato,Guanajuato,Villagrán
+249,MEX,70000000,70100000,70101087,Guanajuato,Xichú,Guanajuato,Guanajuato,Xichú
+250,MEX,70000000,70100000,70101108,Guanajuato,Yuriria,Guanajuato,Guanajuato,Yuriria
+251,MEX,70000000,70110000,70110007,Guerrero,Acapulco de Juárez,Guerrero,Guerrero,Acapulco de Juárez
+252,MEX,70000000,70110000,70110028,Guerrero,Ahuacuotzingo,Guerrero,Guerrero,Ahuacuotzingo
+253,MEX,70000000,70110000,70110032,Guerrero,Ajuchitlán del Progreso,Guerrero,Guerrero,Ajuchitlán del Progreso
+254,MEX,70000000,70110000,70110034,Guerrero,Alcozauca de Guerrero,Guerrero,Guerrero,Alcozauca de Guerrero
+255,MEX,70000000,70110000,70110063,Guerrero,Apaxtla,Guerrero,Guerrero,Apaxtla
+256,MEX,70000000,70110000,70110072,Guerrero,Arcelia,Guerrero,Guerrero,Arcelia
+257,MEX,70000000,70110000,70110090,Guerrero,Atlixtac,Guerrero,Guerrero,Atlixtac
+258,MEX,70000000,70110000,70110096,Guerrero,Atoyac de Álvarez,Guerrero,Guerrero,Atoyac de Álvarez
+259,MEX,70000000,70110000,70110102,Guerrero,Ayutla de los Libres,Guerrero,Guerrero,Ayutla de los Libres
+260,MEX,70000000,70110000,70110104,Guerrero,Azoyú,Guerrero,Guerrero,Azoyú
+261,MEX,70000000,70110000,70110112,Guerrero,Benito Juárez,Guerrero,Guerrero,Benito Juárez
+262,MEX,70000000,70110000,70110224,Guerrero,Copala,Guerrero,Guerrero,Copala
+263,MEX,70000000,70110000,70110225,Guerrero,Copanatoyac,Guerrero,Guerrero,Copanatoyac
+264,MEX,70000000,70110000,70110240,Guerrero,Coyuca de Benítez,Guerrero,Guerrero,Coyuca de Benítez
+265,MEX,70000000,70110000,70110241,Guerrero,Coyuca de Catalán,Guerrero,Guerrero,Coyuca de Catalán
+266,MEX,70000000,70110000,70110244,Guerrero,Cuajinicuilapa,Guerrero,Guerrero,Cuajinicuilapa
+267,MEX,70000000,70110000,70110248,Guerrero,Cuautepec,Guerrero,Guerrero,Cuautepec
+268,MEX,70000000,70110000,70110264,Guerrero,Cutzamala de Pinzón,Guerrero,Guerrero,Cutzamala de Pinzón
+269,MEX,70000000,70110000,70110184,Guerrero,Chilapa de Álvarez,Guerrero,Guerrero,Chilapa de Álvarez
+270,MEX,70000000,70110000,70110187,Guerrero,Chilpancingo de los Bravo,Guerrero,Guerrero,Chilpancingo de los Bravo
+271,MEX,70000000,70110000,70110310,Guerrero,Florencio Villarreal,Guerrero,Guerrero,Florencio Villarreal
+272,MEX,70000000,70110000,70110323,Guerrero,General Heliodoro Castillo,Guerrero,Guerrero,General Heliodoro Castillo
+273,MEX,70000000,70110000,70110363,Guerrero,Huamuxtitlán,Guerrero,Guerrero,Huamuxtitlán
+274,MEX,70000000,70110000,70110385,Guerrero,Huitzuco de los Figueroa,Guerrero,Guerrero,Huitzuco de los Figueroa
+275,MEX,70000000,70110000,70110390,Guerrero,Iguala de la Independencia,Guerrero,Guerrero,Iguala de la Independencia
+276,MEX,70000000,70110000,70110391,Guerrero,Igualapa,Guerrero,Guerrero,Igualapa
+277,MEX,70000000,70110000,70111129,Guerrero,Zihuatanejo de Azueta,Guerrero,Guerrero,Zihuatanejo de Azueta
+278,MEX,70000000,70110000,70110449,Guerrero,Juan R. Escudero,Guerrero,Guerrero,Juan R. Escudero
+279,MEX,70000000,70110000,70110476,Guerrero,Leonardo Bravo,Guerrero,Guerrero,Leonardo Bravo
+280,MEX,70000000,70110000,70110497,Guerrero,Malinaltepec,Guerrero,Guerrero,Malinaltepec
+281,MEX,70000000,70110000,70110561,Guerrero,Mártir de Cuilapan,Guerrero,Guerrero,Mártir de Cuilapan
+282,MEX,70000000,70110000,70110544,Guerrero,Mochitlán,Guerrero,Guerrero,Mochitlán
+283,MEX,70000000,70110000,70110603,Guerrero,Ometepec,Guerrero,Guerrero,Ometepec
+284,MEX,70000000,70110000,70110631,Guerrero,Petatlán,Guerrero,Guerrero,Petatlán
+285,MEX,70000000,70110000,70110657,Guerrero,Pungarabato,Guerrero,Guerrero,Pungarabato
+286,MEX,70000000,70110000,70110762,Guerrero,San Luis Acatlán,Guerrero,Guerrero,San Luis Acatlán
+287,MEX,70000000,70110000,70110766,Guerrero,San Marcos,Guerrero,Guerrero,San Marcos
+288,MEX,70000000,70110000,70110778,Guerrero,San Miguel Totolapan,Guerrero,Guerrero,San Miguel Totolapan
+289,MEX,70000000,70110000,70110902,Guerrero,Taxco de Alarcón,Guerrero,Guerrero,Taxco de Alarcón
+290,MEX,70000000,70110000,70111033,Guerrero,Técpan de Galeana,Guerrero,Guerrero,Técpan de Galeana
+291,MEX,70000000,70110000,70110920,Guerrero,Teloloapan,Guerrero,Guerrero,Teloloapan
+292,MEX,70000000,70110000,70110985,Guerrero,Tlacoachistlahuaca,Guerrero,Guerrero,Tlacoachistlahuaca
+293,MEX,70000000,70110000,70110999,Guerrero,Tlapa de Comonfort,Guerrero,Guerrero,Tlapa de Comonfort
+294,MEX,70000000,70110000,70111085,Guerrero,Xalpatláhuac,Guerrero,Guerrero,Xalpatláhuac
+295,MEX,70000000,70110000,70111097,Guerrero,Xochistlahuaca,Guerrero,Guerrero,Xochistlahuaca
+296,MEX,70000000,70110000,70111120,Guerrero,Zapotitlán Tablas,Guerrero,Guerrero,Zapotitlán Tablas
+297,MEX,70000000,70110000,70110507,Guerrero,Marquelia,Guerrero,Guerrero,Marquelia
+298,MEX,70000000,70120000,70120008,Hidalgo,Acatlán,Hidalgo,Hidalgo,Acatlán
+299,MEX,70000000,70120000,70120011,Hidalgo,Acaxochitlán,Hidalgo,Hidalgo,Acaxochitlán
+300,MEX,70000000,70120000,70120021,Hidalgo,Agua Blanca de Iturbide,Hidalgo,Hidalgo,Agua Blanca de Iturbide
+301,MEX,70000000,70120000,70120037,Hidalgo,Almoloya,Hidalgo,Hidalgo,Almoloya
+302,MEX,70000000,70120000,70120059,Hidalgo,Apan,Hidalgo,Hidalgo,Apan
+303,MEX,70000000,70120000,70120083,Hidalgo,Atitalaquia,Hidalgo,Hidalgo,Atitalaquia
+304,MEX,70000000,70120000,70120094,Hidalgo,Atotonilco el Grande,Hidalgo,Hidalgo,Atotonilco el Grande
+305,MEX,70000000,70120000,70120092,Hidalgo,Atotonilco de Tula,Hidalgo,Hidalgo,Atotonilco de Tula
+306,MEX,70000000,70120000,70120249,Hidalgo,Cuautepec de Hinojosa,Hidalgo,Hidalgo,Cuautepec de Hinojosa
+307,MEX,70000000,70120000,70120164,Hidalgo,Chapulhuacán,Hidalgo,Hidalgo,Chapulhuacán
+308,MEX,70000000,70120000,70120295,Hidalgo,Eloxochitlán,Hidalgo,Hidalgo,Eloxochitlán
+309,MEX,70000000,70120000,70120296,Hidalgo,Emiliano Zapata,Hidalgo,Hidalgo,Emiliano Zapata
+310,MEX,70000000,70120000,70120369,Hidalgo,Huautla,Hidalgo,Hidalgo,Huautla
+311,MEX,70000000,70120000,70120375,Hidalgo,Huejutla de Reyes,Hidalgo,Hidalgo,Huejutla de Reyes
+312,MEX,70000000,70120000,70120379,Hidalgo,Huichapan,Hidalgo,Hidalgo,Huichapan
+313,MEX,70000000,70120000,70120402,Hidalgo,Ixmiquilpan,Hidalgo,Hidalgo,Ixmiquilpan
+314,MEX,70000000,70120000,70120427,Hidalgo,Jaltocán,Hidalgo,Hidalgo,Jaltocán
+315,MEX,70000000,70120000,70120455,Hidalgo,Juárez Hidalgo,Hidalgo,Hidalgo,Juárez Hidalgo
+316,MEX,70000000,70120000,70120699,Hidalgo,San Agustín Metzquititlán,Hidalgo,Hidalgo,San Agustín Metzquititlán
+317,MEX,70000000,70120000,70120537,Hidalgo,Mineral del Chico,Hidalgo,Hidalgo,Mineral del Chico
+318,MEX,70000000,70120000,70120465,Hidalgo,La Misión,Hidalgo,Hidalgo,La Misión
+319,MEX,70000000,70120000,70120541,Hidalgo,Mixquiahuala de Juárez,Hidalgo,Hidalgo,Mixquiahuala de Juárez
+320,MEX,70000000,70120000,70120724,Hidalgo,San Felipe Orizatlán,Hidalgo,Hidalgo,San Felipe Orizatlán
+321,MEX,70000000,70120000,70120613,Hidalgo,Pachuca de Soto,Hidalgo,Hidalgo,Pachuca de Soto
+322,MEX,70000000,70120000,70120649,Hidalgo,Progreso de Obregón,Hidalgo,Hidalgo,Progreso de Obregón
+323,MEX,70000000,70120000,70120536,Hidalgo,Mineral de la Reforma,Hidalgo,Hidalgo,Mineral de la Reforma
+324,MEX,70000000,70120000,70120711,Hidalgo,San Bartolo Tutotepec,Hidalgo,Hidalgo,San Bartolo Tutotepec
+325,MEX,70000000,70120000,70120799,Hidalgo,San Salvador,Hidalgo,Hidalgo,San Salvador
+326,MEX,70000000,70120000,70120910,Hidalgo,Tecozautla,Hidalgo,Hidalgo,Tecozautla
+327,MEX,70000000,70120000,70120944,Hidalgo,Tepeapulco,Hidalgo,Hidalgo,Tepeapulco
+328,MEX,70000000,70120000,70120947,Hidalgo,Tepeji del Río de Ocampo,Hidalgo,Hidalgo,Tepeji del Río de Ocampo
+329,MEX,70000000,70120000,70120969,Hidalgo,Tezontepec de Aldama,Hidalgo,Hidalgo,Tezontepec de Aldama
+330,MEX,70000000,70120000,70120983,Hidalgo,Tizayuca,Hidalgo,Hidalgo,Tizayuca
+331,MEX,70000000,70120000,70121005,Hidalgo,Tlaxcoapan,Hidalgo,Hidalgo,Tlaxcoapan
+332,MEX,70000000,70120000,70121020,Hidalgo,Tula de Allende,Hidalgo,Hidalgo,Tula de Allende
+333,MEX,70000000,70120000,70121021,Hidalgo,Tulancingo de Bravo,Hidalgo,Hidalgo,Tulancingo de Bravo
+334,MEX,70000000,70120000,70121100,Hidalgo,Yahualica,Hidalgo,Hidalgo,Yahualica
+335,MEX,70000000,70120000,70121116,Hidalgo,Zacualtipán de Ángeles,Hidalgo,Hidalgo,Zacualtipán de Ángeles
+336,MEX,70000000,70120000,70121122,Hidalgo,Zapotlán de Juárez,Hidalgo,Hidalgo,Zapotlán de Juárez
+337,MEX,70000000,70120000,70121127,Hidalgo,Zempoala,Hidalgo,Hidalgo,Zempoala
+338,MEX,70000000,70120000,70121132,Hidalgo,Zimapán,Hidalgo,Hidalgo,Zimapán
+339,MEX,70000000,70130000,70130071,Jalisco,Arandas,Jalisco,Jalisco,Arandas
+340,MEX,70000000,70130000,70130093,Jalisco,Atotonilco el Alto,Jalisco,Jalisco,Atotonilco el Alto
+341,MEX,70000000,70130000,70130097,Jalisco,Autlán de Navarro,Jalisco,Jalisco,Autlán de Navarro
+342,MEX,70000000,70130000,70130101,Jalisco,Ayotlán,Jalisco,Jalisco,Ayotlán
+343,MEX,70000000,70130000,70130459,Jalisco,La Barca,Jalisco,Jalisco,La Barca
+344,MEX,70000000,70130000,70130145,Jalisco,Casimiro Castillo,Jalisco,Jalisco,Casimiro Castillo
+345,MEX,70000000,70130000,70131124,Jalisco,Zapotlán el Grande,Jalisco,Jalisco,Zapotlán el Grande
+346,MEX,70000000,70130000,70130208,Jalisco,Cocula,Jalisco,Jalisco,Cocula
+347,MEX,70000000,70130000,70130262,Jalisco,Cuquío,Jalisco,Jalisco,Cuquío
+348,MEX,70000000,70130000,70130190,Jalisco,Chiquilistlán,Jalisco,Jalisco,Chiquilistlán
+349,MEX,70000000,70130000,70130298,Jalisco,Encarnación de Díaz,Jalisco,Jalisco,Encarnación de Díaz
+350,MEX,70000000,70130000,70130307,Jalisco,Etzatlán,Jalisco,Jalisco,Etzatlán
+351,MEX,70000000,70130000,70130331,Jalisco,Guachinango,Jalisco,Jalisco,Guachinango
+352,MEX,70000000,70130000,70130333,Jalisco,Guadalajara,Jalisco,Jalisco,Guadalajara
+353,MEX,70000000,70130000,70130412,Jalisco,Ixtlahuacán de los Membrillos,Jalisco,Jalisco,Ixtlahuacán de los Membrillos
+354,MEX,70000000,70130000,70130413,Jalisco,Ixtlahuacán del Río,Jalisco,Jalisco,Ixtlahuacán del Río
+355,MEX,70000000,70130000,70130439,Jalisco,Jocotepec,Jalisco,Jalisco,Jocotepec
+356,MEX,70000000,70130000,70130470,Jalisco,Lagos de Moreno,Jalisco,Jalisco,Lagos de Moreno
+357,MEX,70000000,70130000,70130509,Jalisco,Mascota,Jalisco,Jalisco,Mascota
+358,MEX,70000000,70130000,70130527,Jalisco,Mezquitic,Jalisco,Jalisco,Mezquitic
+359,MEX,70000000,70130000,70130543,Jalisco,Mixtlán,Jalisco,Jalisco,Mixtlán
+360,MEX,70000000,70130000,70130593,Jalisco,Ocotlán,Jalisco,Jalisco,Ocotlán
+361,MEX,70000000,70130000,70130602,Jalisco,Ojuelos de Jalisco,Jalisco,Jalisco,Ojuelos de Jalisco
+362,MEX,70000000,70130000,70130645,Jalisco,Poncitlán,Jalisco,Jalisco,Poncitlán
+363,MEX,70000000,70130000,70130656,Jalisco,Puerto Vallarta,Jalisco,Jalisco,Puerto Vallarta
+364,MEX,70000000,70130000,70131062,Jalisco,Villa Purificación,Jalisco,Jalisco,Villa Purificación
+365,MEX,70000000,70130000,70130669,Jalisco,Quitupan,Jalisco,Jalisco,Quitupan
+366,MEX,70000000,70130000,70130292,Jalisco,El Salto,Jalisco,Jalisco,El Salto
+367,MEX,70000000,70130000,70130716,Jalisco,San Cristóbal de la Barranca,Jalisco,Jalisco,San Cristóbal de la Barranca
+368,MEX,70000000,70130000,70130757,Jalisco,San Juan de los Lagos,Jalisco,Jalisco,San Juan de los Lagos
+369,MEX,70000000,70130000,70130769,Jalisco,San Martín Hidalgo,Jalisco,Jalisco,San Martín Hidalgo
+370,MEX,70000000,70130000,70130782,Jalisco,San Miguel el Alto,Jalisco,Jalisco,San Miguel el Alto
+371,MEX,70000000,70130000,70130886,Jalisco,Tala,Jalisco,Jalisco,Tala
+372,MEX,70000000,70130000,70130887,Jalisco,Talpa de Allende,Jalisco,Jalisco,Talpa de Allende
+373,MEX,70000000,70130000,70130907,Jalisco,Tecolotlán,Jalisco,Jalisco,Tecolotlán
+374,MEX,70000000,70130000,70130928,Jalisco,Tenamaxtlán,Jalisco,Jalisco,Tenamaxtlán
+375,MEX,70000000,70130000,70130931,Jalisco,Teocaltiche,Jalisco,Jalisco,Teocaltiche
+376,MEX,70000000,70130000,70130942,Jalisco,Tepatitlán de Morelos,Jalisco,Jalisco,Tepatitlán de Morelos
+377,MEX,70000000,70130000,70130958,Jalisco,Tequila,Jalisco,Jalisco,Tequila
+378,MEX,70000000,70130000,70130989,Jalisco,Tlajomulco de Zúñiga,Jalisco,Jalisco,Tlajomulco de Zúñiga
+379,MEX,70000000,70130000,70131000,Jalisco,Tlaquepaque,Jalisco,Jalisco,Tlaquepaque
+380,MEX,70000000,70130000,70131009,Jalisco,Tolimán,Jalisco,Jalisco,Tolimán
+381,MEX,70000000,70130000,70131011,Jalisco,Tomatlán,Jalisco,Jalisco,Tomatlán
+382,MEX,70000000,70130000,70131012,Jalisco,Tonalá,Jalisco,Jalisco,Tonalá
+383,MEX,70000000,70130000,70131027,Jalisco,Tuxpan,Jalisco,Jalisco,Tuxpan
+384,MEX,70000000,70130000,70131060,Jalisco,Villa Guerrero,Jalisco,Jalisco,Villa Guerrero
+385,MEX,70000000,70130000,70131061,Jalisco,Villa Hidalgo,Jalisco,Jalisco,Villa Hidalgo
+386,MEX,70000000,70130000,70131101,Jalisco,Yahualica de González Gallo,Jalisco,Jalisco,Yahualica de González Gallo
+387,MEX,70000000,70130000,70131118,Jalisco,Zapopan,Jalisco,Jalisco,Zapopan
+388,MEX,70000000,70130000,70131119,Jalisco,Zapotiltic,Jalisco,Jalisco,Zapotiltic
+389,MEX,70000000,70130000,70131121,Jalisco,Zapotitlán de Vadillo,Jalisco,Jalisco,Zapotitlán de Vadillo
+390,MEX,70000000,70130000,70131123,Jalisco,Zapotlán del Rey,Jalisco,Jalisco,Zapotlán del Rey
+391,MEX,70000000,70160000,70160004,México,Acambay,Mxico,México,Acambay
+392,MEX,70000000,70160000,70160013,México,Acolman,Mxico,México,Acolman
+393,MEX,70000000,70160000,70160018,México,Aculco,Mxico,México,Aculco
+394,MEX,70000000,70160000,70160038,México,Almoloya de Alquisiras,Mxico,México,Almoloya de Alquisiras
+395,MEX,70000000,70160000,70160039,México,Almoloya de Juárez,Mxico,México,Almoloya de Juárez
+396,MEX,70000000,70160000,70160047,México,Amatepec,Mxico,México,Amatepec
+397,MEX,70000000,70160000,70160052,México,Amecameca,Mxico,México,Amecameca
+398,MEX,70000000,70160000,70160062,México,Apaxco,Mxico,México,Apaxco
+399,MEX,70000000,70160000,70160082,México,Atenco,Mxico,México,Atenco
+400,MEX,70000000,70160000,70160084,México,Atizapán de Zaragoza,Mxico,México,Atizapán de Zaragoza
+401,MEX,70000000,70160000,70160085,México,Atlacomulco,Mxico,México,Atlacomulco
+402,MEX,70000000,70160000,70160130,México,Calimaya,Mxico,México,Calimaya
+403,MEX,70000000,70160000,70160142,México,Capulhuac,Mxico,México,Capulhuac
+404,MEX,70000000,70160000,70160202,México,Coacalco de Berriozábal,Mxico,México,Coacalco de Berriozábal
+405,MEX,70000000,70160000,70160239,México,Coyotepec,Mxico,México,Coyotepec
+406,MEX,70000000,70160000,70160250,México,Cuautitlán,Mxico,México,Cuautitlán
+407,MEX,70000000,70160000,70160161,México,Chalco,Mxico,México,Chalco
+408,MEX,70000000,70160000,70160165,México,Chapultepec,Mxico,México,Chapultepec
+409,MEX,70000000,70160000,70160173,México,Chiautla,Mxico,México,Chiautla
+410,MEX,70000000,70160000,70160175,México,Chicoloapan,Mxico,México,Chicoloapan
+411,MEX,70000000,70160000,70160178,México,Chiconcuac,Mxico,México,Chiconcuac
+412,MEX,70000000,70160000,70160188,México,Chimalhuacán,Mxico,México,Chimalhuacán
+413,MEX,70000000,70160000,70160271,México,Donato Guerra,Mxico,México,Donato Guerra
+414,MEX,70000000,70160000,70160279,México,Ecatepec de Morelos,Mxico,México,Ecatepec de Morelos
+415,MEX,70000000,70160000,70160372,México,Huehuetoca,Mxico,México,Huehuetoca
+416,MEX,70000000,70160000,70160386,México,Huixquilucan,Mxico,México,Huixquilucan
+417,MEX,70000000,70160000,70160407,México,Ixtapaluca,Mxico,México,Ixtapaluca
+418,MEX,70000000,70160000,70160408,México,Ixtapan de la Sal,Mxico,México,Ixtapan de la Sal
+419,MEX,70000000,70160000,70160410,México,Ixtlahuaca,Mxico,México,Ixtlahuaca
+420,MEX,70000000,70160000,70160426,México,Jaltenco,Mxico,México,Jaltenco
+421,MEX,70000000,70160000,70160433,México,Jilotepec,Mxico,México,Jilotepec
+422,MEX,70000000,70160000,70160434,México,Jilotzingo,Mxico,México,Jilotzingo
+423,MEX,70000000,70160000,70160440,México,Jocotitlán,Mxico,México,Jocotitlán
+424,MEX,70000000,70160000,70160444,México,Joquicingo,Mxico,México,Joquicingo
+425,MEX,70000000,70160000,70160451,México,Juchitepec,Mxico,México,Juchitepec
+426,MEX,70000000,70160000,70160479,México,Lerma,Mxico,México,Lerma
+427,MEX,70000000,70160000,70160521,México,Melchor Ocampo,Mxico,México,Melchor Ocampo
+428,MEX,70000000,70160000,70160524,México,Metepec,Mxico,México,Metepec
+429,MEX,70000000,70160000,70160553,México,Morelos,Mxico,México,Morelos
+430,MEX,70000000,70160000,70160575,México,Naucalpan de Juárez,Mxico,México,Naucalpan de Juárez
+431,MEX,70000000,70160000,70160580,México,Nezahualcóyotl,Mxico,México,Nezahualcóyotl
+432,MEX,70000000,70160000,70160581,México,Nicolás Romero,Mxico,México,Nicolás Romero
+433,MEX,70000000,70160000,70160585,México,Nopaltepec,Mxico,México,Nopaltepec
+434,MEX,70000000,70160000,70160595,México,Ocoyoacac,Mxico,México,Ocoyoacac
+435,MEX,70000000,70160000,70160598,México,Ocuilan,Mxico,México,Ocuilan
+436,MEX,70000000,70160000,70160290,México,El Oro,Mxico,México,El Oro
+437,MEX,70000000,70160000,70160608,México,Otzolotepec,Mxico,México,Otzolotepec
+438,MEX,70000000,70160000,70160611,México,Ozumba,Mxico,México,Ozumba
+439,MEX,70000000,70160000,70160466,México,La Paz,Mxico,México,La Paz
+440,MEX,70000000,70160000,70160644,México,Polotitlán,Mxico,México,Polotitlán
+441,MEX,70000000,70160000,70160728,México,San Felipe del Progreso,Mxico,México,San Felipe del Progreso
+442,MEX,70000000,70160000,70160771,México,San Mateo Atenco,Mxico,México,San Mateo Atenco
+443,MEX,70000000,70160000,70160881,México,Sultepec,Mxico,México,Sultepec
+444,MEX,70000000,70160000,70160913,México,Tecámac,Mxico,México,Tecámac
+445,MEX,70000000,70160000,70160915,México,Tejupilco,Mxico,México,Tejupilco
+446,MEX,70000000,70160000,70160921,México,Temascalapa,Mxico,México,Temascalapa
+447,MEX,70000000,70160000,70160922,México,Temascalcingo,Mxico,México,Temascalcingo
+448,MEX,70000000,70160000,70160925,México,Temoaya,Mxico,México,Temoaya
+449,MEX,70000000,70160000,70160929,México,Tenancingo,Mxico,México,Tenancingo
+450,MEX,70000000,70160000,70160934,México,Teoloyucan,Mxico,México,Teoloyucan
+451,MEX,70000000,70160000,70160936,México,Teotihuacán,Mxico,México,Teotihuacán
+452,MEX,70000000,70160000,70160949,México,Tepetlaoxtoc,Mxico,México,Tepetlaoxtoc
+453,MEX,70000000,70160000,70160950,México,Tepetlixpa,Mxico,México,Tepetlixpa
+454,MEX,70000000,70160000,70160956,México,Tepotzotlán,Mxico,México,Tepotzotlán
+455,MEX,70000000,70160000,70160960,México,Tequixquiac,Mxico,México,Tequixquiac
+456,MEX,70000000,70160000,70160967,México,Texcoco,Mxico,México,Texcoco
+457,MEX,70000000,70160000,70160970,México,Tezoyuca,Mxico,México,Tezoyuca
+458,MEX,70000000,70160000,70160977,México,Timilpan,Mxico,México,Timilpan
+459,MEX,70000000,70160000,70160991,México,Tlalmanalco,Mxico,México,Tlalmanalco
+460,MEX,70000000,70160000,70160992,México,Tlalnepantla de Baz,Mxico,México,Tlalnepantla de Baz
+461,MEX,70000000,70160000,70161010,México,Toluca,Mxico,México,Toluca
+462,MEX,70000000,70160000,70161013,México,Tonatico,Mxico,México,Tonatico
+463,MEX,70000000,70160000,70161023,México,Tultepec,Mxico,México,Tultepec
+464,MEX,70000000,70160000,70161024,México,Tultitlán,Mxico,México,Tultitlán
+465,MEX,70000000,70160000,70161045,México,Valle de Bravo,Mxico,México,Valle de Bravo
+466,MEX,70000000,70160000,70161075,México,Villa del Carbón,Mxico,México,Villa del Carbón
+467,MEX,70000000,70160000,70161065,México,Villa Victoria,Mxico,México,Villa Victoria
+468,MEX,70000000,70160000,70161134,México,Zinacantepec,Mxico,México,Zinacantepec
+469,MEX,70000000,70160000,70161142,México,Zumpahuacán,Mxico,México,Zumpahuacán
+470,MEX,70000000,70160000,70161143,México,Zumpango,Mxico,México,Zumpango
+471,MEX,70000000,70160000,70160251,México,Cuautitlán Izcalli,Mxico,México,Cuautitlán Izcalli
+472,MEX,70000000,70160000,70161046,México,Valle de Chalco Solidaridad,Mxico,México,Valle de Chalco Solidaridad
+473,MEX,70000000,70160000,70160491,México,Luvianos,Mxico,México,Luvianos
+474,MEX,70000000,70160000,70160747,México,San José del Rincón,Mxico,México,San José del Rincón
+475,MEX,70000000,70140000,70140055,Michoacán de Ocampo,Angamacutiro,Michoacn de Ocampo,Michoacán de Ocampo,Angamacutiro
+476,MEX,70000000,70140000,70140056,Michoacán de Ocampo,Angangueo,Michoacn de Ocampo,Michoacán de Ocampo,Angangueo
+477,MEX,70000000,70140000,70140061,Michoacán de Ocampo,Apatzingán,Michoacn de Ocampo,Michoacán de Ocampo,Apatzingán
+478,MEX,70000000,70140000,70140076,Michoacán de Ocampo,Arteaga,Michoacn de Ocampo,Michoacán de Ocampo,Arteaga
+479,MEX,70000000,70140000,70140118,Michoacán de Ocampo,Briseñas,Michoacn de Ocampo,Michoacán de Ocampo,Briseñas
+480,MEX,70000000,70140000,70140121,Michoacán de Ocampo,Buenavista,Michoacn de Ocampo,Michoacán de Ocampo,Buenavista
+481,MEX,70000000,70140000,70140209,Michoacán de Ocampo,Coeneo,Michoacn de Ocampo,Michoacán de Ocampo,Coeneo
+482,MEX,70000000,70140000,70140167,Michoacán de Ocampo,Chavinda,Michoacn de Ocampo,Michoacán de Ocampo,Chavinda
+483,MEX,70000000,70140000,70140170,Michoacán de Ocampo,Cherán,Michoacn de Ocampo,Michoacán de Ocampo,Cherán
+484,MEX,70000000,70140000,70140185,Michoacán de Ocampo,Chilchota,Michoacn de Ocampo,Michoacán de Ocampo,Chilchota
+485,MEX,70000000,70140000,70140280,Michoacán de Ocampo,Ecuandureo,Michoacn de Ocampo,Michoacán de Ocampo,Ecuandureo
+486,MEX,70000000,70140000,70140317,Michoacán de Ocampo,Gabriel Zamora,Michoacn de Ocampo,Michoacán de Ocampo,Gabriel Zamora
+487,MEX,70000000,70140000,70140355,Michoacán de Ocampo,Hidalgo,Michoacn de Ocampo,Michoacán de Ocampo,Hidalgo
+488,MEX,70000000,70140000,70140461,Michoacán de Ocampo,La Huacana,Michoacn de Ocampo,Michoacán de Ocampo,La Huacana
+489,MEX,70000000,70140000,70140364,Michoacán de Ocampo,Huandacareo,Michoacn de Ocampo,Michoacán de Ocampo,Huandacareo
+490,MEX,70000000,70140000,70140376,Michoacán de Ocampo,Huetamo,Michoacn de Ocampo,Michoacán de Ocampo,Huetamo
+491,MEX,70000000,70140000,70140393,Michoacán de Ocampo,Indaparapeo,Michoacn de Ocampo,Michoacán de Ocampo,Indaparapeo
+492,MEX,70000000,70140000,70140395,Michoacán de Ocampo,Irimbo,Michoacn de Ocampo,Michoacán de Ocampo,Irimbo
+493,MEX,70000000,70140000,70140419,Michoacán de Ocampo,Jacona,Michoacn de Ocampo,Michoacán de Ocampo,Jacona
+494,MEX,70000000,70140000,70140453,Michoacán de Ocampo,Jungapeo,Michoacn de Ocampo,Michoacán de Ocampo,Jungapeo
+495,MEX,70000000,70140000,70140505,Michoacán de Ocampo,Maravatío,Michoacn de Ocampo,Michoacán de Ocampo,Maravatío
+496,MEX,70000000,70140000,70140492,Michoacán de Ocampo,Lázaro Cárdenas,Michoacn de Ocampo,Michoacán de Ocampo,Lázaro Cárdenas
+497,MEX,70000000,70140000,70140552,Michoacán de Ocampo,Morelia,Michoacn de Ocampo,Michoacán de Ocampo,Morelia
+498,MEX,70000000,70140000,70140565,Michoacán de Ocampo,Múgica,Michoacn de Ocampo,Michoacán de Ocampo,Múgica
+499,MEX,70000000,70140000,70140589,Michoacán de Ocampo,Nuevo Parangaricutiro,Michoacn de Ocampo,Michoacán de Ocampo,Nuevo Parangaricutiro
+500,MEX,70000000,70140000,70140591,Michoacán de Ocampo,Ocampo,Michoacn de Ocampo,Michoacán de Ocampo,Ocampo
+501,MEX,70000000,70140000,70140618,Michoacán de Ocampo,Panindícuaro,Michoacn de Ocampo,Michoacán de Ocampo,Panindícuaro
+502,MEX,70000000,70140000,70140626,Michoacán de Ocampo,Parácuaro,Michoacn de Ocampo,Michoacán de Ocampo,Parácuaro
+503,MEX,70000000,70140000,70140623,Michoacán de Ocampo,Paracho,Michoacn de Ocampo,Michoacán de Ocampo,Paracho
+504,MEX,70000000,70140000,70140662,Michoacán de Ocampo,Pátzcuaro,Michoacn de Ocampo,Michoacán de Ocampo,Pátzcuaro
+505,MEX,70000000,70140000,70140628,Michoacán de Ocampo,Penjamillo,Michoacn de Ocampo,Michoacán de Ocampo,Penjamillo
+506,MEX,70000000,70140000,70140467,Michoacán de Ocampo,La Piedad,Michoacn de Ocampo,Michoacán de Ocampo,La Piedad
+507,MEX,70000000,70140000,70140658,Michoacán de Ocampo,Puruándiro,Michoacn de Ocampo,Michoacán de Ocampo,Puruándiro
+508,MEX,70000000,70140000,70140668,Michoacán de Ocampo,Quiroga,Michoacn de Ocampo,Michoacán de Ocampo,Quiroga
+509,MEX,70000000,70140000,70140210,Michoacán de Ocampo,Cojumatlán de Régules,Michoacn de Ocampo,Michoacán de Ocampo,Cojumatlán de Régules
+510,MEX,70000000,70140000,70140490,Michoacán de Ocampo,Los Reyes,Michoacn de Ocampo,Michoacán de Ocampo,Los Reyes
+511,MEX,70000000,70140000,70140688,Michoacán de Ocampo,Sahuayo,Michoacn de Ocampo,Michoacán de Ocampo,Sahuayo
+512,MEX,70000000,70140000,70140697,Michoacán de Ocampo,Salvador Escalante,Michoacn de Ocampo,Michoacán de Ocampo,Salvador Escalante
+513,MEX,70000000,70140000,70140865,Michoacán de Ocampo,Senguio,Michoacn de Ocampo,Michoacán de Ocampo,Senguio
+514,MEX,70000000,70140000,70140882,Michoacán de Ocampo,Susupuato,Michoacn de Ocampo,Michoacán de Ocampo,Susupuato
+515,MEX,70000000,70140000,70140884,Michoacán de Ocampo,Tacámbaro,Michoacn de Ocampo,Michoacán de Ocampo,Tacámbaro
+516,MEX,70000000,70140000,70140894,Michoacán de Ocampo,Tangancícuaro,Michoacn de Ocampo,Michoacán de Ocampo,Tangancícuaro
+517,MEX,70000000,70140000,70140900,Michoacán de Ocampo,Tarímbaro,Michoacn de Ocampo,Michoacán de Ocampo,Tarímbaro
+518,MEX,70000000,70140000,70140940,Michoacán de Ocampo,Tepalcatepec,Michoacn de Ocampo,Michoacán de Ocampo,Tepalcatepec
+519,MEX,70000000,70140000,70140979,Michoacán de Ocampo,Tingambato,Michoacn de Ocampo,Michoacán de Ocampo,Tingambato
+520,MEX,70000000,70140000,70140980,Michoacán de Ocampo,Tingüindín,Michoacn de Ocampo,Michoacán de Ocampo,Tingüindín
+521,MEX,70000000,70140000,70140994,Michoacán de Ocampo,Tlalpujahua,Michoacn de Ocampo,Michoacán de Ocampo,Tlalpujahua
+522,MEX,70000000,70140000,70141026,Michoacán de Ocampo,Turicato,Michoacn de Ocampo,Michoacán de Ocampo,Turicato
+523,MEX,70000000,70140000,70141027,Michoacán de Ocampo,Tuxpan,Michoacn de Ocampo,Michoacán de Ocampo,Tuxpan
+524,MEX,70000000,70140000,70141029,Michoacán de Ocampo,Tuzantla,Michoacn de Ocampo,Michoacán de Ocampo,Tuzantla
+525,MEX,70000000,70140000,70141030,Michoacán de Ocampo,Tzintzuntzan,Michoacn de Ocampo,Michoacán de Ocampo,Tzintzuntzan
+526,MEX,70000000,70140000,70141042,Michoacán de Ocampo,Uruapan,Michoacn de Ocampo,Michoacán de Ocampo,Uruapan
+527,MEX,70000000,70140000,70141079,Michoacán de Ocampo,Villamar,Michoacn de Ocampo,Michoacán de Ocampo,Villamar
+528,MEX,70000000,70140000,70141081,Michoacán de Ocampo,Vista Hermosa,Michoacn de Ocampo,Michoacán de Ocampo,Vista Hermosa
+529,MEX,70000000,70140000,70141110,Michoacán de Ocampo,Zacapu,Michoacn de Ocampo,Michoacán de Ocampo,Zacapu
+530,MEX,70000000,70140000,70141117,Michoacán de Ocampo,Zamora,Michoacn de Ocampo,Michoacán de Ocampo,Zamora
+531,MEX,70000000,70140000,70141137,Michoacán de Ocampo,Zináparo,Michoacn de Ocampo,Michoacán de Ocampo,Zináparo
+532,MEX,70000000,70140000,70141138,Michoacán de Ocampo,Ziracuaretiro,Michoacn de Ocampo,Michoacán de Ocampo,Ziracuaretiro
+533,MEX,70000000,70140000,70141139,Michoacán de Ocampo,Zitácuaro,Michoacn de Ocampo,Michoacán de Ocampo,Zitácuaro
+534,MEX,70000000,70150000,70150046,Morelos,Amacuzac,Morelos,Morelos,Amacuzac
+535,MEX,70000000,70150000,70150087,Morelos,Atlatlahucan,Morelos,Morelos,Atlatlahucan
+536,MEX,70000000,70150000,70150098,Morelos,Axochiapan,Morelos,Morelos,Axochiapan
+537,MEX,70000000,70150000,70150100,Morelos,Ayala,Morelos,Morelos,Ayala
+538,MEX,70000000,70150000,70150205,Morelos,Coatlán del Río,Morelos,Morelos,Coatlán del Río
+539,MEX,70000000,70150000,70150252,Morelos,Cuautla,Morelos,Morelos,Cuautla
+540,MEX,70000000,70150000,70150256,Morelos,Cuernavaca,Morelos,Morelos,Cuernavaca
+541,MEX,70000000,70150000,70150296,Morelos,Emiliano Zapata,Morelos,Morelos,Emiliano Zapata
+542,MEX,70000000,70150000,70150384,Morelos,Huitzilac,Morelos,Morelos,Huitzilac
+543,MEX,70000000,70150000,70150429,Morelos,Jantetelco,Morelos,Morelos,Jantetelco
+544,MEX,70000000,70150000,70150438,Morelos,Jiutepec,Morelos,Morelos,Jiutepec
+545,MEX,70000000,70150000,70150441,Morelos,Jojutla,Morelos,Morelos,Jojutla
+546,MEX,70000000,70150000,70150518,Morelos,Mazatepec,Morelos,Morelos,Mazatepec
+547,MEX,70000000,70150000,70150528,Morelos,Miacatlán,Morelos,Morelos,Miacatlán
+548,MEX,70000000,70150000,70150599,Morelos,Ocuituco,Morelos,Morelos,Ocuituco
+549,MEX,70000000,70150000,70150654,Morelos,Puente de Ixtla,Morelos,Morelos,Puente de Ixtla
+550,MEX,70000000,70150000,70150923,Morelos,Temixco,Morelos,Morelos,Temixco
+551,MEX,70000000,70150000,70150941,Morelos,Tepalcingo,Morelos,Morelos,Tepalcingo
+552,MEX,70000000,70150000,70150957,Morelos,Tepoztlán,Morelos,Morelos,Tepoztlán
+553,MEX,70000000,70150000,70150963,Morelos,Tetela del Volcán,Morelos,Morelos,Tetela del Volcán
+554,MEX,70000000,70150000,70150997,Morelos,Tlaltizapán,Morelos,Morelos,Tlaltizapán
+555,MEX,70000000,70150000,70151001,Morelos,Tlaquiltenango,Morelos,Morelos,Tlaquiltenango
+556,MEX,70000000,70150000,70151006,Morelos,Tlayacapan,Morelos,Morelos,Tlayacapan
+557,MEX,70000000,70150000,70151098,Morelos,Xochitepec,Morelos,Morelos,Xochitepec
+558,MEX,70000000,70150000,70151104,Morelos,Yautepec,Morelos,Morelos,Yautepec
+559,MEX,70000000,70150000,70151106,Morelos,Yecapixtla,Morelos,Morelos,Yecapixtla
+560,MEX,70000000,70150000,70151113,Morelos,Zacatepec,Morelos,Morelos,Zacatepec
+561,MEX,70000000,70150000,70151115,Morelos,Zacualpan,Morelos,Morelos,Zacualpan
+562,MEX,70000000,70150000,70150924,Morelos,Temoac,Morelos,Morelos,Temoac
+563,MEX,70000000,70170000,70170006,Nayarit,Acaponeta,Nayarit,Nayarit,Acaponeta
+564,MEX,70000000,70170000,70170027,Nayarit,Ahuacatlán,Nayarit,Nayarit,Ahuacatlán
+565,MEX,70000000,70170000,70170048,Nayarit,Amatlán de Cañas,Nayarit,Nayarit,Amatlán de Cañas
+566,MEX,70000000,70170000,70170218,Nayarit,Compostela,Nayarit,Nayarit,Compostela
+567,MEX,70000000,70170000,70170361,Nayarit,Huajicori,Nayarit,Nayarit,Huajicori
+568,MEX,70000000,70170000,70170414,Nayarit,Ixtlán del Río,Nayarit,Nayarit,Ixtlán del Río
+569,MEX,70000000,70170000,70170420,Nayarit,Jala,Nayarit,Nayarit,Jala
+570,MEX,70000000,70170000,70171083,Nayarit,Xalisco,Nayarit,Nayarit,Xalisco
+571,MEX,70000000,70170000,70170268,Nayarit,Del Nayar,Nayarit,Nayarit,Del Nayar
+572,MEX,70000000,70170000,70170678,Nayarit,Rosamorada,Nayarit,Nayarit,Rosamorada
+573,MEX,70000000,70170000,70170680,Nayarit,Ruíz,Nayarit,Nayarit,Ruíz
+574,MEX,70000000,70170000,70170712,Nayarit,San Blas,Nayarit,Nayarit,San Blas
+575,MEX,70000000,70170000,70170793,Nayarit,San Pedro Lagunillas,Nayarit,Nayarit,San Pedro Lagunillas
+576,MEX,70000000,70170000,70170840,Nayarit,Santa María del Oro,Nayarit,Nayarit,Santa María del Oro
+577,MEX,70000000,70170000,70170846,Nayarit,Santiago Ixcuintla,Nayarit,Nayarit,Santiago Ixcuintla
+578,MEX,70000000,70170000,70170912,Nayarit,Tecuala,Nayarit,Nayarit,Tecuala
+579,MEX,70000000,70170000,70170955,Nayarit,Tepic,Nayarit,Nayarit,Tepic
+580,MEX,70000000,70170000,70171027,Nayarit,Tuxpan,Nayarit,Nayarit,Tuxpan
+581,MEX,70000000,70170000,70170469,Nayarit,La Yesca,Nayarit,Nayarit,La Yesca
+582,MEX,70000000,70170000,70170106,Nayarit,Bahía de Banderas,Nayarit,Nayarit,Bahía de Banderas
+583,MEX,70000000,70180000,70180024,Nuevo León,Agualeguas,Nuevo Len,Nuevo León,Agualeguas
+584,MEX,70000000,70180000,70180486,Nuevo León,Los Aldamas,Nuevo Len,Nuevo León,Los Aldamas
+585,MEX,70000000,70180000,70180036,Nuevo León,Allende,Nuevo Len,Nuevo León,Allende
+586,MEX,70000000,70180000,70180058,Nuevo León,Anáhuac,Nuevo Len,Nuevo León,Anáhuac
+587,MEX,70000000,70180000,70180066,Nuevo León,Apodaca,Nuevo Len,Nuevo León,Apodaca
+588,MEX,70000000,70180000,70180070,Nuevo León,Aramberri,Nuevo Len,Nuevo León,Aramberri
+589,MEX,70000000,70180000,70180122,Nuevo León,Bustamante,Nuevo Len,Nuevo León,Bustamante
+590,MEX,70000000,70180000,70180125,Nuevo León,Cadereyta Jiménez,Nuevo Len,Nuevo León,Cadereyta Jiménez
+591,MEX,70000000,70180000,70180144,Nuevo León,Carmen,Nuevo Len,Nuevo León,Carmen
+592,MEX,70000000,70180000,70180155,Nuevo León,Cerralvo,Nuevo Len,Nuevo León,Cerralvo
+593,MEX,70000000,70180000,70180272,Nuevo León,Dr. Arroyo,Nuevo Len,Nuevo León,Dr. Arroyo
+594,MEX,70000000,70180000,70180274,Nuevo León,Dr. González,Nuevo Len,Nuevo León,Dr. González
+595,MEX,70000000,70180000,70180318,Nuevo León,Galeana,Nuevo Len,Nuevo León,Galeana
+596,MEX,70000000,70180000,70180319,Nuevo León,García,Nuevo Len,Nuevo León,García
+597,MEX,70000000,70180000,70180791,Nuevo León,San Pedro Garza García,Nuevo Len,Nuevo León,San Pedro Garza García
+598,MEX,70000000,70180000,70180327,Nuevo León,Gral. Bravo,Nuevo Len,Nuevo León,Gral. Bravo
+599,MEX,70000000,70180000,70180328,Nuevo León,Gral. Escobedo,Nuevo Len,Nuevo León,Gral. Escobedo
+600,MEX,70000000,70180000,70180329,Nuevo León,Gral. Terán,Nuevo Len,Nuevo León,Gral. Terán
+601,MEX,70000000,70180000,70180330,Nuevo León,Gral. Zaragoza,Nuevo Len,Nuevo León,Gral. Zaragoza
+602,MEX,70000000,70180000,70180334,Nuevo León,Guadalupe,Nuevo Len,Nuevo León,Guadalupe
+603,MEX,70000000,70180000,70180488,Nuevo León,Los Herreras,Nuevo Len,Nuevo León,Los Herreras
+604,MEX,70000000,70180000,70180398,Nuevo León,Iturbide,Nuevo Len,Nuevo León,Iturbide
+605,MEX,70000000,70180000,70180454,Nuevo León,Juárez,Nuevo Len,Nuevo León,Juárez
+606,MEX,70000000,70180000,70180482,Nuevo León,Linares,Nuevo Len,Nuevo León,Linares
+607,MEX,70000000,70180000,70180521,Nuevo León,Melchor Ocampo,Nuevo Len,Nuevo León,Melchor Ocampo
+608,MEX,70000000,70180000,70180534,Nuevo León,Mina,Nuevo Len,Nuevo León,Mina
+609,MEX,70000000,70180000,70180550,Nuevo León,Montemorelos,Nuevo Len,Nuevo León,Montemorelos
+610,MEX,70000000,70180000,70180551,Nuevo León,Monterrey,Nuevo Len,Nuevo León,Monterrey
+611,MEX,70000000,70180000,70180630,Nuevo León,Pesquería,Nuevo Len,Nuevo León,Pesquería
+612,MEX,70000000,70180000,70180489,Nuevo León,Los Ramones,Nuevo Len,Nuevo León,Los Ramones
+613,MEX,70000000,70180000,70180685,Nuevo León,Sabinas Hidalgo,Nuevo Len,Nuevo León,Sabinas Hidalgo
+614,MEX,70000000,70180000,70180693,Nuevo León,Salinas Victoria,Nuevo Len,Nuevo León,Salinas Victoria
+615,MEX,70000000,70180000,70180784,Nuevo León,San Nicolás de los Garza,Nuevo Len,Nuevo León,San Nicolás de los Garza
+616,MEX,70000000,70180000,70180355,Nuevo León,Hidalgo,Nuevo Len,Nuevo León,Hidalgo
+617,MEX,70000000,70180000,70180812,Nuevo León,Santa Catarina,Nuevo Len,Nuevo León,Santa Catarina
+618,MEX,70000000,70180000,70180844,Nuevo León,Santiago,Nuevo Len,Nuevo León,Santiago
+619,MEX,70000000,70180000,70181048,Nuevo León,Vallecillo,Nuevo Len,Nuevo León,Vallecillo
+620,MEX,70000000,70180000,70181078,Nuevo León,Villaldama,Nuevo Len,Nuevo León,Villaldama
+621,MEX,70000000,70190000,70190009,Oaxaca,Acatlán de Pérez Figueroa,Oaxaca,Oaxaca,Acatlán de Pérez Figueroa
+622,MEX,70000000,70190000,70190079,Oaxaca,Asunción Ixtaltepec,Oaxaca,Oaxaca,Asunción Ixtaltepec
+623,MEX,70000000,70190000,70190281,Oaxaca,El Barrio de la Soledad,Oaxaca,Oaxaca,El Barrio de la Soledad
+624,MEX,70000000,70190000,70190201,Oaxaca,Ciénega de Zimatlán,Oaxaca,Oaxaca,Ciénega de Zimatlán
+625,MEX,70000000,70190000,70190197,Oaxaca,Ciudad Ixtepec,Oaxaca,Oaxaca,Ciudad Ixtepec
+626,MEX,70000000,70190000,70190258,Oaxaca,Cuilápam de Guerrero,Oaxaca,Oaxaca,Cuilápam de Guerrero
+627,MEX,70000000,70190000,70190158,Oaxaca,Chahuites,Oaxaca,Oaxaca,Chahuites
+628,MEX,70000000,70190000,70190159,Oaxaca,Chalcatongo de Hidalgo,Oaxaca,Oaxaca,Chalcatongo de Hidalgo
+629,MEX,70000000,70190000,70190351,Oaxaca,Heroica Ciudad de Ejutla de Crespo,Oaxaca,Oaxaca,Heroica Ciudad de Ejutla de Crespo
+630,MEX,70000000,70190000,70190314,Oaxaca,Fresnillo de Trujano,Oaxaca,Oaxaca,Fresnillo de Trujano
+631,MEX,70000000,70190000,70190343,Oaxaca,Guevea de Humboldt,Oaxaca,Oaxaca,Guevea de Humboldt
+632,MEX,70000000,70190000,70190352,Oaxaca,Heroica Ciudad de Huajuapan de León,Oaxaca,Oaxaca,Heroica Ciudad de Huajuapan de León
+633,MEX,70000000,70190000,70190370,Oaxaca,Huautla de Jiménez,Oaxaca,Oaxaca,Huautla de Jiménez
+634,MEX,70000000,70190000,70190353,Oaxaca,Heroica Ciudad de Juchitán de Zaragoza,Oaxaca,Oaxaca,Heroica Ciudad de Juchitán de Zaragoza
+635,MEX,70000000,70190000,70190484,Oaxaca,Loma Bonita,Oaxaca,Oaxaca,Loma Bonita
+636,MEX,70000000,70190000,70190562,Oaxaca,Mártires de Tacubaya,Oaxaca,Oaxaca,Mártires de Tacubaya
+637,MEX,70000000,70190000,70190514,Oaxaca,Matías Romero Avendaño,Oaxaca,Oaxaca,Matías Romero Avendaño
+638,MEX,70000000,70190000,70190529,Oaxaca,Miahuatlán de Porfirio Díaz,Oaxaca,Oaxaca,Miahuatlán de Porfirio Díaz
+639,MEX,70000000,70190000,70190579,Oaxaca,Nejapa de Madero,Oaxaca,Oaxaca,Nejapa de Madero
+640,MEX,70000000,70190000,70190590,Oaxaca,Oaxaca de Juárez,Oaxaca,Oaxaca,Oaxaca de Juárez
+641,MEX,70000000,70190000,70190594,Oaxaca,Ocotlán de Morelos,Oaxaca,Oaxaca,Ocotlán de Morelos
+642,MEX,70000000,70190000,70190691,Oaxaca,Salina Cruz,Oaxaca,Oaxaca,Salina Cruz
+643,MEX,70000000,70190000,70190701,Oaxaca,San Agustín de las Juntas,Oaxaca,Oaxaca,San Agustín de las Juntas
+644,MEX,70000000,70190000,70190700,Oaxaca,San Agustín Yatareni,Oaxaca,Oaxaca,San Agustín Yatareni
+645,MEX,70000000,70190000,70190704,Oaxaca,San Andrés Huaxpaltepec,Oaxaca,Oaxaca,San Andrés Huaxpaltepec
+646,MEX,70000000,70190000,70190705,Oaxaca,San Andrés Huayápam,Oaxaca,Oaxaca,San Andrés Huayápam
+647,MEX,70000000,70190000,70190707,Oaxaca,San Antonino Monte Verde,Oaxaca,Oaxaca,San Antonino Monte Verde
+648,MEX,70000000,70190000,70190708,Oaxaca,San Antonio de la Cal,Oaxaca,Oaxaca,San Antonio de la Cal
+649,MEX,70000000,70190000,70190709,Oaxaca,San Bartolo Coyotepec,Oaxaca,Oaxaca,San Bartolo Coyotepec
+650,MEX,70000000,70190000,70190710,Oaxaca,San Bartolo Soyaltepec,Oaxaca,Oaxaca,San Bartolo Soyaltepec
+651,MEX,70000000,70190000,70190713,Oaxaca,San Blas Atempa,Oaxaca,Oaxaca,San Blas Atempa
+652,MEX,70000000,70190000,70190721,Oaxaca,San Dionisio Ocotepec,Oaxaca,Oaxaca,San Dionisio Ocotepec
+653,MEX,70000000,70190000,70190723,Oaxaca,San Felipe Jalapa de Díaz,Oaxaca,Oaxaca,San Felipe Jalapa de Díaz
+654,MEX,70000000,70190000,70190726,Oaxaca,San Felipe Usila,Oaxaca,Oaxaca,San Felipe Usila
+655,MEX,70000000,70190000,70190730,Oaxaca,San Francisco Cahuacuá,Oaxaca,Oaxaca,San Francisco Cahuacuá
+656,MEX,70000000,70190000,70190731,Oaxaca,San Francisco Sola,Oaxaca,Oaxaca,San Francisco Sola
+657,MEX,70000000,70190000,70190732,Oaxaca,San Francisco Telixtlahuaca,Oaxaca,Oaxaca,San Francisco Telixtlahuaca
+658,MEX,70000000,70190000,70190740,Oaxaca,San Jacinto Amilpas,Oaxaca,Oaxaca,San Jacinto Amilpas
+659,MEX,70000000,70190000,70191146,Oaxaca,Ánimas Trujano,Oaxaca,Oaxaca,Ánimas Trujano
+660,MEX,70000000,70190000,70190748,Oaxaca,San Juan Bautista Coixtlahuaca,Oaxaca,Oaxaca,San Juan Bautista Coixtlahuaca
+661,MEX,70000000,70190000,70190749,Oaxaca,San Juan Bautista Cuicatlán,Oaxaca,Oaxaca,San Juan Bautista Cuicatlán
+662,MEX,70000000,70190000,70190750,Oaxaca,San Juan Bautista Tuxtepec,Oaxaca,Oaxaca,San Juan Bautista Tuxtepec
+663,MEX,70000000,70190000,70190751,Oaxaca,San Juan Cotzocón,Oaxaca,Oaxaca,San Juan Cotzocón
+664,MEX,70000000,70190000,70190752,Oaxaca,San Juan Guichicovi,Oaxaca,Oaxaca,San Juan Guichicovi
+665,MEX,70000000,70190000,70190754,Oaxaca,San Juan Lalana,Oaxaca,Oaxaca,San Juan Lalana
+666,MEX,70000000,70190000,70190760,Oaxaca,San Lorenzo Cacaotepec,Oaxaca,Oaxaca,San Lorenzo Cacaotepec
+667,MEX,70000000,70190000,70190761,Oaxaca,San Lucas Ojitlán,Oaxaca,Oaxaca,San Lucas Ojitlán
+668,MEX,70000000,70190000,70190767,Oaxaca,San Marcos Arteaga,Oaxaca,Oaxaca,San Marcos Arteaga
+669,MEX,70000000,70190000,70190772,Oaxaca,San Mateo Sindihui,Oaxaca,Oaxaca,San Mateo Sindihui
+670,MEX,70000000,70190000,70190783,Oaxaca,San Miguel el Grande,Oaxaca,Oaxaca,San Miguel el Grande
+671,MEX,70000000,70190000,70190774,Oaxaca,San Miguel Santa Flor,Oaxaca,Oaxaca,San Miguel Santa Flor
+672,MEX,70000000,70190000,70191063,Oaxaca,Villa Sola de Vega,Oaxaca,Oaxaca,Villa Sola de Vega
+673,MEX,70000000,70190000,70190775,Oaxaca,San Miguel Soyaltepec,Oaxaca,Oaxaca,San Miguel Soyaltepec
+674,MEX,70000000,70190000,70190776,Oaxaca,San Miguel Tequixtepec,Oaxaca,Oaxaca,San Miguel Tequixtepec
+675,MEX,70000000,70190000,70190777,Oaxaca,San Miguel Tilquiápam,Oaxaca,Oaxaca,San Miguel Tilquiápam
+676,MEX,70000000,70190000,70190785,Oaxaca,San Pablo Etla,Oaxaca,Oaxaca,San Pablo Etla
+677,MEX,70000000,70190000,70190786,Oaxaca,San Pablo Huixtepec,Oaxaca,Oaxaca,San Pablo Huixtepec
+678,MEX,70000000,70190000,70190790,Oaxaca,San Pedro Comitancillo,Oaxaca,Oaxaca,San Pedro Comitancillo
+679,MEX,70000000,70190000,70190792,Oaxaca,San Pedro Huamelula,Oaxaca,Oaxaca,San Pedro Huamelula
+680,MEX,70000000,70190000,70190794,Oaxaca,San Pedro Mixtepec -Dto. 22 -,Oaxaca,Oaxaca,San Pedro Mixtepec -Dto. 22 -
+681,MEX,70000000,70190000,70190795,Oaxaca,San Pedro Pochutla,Oaxaca,Oaxaca,San Pedro Pochutla
+682,MEX,70000000,70190000,70190796,Oaxaca,San Pedro Quiatoni,Oaxaca,Oaxaca,San Pedro Quiatoni
+683,MEX,70000000,70190000,70191072,Oaxaca,Villa de Tututepec de Melchor Ocampo,Oaxaca,Oaxaca,Villa de Tututepec de Melchor Ocampo
+684,MEX,70000000,70190000,70190801,Oaxaca,San Sebastián Río Hondo,Oaxaca,Oaxaca,San Sebastián Río Hondo
+685,MEX,70000000,70190000,70190802,Oaxaca,San Sebastián Tecomaxtlahuaca,Oaxaca,Oaxaca,San Sebastián Tecomaxtlahuaca
+686,MEX,70000000,70190000,70190803,Oaxaca,San Sebastián Tutla,Oaxaca,Oaxaca,San Sebastián Tutla
+687,MEX,70000000,70190000,70190804,Oaxaca,San Simón Zahuatlán,Oaxaca,Oaxaca,San Simón Zahuatlán
+688,MEX,70000000,70190000,70190811,Oaxaca,Santa Catalina Quierí,Oaxaca,Oaxaca,Santa Catalina Quierí
+689,MEX,70000000,70190000,70190814,Oaxaca,Santa Catarina Juquila,Oaxaca,Oaxaca,Santa Catarina Juquila
+690,MEX,70000000,70190000,70190816,Oaxaca,Santa Cruz Amilpas,Oaxaca,Oaxaca,Santa Cruz Amilpas
+691,MEX,70000000,70190000,70190817,Oaxaca,Santa Cruz Itundujia,Oaxaca,Oaxaca,Santa Cruz Itundujia
+692,MEX,70000000,70190000,70190820,Oaxaca,Santa Cruz Xitla,Oaxaca,Oaxaca,Santa Cruz Xitla
+693,MEX,70000000,70190000,70190821,Oaxaca,Santa Cruz Xoxocotlán,Oaxaca,Oaxaca,Santa Cruz Xoxocotlán
+694,MEX,70000000,70190000,70190822,Oaxaca,Santa Cruz Zenzontepec,Oaxaca,Oaxaca,Santa Cruz Zenzontepec
+695,MEX,70000000,70190000,70190825,Oaxaca,Santa Inés del Monte,Oaxaca,Oaxaca,Santa Inés del Monte
+696,MEX,70000000,70190000,70190824,Oaxaca,Santa Inés Yatzeche,Oaxaca,Oaxaca,Santa Inés Yatzeche
+697,MEX,70000000,70190000,70190829,Oaxaca,Santa Lucía del Camino,Oaxaca,Oaxaca,Santa Lucía del Camino
+698,MEX,70000000,70190000,70190828,Oaxaca,Santa Lucía Monteverde,Oaxaca,Oaxaca,Santa Lucía Monteverde
+699,MEX,70000000,70190000,70190354,Oaxaca,Heroica Ciudad de Tlaxiaco,Oaxaca,Oaxaca,Heroica Ciudad de Tlaxiaco
+700,MEX,70000000,70190000,70190830,Oaxaca,Santa María Atzompa,Oaxaca,Oaxaca,Santa María Atzompa
+701,MEX,70000000,70190000,70190831,Oaxaca,Santa María Colotepec,Oaxaca,Oaxaca,Santa María Colotepec
+702,MEX,70000000,70190000,70190832,Oaxaca,Santa María Coyotepec,Oaxaca,Oaxaca,Santa María Coyotepec
+703,MEX,70000000,70190000,70190841,Oaxaca,Santa María del Rosario,Oaxaca,Oaxaca,Santa María del Rosario
+704,MEX,70000000,70190000,70190843,Oaxaca,Santa María del Tule,Oaxaca,Oaxaca,Santa María del Tule
+705,MEX,70000000,70190000,70190833,Oaxaca,Santa María Ecatepec,Oaxaca,Oaxaca,Santa María Ecatepec
+706,MEX,70000000,70190000,70190834,Oaxaca,Santa María Guelacé,Oaxaca,Oaxaca,Santa María Guelacé
+707,MEX,70000000,70190000,70190835,Oaxaca,Santa María Huatulco,Oaxaca,Oaxaca,Santa María Huatulco
+708,MEX,70000000,70190000,70190836,Oaxaca,Santa María Petapa,Oaxaca,Oaxaca,Santa María Petapa
+709,MEX,70000000,70190000,70190837,Oaxaca,Santa María Temaxcaltepec,Oaxaca,Oaxaca,Santa María Temaxcaltepec
+710,MEX,70000000,70190000,70190838,Oaxaca,Santa María Tlalixtac,Oaxaca,Oaxaca,Santa María Tlalixtac
+711,MEX,70000000,70190000,70190839,Oaxaca,Santa María Xadani,Oaxaca,Oaxaca,Santa María Xadani
+712,MEX,70000000,70190000,70190845,Oaxaca,Santiago Apóstol,Oaxaca,Oaxaca,Santiago Apóstol
+713,MEX,70000000,70190000,70190847,Oaxaca,Santiago Ixtayutla,Oaxaca,Oaxaca,Santiago Ixtayutla
+714,MEX,70000000,70190000,70190848,Oaxaca,Santiago Jamiltepec,Oaxaca,Oaxaca,Santiago Jamiltepec
+715,MEX,70000000,70190000,70190849,Oaxaca,Santiago Jocotepec,Oaxaca,Oaxaca,Santiago Jocotepec
+716,MEX,70000000,70190000,70190850,Oaxaca,Santiago Juxtlahuaca,Oaxaca,Oaxaca,Santiago Juxtlahuaca
+717,MEX,70000000,70190000,70190853,Oaxaca,Santiago Pinotepa Nacional,Oaxaca,Oaxaca,Santiago Pinotepa Nacional
+718,MEX,70000000,70190000,70190854,Oaxaca,Santiago Tetepec,Oaxaca,Oaxaca,Santiago Tetepec
+719,MEX,70000000,70190000,70190855,Oaxaca,Santiago Yaveo,Oaxaca,Oaxaca,Santiago Yaveo
+720,MEX,70000000,70190000,70190856,Oaxaca,Santiago Zacatepec,Oaxaca,Oaxaca,Santiago Zacatepec
+721,MEX,70000000,70190000,70190860,Oaxaca,Santo Domingo de Morelos,Oaxaca,Oaxaca,Santo Domingo de Morelos
+722,MEX,70000000,70190000,70190858,Oaxaca,Santo Domingo Tehuantepec,Oaxaca,Oaxaca,Santo Domingo Tehuantepec
+723,MEX,70000000,70190000,70190859,Oaxaca,Santo Domingo Tomaltepec,Oaxaca,Oaxaca,Santo Domingo Tomaltepec
+724,MEX,70000000,70190000,70190862,Oaxaca,Santos Reyes Nopala,Oaxaca,Oaxaca,Santos Reyes Nopala
+725,MEX,70000000,70190000,70190895,Oaxaca,Taniche,Oaxaca,Oaxaca,Taniche
+726,MEX,70000000,70190000,70190901,Oaxaca,Tataltepec de Valdés,Oaxaca,Oaxaca,Tataltepec de Valdés
+727,MEX,70000000,70190000,70190937,Oaxaca,Teotitlán de Flores Magón,Oaxaca,Oaxaca,Teotitlán de Flores Magón
+728,MEX,70000000,70190000,70190938,Oaxaca,Teotitlán del Valle,Oaxaca,Oaxaca,Teotitlán del Valle
+729,MEX,70000000,70190000,70190990,Oaxaca,Tlalixtac de Cabrera,Oaxaca,Oaxaca,Tlalixtac de Cabrera
+730,MEX,70000000,70190000,70191036,Oaxaca,Unión Hidalgo,Oaxaca,Oaxaca,Unión Hidalgo
+731,MEX,70000000,70190000,70191133,Oaxaca,Zimatlán de Álvarez,Oaxaca,Oaxaca,Zimatlán de Álvarez
+732,MEX,70000000,70200000,70200002,Puebla,Acajete,Puebla,Puebla,Acajete
+733,MEX,70000000,70200000,70200008,Puebla,Acatlán,Puebla,Puebla,Acatlán
+734,MEX,70000000,70200000,70200010,Puebla,Acatzingo,Puebla,Puebla,Acatzingo
+735,MEX,70000000,70200000,70200027,Puebla,Ahuacatlán,Puebla,Puebla,Ahuacatlán
+736,MEX,70000000,70200000,70200031,Puebla,Ajalpan,Puebla,Puebla,Ajalpan
+737,MEX,70000000,70200000,70200042,Puebla,Altepexi,Puebla,Puebla,Altepexi
+738,MEX,70000000,70200000,70200053,Puebla,Amixtlán,Puebla,Puebla,Amixtlán
+739,MEX,70000000,70200000,70200054,Puebla,Amozoc,Puebla,Puebla,Amozoc
+740,MEX,70000000,70200000,70200081,Puebla,Atempan,Puebla,Puebla,Atempan
+741,MEX,70000000,70200000,70200089,Puebla,Atlixco,Puebla,Puebla,Atlixco
+742,MEX,70000000,70200000,70200228,Puebla,Coronango,Puebla,Puebla,Coronango
+743,MEX,70000000,70200000,70200236,Puebla,Coxcatlán,Puebla,Puebla,Coxcatlán
+744,MEX,70000000,70200000,70200238,Puebla,Coyomeapan,Puebla,Puebla,Coyomeapan
+745,MEX,70000000,70200000,70200246,Puebla,Cuapiaxtla de Madero,Puebla,Puebla,Cuapiaxtla de Madero
+746,MEX,70000000,70200000,70200253,Puebla,Cuautlancingo,Puebla,Puebla,Cuautlancingo
+747,MEX,70000000,70200000,70200173,Puebla,Chiautla,Puebla,Puebla,Chiautla
+748,MEX,70000000,70200000,70200174,Puebla,Chiautzingo,Puebla,Puebla,Chiautzingo
+749,MEX,70000000,70200000,70200179,Puebla,Chiconcuautla,Puebla,Puebla,Chiconcuautla
+750,MEX,70000000,70200000,70200181,Puebla,Chietla,Puebla,Puebla,Chietla
+751,MEX,70000000,70200000,70200183,Puebla,Chila de la Sal,Puebla,Puebla,Chila de la Sal
+752,MEX,70000000,70200000,70200186,Puebla,Chilchotla,Puebla,Puebla,Chilchotla
+753,MEX,70000000,70200000,70200189,Puebla,Chinantla,Puebla,Puebla,Chinantla
+754,MEX,70000000,70200000,70200335,Puebla,Guadalupe Victoria,Puebla,Puebla,Guadalupe Victoria
+755,MEX,70000000,70200000,70200368,Puebla,Huauchinango,Puebla,Puebla,Huauchinango
+756,MEX,70000000,70200000,70200374,Puebla,Huejotzingo,Puebla,Puebla,Huejotzingo
+757,MEX,70000000,70200000,70200088,Puebla,Atlequizayan,Puebla,Puebla,Atlequizayan
+758,MEX,70000000,70200000,70200403,Puebla,Ixtacamaxtitlán,Puebla,Puebla,Ixtacamaxtitlán
+759,MEX,70000000,70200000,70200418,Puebla,Izúcar de Matamoros,Puebla,Puebla,Izúcar de Matamoros
+760,MEX,70000000,70200000,70200424,Puebla,Jalpan,Puebla,Puebla,Jalpan
+761,MEX,70000000,70200000,70200442,Puebla,Jolalpan,Puebla,Puebla,Jolalpan
+762,MEX,70000000,70200000,70200448,Puebla,Juan C. Bonilla,Puebla,Puebla,Juan C. Bonilla
+763,MEX,70000000,70200000,70200481,Puebla,Libres,Puebla,Puebla,Libres
+764,MEX,70000000,70200000,70200516,Puebla,Mazapiltepec de Juárez,Puebla,Puebla,Mazapiltepec de Juárez
+765,MEX,70000000,70200000,70200542,Puebla,Mixtla,Puebla,Puebla,Mixtla
+766,MEX,70000000,70200000,70200149,Puebla,Cañada Morelos,Puebla,Puebla,Cañada Morelos
+767,MEX,70000000,70200000,70200578,Puebla,Nealtican,Puebla,Puebla,Nealtican
+768,MEX,70000000,70200000,70200596,Puebla,Ocoyucan,Puebla,Puebla,Ocoyucan
+769,MEX,70000000,70200000,70200616,Puebla,Palmar de Bravo,Puebla,Puebla,Palmar de Bravo
+770,MEX,70000000,70200000,70200632,Puebla,Petlalcingo,Puebla,Puebla,Petlalcingo
+771,MEX,70000000,70200000,70200650,Puebla,Puebla,Puebla,Puebla,Puebla
+772,MEX,70000000,70200000,70200664,Puebla,Quecholac,Puebla,Puebla,Quecholac
+773,MEX,70000000,70200000,70200666,Puebla,Quimixtlán,Puebla,Puebla,Quimixtlán
+774,MEX,70000000,70200000,70200702,Puebla,San Andrés Cholula,Puebla,Puebla,San Andrés Cholula
+775,MEX,70000000,70200000,70200725,Puebla,San Felipe Teotlalcingo,Puebla,Puebla,San Felipe Teotlalcingo
+776,MEX,70000000,70200000,70200736,Puebla,San Gabriel Chilac,Puebla,Puebla,San Gabriel Chilac
+777,MEX,70000000,70200000,70200737,Puebla,San Gregorio Atzompa,Puebla,Puebla,San Gregorio Atzompa
+778,MEX,70000000,70200000,70200742,Puebla,San Jerónimo Tecuanipan,Puebla,Puebla,San Jerónimo Tecuanipan
+779,MEX,70000000,70200000,70200770,Puebla,San Martín Texmelucan,Puebla,Puebla,San Martín Texmelucan
+780,MEX,70000000,70200000,70200773,Puebla,San Matías Tlalancaleca,Puebla,Puebla,San Matías Tlalancaleca
+781,MEX,70000000,70200000,70200779,Puebla,San Miguel Xoxtla,Puebla,Puebla,San Miguel Xoxtla
+782,MEX,70000000,70200000,70200789,Puebla,San Pedro Cholula,Puebla,Puebla,San Pedro Cholula
+783,MEX,70000000,70200000,70200800,Puebla,San Salvador el Verde,Puebla,Puebla,San Salvador el Verde
+784,MEX,70000000,70200000,70200826,Puebla,Santa Isabel Cholula,Puebla,Puebla,Santa Isabel Cholula
+785,MEX,70000000,70200000,70200851,Puebla,Santiago Miahuatlán,Puebla,Puebla,Santiago Miahuatlán
+786,MEX,70000000,70200000,70200861,Puebla,Santo Tomás Hueyotlipan,Puebla,Puebla,Santo Tomás Hueyotlipan
+787,MEX,70000000,70200000,70200904,Puebla,Tecamachalco,Puebla,Puebla,Tecamachalco
+788,MEX,70000000,70200000,70200914,Puebla,Tehuacán,Puebla,Puebla,Tehuacán
+789,MEX,70000000,70200000,70200943,Puebla,Tepatlaxco de Hidalgo,Puebla,Puebla,Tepatlaxco de Hidalgo
+790,MEX,70000000,70200000,70200952,Puebla,Tepexi de Rodríguez,Puebla,Puebla,Tepexi de Rodríguez
+791,MEX,70000000,70200000,70200962,Puebla,Tetela de Ocampo,Puebla,Puebla,Tetela de Ocampo
+792,MEX,70000000,70200000,70200968,Puebla,Teziutlán,Puebla,Puebla,Teziutlán
+793,MEX,70000000,70200000,70200986,Puebla,Tlacotepec de Benito Juárez,Puebla,Puebla,Tlacotepec de Benito Juárez
+794,MEX,70000000,70200000,70200988,Puebla,Tlahuapan,Puebla,Puebla,Tlahuapan
+795,MEX,70000000,70200000,70200995,Puebla,Tlaltenango,Puebla,Puebla,Tlaltenango
+796,MEX,70000000,70200000,70200998,Puebla,Tlaola,Puebla,Puebla,Tlaola
+797,MEX,70000000,70200000,70201002,Puebla,Tlatlauquitepec,Puebla,Puebla,Tlatlauquitepec
+798,MEX,70000000,70200000,70201022,Puebla,Tulcingo,Puebla,Puebla,Tulcingo
+799,MEX,70000000,70200000,70201052,Puebla,Venustiano Carranza,Puebla,Puebla,Venustiano Carranza
+800,MEX,70000000,70200000,70201090,Puebla,Xicotepec,Puebla,Puebla,Xicotepec
+801,MEX,70000000,70200000,70201091,Puebla,Xicotlán,Puebla,Puebla,Xicotlán
+802,MEX,70000000,70200000,70201094,Puebla,Xiutetelco,Puebla,Puebla,Xiutetelco
+803,MEX,70000000,70200000,70201099,Puebla,Xochitlán Todos Santos,Puebla,Puebla,Xochitlán Todos Santos
+804,MEX,70000000,70200000,70201102,Puebla,Yaonáhuac,Puebla,Puebla,Yaonáhuac
+805,MEX,70000000,70200000,70201107,Puebla,Yehualtepec,Puebla,Puebla,Yehualtepec
+806,MEX,70000000,70200000,70201114,Puebla,Zacatlán,Puebla,Puebla,Zacatlán
+807,MEX,70000000,70200000,70201126,Puebla,Zautla,Puebla,Puebla,Zautla
+808,MEX,70000000,70200000,70201130,Puebla,Zihuateutla,Puebla,Puebla,Zihuateutla
+809,MEX,70000000,70200000,70201136,Puebla,Zinacatepec,Puebla,Puebla,Zinacatepec
+810,MEX,70000000,70200000,70201141,Puebla,Zoquitlán,Puebla,Puebla,Zoquitlán
+811,MEX,70000000,70210000,70210051,Querétaro,Amealco de Bonfil,Quertaro,Querétaro,Amealco de Bonfil
+812,MEX,70000000,70210000,70210639,Querétaro,Pinal de Amoles,Quertaro,Querétaro,Pinal de Amoles
+813,MEX,70000000,70210000,70210075,Querétaro,Arroyo Seco,Quertaro,Querétaro,Arroyo Seco
+814,MEX,70000000,70210000,70210126,Querétaro,Cadereyta de Montes,Quertaro,Querétaro,Cadereyta de Montes
+815,MEX,70000000,70210000,70210212,Querétaro,Colón,Quertaro,Querétaro,Colón
+816,MEX,70000000,70210000,70210229,Querétaro,Corregidora,Quertaro,Querétaro,Corregidora
+817,MEX,70000000,70210000,70210308,Querétaro,Ezequiel Montes,Quertaro,Querétaro,Ezequiel Montes
+818,MEX,70000000,70210000,70210382,Querétaro,Huimilpan,Quertaro,Querétaro,Huimilpan
+819,MEX,70000000,70210000,70210425,Querétaro,Jalpan de Serra,Quertaro,Querétaro,Jalpan de Serra
+820,MEX,70000000,70210000,70210472,Querétaro,Landa de Matamoros,Quertaro,Querétaro,Landa de Matamoros
+821,MEX,70000000,70210000,70210288,Querétaro,El Marqués,Quertaro,Querétaro,El Marqués
+822,MEX,70000000,70210000,70210627,Querétaro,Pedro Escobedo,Quertaro,Querétaro,Pedro Escobedo
+823,MEX,70000000,70210000,70210634,Querétaro,Peñamiller,Quertaro,Querétaro,Peñamiller
+824,MEX,70000000,70210000,70210665,Querétaro,Querétaro,Quertaro,Querétaro,Querétaro
+825,MEX,70000000,70210000,70210758,Querétaro,San Juan del Río,Quertaro,Querétaro,San Juan del Río
+826,MEX,70000000,70210000,70210959,Querétaro,Tequisquiapan,Quertaro,Querétaro,Tequisquiapan
+827,MEX,70000000,70210000,70211009,Querétaro,Tolimán,Quertaro,Querétaro,Tolimán
+828,MEX,70000000,70220000,70220242,Quintana Roo,Cozumel,Quintana Roo,Quintana Roo,Cozumel
+829,MEX,70000000,70220000,70220309,Quintana Roo,Felipe Carrillo Puerto,Quintana Roo,Quintana Roo,Felipe Carrillo Puerto
+830,MEX,70000000,70220000,70220397,Quintana Roo,Isla Mujeres,Quintana Roo,Quintana Roo,Isla Mujeres
+831,MEX,70000000,70220000,70220607,Quintana Roo,Othón P. Blanco,Quintana Roo,Quintana Roo,Othón P. Blanco
+832,MEX,70000000,70220000,70220112,Quintana Roo,Benito Juárez,Quintana Roo,Quintana Roo,Benito Juárez
+833,MEX,70000000,70220000,70220446,Quintana Roo,José María Morelos,Quintana Roo,Quintana Roo,José María Morelos
+834,MEX,70000000,70220000,70220492,Quintana Roo,Lázaro Cárdenas,Quintana Roo,Quintana Roo,Lázaro Cárdenas
+835,MEX,70000000,70220000,70220875,Quintana Roo,Solidaridad,Quintana Roo,Quintana Roo,Solidaridad
+836,MEX,70000000,70230000,70230029,San Luis Potosí,Ahualulco,San Luis Potos,San Luis Potosí,Ahualulco
+837,MEX,70000000,70230000,70230069,San Luis Potosí,Aquismón,San Luis Potos,San Luis Potosí,Aquismón
+838,MEX,70000000,70230000,70230266,San Luis Potosí,Cárdenas,San Luis Potos,San Luis Potosí,Cárdenas
+839,MEX,70000000,70230000,70230148,San Luis Potosí,Catorce,San Luis Potos,San Luis Potosí,Catorce
+840,MEX,70000000,70230000,70230151,San Luis Potosí,Cedral,San Luis Potos,San Luis Potosí,Cedral
+841,MEX,70000000,70230000,70230156,San Luis Potosí,Cerritos,San Luis Potos,San Luis Potosí,Cerritos
+842,MEX,70000000,70230000,70230157,San Luis Potosí,Cerro de San Pedro,San Luis Potos,San Luis Potosí,Cerro de San Pedro
+843,MEX,70000000,70230000,70230200,San Luis Potosí,Ciudad del Maíz,San Luis Potos,San Luis Potosí,Ciudad del Maíz
+844,MEX,70000000,70230000,70230196,San Luis Potosí,Ciudad Fernández,San Luis Potos,San Luis Potosí,Ciudad Fernández
+845,MEX,70000000,70230000,70230199,San Luis Potosí,Ciudad Valles,San Luis Potos,San Luis Potosí,Ciudad Valles
+846,MEX,70000000,70230000,70230166,San Luis Potosí,Charcas,San Luis Potos,San Luis Potosí,Charcas
+847,MEX,70000000,70230000,70230278,San Luis Potosí,Ebano,San Luis Potos,San Luis Potosí,Ebano
+848,MEX,70000000,70230000,70230371,San Luis Potosí,Huehuetlán,San Luis Potos,San Luis Potosí,Huehuetlán
+849,MEX,70000000,70230000,70230512,San Luis Potosí,Matehuala,San Luis Potos,San Luis Potosí,Matehuala
+850,MEX,70000000,70230000,70230526,San Luis Potosí,Mexquitic de Carmona,San Luis Potos,San Luis Potosí,Mexquitic de Carmona
+851,MEX,70000000,70230000,70230547,San Luis Potosí,Moctezuma,San Luis Potos,San Luis Potosí,Moctezuma
+852,MEX,70000000,70230000,70230674,San Luis Potosí,Rioverde,San Luis Potos,San Luis Potosí,Rioverde
+853,MEX,70000000,70230000,70230692,San Luis Potosí,Salinas,San Luis Potos,San Luis Potosí,Salinas
+854,MEX,70000000,70230000,70230715,San Luis Potosí,San Ciro de Acosta,San Luis Potos,San Luis Potosí,San Ciro de Acosta
+855,MEX,70000000,70230000,70230763,San Luis Potosí,San Luis Potosí,San Luis Potos,San Luis Potosí,San Luis Potosí
+856,MEX,70000000,70230000,70230768,San Luis Potosí,San Martín Chalchicuautla,San Luis Potos,San Luis Potosí,San Martín Chalchicuautla
+857,MEX,70000000,70230000,70230842,San Luis Potosí,Santa María del Río,San Luis Potos,San Luis Potosí,Santa María del Río
+858,MEX,70000000,70230000,70230805,San Luis Potosí,San Vicente Tancuayalab,San Luis Potos,San Luis Potosí,San Vicente Tancuayalab
+859,MEX,70000000,70230000,70230874,San Luis Potosí,Soledad de Graciano Sánchez,San Luis Potos,San Luis Potosí,Soledad de Graciano Sánchez
+860,MEX,70000000,70230000,70230888,San Luis Potosí,Tamasopo,San Luis Potos,San Luis Potosí,Tamasopo
+861,MEX,70000000,70230000,70230889,San Luis Potosí,Tamazunchale,San Luis Potos,San Luis Potosí,Tamazunchale
+862,MEX,70000000,70230000,70230891,San Luis Potosí,Tampamolón Corona,San Luis Potos,San Luis Potosí,Tampamolón Corona
+863,MEX,70000000,70230000,70230893,San Luis Potosí,Tamuín,San Luis Potos,San Luis Potosí,Tamuín
+864,MEX,70000000,70230000,70230896,San Luis Potosí,Tanlajás,San Luis Potos,San Luis Potosí,Tanlajás
+865,MEX,70000000,70230000,70230897,San Luis Potosí,Tanquián de Escobedo,San Luis Potos,San Luis Potosí,Tanquián de Escobedo
+866,MEX,70000000,70230000,70230974,San Luis Potosí,Tierra Nueva,San Luis Potos,San Luis Potosí,Tierra Nueva
+867,MEX,70000000,70230000,70231051,San Luis Potosí,Venado,San Luis Potos,San Luis Potosí,Venado
+868,MEX,70000000,70230000,70231067,San Luis Potosí,Villa de Arriaga,San Luis Potos,San Luis Potosí,Villa de Arriaga
+869,MEX,70000000,70230000,70231069,San Luis Potosí,Villa de Guadalupe,San Luis Potos,San Luis Potosí,Villa de Guadalupe
+870,MEX,70000000,70230000,70231073,San Luis Potosí,Villa de la Paz,San Luis Potos,San Luis Potosí,Villa de la Paz
+871,MEX,70000000,70230000,70231070,San Luis Potosí,Villa de Ramos,San Luis Potos,San Luis Potosí,Villa de Ramos
+872,MEX,70000000,70230000,70231071,San Luis Potosí,Villa de Reyes,San Luis Potos,San Luis Potosí,Villa de Reyes
+873,MEX,70000000,70230000,70231061,San Luis Potosí,Villa Hidalgo,San Luis Potos,San Luis Potosí,Villa Hidalgo
+874,MEX,70000000,70230000,70230099,San Luis Potosí,Axtla de Terrazas,San Luis Potos,San Luis Potosí,Axtla de Terrazas
+875,MEX,70000000,70230000,70231093,San Luis Potosí,Xilitla,San Luis Potos,San Luis Potosí,Xilitla
+876,MEX,70000000,70230000,70231066,San Luis Potosí,Villa de Arista,San Luis Potos,San Luis Potosí,Villa de Arista
+877,MEX,70000000,70230000,70230513,San Luis Potosí,Matlapa,San Luis Potos,San Luis Potosí,Matlapa
+878,MEX,70000000,70230000,70230289,San Luis Potosí,El Naranjo,San Luis Potos,San Luis Potosí,El Naranjo
+879,MEX,70000000,70240000,70240026,Sinaloa,Ahome,Sinaloa,Sinaloa,Ahome
+880,MEX,70000000,70240000,70240057,Sinaloa,Angostura,Sinaloa,Sinaloa,Angostura
+881,MEX,70000000,70240000,70240105,Sinaloa,Badiraguato,Sinaloa,Sinaloa,Badiraguato
+882,MEX,70000000,70240000,70240219,Sinaloa,Concordia,Sinaloa,Sinaloa,Concordia
+883,MEX,70000000,70240000,70240259,Sinaloa,Culiacán,Sinaloa,Sinaloa,Culiacán
+884,MEX,70000000,70240000,70240191,Sinaloa,Choix,Sinaloa,Sinaloa,Choix
+885,MEX,70000000,70240000,70240294,Sinaloa,Elota,Sinaloa,Sinaloa,Elota
+886,MEX,70000000,70240000,70240301,Sinaloa,Escuinapa,Sinaloa,Sinaloa,Escuinapa
+887,MEX,70000000,70240000,70240284,Sinaloa,El Fuerte,Sinaloa,Sinaloa,El Fuerte
+888,MEX,70000000,70240000,70240339,Sinaloa,Guasave,Sinaloa,Sinaloa,Guasave
+889,MEX,70000000,70240000,70240519,Sinaloa,Mazatlán,Sinaloa,Sinaloa,Mazatlán
+890,MEX,70000000,70240000,70240546,Sinaloa,Mocorito,Sinaloa,Sinaloa,Mocorito
+891,MEX,70000000,70240000,70240679,Sinaloa,Rosario,Sinaloa,Sinaloa,Rosario
+892,MEX,70000000,70240000,70240696,Sinaloa,Salvador Alvarado,Sinaloa,Sinaloa,Salvador Alvarado
+893,MEX,70000000,70240000,70240738,Sinaloa,San Ignacio,Sinaloa,Sinaloa,San Ignacio
+894,MEX,70000000,70240000,70240869,Sinaloa,Sinaloa,Sinaloa,Sinaloa,Sinaloa
+895,MEX,70000000,70240000,70240577,Sinaloa,Navolato,Sinaloa,Sinaloa,Navolato
+896,MEX,70000000,70250000,70250014,Sonora,Aconchi,Sonora,Sonora,Aconchi
+897,MEX,70000000,70250000,70250023,Sonora,Agua Prieta,Sonora,Sonora,Agua Prieta
+898,MEX,70000000,70250000,70250033,Sonora,Alamos,Sonora,Sonora,Alamos
+899,MEX,70000000,70250000,70250123,Sonora,Bácum,Sonora,Sonora,Bácum
+900,MEX,70000000,70250000,70250110,Sonora,Banámichi,Sonora,Sonora,Banámichi
+901,MEX,70000000,70250000,70250111,Sonora,Baviácora,Sonora,Sonora,Baviácora
+902,MEX,70000000,70250000,70250124,Sonora,Caborca,Sonora,Sonora,Caborca
+903,MEX,70000000,70250000,70250127,Sonora,Cajeme,Sonora,Sonora,Cajeme
+904,MEX,70000000,70250000,70250138,Sonora,Cananea,Sonora,Sonora,Cananea
+905,MEX,70000000,70250000,70250260,Sonora,Cumpas,Sonora,Sonora,Cumpas
+906,MEX,70000000,70250000,70250297,Sonora,Empalme,Sonora,Sonora,Empalme
+907,MEX,70000000,70250000,70250306,Sonora,Etchojoa,Sonora,Sonora,Etchojoa
+908,MEX,70000000,70250000,70250340,Sonora,Guaymas,Sonora,Sonora,Guaymas
+909,MEX,70000000,70250000,70250350,Sonora,Hermosillo,Sonora,Sonora,Hermosillo
+910,MEX,70000000,70250000,70250366,Sonora,Huatabampo,Sonora,Sonora,Huatabampo
+911,MEX,70000000,70250000,70250389,Sonora,Huépac,Sonora,Sonora,Huépac
+912,MEX,70000000,70250000,70250392,Sonora,Imuris,Sonora,Sonora,Imuris
+913,MEX,70000000,70250000,70250495,Sonora,Magdalena,Sonora,Sonora,Magdalena
+914,MEX,70000000,70250000,70250568,Sonora,Nacozari de García,Sonora,Sonora,Nacozari de García
+915,MEX,70000000,70250000,70250576,Sonora,Navojoa,Sonora,Sonora,Navojoa
+916,MEX,70000000,70250000,70250583,Sonora,Nogales,Sonora,Sonora,Nogales
+917,MEX,70000000,70250000,70250604,Sonora,Oquitoa,Sonora,Sonora,Oquitoa
+918,MEX,70000000,70250000,70250655,Sonora,Puerto Peñasco,Sonora,Sonora,Puerto Peñasco
+919,MEX,70000000,70250000,70250687,Sonora,Sahuaripa,Sonora,Sonora,Sahuaripa
+920,MEX,70000000,70250000,70250727,Sonora,San Felipe de Jesús,Sonora,Sonora,San Felipe de Jesús
+921,MEX,70000000,70250000,70250741,Sonora,San Javier,Sonora,Sonora,San Javier
+922,MEX,70000000,70250000,70250764,Sonora,San Luis Río Colorado,Sonora,Sonora,San Luis Río Colorado
+923,MEX,70000000,70250000,70250781,Sonora,San Miguel de Horcasitas,Sonora,Sonora,San Miguel de Horcasitas
+924,MEX,70000000,70250000,70250797,Sonora,San Pedro de la Cueva,Sonora,Sonora,San Pedro de la Cueva
+925,MEX,70000000,70250000,70250808,Sonora,Santa Ana,Sonora,Sonora,Santa Ana
+926,MEX,70000000,70250000,70251037,Sonora,Ures,Sonora,Sonora,Ures
+927,MEX,70000000,70250000,70251061,Sonora,Villa Hidalgo,Sonora,Sonora,Villa Hidalgo
+928,MEX,70000000,70250000,70251109,Sonora,Yécora,Sonora,Sonora,Yécora
+929,MEX,70000000,70250000,70250112,Sonora,Benito Juárez,Sonora,Sonora,Benito Juárez
+930,MEX,70000000,70250000,70250739,Sonora,San Ignacio Río Muerto,Sonora,Sonora,San Ignacio Río Muerto
+931,MEX,70000000,70260000,70260107,Tabasco,Balancán,Tabasco,Tabasco,Balancán
+932,MEX,70000000,70260000,70260266,Tabasco,Cárdenas,Tabasco,Tabasco,Cárdenas
+933,MEX,70000000,70260000,70260153,Tabasco,Centla,Tabasco,Tabasco,Centla
+934,MEX,70000000,70260000,70260154,Tabasco,Centro,Tabasco,Tabasco,Centro
+935,MEX,70000000,70260000,70260214,Tabasco,Comalcalco,Tabasco,Tabasco,Comalcalco
+936,MEX,70000000,70260000,70260261,Tabasco,Cunduacán,Tabasco,Tabasco,Cunduacán
+937,MEX,70000000,70260000,70260296,Tabasco,Emiliano Zapata,Tabasco,Tabasco,Emiliano Zapata
+938,MEX,70000000,70260000,70260381,Tabasco,Huimanguillo,Tabasco,Tabasco,Huimanguillo
+939,MEX,70000000,70260000,70260421,Tabasco,Jalapa,Tabasco,Tabasco,Jalapa
+940,MEX,70000000,70260000,70260423,Tabasco,Jalpa de Méndez,Tabasco,Tabasco,Jalpa de Méndez
+941,MEX,70000000,70260000,70260443,Tabasco,Jonuta,Tabasco,Tabasco,Jonuta
+942,MEX,70000000,70260000,70260493,Tabasco,Macuspana,Tabasco,Tabasco,Macuspana
+943,MEX,70000000,70260000,70260567,Tabasco,Nacajuca,Tabasco,Tabasco,Nacajuca
+944,MEX,70000000,70260000,70260624,Tabasco,Paraíso,Tabasco,Tabasco,Paraíso
+945,MEX,70000000,70260000,70260903,Tabasco,Teapa,Tabasco,Tabasco,Teapa
+946,MEX,70000000,70260000,70260930,Tabasco,Tenosique,Tabasco,Tabasco,Tenosique
+947,MEX,70000000,70270000,70270001,Tamaulipas,Abasolo,Tamaulipas,Tamaulipas,Abasolo
+948,MEX,70000000,70270000,70270035,Tamaulipas,Aldama,Tamaulipas,Tamaulipas,Aldama
+949,MEX,70000000,70270000,70270040,Tamaulipas,Altamira,Tamaulipas,Tamaulipas,Altamira
+950,MEX,70000000,70270000,70270122,Tamaulipas,Bustamante,Tamaulipas,Tamaulipas,Bustamante
+951,MEX,70000000,70270000,70270135,Tamaulipas,Camargo,Tamaulipas,Tamaulipas,Camargo
+952,MEX,70000000,70270000,70270198,Tamaulipas,Ciudad Madero,Tamaulipas,Tamaulipas,Ciudad Madero
+953,MEX,70000000,70270000,70270326,Tamaulipas,González,Tamaulipas,Tamaulipas,González
+954,MEX,70000000,70270000,70270348,Tamaulipas,Güémez,Tamaulipas,Tamaulipas,Güémez
+955,MEX,70000000,70270000,70270355,Tamaulipas,Hidalgo,Tamaulipas,Tamaulipas,Hidalgo
+956,MEX,70000000,70270000,70270435,Tamaulipas,Jiménez,Tamaulipas,Tamaulipas,Jiménez
+957,MEX,70000000,70270000,70270483,Tamaulipas,Llera,Tamaulipas,Tamaulipas,Llera
+958,MEX,70000000,70270000,70270496,Tamaulipas,Mainero,Tamaulipas,Tamaulipas,Mainero
+959,MEX,70000000,70270000,70270287,Tamaulipas,El Mante,Tamaulipas,Tamaulipas,El Mante
+960,MEX,70000000,70270000,70270511,Tamaulipas,Matamoros,Tamaulipas,Tamaulipas,Matamoros
+961,MEX,70000000,70270000,70270563,Tamaulipas,Méndez,Tamaulipas,Tamaulipas,Méndez
+962,MEX,70000000,70270000,70270530,Tamaulipas,Miguel Alemán,Tamaulipas,Tamaulipas,Miguel Alemán
+963,MEX,70000000,70270000,70270538,Tamaulipas,Miquihuana,Tamaulipas,Tamaulipas,Miquihuana
+964,MEX,70000000,70270000,70270588,Tamaulipas,Nuevo Laredo,Tamaulipas,Tamaulipas,Nuevo Laredo
+965,MEX,70000000,70270000,70270672,Tamaulipas,Reynosa,Tamaulipas,Tamaulipas,Reynosa
+966,MEX,70000000,70270000,70270682,Tamaulipas,Río Bravo,Tamaulipas,Tamaulipas,Río Bravo
+967,MEX,70000000,70270000,70270714,Tamaulipas,San Carlos,Tamaulipas,Tamaulipas,San Carlos
+968,MEX,70000000,70270000,70270729,Tamaulipas,San Fernando,Tamaulipas,Tamaulipas,San Fernando
+969,MEX,70000000,70270000,70270877,Tamaulipas,Soto la Marina,Tamaulipas,Tamaulipas,Soto la Marina
+970,MEX,70000000,70270000,70270892,Tamaulipas,Tampico,Tamaulipas,Tamaulipas,Tampico
+971,MEX,70000000,70270000,70271019,Tamaulipas,Tula,Tamaulipas,Tamaulipas,Tula
+972,MEX,70000000,70270000,70271044,Tamaulipas,Valle Hermoso,Tamaulipas,Tamaulipas,Valle Hermoso
+973,MEX,70000000,70270000,70271055,Tamaulipas,Victoria,Tamaulipas,Tamaulipas,Victoria
+974,MEX,70000000,70270000,70271077,Tamaulipas,Villagrán,Tamaulipas,Tamaulipas,Villagrán
+975,MEX,70000000,70270000,70271092,Tamaulipas,Xicoténcatl,Tamaulipas,Tamaulipas,Xicoténcatl
+976,MEX,70000000,70280000,70280050,Tlaxcala,Amaxac de Guerrero,Tlaxcala,Tlaxcala,Amaxac de Guerrero
+977,MEX,70000000,70280000,70280064,Tlaxcala,Apetatitlán de Antonio Carvajal,Tlaxcala,Tlaxcala,Apetatitlán de Antonio Carvajal
+978,MEX,70000000,70280000,70280086,Tlaxcala,Atlangatepec,Tlaxcala,Tlaxcala,Atlangatepec
+979,MEX,70000000,70280000,70280091,Tlaxcala,Atltzayanca,Tlaxcala,Tlaxcala,Atltzayanca
+980,MEX,70000000,70280000,70280065,Tlaxcala,Apizaco,Tlaxcala,Tlaxcala,Apizaco
+981,MEX,70000000,70280000,70280133,Tlaxcala,Calpulalpan,Tlaxcala,Tlaxcala,Calpulalpan
+982,MEX,70000000,70280000,70280283,Tlaxcala,El Carmen Tequexquitla,Tlaxcala,Tlaxcala,El Carmen Tequexquitla
+983,MEX,70000000,70280000,70280245,Tlaxcala,Cuapiaxtla,Tlaxcala,Tlaxcala,Cuapiaxtla
+984,MEX,70000000,70280000,70280254,Tlaxcala,Cuaxomulco,Tlaxcala,Tlaxcala,Cuaxomulco
+985,MEX,70000000,70280000,70280172,Tlaxcala,Chiautempan,Tlaxcala,Tlaxcala,Chiautempan
+986,MEX,70000000,70280000,70280560,Tlaxcala,Muñoz de Domingo Arenas,Tlaxcala,Tlaxcala,Muñoz de Domingo Arenas
+987,MEX,70000000,70280000,70280303,Tlaxcala,Españita,Tlaxcala,Tlaxcala,Españita
+988,MEX,70000000,70280000,70280362,Tlaxcala,Huamantla,Tlaxcala,Tlaxcala,Huamantla
+989,MEX,70000000,70280000,70280378,Tlaxcala,Hueyotlipan,Tlaxcala,Tlaxcala,Hueyotlipan
+990,MEX,70000000,70280000,70280404,Tlaxcala,Ixtacuixtla de Mariano Matamoros,Tlaxcala,Tlaxcala,Ixtacuixtla de Mariano Matamoros
+991,MEX,70000000,70280000,70280517,Tlaxcala,Mazatecochco de José María Morelos,Tlaxcala,Tlaxcala,Mazatecochco de José María Morelos
+992,MEX,70000000,70280000,70280222,Tlaxcala,Contla de Juan Cuamatzi,Tlaxcala,Tlaxcala,Contla de Juan Cuamatzi
+993,MEX,70000000,70280000,70280948,Tlaxcala,Tepetitla de Lardizábal,Tlaxcala,Tlaxcala,Tepetitla de Lardizábal
+994,MEX,70000000,70280000,70280807,Tlaxcala,Sanctórum de Lázaro Cárdenas,Tlaxcala,Tlaxcala,Sanctórum de Lázaro Cárdenas
+995,MEX,70000000,70280000,70280571,Tlaxcala,Nanacamilpa de Mariano Arista,Tlaxcala,Tlaxcala,Nanacamilpa de Mariano Arista
+996,MEX,70000000,70280000,70280016,Tlaxcala,Acuamanala de Miguel Hidalgo,Tlaxcala,Tlaxcala,Acuamanala de Miguel Hidalgo
+997,MEX,70000000,70280000,70280574,Tlaxcala,Natívitas,Tlaxcala,Tlaxcala,Natívitas
+998,MEX,70000000,70280000,70280619,Tlaxcala,Panotla,Tlaxcala,Tlaxcala,Panotla
+999,MEX,70000000,70280000,70280787,Tlaxcala,San Pablo del Monte,Tlaxcala,Tlaxcala,San Pablo del Monte
+1000,MEX,70000000,70280000,70280819,Tlaxcala,Santa Cruz Tlaxcala,Tlaxcala,Tlaxcala,Santa Cruz Tlaxcala
+1001,MEX,70000000,70280000,70280929,Tlaxcala,Tenancingo,Tlaxcala,Tlaxcala,Tenancingo
+1002,MEX,70000000,70280000,70280933,Tlaxcala,Teolocholco,Tlaxcala,Tlaxcala,Teolocholco
+1003,MEX,70000000,70280000,70280953,Tlaxcala,Tepeyanco,Tlaxcala,Tlaxcala,Tepeyanco
+1004,MEX,70000000,70280000,70280961,Tlaxcala,Terrenate,Tlaxcala,Tlaxcala,Terrenate
+1005,MEX,70000000,70280000,70280965,Tlaxcala,Tetla de la Solidaridad,Tlaxcala,Tlaxcala,Tetla de la Solidaridad
+1006,MEX,70000000,70280000,70280966,Tlaxcala,Tetlatlahuca,Tlaxcala,Tlaxcala,Tetlatlahuca
+1007,MEX,70000000,70280000,70281003,Tlaxcala,Tlaxcala,Tlaxcala,Tlaxcala,Tlaxcala
+1008,MEX,70000000,70280000,70281004,Tlaxcala,Tlaxco,Tlaxcala,Tlaxcala,Tlaxco
+1009,MEX,70000000,70280000,70281008,Tlaxcala,Tocatlán,Tlaxcala,Tlaxcala,Tocatlán
+1010,MEX,70000000,70280000,70281015,Tlaxcala,Totolac,Tlaxcala,Tlaxcala,Totolac
+1011,MEX,70000000,70280000,70281131,Tlaxcala,Ziltlaltépec de Trinidad Sánchez Santos,Tlaxcala,Tlaxcala,Ziltlaltépec de Trinidad Sánchez Santos
+1012,MEX,70000000,70280000,70281031,Tlaxcala,Tzompantepec,Tlaxcala,Tlaxcala,Tzompantepec
+1013,MEX,70000000,70280000,70281084,Tlaxcala,Xaloztoc,Tlaxcala,Tlaxcala,Xaloztoc
+1014,MEX,70000000,70280000,70281086,Tlaxcala,Xaltocan,Tlaxcala,Tlaxcala,Xaltocan
+1015,MEX,70000000,70280000,70280621,Tlaxcala,Papalotla de Xicohténcatl,Tlaxcala,Tlaxcala,Papalotla de Xicohténcatl
+1016,MEX,70000000,70280000,70281089,Tlaxcala,Xicohtzinco,Tlaxcala,Tlaxcala,Xicohtzinco
+1017,MEX,70000000,70280000,70281103,Tlaxcala,Yauhquemehcan,Tlaxcala,Tlaxcala,Yauhquemehcan
+1018,MEX,70000000,70280000,70281112,Tlaxcala,Zacatelco,Tlaxcala,Tlaxcala,Zacatelco
+1019,MEX,70000000,70280000,70280296,Tlaxcala,Emiliano Zapata,Tlaxcala,Tlaxcala,Emiliano Zapata
+1020,MEX,70000000,70280000,70280492,Tlaxcala,Lázaro Cárdenas,Tlaxcala,Tlaxcala,Lázaro Cárdenas
+1021,MEX,70000000,70280000,70280464,Tlaxcala,La Magdalena Tlaltelulco,Tlaxcala,Tlaxcala,La Magdalena Tlaltelulco
+1022,MEX,70000000,70280000,70280718,Tlaxcala,San Damián Texóloc,Tlaxcala,Tlaxcala,San Damián Texóloc
+1023,MEX,70000000,70280000,70280733,Tlaxcala,San Francisco Tetlanohcan,Tlaxcala,Tlaxcala,San Francisco Tetlanohcan
+1024,MEX,70000000,70280000,70280743,Tlaxcala,San Jerónimo Zacualpan,Tlaxcala,Tlaxcala,San Jerónimo Zacualpan
+1025,MEX,70000000,70280000,70280745,Tlaxcala,San José Teacalco,Tlaxcala,Tlaxcala,San José Teacalco
+1026,MEX,70000000,70280000,70280753,Tlaxcala,San Juan Huactzinco,Tlaxcala,Tlaxcala,San Juan Huactzinco
+1027,MEX,70000000,70280000,70280759,Tlaxcala,San Lorenzo Axocomanitla,Tlaxcala,Tlaxcala,San Lorenzo Axocomanitla
+1028,MEX,70000000,70280000,70280809,Tlaxcala,Santa Ana Nopalucan,Tlaxcala,Tlaxcala,Santa Ana Nopalucan
+1029,MEX,70000000,70280000,70280810,Tlaxcala,Santa Apolonia Teacalco,Tlaxcala,Tlaxcala,Santa Apolonia Teacalco
+1030,MEX,70000000,70280000,70280813,Tlaxcala,Santa Catarina Ayometla,Tlaxcala,Tlaxcala,Santa Catarina Ayometla
+1031,MEX,70000000,70280000,70280818,Tlaxcala,Santa Cruz Quilehtla,Tlaxcala,Tlaxcala,Santa Cruz Quilehtla
+1032,MEX,70000000,70280000,70280827,Tlaxcala,Santa Isabel Xiloxoxtla,Tlaxcala,Tlaxcala,Santa Isabel Xiloxoxtla
+1033,MEX,70000000,70290000,70290012,Veracruz de Ignacio de la Llave,Acayucan,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Acayucan
+1034,MEX,70000000,70290000,70290015,Veracruz de Ignacio de la Llave,Actopan,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Actopan
+1035,MEX,70000000,70290000,70290017,Veracruz de Ignacio de la Llave,Acula,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Acula
+1036,MEX,70000000,70290000,70290043,Veracruz de Ignacio de la Llave,Alto Lucero de Gutiérrez Barrios,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Alto Lucero de Gutiérrez Barrios
+1037,MEX,70000000,70290000,70290044,Veracruz de Ignacio de la Llave,Altotonga,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Altotonga
+1038,MEX,70000000,70290000,70290045,Veracruz de Ignacio de la Llave,Alvarado,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Alvarado
+1039,MEX,70000000,70290000,70290573,Veracruz de Ignacio de la Llave,Naranjos Amatlán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Naranjos Amatlán
+1040,MEX,70000000,70290000,70290049,Veracruz de Ignacio de la Llave,Amatlán de los Reyes,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Amatlán de los Reyes
+1041,MEX,70000000,70290000,70290095,Veracruz de Ignacio de la Llave,Atoyac,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Atoyac
+1042,MEX,70000000,70290000,70290109,Veracruz de Ignacio de la Llave,Banderilla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Banderilla
+1043,MEX,70000000,70290000,70290114,Veracruz de Ignacio de la Llave,Boca del Río,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Boca del Río
+1044,MEX,70000000,70290000,70290136,Veracruz de Ignacio de la Llave,Camerino Z. Mendoza,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Camerino Z. Mendoza
+1045,MEX,70000000,70290000,70290147,Veracruz de Ignacio de la Llave,Catemaco,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Catemaco
+1046,MEX,70000000,70290000,70290195,Veracruz de Ignacio de la Llave,Citlaltépetl,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Citlaltépetl
+1047,MEX,70000000,70290000,70290204,Veracruz de Ignacio de la Llave,Coatepec,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Coatepec
+1048,MEX,70000000,70290000,70290206,Veracruz de Ignacio de la Llave,Coatzacoalcos,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Coatzacoalcos
+1049,MEX,70000000,70290000,70290207,Veracruz de Ignacio de la Llave,Coatzintla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Coatzintla
+1050,MEX,70000000,70290000,70290267,Veracruz de Ignacio de la Llave,Córdoba,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Córdoba
+1051,MEX,70000000,70290000,70290231,Veracruz de Ignacio de la Llave,Cosamaloapan de Carpio,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Cosamaloapan de Carpio
+1052,MEX,70000000,70290000,70290232,Veracruz de Ignacio de la Llave,Coscomatepec,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Coscomatepec
+1053,MEX,70000000,70290000,70290233,Veracruz de Ignacio de la Llave,Cosoleacaque,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Cosoleacaque
+1054,MEX,70000000,70290000,70290235,Veracruz de Ignacio de la Llave,Cotaxtla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Cotaxtla
+1055,MEX,70000000,70290000,70290177,Veracruz de Ignacio de la Llave,Chiconamel,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Chiconamel
+1056,MEX,70000000,70290000,70290180,Veracruz de Ignacio de la Llave,Chicontepec,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Chicontepec
+1057,MEX,70000000,70290000,70290473,Veracruz de Ignacio de la Llave,Las Choapas,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Las Choapas
+1058,MEX,70000000,70290000,70290192,Veracruz de Ignacio de la Llave,Chontla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Chontla
+1059,MEX,70000000,70290000,70290296,Veracruz de Ignacio de la Llave,Emiliano Zapata,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Emiliano Zapata
+1060,MEX,70000000,70290000,70290304,Veracruz de Ignacio de la Llave,Espinal,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Espinal
+1061,MEX,70000000,70290000,70290311,Veracruz de Ignacio de la Llave,Fortín,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Fortín
+1062,MEX,70000000,70290000,70290345,Veracruz de Ignacio de la Llave,Gutiérrez Zamora,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Gutiérrez Zamora
+1063,MEX,70000000,70290000,70290367,Veracruz de Ignacio de la Llave,Huatusco,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Huatusco
+1064,MEX,70000000,70290000,70290377,Veracruz de Ignacio de la Llave,Hueyapan de Ocampo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Hueyapan de Ocampo
+1065,MEX,70000000,70290000,70290380,Veracruz de Ignacio de la Llave,Huiloapan de Cuauhtémoc,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Huiloapan de Cuauhtémoc
+1066,MEX,70000000,70290000,70290396,Veracruz de Ignacio de la Llave,Isla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Isla
+1067,MEX,70000000,70290000,70290401,Veracruz de Ignacio de la Llave,Ixhuatlán del Café,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Ixhuatlán del Café
+1068,MEX,70000000,70290000,70290399,Veracruz de Ignacio de la Llave,Ixhuatlancillo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Ixhuatlancillo
+1069,MEX,70000000,70290000,70290400,Veracruz de Ignacio de la Llave,Ixhuatlán de Madero,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Ixhuatlán de Madero
+1070,MEX,70000000,70290000,70290405,Veracruz de Ignacio de la Llave,Ixtaczoquitlán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Ixtaczoquitlán
+1071,MEX,70000000,70290000,70291082,Veracruz de Ignacio de la Llave,Xalapa,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Xalapa
+1072,MEX,70000000,70290000,70290456,Veracruz de Ignacio de la Llave,Jáltipan,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Jáltipan
+1073,MEX,70000000,70290000,70290431,Veracruz de Ignacio de la Llave,Jesús Carranza,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Jesús Carranza
+1074,MEX,70000000,70290000,70291088,Veracruz de Ignacio de la Llave,Xico,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Xico
+1075,MEX,70000000,70290000,70290478,Veracruz de Ignacio de la Llave,Lerdo de Tejada,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Lerdo de Tejada
+1076,MEX,70000000,70290000,70290495,Veracruz de Ignacio de la Llave,Magdalena,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Magdalena
+1077,MEX,70000000,70290000,70290499,Veracruz de Ignacio de la Llave,Manlio Fabio Altamirano,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Manlio Fabio Altamirano
+1078,MEX,70000000,70290000,70290506,Veracruz de Ignacio de la Llave,Mariano Escobedo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Mariano Escobedo
+1079,MEX,70000000,70290000,70290508,Veracruz de Ignacio de la Llave,Martínez de la Torre,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Martínez de la Torre
+1080,MEX,70000000,70290000,70290520,Veracruz de Ignacio de la Llave,Medellín,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Medellín
+1081,MEX,70000000,70290000,70290535,Veracruz de Ignacio de la Llave,Minatitlán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Minatitlán
+1082,MEX,70000000,70290000,70290539,Veracruz de Ignacio de la Llave,Misantla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Misantla
+1083,MEX,70000000,70290000,70290548,Veracruz de Ignacio de la Llave,Moloacán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Moloacán
+1084,MEX,70000000,70290000,70290583,Veracruz de Ignacio de la Llave,Nogales,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Nogales
+1085,MEX,70000000,70290000,70290605,Veracruz de Ignacio de la Llave,Orizaba,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Orizaba
+1086,MEX,70000000,70290000,70290660,Veracruz de Ignacio de la Llave,Pánuco,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Pánuco
+1087,MEX,70000000,70290000,70290622,Veracruz de Ignacio de la Llave,Papantla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Papantla
+1088,MEX,70000000,70290000,70290629,Veracruz de Ignacio de la Llave,Perote,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Perote
+1089,MEX,70000000,70290000,70290641,Veracruz de Ignacio de la Llave,Playa Vicente,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Playa Vicente
+1090,MEX,70000000,70290000,70290646,Veracruz de Ignacio de la Llave,Poza Rica de Hidalgo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Poza Rica de Hidalgo
+1091,MEX,70000000,70290000,70290652,Veracruz de Ignacio de la Llave,Pueblo Viejo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Pueblo Viejo
+1092,MEX,70000000,70290000,70290653,Veracruz de Ignacio de la Llave,Puente Nacional,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Puente Nacional
+1093,MEX,70000000,70290000,70290681,Veracruz de Ignacio de la Llave,Río Blanco,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Río Blanco
+1094,MEX,70000000,70290000,70290706,Veracruz de Ignacio de la Llave,San Andrés Tuxtla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,San Andrés Tuxtla
+1095,MEX,70000000,70290000,70290864,Veracruz de Ignacio de la Llave,Sayula de Alemán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Sayula de Alemán
+1096,MEX,70000000,70290000,70290872,Veracruz de Ignacio de la Llave,Soconusco,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Soconusco
+1097,MEX,70000000,70290000,70290873,Veracruz de Ignacio de la Llave,Soledad de Doblado,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Soledad de Doblado
+1098,MEX,70000000,70290000,70290890,Veracruz de Ignacio de la Llave,Tamiahua,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tamiahua
+1099,MEX,70000000,70290000,70290908,Veracruz de Ignacio de la Llave,Tecolutla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tecolutla
+1100,MEX,70000000,70290000,70291144,Veracruz de Ignacio de la Llave,Álamo Temapache,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Álamo Temapache
+1101,MEX,70000000,70290000,70290926,Veracruz de Ignacio de la Llave,Tempoal,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tempoal
+1102,MEX,70000000,70290000,70290932,Veracruz de Ignacio de la Llave,Teocelo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Teocelo
+1103,MEX,70000000,70290000,70290445,Veracruz de Ignacio de la Llave,José Azueta,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,José Azueta
+1104,MEX,70000000,70290000,70290973,Veracruz de Ignacio de la Llave,Tierra Blanca,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tierra Blanca
+1105,MEX,70000000,70290000,70290975,Veracruz de Ignacio de la Llave,Tihuatlán,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tihuatlán
+1106,MEX,70000000,70290000,70291027,Veracruz de Ignacio de la Llave,Tuxpan,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tuxpan
+1107,MEX,70000000,70290000,70291040,Veracruz de Ignacio de la Llave,Ursulo Galván,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Ursulo Galván
+1108,MEX,70000000,70290000,70291050,Veracruz de Ignacio de la Llave,Vega de Alatorre,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Vega de Alatorre
+1109,MEX,70000000,70290000,70291053,Veracruz de Ignacio de la Llave,Veracruz,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Veracruz
+1110,MEX,70000000,70290000,70291128,Veracruz de Ignacio de la Llave,Zentla,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Zentla
+1111,MEX,70000000,70290000,70291140,Veracruz de Ignacio de la Llave,Zongolica,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Zongolica
+1112,MEX,70000000,70290000,70290022,Veracruz de Ignacio de la Llave,Agua Dulce,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Agua Dulce
+1113,MEX,70000000,70290000,70290285,Veracruz de Ignacio de la Llave,El Higo,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,El Higo
+1114,MEX,70000000,70290000,70290572,Veracruz de Ignacio de la Llave,Nanchital de Lázaro Cárdenas del Río,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Nanchital de Lázaro Cárdenas del Río
+1115,MEX,70000000,70290000,70291018,Veracruz de Ignacio de la Llave,Tres Valles,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,Tres Valles
+1116,MEX,70000000,70290000,70290798,Veracruz de Ignacio de la Llave,San Rafael,Veracruz de Ignacio de la Llave,Veracruz de Ignacio de la Llave,San Rafael
+1117,MEX,70000000,70300000,70300000,Yucatán,Abalá,Yucatn,Yucatán,Abalá
+1118,MEX,70000000,70300000,70300005,Yucatán,Acanceh,Yucatn,Yucatán,Acanceh
+1119,MEX,70000000,70300000,70300117,Yucatán,Bokobá,Yucatn,Yucatán,Bokobá
+1120,MEX,70000000,70300000,70300119,Yucatán,Buctzotz,Yucatn,Yucatán,Buctzotz
+1121,MEX,70000000,70300000,70300132,Yucatán,Calotmul,Yucatn,Yucatán,Calotmul
+1122,MEX,70000000,70300000,70300221,Yucatán,Conkal,Yucatn,Yucatán,Conkal
+1123,MEX,70000000,70300000,70300265,Yucatán,Cuzamá,Yucatn,Yucatán,Cuzamá
+1124,MEX,70000000,70300000,70300168,Yucatán,Chemax,Yucatn,Yucatán,Chemax
+1125,MEX,70000000,70300000,70300193,Yucatán,Chumayel,Yucatn,Yucatán,Chumayel
+1126,MEX,70000000,70300000,70300276,Yucatán,Dzilam de Bravo,Yucatn,Yucatán,Dzilam de Bravo
+1127,MEX,70000000,70300000,70300277,Yucatán,Dzoncauich,Yucatn,Yucatán,Dzoncauich
+1128,MEX,70000000,70300000,70300305,Yucatán,Espita,Yucatn,Yucatán,Espita
+1129,MEX,70000000,70300000,70300357,Yucatán,Hocabá,Yucatn,Yucatán,Hocabá
+1130,MEX,70000000,70300000,70300358,Yucatán,Hoctún,Yucatn,Yucatán,Hoctún
+1131,MEX,70000000,70300000,70300359,Yucatán,Homún,Yucatn,Yucatán,Homún
+1132,MEX,70000000,70300000,70300388,Yucatán,Hunucmá,Yucatn,Yucatán,Hunucmá
+1133,MEX,70000000,70300000,70300415,Yucatán,Izamal,Yucatn,Yucatán,Izamal
+1134,MEX,70000000,70300000,70300457,Yucatán,Kanasín,Yucatn,Yucatán,Kanasín
+1135,MEX,70000000,70300000,70300458,Yucatán,Kinchil,Yucatn,Yucatán,Kinchil
+1136,MEX,70000000,70300000,70300498,Yucatán,Mama,Yucatn,Yucatán,Mama
+1137,MEX,70000000,70300000,70300564,Yucatán,Mérida,Yucatn,Yucatán,Mérida
+1138,MEX,70000000,70300000,70300545,Yucatán,Mocochá,Yucatn,Yucatán,Mocochá
+1139,MEX,70000000,70300000,70300557,Yucatán,Motul,Yucatn,Yucatán,Motul
+1140,MEX,70000000,70300000,70300559,Yucatán,Muxupip,Yucatn,Yucatán,Muxupip
+1141,MEX,70000000,70300000,70300610,Yucatán,Oxkutzcab,Yucatn,Yucatán,Oxkutzcab
+1142,MEX,70000000,70300000,70300617,Yucatán,Panabá,Yucatn,Yucatán,Panabá
+1143,MEX,70000000,70300000,70300633,Yucatán,Peto,Yucatn,Yucatán,Peto
+1144,MEX,70000000,70300000,70300648,Yucatán,Progreso,Yucatn,Yucatán,Progreso
+1145,MEX,70000000,70300000,70300667,Yucatán,Quintana Roo,Yucatn,Yucatán,Quintana Roo
+1146,MEX,70000000,70300000,70300686,Yucatán,Sacalum,Yucatn,Yucatán,Sacalum
+1147,MEX,70000000,70300000,70300806,Yucatán,Sanahcat,Yucatn,Yucatán,Sanahcat
+1148,MEX,70000000,70300000,70300866,Yucatán,Seyé,Yucatn,Yucatán,Seyé
+1149,MEX,70000000,70300000,70300885,Yucatán,Tahmek,Yucatn,Yucatán,Tahmek
+1150,MEX,70000000,70300000,70300906,Yucatán,Tecoh,Yucatn,Yucatán,Tecoh
+1151,MEX,70000000,70300000,70300916,Yucatán,Tekax,Yucatn,Yucatán,Tekax
+1152,MEX,70000000,70300000,70300917,Yucatán,Tekit,Yucatn,Yucatán,Tekit
+1153,MEX,70000000,70300000,70300918,Yucatán,Telchac Pueblo,Yucatn,Yucatán,Telchac Pueblo
+1154,MEX,70000000,70300000,70300919,Yucatán,Telchac Puerto,Yucatn,Yucatán,Telchac Puerto
+1155,MEX,70000000,70300000,70300939,Yucatán,Tepakán,Yucatn,Yucatán,Tepakán
+1156,MEX,70000000,70300000,70300964,Yucatán,Tetiz,Yucatn,Yucatán,Tetiz
+1157,MEX,70000000,70300000,70300972,Yucatán,Ticul,Yucatn,Yucatán,Ticul
+1158,MEX,70000000,70300000,70300978,Yucatán,Timucuy,Yucatn,Yucatán,Timucuy
+1159,MEX,70000000,70300000,70300981,Yucatán,Tinum,Yucatn,Yucatán,Tinum
+1160,MEX,70000000,70300000,70300982,Yucatán,Tixcacalcupul,Yucatn,Yucatán,Tixcacalcupul
+1161,MEX,70000000,70300000,70300984,Yucatán,Tizimín,Yucatn,Yucatán,Tizimín
+1162,MEX,70000000,70300000,70301032,Yucatán,Tzucacab,Yucatn,Yucatán,Tzucacab
+1163,MEX,70000000,70300000,70301034,Yucatán,Ucú,Yucatn,Yucatán,Ucú
+1164,MEX,70000000,70300000,70301035,Yucatán,Umán,Yucatn,Yucatán,Umán
+1165,MEX,70000000,70300000,70301043,Yucatán,Valladolid,Yucatn,Yucatán,Valladolid
+1166,MEX,70000000,70300000,70301095,Yucatán,Xocchel,Yucatn,Yucatán,Xocchel
+1167,MEX,70000000,70300000,70301105,Yucatán,Yaxcabá,Yucatn,Yucatán,Yaxcabá
+1168,MEX,70000000,70310000,70310067,Zacatecas,Apozol,Zacatecas,Zacatecas,Apozol
+1169,MEX,70000000,70310000,70310112,Zacatecas,Benito Juárez,Zacatecas,Zacatecas,Benito Juárez
+1170,MEX,70000000,70310000,70310129,Zacatecas,Calera,Zacatecas,Zacatecas,Calera
+1171,MEX,70000000,70310000,70310150,Zacatecas,Cañitas de Felipe Pescador,Zacatecas,Zacatecas,Cañitas de Felipe Pescador
+1172,MEX,70000000,70310000,70310247,Zacatecas,Cuauhtémoc,Zacatecas,Zacatecas,Cuauhtémoc
+1173,MEX,70000000,70310000,70310160,Zacatecas,Chalchihuites,Zacatecas,Zacatecas,Chalchihuites
+1174,MEX,70000000,70310000,70310313,Zacatecas,Fresnillo,Zacatecas,Zacatecas,Fresnillo
+1175,MEX,70000000,70310000,70310320,Zacatecas,Genaro Codina,Zacatecas,Zacatecas,Genaro Codina
+1176,MEX,70000000,70310000,70310322,Zacatecas,General Francisco R. Murguía,Zacatecas,Zacatecas,General Francisco R. Murguía
+1177,MEX,70000000,70310000,70310291,Zacatecas,El Plateado de Joaquín Amaro,Zacatecas,Zacatecas,El Plateado de Joaquín Amaro
+1178,MEX,70000000,70310000,70310324,Zacatecas,General Pánfilo Natera,Zacatecas,Zacatecas,General Pánfilo Natera
+1179,MEX,70000000,70310000,70310334,Zacatecas,Guadalupe,Zacatecas,Zacatecas,Guadalupe
+1180,MEX,70000000,70310000,70310365,Zacatecas,Huanusco,Zacatecas,Zacatecas,Huanusco
+1181,MEX,70000000,70310000,70310422,Zacatecas,Jalpa,Zacatecas,Zacatecas,Jalpa
+1182,MEX,70000000,70310000,70310430,Zacatecas,Jerez,Zacatecas,Zacatecas,Jerez
+1183,MEX,70000000,70310000,70310447,Zacatecas,Juan Aldama,Zacatecas,Zacatecas,Juan Aldama
+1184,MEX,70000000,70310000,70310450,Zacatecas,Juchipila,Zacatecas,Zacatecas,Juchipila
+1185,MEX,70000000,70310000,70310485,Zacatecas,Loreto,Zacatecas,Zacatecas,Loreto
+1186,MEX,70000000,70310000,70310515,Zacatecas,Mazapil,Zacatecas,Zacatecas,Mazapil
+1187,MEX,70000000,70310000,70310531,Zacatecas,Miguel Auza,Zacatecas,Zacatecas,Miguel Auza
+1188,MEX,70000000,70310000,70310582,Zacatecas,Nochistlán de Mejía,Zacatecas,Zacatecas,Nochistlán de Mejía
+1189,MEX,70000000,70310000,70310601,Zacatecas,Ojocaliente,Zacatecas,Zacatecas,Ojocaliente
+1190,MEX,70000000,70310000,70310660,Zacatecas,Pánuco,Zacatecas,Zacatecas,Pánuco
+1191,MEX,70000000,70310000,70310640,Zacatecas,Pinos,Zacatecas,Zacatecas,Pinos
+1192,MEX,70000000,70310000,70310683,Zacatecas,Río Grande,Zacatecas,Zacatecas,Río Grande
+1193,MEX,70000000,70310000,70310689,Zacatecas,Sain Alto,Zacatecas,Zacatecas,Sain Alto
+1194,MEX,70000000,70310000,70310876,Zacatecas,Sombrerete,Zacatecas,Zacatecas,Sombrerete
+1195,MEX,70000000,70310000,70310883,Zacatecas,Tabasco,Zacatecas,Zacatecas,Tabasco
+1196,MEX,70000000,70310000,70310945,Zacatecas,Tepechitlán,Zacatecas,Zacatecas,Tepechitlán
+1197,MEX,70000000,70310000,70310951,Zacatecas,Tepetongo,Zacatecas,Zacatecas,Tepetongo
+1198,MEX,70000000,70310000,70310971,Zacatecas,Teúl de González Ortega,Zacatecas,Zacatecas,Teúl de González Ortega
+1199,MEX,70000000,70310000,70310996,Zacatecas,Tlaltenango de Sánchez Román,Zacatecas,Zacatecas,Tlaltenango de Sánchez Román
+1200,MEX,70000000,70310000,70311049,Zacatecas,Valparaíso,Zacatecas,Zacatecas,Valparaíso
+1201,MEX,70000000,70310000,70311068,Zacatecas,Villa de Cos,Zacatecas,Zacatecas,Villa de Cos
+1202,MEX,70000000,70310000,70311059,Zacatecas,Villa García,Zacatecas,Zacatecas,Villa García
+1203,MEX,70000000,70310000,70311061,Zacatecas,Villa Hidalgo,Zacatecas,Zacatecas,Villa Hidalgo
+1204,MEX,70000000,70310000,70311080,Zacatecas,Villanueva,Zacatecas,Zacatecas,Villanueva
+1205,MEX,70000000,70310000,70311111,Zacatecas,Zacatecas,Zacatecas,Zacatecas,Zacatecas
+1206,MEX,70000000,70310000,70311017,Zacatecas,Trancoso,Zacatecas,Zacatecas,Trancoso

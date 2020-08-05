@@ -1,0 +1,11 @@
+,iso,adm0_id,adm1_id,adm2_id,region_name,region_code,ADMIN_NAME,weight
+0,GBR,50000000,50040000,50040001,Scotland,7,Scotland,1.0
+1,GBR,50000000,50050000,50050001,London and South East,4,South East and London,1.0
+2,GBR,50000000,50030000,50030001,Northern Ireland,8,Northern Ireland,1.0
+3,GBR,50000000,50070000,50070001,Wales,6,Wales,1.0
+4,GBR,50000000,50060000,50060001,South West of England,5,South West,1.0
+5,GBR,50000000,50080000,50080001,English Midlands,2,West Midlands,0.442
+6,GBR,50000000,50000000,50000001,English Midlands,2,East Midlands,0.558
+7,GBR,50000000,50010000,50010001,East of England,3,East of England,1.0
+8,GBR,50000000,50020000,50020001,North of England,1,North East,0.178
+9,GBR,50000000,50090000,50090001,North of England,1,Yorkshire and the Humber,0.348

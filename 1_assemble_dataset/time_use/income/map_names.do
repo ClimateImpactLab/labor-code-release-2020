@@ -45,7 +45,7 @@ end
 loc isos "BRA" "CHN" "ESP" "FRA" "GBR" "IND" "MEX" "USA"
 
 foreach iso in "`isos'" {
-	qui import delim `lab'/shapefile_to_timeuse_crosswalk_`iso'.csv, clear
+	qui import delim "${DIR_EXT_DATA}/crosswalks/shapefile_to_timeuse_crosswalk_`iso'.csv", clear
 	
 	if "`iso'" == "GBR" {
 		rename admin_name name_1
@@ -82,7 +82,7 @@ tempfile countnames
 save `countnames'
 
 * load getal data and subset to countries we want
-use "${DIR_EXT_DATA}/pwt_income_adm1.dta", clear
+use "${DIR_EXT_DATA}/misc/pwt_income_adm1.dta", clear
 keep region countrycode
 rename countrycode iso
 duplicates drop
@@ -102,7 +102,7 @@ tempfile insample
 save `insample'
 
 * load population data and subset to countries we want
-use "${}/adm2_pop_mortality.dta", clear
+use "${DIR_EXT_DATA}/misc/adm2_pop_mortality.dta", clear
 
 * NOTE: Missing a few years of China data here. Interpolate (linearly in-sample, log out of sample)
 egen adm2_id_unique = group(iso adm1_id adm2_id)
@@ -585,7 +585,7 @@ replace admin_name = "missing" if admin_name == ""
 
 forvalues j  = 1(1)2 {
 	preserve
-		use "`lab_db'/1_preparation/covariates/income/pwt_income_adm1.dta", clear
+		use "${DIR_EXT_DATA}/misc/PennWorldTables_pwt_income_adm1.dta", clear
 		rename (region *gdppc*) (Uadmin_name`j' *gdppc*_`j')
 		rename countrycode iso
 
@@ -620,4 +620,4 @@ forvalues j  = 1(1)2 {
 * make a new grouping id var
 egen match_id = group(iso admin_name getal_admin_name* pop_adm_name*), missing
 
-export delimited using "$DB/Global ACP/labor/replication/1_preparation/covariates/income/income_pop_merged.csv", replace
+export delimited using "${DIR_EXT_DATA}/misc/income_pop_merged.csv", replace

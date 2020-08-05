@@ -1,0 +1,19 @@
+,iso,adm0_id,adm1_id,adm2_id,region_name,region_code,NAME_1
+0,ESP,30000000,30000000,30000001,Andalucia,1,Andalucía
+1,ESP,30000000,30010000,30010001,Aragon,2,Aragón
+2,ESP,30000000,30020000,30020001,Cantabria,6,Cantabria
+3,ESP,30000000,30030000,30030001,Castilla y Leon,7,Castilla y León
+4,ESP,30000000,30040000,30040001,Castilla la Mancha,8,Castilla-La Mancha
+5,ESP,30000000,30050000,30050001,Catalonia,9,Cataluña
+6,ESP,30000000,30060000,30060001,Ceuta y Melilla,18,Ceuta y Melilla
+7,ESP,30000000,30090000,30090001,Madrid (Comunidad de),13,Comunidad de Madrid
+8,ESP,30000000,30070000,30070001,Navarra (Comunidad Foral de),15,Comunidad Foral de Navarra
+9,ESP,30000000,30080000,30080001,Comunidad Valencia,10,Comunidad Valenciana
+10,ESP,30000000,30100000,30100001,Extremadura,11,Extremadura
+11,ESP,30000000,30110000,30110001,Galicia,12,Galicia
+12,ESP,30000000,30120000,30120001,Balears (Illes),4,Islas Baleares
+13,ESP,30000000,30130000,30130001,Canarias,5,Islas Canarias
+14,ESP,30000000,30140000,30140001,Rioja (la),17,La Rioja
+15,ESP,30000000,30150000,30150001,Pais Vasco,16,País Vasco
+16,ESP,30000000,30160000,30160001,Asturias (Principado de),3,Principado de Asturias
+17,ESP,30000000,30170000,30170001,Murcia (Region de),14,Región de Murcia
