@@ -42,7 +42,7 @@ stata do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths
 *************************************************************************
 
 * import Penn World Tables Country-level data 
-use "${DIR_EXT_DATA}/PennWorldTables_pwt90.dta", clear
+use "${DIR_EXT_DATA}/misc/PennWorldTables_pwt90.dta", clear
 
 * get the inflation factor
 preserve
@@ -73,7 +73,7 @@ save `pwt'
 * LA PORTA
 **********
 
-import delimited "${DIR_EXT_DATA}/LaPorta_Gennaioli2014_full.csv", clear
+import delimited "${DIR_EXT_DATA}/misc/LaPorta_Gennaioli2014_full.csv", clear
 
 * housekeeping
 rename code countrycode 
@@ -101,7 +101,7 @@ save `laporta'
 * EU
 ****
 * import iso-2 to iso-3 crosswalk
-import delimited "${DIR_EXT_DATA}/countries_codes_and_coordinates.csv", clear varnames(1)
+import delimited "${DIR_EXT_DATA}/misc/countries_codes_and_coordinates.csv", clear varnames(1)
 foreach var in alpha2code alpha3code {
 	replace `var' = subinstr(`var',`"""',"",.)
 	replace `var' = subinstr(`var'," ","",.)
@@ -260,5 +260,5 @@ label var countrycode "alpha-3 iso code"
 
 * save output -- note: other users may want to change this path
 
-save "${DIR_EXT_DATA}/pwt_income_adm1.dta", replace
+save "${DIR_EXT_DATA}/misc/pwt_income_adm1.dta", replace
 

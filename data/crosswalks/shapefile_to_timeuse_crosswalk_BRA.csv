@@ -1,0 +1,7 @@
+,iso,metropolitan_region_code,metropolitan_region_name,NAME_1_adm1,NAME_1_adm2,NAME_2,adm0_id,adm1_id,adm2_id
+0,BRA,26,Recife,Pernambuco,Pernambuco,Recife,10000000,10020000,10020002
+1,BRA,29,Salvador,Bahia,Bahia,Salvador,10000000,10000000,10000004
+2,BRA,31,Belo Horizonte,Minas Gerais,Minas Gerais,Belo Horizonte,10000000,10010000,10010000
+3,BRA,33,Rio de Janeiro,Rio de Janeiro,Rio de Janeiro,Rio de Janeiro,10000000,10040000,10040003
+4,BRA,35,So Paulo,São Paulo,So Paulo,So Paulo,10000000,10050000,10050005
+5,BRA,43,Porto Alegre,Rio Grande do Sul,Rio Grande do Sul,Porto Alegre,10000000,10030000,10030001
