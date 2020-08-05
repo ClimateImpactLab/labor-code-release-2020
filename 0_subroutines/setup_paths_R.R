@@ -8,8 +8,8 @@ DIR_EXT_DATA = paste0(ROOT_REPO, "/data")
 
 DIR_REPO_LABOR <- paste0(ROOT_REPO,"/labor-code-release-2020")
 
-DIR_EXT_DATA <- paste0(ROOT_REPO,"/data")
-DIR_FIG <- paste0(DIR_EXT_DATA,"/figures")
+DIR_EXT_DATA <- paste0(DIR_REPO_LABOR,"/data")
+DIR_FIG <- paste0(DIR_REPO_LABOR,"/figures")
 
 DIR_STER <- paste0(DIR_EXT_DATA,"/sters")
 DIR_REPO_POST_PROJ <- paste0(ROOT_REPO,"/post-projection-tools")

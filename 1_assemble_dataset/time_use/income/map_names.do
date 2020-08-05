@@ -585,7 +585,7 @@ replace admin_name = "missing" if admin_name == ""
 
 forvalues j  = 1(1)2 {
 	preserve
-		use "${DIR_EXT_DATA}/misc/PennWorldTables_pwt_income_adm1.dta", clear
+		use "${DIR_EXT_DATA}/misc/pwt_income_adm1.dta", clear
 		rename (region *gdppc*) (Uadmin_name`j' *gdppc*_`j')
 		rename countrycode iso
 
