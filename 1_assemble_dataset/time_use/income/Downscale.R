@@ -19,7 +19,6 @@ library(data.table)
 source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R"))
 
 lab = glue("{DB}/Global ACP/labor/replication/")
-mig = glue("{DB}/GCP_Reanalysis/cross_sector/present_data/population/")
 source(glue("{DIR_REPO_POST_PROJ}/downscale_function.R"))
 
 
@@ -74,7 +73,7 @@ col = long %>%
 
 # get country level populations and merge in
 # use World Bank data for this, as our data are not comprehensive within a country
-country_pop = fread(glue("{mig}/world_bank_pop_data.csv"), header=T) %>%
+country_pop = fread(glue("{DIR_EXT_DATA}/misc/world_bank_pop_data.csv"), header=T) %>%
 	data.frame() %>%
 	dplyr::select(-Country.Name, -Indicator.Name, -Indicator.Code, -V64) %>%
 	rename(iso = Country.Code) %>%

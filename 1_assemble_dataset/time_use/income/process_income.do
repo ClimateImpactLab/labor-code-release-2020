@@ -35,16 +35,14 @@ set maxvar 32767
 pause off
 cap ssc install unique
 
-cilpath 
-local lab       "$DB/Global ACP/labor/"
-global Inc_DATA "$DB/Global ACP/MORTALITY/Replication_2018/2_Data"
+stata do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
 
 *************************************************************************
 * 				PART B. Import Pen World Tables Data					*			
 *************************************************************************
 
 * import Penn World Tables Country-level data 
-use "$Inc_DATA/Raw/Income/PennWorldTables/pwt90.dta", clear
+use "${DIR_EXT_DATA}/PennWorldTables_pwt90.dta", clear
 
 * get the inflation factor
 preserve
@@ -75,7 +73,7 @@ save `pwt'
 * LA PORTA
 **********
 
-import delimited "$Inc_DATA/Raw/Income/LaPorta/Gennaioli2014_full.csv", clear
+import delimited "${DIR_EXT_DATA}/LaPorta_Gennaioli2014_full.csv", clear
 
 * housekeeping
 rename code countrycode 
@@ -103,7 +101,7 @@ save `laporta'
 * EU
 ****
 * import iso-2 to iso-3 crosswalk
-import delimited "$Inc_DATA/Raw/Income/EU/countries_codes_and_coordinates.csv", clear varnames(1)
+import delimited "${DIR_EXT_DATA}/countries_codes_and_coordinates.csv", clear varnames(1)
 foreach var in alpha2code alpha3code {
 	replace `var' = subinstr(`var',`"""',"",.)
 	replace `var' = subinstr(`var'," ","",.)
@@ -124,7 +122,7 @@ save `iso_xwalk'
 
 * import NUTS_2 gdppd and create downscaling factor to 
 * 	apply to Penn world tables national figures
-import delimited "$Inc_DATA/Raw/Income/EU/nama_10r_2gdp.tsv", delimit(tab) clear
+import delimited "${DIR_EXT_DATA}/EU_nama_10r_2gdp.tsv", delimit(tab) clear
 
 * rename year columns
 forvalues ii = 2/18 {
@@ -262,5 +260,5 @@ label var countrycode "alpha-3 iso code"
 
 * save output -- note: other users may want to change this path
 
-save "`lab'/replication/1_preparation/covariates/income/pwt_income_adm1.dta", replace
+save "${DIR_EXT_DATA}/pwt_income_adm1.dta", replace
 
