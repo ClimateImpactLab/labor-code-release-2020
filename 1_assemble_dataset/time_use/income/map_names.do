@@ -11,11 +11,7 @@ set more off
 pause off
 cap ssc install reclink
 
-cilpath
-
-loc lab "$SAC_SHARES/estimation/labor/time_use_data/intermediate/"
-loc lab_db "$DB/Global ACP/labor/replication"
-loc Inc_DATA "$DB/Global ACP/MORTALITY/Replication_2018/2_Data"
+stata do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
 
 ****************************
 * 1. set up tools and data *
@@ -86,7 +82,7 @@ tempfile countnames
 save `countnames'
 
 * load getal data and subset to countries we want
-use "`lab_db'/1_preparation/covariates/income/pwt_income_adm1.dta", clear
+use "${DIR_EXT_DATA}/pwt_income_adm1.dta", clear
 keep region countrycode
 rename countrycode iso
 duplicates drop
@@ -106,7 +102,7 @@ tempfile insample
 save `insample'
 
 * load population data and subset to countries we want
-use "${DB}/Global ACP/labor/1_preparation/covariates/population/adm2_pop_mortality.dta", clear
+use "${}/adm2_pop_mortality.dta", clear
 
 * NOTE: Missing a few years of China data here. Interpolate (linearly in-sample, log out of sample)
 egen adm2_id_unique = group(iso adm1_id adm2_id)
