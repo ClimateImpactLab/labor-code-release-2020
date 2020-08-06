@@ -4,9 +4,6 @@
 import pandas
 import os
 import sys
-from cilpath import Cilpath 
-
-paths = Cilpath()
 
 
 
