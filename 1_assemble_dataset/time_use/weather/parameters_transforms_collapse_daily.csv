@@ -1,12 +1,6 @@
 parameters,transforms,collapse_as,prefix_config
 prcp,"""poly"" : 2",avg,prcp_poly
-tmax,"'polyAbove' : [4, 27], 'polyBelow' : [4, 27]",avg,tmax_polyA27_polyB27
-tavg,"'polyAbove' : [4, 27], 'polyBelow' : [4, 27]",avg,tavg_polyA27_polyB27
 tmax,"'bins' : ['1C', -40, 60]",avg,tmax_bin
-tavg,"'bins' : ['1C', -40, 60]",avg,tavg_bin
-tmax,"'polyAbove' : [4, 0]",avg,tmax_polyA_0
-tavg,"'polyAbove' : [4, 0]",avg,tavg_polyA_0
 tmax,"""poly"" : 4",avg,tmax_poly
-tavg,"""poly"" : 4",avg,tavg_poly
 tmax,"'rcspline' : (27, 37, 39)",avg,tmax_rcspline_nochn_3kn
 tmax,"'rcspline' : (21, 37, 41)",avg,tmax_rcspline_wchn_3kn
