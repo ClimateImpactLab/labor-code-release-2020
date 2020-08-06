@@ -1,19 +1,17 @@
 country,region_columns,input_file,climate_source,weight_columns,start_year,last_year,collapse_to,admin_level
-BRA,"""NAME_1"", ""NAME_2""",/shares/gcp/estimation/labor/spatial_data/BRA/segment_weights/BRA_6mun_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,2001,2010,day,adm2
-FRA,"""NAME_1"" ",/shares/gcp/estimation/labor/spatial_data/FRA/segment_weights/FRA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1997,2000,day,adm1
-ESP,"""NAME_1"" ",/shares/gcp/estimation/labor/spatial_data/ESP/segment_weights/ESP_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2001,2004,day ,adm1
-GBR,"""ADMIN_NAME""",/shares/gcp/estimation/labor/spatial_data/GBR/segment_weights/GBR_region_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1973,2002,day ,adm1
-IND,"""DIST91_ID""",/shares/gcp/estimation/labor/spatial_data/IND/segment_weights/district91_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1997,2000,day ,adm2
-MEX,"""NOM_ENT"", ""NOM_MUN""",/shares/gcp/estimation/labor/spatial_data/MEX/segment_weights/national_municipal_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2004,2010,day ,adm2
-USA,"""NAME_1"", ""NAME_2""",/shares/gcp/estimation/labor/spatial_data/USA/segment_weights/USA_adm2_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2002,2010,day ,adm2
-CHN,"""NAME_1"", ""NAME_2""",/shares/gcp/estimation/labor/spatial_data/CHN/segment_weights/CHN_adm2_corrected_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1988,2010,day ,adm2
-CHN,"""NAME_1"", ""NAME_2""",/shares/gcp/estimation/labor/spatial_data/CHN/segment_weights/CHN_adm2_corrected_ERAI_grid_segment_weights_area_pop.csv ,ERAI ,popwt ,1988,2012,day ,adm2
-CHN,"""GID_3""",/shares/gcp/estimation/labor/spatial_data/CHN/segment_weights/gadm36_CHN_3_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,1988,2010,day,adm3
-BRA,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/BRA/segment_weights/BRA_adm1_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,1979,2012,year ,adm1
-FRA,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/FRA/segment_weights/FRA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-ESP,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/ESP/segment_weights/ESP_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-GBR,"""ADMIN_NAME""",/shares/gcp/estimation/labor/spatial_data/GBR/segment_weights/GBR_region_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-IND,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/IND/segment_weights/IND_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-MEX,"""NOM_ENT""",/shares/gcp/estimation/labor/spatial_data/MEX/segment_weights/Ag_ESOC_shapefiles_Mexican States_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-USA,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/USA/segment_weights/USA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
-CHN,"""NAME_1""",/shares/gcp/estimation/labor/spatial_data/CHN/segment_weights/CHN_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+BRA,"""NAME_1"", ""NAME_2""",ROOT_INT_DATA/climate/spatial_data/BRA/segment_weights/BRA_6mun_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,2001,2010,day,adm2
+FRA,"""NAME_1"" ",ROOT_INT_DATA/climate/spatial_data/FRA/segment_weights/FRA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1997,2000,day,adm1
+ESP,"""NAME_1"" ",ROOT_INT_DATA/climate/spatial_data/ESP/segment_weights/ESP_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2001,2004,day ,adm1
+GBR,"""ADMIN_NAME""",ROOT_INT_DATA/climate/spatial_data/GBR/segment_weights/GBR_region_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1973,2002,day ,adm1
+IND,"""DIST91_ID""",ROOT_INT_DATA/climate/spatial_data/IND/segment_weights/district91_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1997,2000,day ,adm2
+MEX,"""NOM_ENT"", ""NOM_MUN""",ROOT_INT_DATA/climate/spatial_data/MEX/segment_weights/national_municipal_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2004,2010,day ,adm2
+USA,"""NAME_1"", ""NAME_2""",ROOT_INT_DATA/climate/spatial_data/USA/segment_weights/USA_adm2_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,2002,2010,day ,adm2
+CHN,"""GID_3""",ROOT_INT_DATA/climate/spatial_data/CHN/segment_weights/gadm36_CHN_3_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,1988,2010,day,adm3
+BRA,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/BRA/segment_weights/BRA_adm1_GMFD_grid_segment_weights_area_pop.csv,GMFD ,popwt ,1979,2012,year ,adm1
+FRA,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/FRA/segment_weights/FRA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+ESP,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/ESP/segment_weights/ESP_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+GBR,"""ADMIN_NAME""",ROOT_INT_DATA/climate/spatial_data/GBR/segment_weights/GBR_region_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+IND,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/IND/segment_weights/IND_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+MEX,"""NOM_ENT""",ROOT_INT_DATA/climate/spatial_data/MEX/segment_weights/Ag_ESOC_shapefiles_Mexican States_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+USA,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/USA/segment_weights/USA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+CHN,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/CHN/segment_weights/CHN_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1

@@ -1,7 +1,6 @@
 # set up paths for python scripts
 
 ROOT_REPO = "/home/liruixue/repos"
-print(ROOT_REPO)
 ROOT_INT_DATA = "/shares/gcp/estimation/labor/code_release_int_data"
 
 DIR_OUTPUT = ROOT_REPO + "/output"
