@@ -4,7 +4,7 @@ ROOT_REPO <- "/home/liruixue/repos"
 ROOT_INT_DATA <- "/shares/gcp"
 
 DIR_OUTPUT <- paste0(ROOT_REPO,"/output")
-DIR_EXT_DATA = paste0(ROOT_REPO, "/data")
+DIR_EXT_DATA <- paste0(ROOT_REPO, "/data")
 
 DIR_REPO_LABOR <- paste0(ROOT_REPO,"/labor-code-release-2020")
 
