@@ -9,13 +9,16 @@ import os
 import re
 
 
+os.chdir(paths.DIR_REPO_LABOR + "/1_assemble_dataset/time_use/weather")
+
 lines_agg = pandas.read_csv(r"aggregation_config_lines.csv", skipinitialspace=True)
 lines_gis = pandas.read_csv("gis_config_lines.csv")
 
 find_str = 'ROOT_INT_DATA'
-replace_str = ROOT_INT_DATA
+replace_str = paths.ROOT_INT_DATA
 
-new_csv_str = re.sub(find_str, replace_str, my_csv_text)
+lines_agg = lines_agg.replace(find_str, replace_str, regex = True)
+lines_gis = lines_gis.replace(find_str, replace_str, regex = True)
 
 
 daily = pandas.read_csv(r"parameters_transforms_collapse_daily.csv", skipinitialspace=True)
@@ -25,12 +28,13 @@ yearly = pandas.read_csv(r"parameters_transforms_collapse_yearly.csv", skipiniti
 
 
 # create the folder to store configs
-path_config = paths.ROOT_INT_DATA + "/climate/config/"
+path_config = paths.DIR_EXT_DATA + "/climate/config"
+
 if not os.path.exists(path_config):
+	print("Creating:" + path_config)
 	os.makedirs(path_config)
 
 for i in range(0, len(lines_agg),1):
-
 	os.chdir(path_config)
 	country = lines_agg.loc[i]["country"]
 	if os.path.isdir(country)==False:

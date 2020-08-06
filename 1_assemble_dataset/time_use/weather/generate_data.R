@@ -1,6 +1,7 @@
 #Hit command+k+1 to fold functions. Better to read ! 
 #Below functions are commented out tons of examples of arguments to run. Don't read. 
 
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R")
 
 setup <- function(){
 
@@ -30,9 +31,9 @@ setup()
 paths <- function(ctry, admin_level){
 
 
-	config_path = glue("{SAC_SHARES}/estimation/labor/climate_data/config/{ctry}")
+	config_path = glue("{DIR_EXT_DATA}/climate/config/{ctry}")
 
-	output_path = glue("{SAC_SHARES}/estimation/labor/climate_data/raw/{ctry}/{admin_level}")
+	output_path = glue("{ROOT_INT_DATA}/climate/raw/{ctry}/{admin_level}")
 
 	  if(dir.exists(output_path)==FALSE){
 	    dir.create(output_path, recursive=TRUE)
@@ -67,7 +68,7 @@ do_weights = function(country, climate_source, admin_level){
 
 	paths = paths(ctry=country, admin_level=admin_level)
 
-	code = glue("{REPO}/climate_data_aggregation/gis/intersect_zonalstats_par.py")
+	code = glue("{ROOT_REPO}/climate_data_aggregation/gis/intersect_zonalstats_par.py")
 
 	config = glue("{paths$config_path}/gis_{country}_{climate_source}_{admin_level}.txt")
 
@@ -83,26 +84,23 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 
 	paths = paths(ctry=country, admin_level=admin_level)
 
-	code = glue("{REPO}/climate_data_aggregation/aggregation/merge_transform_average.py")
+	code = glue("{ROOT_REPO}/climate_data_aggregation/aggregation/merge_transform_average.py")
 
 	config = glue("{paths$config_path}/{transf}_{country}_{climate_source}_{admin_level}.txt")
 
 	command = glue("python {code} {config}")
 
 	system(command)
-	#return(command)
 }
 
 ######### generate weights
 
-# args_weights = args_for_weights(climate_source_list = "GMFD",
-# 	countries_list = "CHN",
-# 	admin_list = "adm3"
-# )
+args_weights = args_for_weights(climate_source_list = "GMFD",
+	countries_list = "CHN",
+	admin_list = "adm3"
+)
 
-# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
-
-
+mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
 
 
 
