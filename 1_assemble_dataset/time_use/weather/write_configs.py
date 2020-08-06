@@ -1,11 +1,11 @@
 
 
 
+from labor-code-release-2020.0_subroutimes import setup_paths_python
+
 import pandas
 import os
 import sys
-
-
 
 os.chdir(paths.REPO + "/gcp-labor/1_preparation/weather")
 
@@ -17,9 +17,6 @@ lines = pandas.read_csv(r"aggregation_config_lines.csv", skipinitialspace=True)
 daily = pandas.read_csv(r"parameters_transforms_collapse_daily.csv", skipinitialspace=True)
 
 yearly = pandas.read_csv(r"parameters_transforms_collapse_yearly.csv", skipinitialspace=True)
-
-
-
 
 
 for i in range(0, len(lines),1):

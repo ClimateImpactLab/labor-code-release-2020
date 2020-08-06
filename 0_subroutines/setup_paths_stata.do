@@ -2,7 +2,7 @@
 * the user needs to determine where the repo is located
 * and where the large raw data files are
 global ROOT_REPO = "/home/liruixue/repos"
-global ROOT_INT_DATA = "/shares/gcp"
+global ROOT_INT_DATA = "/shares/gcp/estimation/labor/code_release_int_data"
 
 * generate the rest of the paths according to the first two
 global DIR_OUTPUT = "${DIR_REPO_LABOR}/output"
