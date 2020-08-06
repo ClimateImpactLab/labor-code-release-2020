@@ -7,7 +7,7 @@ import paths
 import pandas
 import os
 import re
-
+import shutil
 
 os.chdir(paths.DIR_REPO_LABOR + "/1_assemble_dataset/time_use/weather")
 
@@ -25,14 +25,16 @@ daily = pandas.read_csv(r"parameters_transforms_collapse_daily.csv", skipinitial
 yearly = pandas.read_csv(r"parameters_transforms_collapse_yearly.csv", skipinitialspace=True)
 
 
-
-
 # create the folder to store configs
 path_config = paths.DIR_EXT_DATA + "/climate/config"
 
-if not os.path.exists(path_config):
-	print("Creating:" + path_config)
-	os.makedirs(path_config)
+
+if os.path.exists(path_config):
+	print("Moved old configs at:" + path_config)
+	shutil.rmtree(path_config)
+
+print("Creating:" + path_config)
+os.makedirs(path_config)
 
 for i in range(0, len(lines_agg),1):
 	os.chdir(path_config)
