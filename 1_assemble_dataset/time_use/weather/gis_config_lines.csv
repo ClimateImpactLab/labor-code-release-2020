@@ -1,17 +1,15 @@
 country,string_id_fields,shapefile_location,shapefile_name,shp_id,weightlist,admin_level,clim
-BRA,"'NAME_1','NAME_2'",/shares/gcp/estimation/labor/spatial_data/BRA,BRA_6mun,BRA,pop,adm2,GMFD
-FRA,'NAME_1',/shares/gcp/estimation/labor/spatial_data/FRA,FRA_adm1,FRA,pop,adm1,GMFD
-ESP,'NAME_1',/shares/gcp/estimation/labor/spatial_data/ESP,ESP_adm1,ESP,pop,adm1,GMFD
-GBR,'ADMIN_NAME',/shares/gcp/estimation/labor/spatial_data/GBR,GBR_region,GBR,pop,adm1,GMFD
-IND,'DIST91_ID',/shares/gcp/estimation/labor/spatial_data/IND,district91,IND,pop,adm2,GMFD
-MEX,"'NOM_ENT', 'NOM_MUN'",/shares/gcp/estimation/labor/spatial_data/MEX,national_municipal,MEX,pop,adm2,GMFD
-USA,"'NAME_1', 'NAME_2'",/shares/gcp/estimation/labor/spatial_data/USA,USA_adm2,USA,pop,adm2,GMFD
-CHN,"'NAME_1', 'NAME_2'",/shares/gcp/estimation/labor/spatial_data/CHN,CHN_adm2_corrected,CHN,pop,adm2,GMFD
-CHN,"'NAME_1', 'NAME_2'",/shares/gcp/estimation/labor/spatial_data/CHN,CHN_adm2_corrected,CHN,pop,adm2,ERAI
-BRA,'NAME_1',/shares/gcp/estimation/labor/spatial_data/BRA,BRA_adm1,BRA,pop,adm1,GMFD
-IND,'NAME_1',/shares/gcp/estimation/labor/spatial_data/IND,IND_adm1,IND,pop,adm1,GMFD
-MEX,'NOM_ENT',/shares/gcp/estimation/labor/spatial_data/MEX,Ag_ESOC_shapefiles_Mexican States,MEX,pop,adm1,GMFD
-USA,'NAME_1',/shares/gcp/estimation/labor/spatial_data/USA,USA_adm1,USA,pop,adm1,GMFD
-CHN,'NAME_1',/shares/gcp/estimation/labor/spatial_data/CHN,CHN_adm1,CHN,pop,adm1,GMFD
-CHN,'NAME_1',/shares/gcp/estimation/labor/spatial_data/CHN,CHN_adm1,CHN,pop,adm1,ERAI
-CHN,'GID_3',/shares/gcp/estimation/labor/spatial_data/CHN,gadm36_CHN_3,CHN,pop,adm3,GMFD
+BRA,"'NAME_1','NAME_2'",ROOT_INT_DATA/climate/spatial_data/BRA,BRA_6mun,BRA,pop,adm2,GMFD
+BRA,'NAME_1',ROOT_INT_DATA/climate/spatial_data/BRA,BRA_adm1,BRA,pop,adm1,GMFD
+FRA,'NAME_1',ROOT_INT_DATA/climate/spatial_data/FRA,FRA_adm1,FRA,pop,adm1,GMFD
+ESP,'NAME_1',ROOT_INT_DATA/climate/spatial_data/ESP,ESP_adm1,ESP,pop,adm1,GMFD
+GBR,'ADMIN_NAME',ROOT_INT_DATA/climate/spatial_data/GBR,GBR_region,GBR,pop,adm1,GMFD
+IND,'DIST91_ID',ROOT_INT_DATA/climate/spatial_data/IND,district91,IND,pop,adm2,GMFD
+IND,'NAME_1',ROOT_INT_DATA/climate/spatial_data/IND,IND_adm1,IND,pop,adm1,GMFD
+MEX,"'NOM_ENT', 'NOM_MUN'",ROOT_INT_DATA/climate/spatial_data/MEX,national_municipal,MEX,pop,adm2,GMFD
+MEX,'NOM_ENT',ROOT_INT_DATA/climate/spatial_data/MEX,Ag_ESOC_shapefiles_Mexican States,MEX,pop,adm1,GMFD
+USA,'NAME_1',ROOT_INT_DATA/climate/spatial_data/USA,USA_adm1,USA,pop,adm1,GMFD
+USA,"'NAME_1', 'NAME_2'",ROOT_INT_DATA/climate/spatial_data/USA,USA_adm2,USA,pop,adm2,GMFD
+CHN,"'NAME_1', 'NAME_2'",ROOT_INT_DATA/climate/spatial_data/CHN,CHN_adm2_corrected,CHN,pop,adm2,GMFD
+CHN,'NAME_1',ROOT_INT_DATA/climate/spatial_data/CHN,CHN_adm1,CHN,pop,adm1,GMFD
+CHN,'GID_3',ROOT_INT_DATA/climate/spatial_data/CHN,gadm36_CHN_3,CHN,pop,adm3,GMFD

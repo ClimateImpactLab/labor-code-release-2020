@@ -1,9 +1,5 @@
 parameters,transforms,collapse_as,prefix_config
 prcp,"""poly"" : 2",avg,prcp_poly
-tmax,"'rcspline' : (15.6, 27.9, 35.3)",avg,tmax_rcspline_3kn
-tavg,"'rcspline' : (11, 22.5, 29.8)",avg,tavg_rcspline_3kn
-tmax,"'rcspline' : (10.5, 24.8, 30.3, 37.3)",avg,tmax_rcspline_4kn
-tavg,"'rcspline' : (6.5, 19.2, 25.3, 31.3)",avg,tavg_rcspline_4kn
 tmax,"'polyAbove' : [4, 27], 'polyBelow' : [4, 27]",avg,tmax_polyA27_polyB27
 tavg,"'polyAbove' : [4, 27], 'polyBelow' : [4, 27]",avg,tavg_polyA27_polyB27
 tmax,"'bins' : ['1C', -40, 60]",avg,tmax_bin
@@ -12,8 +8,5 @@ tmax,"'polyAbove' : [4, 0]",avg,tmax_polyA_0
 tavg,"'polyAbove' : [4, 0]",avg,tavg_polyA_0
 tmax,"""poly"" : 4",avg,tmax_poly
 tavg,"""poly"" : 4",avg,tavg_poly
-tmax,"'rcspline' : (16.6, 30.3, 36.6)",avg,tmax_rcspline_nochn_3kn
-tavg,"'rcspline' : (11.5, 25, 30.8)",avg,tavg_rcspline_nochn_3kn
-tmax,"'rcspline' : (10, 27.6, 32.1, 38.2)",avg,tmax_rcspline_nochn_4kn
-tavg,"'rcspline' : (6.1, 21.5, 27.4, 31.9)",avg,tavg_rcspline_nochn_4kn
-tmax,"'rcspline' : (27, 37, 39)",avg,tmax_rcspline_nochn_best_3kn
+tmax,"'rcspline' : (27, 37, 39)",avg,tmax_rcspline_nochn_3kn
+tmax,"'rcspline' : (21, 37, 41)",avg,tmax_rcspline_wchn_3kn
