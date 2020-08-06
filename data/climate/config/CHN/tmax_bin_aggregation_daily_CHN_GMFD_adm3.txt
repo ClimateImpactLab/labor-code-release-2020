@@ -1,0 +1,15 @@
+{
+'run_location': 'sacagawea',
+'input_file': '/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/CHN/segment_weights/gadm36_CHN_3_GMFD_grid_segment_weights_area_pop.csv',
+'output_dir': '/shares/gcp/estimation/labor/code_release_int_data/climate/raw/CHN/adm3',
+'region_columns': ["GID_3"],
+'group_by_column': None,
+'weight_columns': ['popwt'],
+'climate_source': ['GMFD'],
+'parameters': ['tmax'],
+'transforms': {'bins' : ['1C', -40, 60]},
+'collapse_to': 'day',
+'collapse_as': 'avg',
+'first_year': 1988,
+'last_year': 2010
+}

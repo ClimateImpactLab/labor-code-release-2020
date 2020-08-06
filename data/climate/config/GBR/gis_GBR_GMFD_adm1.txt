@@ -1,0 +1,16 @@
+{
+'run_location': 'sacagawea',
+'n_jobs': 12,
+'verbose': 2,
+'clim': 'GMFD',
+'shapefile_location': '/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/GBR',
+'shapefile_name': 'GBR_region',
+'shp_id': 'GBR',
+'numeric_id_fields': [],
+'string_id_fields': ['ADMIN_NAME'],
+'weightlist': ['pop'],
+'use_existing_segment_shp': False,
+'filter_ocean_pixels': False,
+'keep_features': None,
+'drop_features': None,
+}

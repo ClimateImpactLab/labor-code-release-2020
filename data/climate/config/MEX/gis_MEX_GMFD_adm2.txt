@@ -1,0 +1,16 @@
+{
+'run_location': 'sacagawea',
+'n_jobs': 12,
+'verbose': 2,
+'clim': 'GMFD',
+'shapefile_location': '/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/MEX',
+'shapefile_name': 'national_municipal',
+'shp_id': 'MEX',
+'numeric_id_fields': [],
+'string_id_fields': ['NOM_ENT', 'NOM_MUN'],
+'weightlist': ['pop'],
+'use_existing_segment_shp': False,
+'filter_ocean_pixels': False,
+'keep_features': None,
+'drop_features': None,
+}
