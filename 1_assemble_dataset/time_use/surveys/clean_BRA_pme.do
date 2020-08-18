@@ -1,8 +1,8 @@
 * this code cleans 
 
-cilpath
-global data_folder /shares/gcp/estimation/Labor/replication_data/time_use/brazil/
-use "$data_folder/pme_all_lodown.dta", clear
+do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.do"
+
+use "$ROOT_INT_DATA/surveys/pme_all_lodown.dta", clear
 
 count
 * 16,508,681 obs
@@ -172,8 +172,6 @@ drop if year < 2002 | year > 2010
 
 keep metropolitan_region ind_id year month day mins_worked age male high_risk hhsize sample_wgt
 
-save "/shares/gcp/estimation/labor/time_use_data/intermediate/BRA_PME_time_use.dta", replace
+save "${ROOT_INT_DATA}/surveys/BRA_PME_time_use.dta", replace
 
-use "/shares/gcp/estimation/labor/time_use_data/intermediate/BRA_PME_time_use.dta", clear
-
-export delimited using "/shares/gcp/estimation/labor/time_use_data/intermediate/BRA_PME_time_use.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/BRA_PME_time_use.csv", replace

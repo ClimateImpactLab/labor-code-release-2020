@@ -14,3 +14,4 @@ global DIR_EXT_DATA = "${DIR_REPO_LABOR}/data"
 global DIR_FIG = "${DIR_EXT_DATA}/figures"
 
 global DIR_STER = "${DIR_EXT_DATA}/sters"
+

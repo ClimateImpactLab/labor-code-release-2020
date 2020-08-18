@@ -2,6 +2,10 @@
 # Raw data located at/shares/gcp/estimation/labor/time_use_data/raw/CHN_CHNS/
 # By: Rae (liruixue@uchicago.edu)
 
+import sys
+sys.path.insert(0, '/home/liruixue/repos/labor-code-release-2020/0_subroutines') 
+import paths
+
 
 import pandas as pd
 import numpy as np
@@ -9,8 +13,7 @@ import cilpath
 import time
 import datetime
 
-paths = cilpath.Cilpath()
-data_folder = "/shares/gcp/estimation/labor/time_use_data/raw/CHN_CHNS/"
+data_folder = DIR_INT_DATA + "/surveys/CHNS/"
 
 
 # read a few files that contain variables we want, then combine them 
