@@ -216,6 +216,10 @@ vivienda = read_data('vivt') %>%
 		) %>%
 	data.table()
 
+
+
+
+
 # 2.4. Process data for Cuestonarios Ampliado and Basico (coe1t)
 # be careful here--this takes around 200GB mem
 # can scale this down by modifying cores at the top of the script
@@ -366,7 +370,7 @@ final = outcome %>%
 		-prev_sunday)
 
 fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.dta"))
 
 location_names = final %>% 
 	select(state_name, municipality_name) %>%

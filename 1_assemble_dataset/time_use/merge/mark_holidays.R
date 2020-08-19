@@ -1,6 +1,7 @@
 # filter out all countries' holidays
 # author: Simon Greenhill, sgreenhill@uchicago.edu
 # date: 2/27/2020
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(data.table)
@@ -12,8 +13,7 @@ library(numbers)
 library(lubridate)
 
 # cilpath.r:::cilpath()
-cores = parallel:::detectCores()
-SAC_SHARES  = '/mnt/sacagawea_shares'
+cores = 10
 
 #######################
 # 1. SET UP FUNCTIONS #
@@ -197,9 +197,8 @@ get_years = function(country_code, df=time_use) {
 
 # get the full dataset
 time_use = glue(
-	'{SAC_SHARES}/gcp',
-	'/estimation/labor/time_use_data/intermediate/',
-	'all_time_use_clustered.dta') %>%
+	'{ROOT_INT_DATA}',
+	'/temp/all_time_use_pop_merged.dta') %>%
 	read_dta() %>%
 	data.table()
 
@@ -473,8 +472,7 @@ final = final %>%
 
 
 write.dta(final, glue(
-	'{SAC_SHARES}/gcp',
-	'/estimation/labor/time_use_data/intermediate/',
+	'{ROOT_INT_DATA}/temp/',
 	'all_time_use_holidays_marked.dta'))
 
 
