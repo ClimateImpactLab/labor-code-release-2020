@@ -250,6 +250,6 @@ location_names = final_dataset %>%
 		st_name, district_name
 		)
 
-write.csv(location_names, glue("{ROOT_INT_DATA}/surveys/IND_ITUS/IND_ITUS_location_names.csv"))
+write.csv(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_location_names.csv"))
 
 

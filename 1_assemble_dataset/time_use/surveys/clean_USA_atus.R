@@ -404,4 +404,4 @@ write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_tim
 location_names = final %>% 
 	select(state, master_county_name) %>%
 	distinct()
-fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/IND_ITUS/USA_ATUS_location_names.csv"))
+fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_location_names.csv"))
