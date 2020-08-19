@@ -95,12 +95,12 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 
 ######### generate weights
 
-args_weights = args_for_weights(climate_source_list = "GMFD",
-	countries_list = "CHN",
-	admin_list = "adm3"
-)
+# args_weights = args_for_weights(climate_source_list = "GMFD",
+# 	countries_list = "CHN",
+# 	admin_list = "adm3"
+# )
 
-mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
+# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
 
 
 
@@ -108,7 +108,7 @@ mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weigh
 all_variables <- c(
 	"prcp_poly",
 	"tmax_rcspline_nochn_3kn",
-	"tavg_rcspline_wchn_3kn",
+	"tmax_rcspline_wchn_3kn",
 	"tmax_poly",
 	"tmax_bin"
 )
@@ -161,8 +161,3 @@ transf=args_aggregate$transf, mc.cores=1)
 message(glue("date the code finished to run : {Sys.Date()}"))
 message(glue("time the code finished to run : {Sys.time()}"))
 toc()
-
-
-
-
-

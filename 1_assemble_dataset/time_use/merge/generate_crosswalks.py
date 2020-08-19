@@ -27,7 +27,7 @@ time_use_identifiers = {}
 
 
 # read a csv file (compiled by Emile) that contains the paths to adm1 and adm2 shps
-shp_list = pd.read_csv(paths.DIR_REPO_LABOR + "/1_assemble_dataset/weather/gis_config_lines.csv")
+shp_list = pd.read_csv(paths.DIR_REPO_LABOR + "/1_assemble_dataset/time_use/weather/gis_config_lines.csv")
 
 countries = shp_list.shp_id.unique()
 shps = {}
@@ -135,7 +135,7 @@ adm2_shp_identifiers['BRA'] = shps['BRA']['adm2'][['NAME_1','NAME_2']].drop_dupl
 
 
 # read the codes used in PME data and their corresponding region names
-BRA_metropolitan_region_codes = pd.read_csv(time_use_data_folder + "/raw/BRA_PME/BRA_PME_metropolitan_region_codes.csv")
+BRA_metropolitan_region_codes = pd.read_csv(time_use_data_folder + "/BRA_PME_metropolitan_region_codes.csv")
 # manually change one entry for merging
 BRA_metropolitan_region_codes.replace("São Paulo","So Paulo", inplace = True)
 
@@ -169,7 +169,7 @@ cw['BRA'] = cw['BRA'][['iso','metropolitan_region_code','metropolitan_region_nam
 
 adm1_shp_identifiers['IND'] = shps['IND']['adm1'][['NAME_1']].drop_duplicates()
 adm2_shp_identifiers['IND'] = shps['IND']['adm2'][['DIST91_ID','STATE_UT','NAME']].drop_duplicates().dropna(how='any')
-time_use_identifiers['IND'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/intermediate/IND_ITUS_time_use_location_names.csv")[['st_name', 'district_name']].drop_duplicates()).dropna(how='all')
+time_use_identifiers['IND'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/IND_ITUS_location_names.csv")[['st_name', 'district_name']].drop_duplicates()).dropna(how='all')
 
 # a function that creates a new column for merging based on the old column
 def add_col(x, col_new, col_old):
@@ -293,7 +293,7 @@ def clean_shp_names(x):
 
 
 adm2_shp_identifiers['USA'] = shps['USA']['adm2'][['NAME_1','NAME_2']].drop_duplicates()
-time_use_identifiers['USA'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/intermediate/USA_ATUS_time_use_location_names.csv")[['state', 'master_county_name']].drop_duplicates()).dropna(how='all')
+time_use_identifiers['USA'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/USA_ATUS_location_names.csv")[['state', 'master_county_name']].drop_duplicates()).dropna(how='all')
 
 # convert abbrevations to full names
 time_use_identifiers['USA']['state_name'] = time_use_identifiers['USA']['state'].map(us_state_abbrev)
@@ -328,7 +328,7 @@ cw['USA'] = cw['USA'][['iso','adm0_id', 'adm1_id','adm2_id','state','master_coun
 
 adm1_shp_identifiers['MEX'] = shps['MEX']['adm1'][['NOM_ENT']].drop_duplicates()
 adm2_shp_identifiers['MEX'] = shps['MEX']['adm2'][['NOM_ENT','NOM_MUN']].drop_duplicates()
-time_use_identifiers['MEX'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/intermediate/MEX_ENOE_time_use_location_names.csv")[['state_name', 'municipality_name']].drop_duplicates()).dropna(how='all')
+time_use_identifiers['MEX'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/MEX_ENOE_location_names.csv")[['state_name', 'municipality_name']].drop_duplicates()).dropna(how='all')
 
 # manually correct a few entries
 adm1_shp_identifiers['MEX']['NOM_ENT_merge'] = adm1_shp_identifiers['MEX']['NOM_ENT']
@@ -374,9 +374,9 @@ adm1_shp_identifiers['FRA'] = shps['FRA']['adm1'][['NAME_1']].drop_duplicates()
 adm1_shp_identifiers['ESP'] = shps['ESP']['adm1'][['NAME_1']].drop_duplicates()
 adm1_shp_identifiers['GBR'] = shps['GBR']['adm1'][['ADMIN_NAME']].drop_duplicates()
 
-time_use_identifiers['FRA'] = pd.DataFrame(pd.read_csv("/shares/gcp/estimation/labor/time_use_data/raw/WEU_MTUS/MUTS_region_codec_FRA.csv")[['region_name', 'region_code']])
-time_use_identifiers['ESP'] = pd.DataFrame(pd.read_csv("/shares/gcp/estimation/labor/time_use_data/raw/WEU_MTUS/MUTS_region_codec_ESP.csv")[['region_name', 'region_code']])
-time_use_identifiers['GBR'] = pd.DataFrame(pd.read_csv("/shares/gcp/estimation/labor/time_use_data/raw/WEU_MTUS/MUTS_region_codec_GBR.csv")[['region_name', 'region_code']])
+time_use_identifiers['FRA'] = pd.DataFrame(pd.read_csv(paths.ROOT_INT_DATA + "/surveys/WEU_MTUS/MUTS_region_codec_FRA.csv")[['region_name', 'region_code']])
+time_use_identifiers['ESP'] = pd.DataFrame(pd.read_csv(paths.ROOT_INT_DATA + "/surveys/WEU_MTUS/MUTS_region_codec_ESP.csv")[['region_name', 'region_code']])
+time_use_identifiers['GBR'] = pd.DataFrame(pd.read_csv(paths.ROOT_INT_DATA + "/surveys/WEU_MTUS/MUTS_region_codec_GBR.csv")[['region_name', 'region_code']])
 
 # ESP 
 # create a dictionary to manually transform shapefile entries
@@ -469,7 +469,9 @@ cw['FRA']["adm1_id"] = 40000000 + cw['FRA']['NAME_1'].astype('category').cat.cod
 cw['FRA']["adm2_id"] = cw['FRA']["adm1_id"] + 1
 cw['FRA'] = cw['FRA'][['iso','adm0_id', 'adm1_id','adm2_id','region_name','region_code','NAME_1']].drop_duplicates()
 
-for country in countries: 
-    cw[country].to_csv("/shares/gcp/estimation/labor/time_use_data/intermediate/shapefile_to_timeuse_crosswalk_" + country +".csv")
-    #cw[country].to_stata("/shares/gcp/estimation/labor/time_use_data/intermediate/shapefile_to_timeuse_crosswalk_" + country +".dta")
+# for country in countries: 
+for country in ['USA','MEX','BRA','FRA','GBR','ESP','IND']:
+    cw[country]['adm3_id'] = cw[country]['adm2_id']
+    cw[country].to_csv(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".csv")
+    cw[country].to_stata(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".dta")
 

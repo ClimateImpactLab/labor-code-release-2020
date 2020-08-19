@@ -14,20 +14,23 @@
 
 #clean environment
 rm(list = ls())
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 #load packages
 library(readstata13)
 library(dplyr)
 library(plyr)
 library(foreign)
+library(glue)
 
 #set decimal places
 options(digits=15)
 
 #####################################
 
-input_file <- "/mnt/sacagawea_shares/gcp/estimation/labor/time_use_data/intermediate/all_time_use_pop_merged.dta"
-
+input_file <- glue(
+  '{ROOT_INT_DATA}/temp/',
+  'all_time_use_holidays_dropped.dta')
 
 #####################################
 
@@ -116,6 +119,8 @@ df$pop_adj_sample_wgt <- df$pop_adj_sample_wgt/sum_all #normalize pop_adj_sample
 
 
 #save dataset
-output_file <- "/mnt/sacagawea_shares/gcp/estimation/labor/time_use_data/intermediate/all_time_use_reweighted.dta"
+output_file <- glue(
+  '{ROOT_INT_DATA}/temp/',
+  'all_time_use_holidays_dropped_reweighted.dta')
 write.dta(df, output_file)
 
