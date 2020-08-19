@@ -23,6 +23,7 @@
 # first avoids incorrect conversion we also set stringsAsFactors=FALSE in an abundance
 # of caution. see this SO post for more information: 
 # https://stackoverflow.com/questions/6917518/r-as-numeric-function-not-returning-correct-from-data-frame
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
@@ -34,18 +35,15 @@ library(testthat)
 library(lubridate)
 library(sf)
 library(foreign)
-cilpath.r:::cilpath()
 
 # how much of the server do you want to take up?
 # remember to consider memory constraints!
-cores = detectCores()
 
 ####################
 # 1. Load raw data #
 ####################
 
-input = glue('/local/shsiang/Dropbox/GCP/WORKSHOP_STUDENT_FOLDERS/Pecenco_LaborForceSurveyMexico/Data/Raw/Data/')
-
+input = glue("{ROOT_INT_DATA}/surveys/MEX_ENOE/raw_data/")
 # unzip all the zipped files
 files_2004 = list.files(
 	glue('{input}/1987-2004/'), 
@@ -67,7 +65,7 @@ unzip_if_zip = function(file) {
 	}
 }
 
-mclapply(c(files_2004, files_2014), unzip_if_zip, mc.cores=cores)
+mclapply(c(files_2004, files_2014), unzip_if_zip, mc.cores=5)
 
 read_format_dbf = function(path) {
 	# read a dbf and format the column names to bind the files together
@@ -119,7 +117,7 @@ read_data = function(type) {
 	all_files = list.files(dir, full.names=TRUE)
 	files = all_files[grep(glue('*{type}*'), all_files)]
 
-	data = mclapply(files, read_format_dbf, mc.cores=cores)
+	data = mclapply(files, read_format_dbf, mc.cores=5)
 	ret = rbindlist(data, use.names=TRUE, fill=TRUE)
 	rm(data)
 	return(ret)
@@ -210,11 +208,11 @@ vivienda = read_data('vivt') %>%
 		hhsize = P1
 		) %>%
 	mutate_at(
-		vars(CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, hhsize),
+		vars(CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, PER, hhsize),
 		~ as.numeric(as.character(.), stringsAsFactors=FALSE)
 		) %>%
 	select(
-		CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, hhsize
+		CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, hhsize, PER
 		) %>%
 	data.table()
 
@@ -280,7 +278,7 @@ outcome = merge(
 	) %>%
 	merge(
 		vivienda,
-		by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_PRO_VIV', 'N_ENT', 'UPM')
+		by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_PRO_VIV', 'N_ENT', 'UPM', 'PER')
 		) %>%
 	merge(
 		ca,
@@ -319,14 +317,14 @@ enoe_geo = outcome %>%
 
 
 enoe_cw = fread(
-	glue('/local/shsiang/Dropbox/GCP/WORKSHOP_STUDENT_FOLDERS/Pecenco_LaborForceSurveyMexico/Data/Raw/Data/',
+	glue('{input}',
 	'Claves Entidades Federativas y Municipios PEF 2012 (No accent characters).csv')
 	) %>%
 	rename(
-		state = CLAVE.DE.ENTIDAD.FEDERATIVA,
-		municipality = `CLAVE.DE.MUNICIPIO./.DEMARCACIÓN.TERRITORIAL`,
-		state_name = NOMBRE.ENTIDAD.FEDERATIVA,
-		municipality_name = `NOMBRE.DE.MUNICIPIO./.DEMARCACIÓN.TERRITORIAL`
+		state = "CLAVE.DE.ENTIDAD.FEDERATIVA",
+		municipality = "CLAVE.DE.MUNICIPIO./.DEMARCACI\303\223N.TERRITORIAL",
+		state_name = "NOMBRE.ENTIDAD.FEDERATIVA",
+		municipality_name = "NOMBRE.DE.MUNICIPIO./.DEMARCACI\303\223N.TERRITORIAL"
 		) %>%
 	select(
 		state, state_name, municipality, municipality_name
@@ -334,8 +332,9 @@ enoe_cw = fread(
 
 enoe_geo = merge(enoe_geo, enoe_cw, by=c('state', 'municipality'), all.x=TRUE)
 
+# TO-DO: copy and change this
 shp = st_read(
-	dsn = glue('/shares/gcp//climate/_spatial_data/MEX/'),
+	dsn = glue('{ROOT_INT_DATA}/climate/spatial_data/MEX'),
 	layer = 'national_municipal'
 	) %>%
 	as.data.table() %>%
@@ -366,18 +365,12 @@ final = outcome %>%
 	select(
 		-prev_sunday)
 
-#fwrite(
-#	final, 
-#	glue('{DB}/Global ACP/labor/replication/1_preparation/time_use/',
-#		'enoe_replicated.csv')
-#	)
-
-fwrite(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/MEX_ENOE_time_use.csv")
-write.dta(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/MEX_ENOE_time_use.dta")
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
 
 location_names = final %>% 
 	select(state_name, municipality_name) %>%
 	distinct()
-fwrite(location_names, "/shares/gcp/estimation/labor/time_use_data/intermediate/MEX_ENOE_time_use_location_names.csv")
+fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_location_names.csv"))
 
 

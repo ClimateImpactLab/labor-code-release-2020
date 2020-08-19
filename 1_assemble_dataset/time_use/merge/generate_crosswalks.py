@@ -16,8 +16,7 @@ pd.set_option('display.max_columns', None)  # or 1000
 pd.set_option('display.max_rows', None)  # or 1000
 pd.set_option('display.max_colwidth', -1)  # or 199
 
-paths = cilpath.Cilpath()
-time_use_data_folder = "/shares/gcp/estimation/labor/time_use_data"
+time_use_data_folder = paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/"
 
 # we will fill these dictionaries with identifiers in each country's shapefiles and survey, and match them to get crosswalks
 adm1_shp_identifiers = {}
@@ -28,7 +27,7 @@ time_use_identifiers = {}
 
 
 # read a csv file (compiled by Emile) that contains the paths to adm1 and adm2 shps
-shp_list = pd.read_csv(paths.REPO + "/gcp-labor/1_preparation/weather/gis_config_lines.csv")
+shp_list = pd.read_csv(paths.DIR_REPO_LABOR + "/1_assemble_dataset/weather/gis_config_lines.csv")
 
 countries = shp_list.shp_id.unique()
 shps = {}

@@ -36,6 +36,7 @@
 # 3. Write sanity checks for the combined data (eg, daily hours add up to 24, ages in reasonable range)
 
 # set up the environment
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(tidyverse)
 library(magrittr)
 library(glue)
@@ -45,14 +46,14 @@ library(testthat)
 library(foreign)
 cilpath.r:::cilpath()
 
-input = glue("{DB}")
+input = glue("{ROOT_INT_DATA}/surveys/WEU_MTUS/raw_data/")
 
 ####################
 # 1. Load raw data #
 ####################
 
-adult = fread(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/MTUS-adult-aggregate.csv"))
-child = fread(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/MTUS-child-aggregate.csv"))
+adult = fread(glue("{input}/MTUS-adult-aggregate.csv"))
+child = fread(glue("{input}/MTUS-child-aggregate.csv"))
 
 comb = rbind(adult, child) 
 
@@ -62,19 +63,19 @@ comb = rbind(adult, child)
 # 2. Merge in geographic information #
 ######################################
 
-gbr = read_dta(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/SupplementaryData/region-race-uk.dta")) %>%
+gbr = read_dta(glue("{input}/SupplementaryData/region-race-uk.dta")) %>%
 	data.frame() %>%
 	zap_labels() %>%
 	dplyr::select(-ethnic, -id) %>%
 	distinct() # drop duplicates
 
-fra = read_dta(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/SupplementaryData/region-race-fra1998.dta")) %>%
+fra = read_dta(glue("{input}/SupplementaryData/region-race-fra1998.dta")) %>%
 	data.frame() %>%
 	zap_labels() %>%
 	select(-ethnic) %>%
 	distinct() # drop duplicates
 
-esp = read_dta(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/SupplementaryData/region-race-spa.dta")) %>%
+esp = read_dta(glue("{input}/SupplementaryData/region-race-spa.dta")) %>%
 	data.frame() %>%
 	zap_labels() %>%
 	select(-ethnic) %>%
@@ -112,8 +113,8 @@ comb_geo = rbindlist(list(gbr_comb, fra_comb, esp_comb), use.names=TRUE)
 ################################
 
 # merge in date information, which is available only in the "episode" file
-ep_adult = fread(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/MTUS-adult-episode.csv"))
-ep_child = fread(glue("{input}/Hultgren_TimeUseMTUS/Data/Raw/Data/MTUS-child-episode.csv"))
+ep_adult = fread(glue("{input}/MTUS-adult-episode.csv"))
+ep_child = fread(glue("{input}/MTUS-child-episode.csv"))
 
 ep = rbind(ep_adult, ep_child)   %>%
 	select(countrya, survey, swave, msamp, hldid, persid, id, day, cday, month, year) %>%
@@ -198,24 +199,24 @@ final_esp = final %>%
 		-iso)
 
 
-fwrite(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/EU_MTUS_time_use.csv")
-write.dta(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/EU_MTUS_time_use.dta")
-fwrite(final_gbr, "/shares/gcp/estimation/labor/time_use_data/intermediate/GBR_MTUS_time_use.csv")
-fwrite(final_fra, "/shares/gcp/estimation/labor/time_use_data/intermediate/FRA_MTUS_time_use.csv")
-fwrite(final_esp, "/shares/gcp/estimation/labor/time_use_data/intermediate/ESP_MTUS_time_use.csv")
-write.dta(final_gbr, "/shares/gcp/estimation/labor/time_use_data/intermediate/GBR_MTUS_time_use.dta")
-write.dta(final_fra, "/shares/gcp/estimation/labor/time_use_data/intermediate/FRA_MTUS_time_use.dta")
-write.dta(final_esp, "/shares/gcp/estimation/labor/time_use_data/intermediate/ESP_MTUS_time_use.dta")
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.dta"))
+fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.csv"))
+fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.csv"))
+fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.csv"))
+write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.dta"))
+write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.dta"))
+write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.dta"))
 
 
-#final  = final %>%
-#	select( # select the variables we want to write out into the estimating dataset
-#		iso, region
-#		) %>%
-#	distinct()
+final  = final %>%
+	select( # select the variables we want to write out into the estimating dataset
+		iso, region_code
+		) %>%
+	distinct()
 
 
-#fwrite(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/WEU_MTUS_time_use_location_names.csv")
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_location_names.csv"))
 
 
 
