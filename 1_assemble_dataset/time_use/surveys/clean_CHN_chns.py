@@ -13,7 +13,7 @@ import cilpath
 import time
 import datetime
 
-data_folder = DIR_INT_DATA + "/surveys/CHNS/"
+data_folder = DIR_INT_DATA + "/surveys/CHN_CHNS/"
 
 
 # read a few files that contain variables we want, then combine them 

@@ -25,6 +25,8 @@
 # I will clean these blocks individually and then merge them together
 
 # set up the environment
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+
 library(tidyverse)
 library(magrittr)
 library(glue)
@@ -36,14 +38,12 @@ library(arules)
 library(parallel)
 library(stringr)
 library(foreign)
-cilpath.r:::cilpath()
 
 ####################
 # 1. Load raw data #
 ####################
 
-#input = glue("{DB}/D'Agostino_TimeUseIndia/Data/Raw/Data/Time_use_survey_1998")
-input = "/local/shsiang/Dropbox/GCP/WORKSHOP_STUDENT_FOLDERS/D'Agostino_TimeUseIndia/Data/Raw/Data/Time_use_survey_1998"
+input = glue("{ROOT_INT_DATA}/surveys/IND_ITUS/Time_use_survey_1998")
 
 # block 0-1: household characteristics
 b0.1 = read_dta(glue("{input}/Block-0-1-Identification-Household-Characteristics-records.dta")) %>%
@@ -134,7 +134,7 @@ b3 = read_dta(glue("{input}/Block-3-Time-disposition-selected-days-week-records.
 	filter( 
 		# remove two dates that do not exist: 2/29/1999 and 2/30/1999.
 		# this affects only 5 observations
-		!(date %in% c('290299', '300299')))
+		!(date %in% c('290299', '300299'))) %>%
 	data.table()
 # ?????? keep only the first one?
 
@@ -233,13 +233,14 @@ final_dataset = all_geo %>%
 		year == 1999 | year == 1998,
 		month >= 1 & month <= 12,
 		day >= 1 & day <= 31
-		)
+		) %>%
+	distinct()
 
 
-head(final_dataset)
+# head(final_dataset)
 
-write.csv(final_dataset, "/shares/gcp/estimation/labor/time_use_data/intermediate/IND_ITUS_time_use.csv")
-write.dta(final_dataset, "/shares/gcp/estimation/labor/time_use_data/intermediate/IND_ITUS_time_use.dta")
+write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use.csv"))
+write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use.dta"))
 
 location_names = final_dataset %>%
 	dplyr::select(
@@ -249,5 +250,6 @@ location_names = final_dataset %>%
 		st_name, district_name
 		)
 
-write.csv(final_dataset, "/shares/gcp/estimation/labor/time_use_data/intermediate/IND_ITUS_time_use_location_names.csv")
+write.csv(location_names, glue("{ROOT_INT_DATA}/surveys/IND_ITUS/IND_ITUS_location_names.csv"))
+
 

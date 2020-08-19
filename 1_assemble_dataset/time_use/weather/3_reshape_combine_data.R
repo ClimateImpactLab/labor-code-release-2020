@@ -1,4 +1,6 @@
 
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+
 setup <- function(){
 
   #clean the global environment
@@ -23,9 +25,9 @@ setup()
 
 paths <- function(ctry, admin){
 
-  climate_data_dir = glue("{SAC_SHARES}/estimation/labor/climate_data")
+  climate_data_dir = glue("{ROOT_INT_DATA}/climate")
 
-  repodir = glue("{REPO}/gcp-labor/1_preparation/weather")
+  repodir = glue("{DIR_REPO_LABOR}/1_assemble_dataset/weather")
 
   csdir <- glue("/shares/gcp/estimation/labor/time_use_data/intermediate/shapefile_to_timeuse_crosswalk_{ctry}.csv")
 
