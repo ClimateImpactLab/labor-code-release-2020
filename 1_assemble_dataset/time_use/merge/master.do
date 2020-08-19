@@ -1,24 +1,13 @@
 * liruixue@uchicago.edu
-cap log close
+clear all
 
-log using "/home/kschwarz/logs/masterdo_log.smcl", replace
-
-global REPO = "/home/kschwarz/repos"
-global DB = "/mnt/norgay_synology_drive/"
-* I recommend doing the Rscripts manually because filepaths
-* can error out without stopping the script!
+do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
 
 set more off
 set trace off
 
-clear all
 cap ssc install rsource
 
-
-if "`c(hostname)'" == "battuta" {
-	global shares_path "/mnt/sacagawea_shares"
-}
-else global shares_path "/shares"
 
 
 global temp_path ${shares_path}/gcp/estimation/labor/time_use_data/intermediate

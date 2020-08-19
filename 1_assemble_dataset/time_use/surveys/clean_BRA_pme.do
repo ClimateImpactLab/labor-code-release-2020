@@ -2,10 +2,11 @@
 
 do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.do"
 
-use "$ROOT_INT_DATA/surveys/pme_all_lodown.dta", clear
+use "$ROOT_INT_DATA/surveys/BRA_PME/pme_all_lodown.dta", clear
 
 count
 * 16,508,681 obs
+* no duplicates at this point
 
 * mins_worked
 gen mins_worked = vd28 * 60 
@@ -26,6 +27,8 @@ drop if age < 15 | age > 65
 rename v203 male
 * no missing
 replace male = 0 if male == 2
+
+* no duplicates yet
 
 
 * hhsize
@@ -71,14 +74,18 @@ egen hhd_id = group(metropolitan_region control_number hhd_selection_number pane
 rename v204 day_of_birth
 rename v214 month_of_birth
 rename v224 year_of_birth
-egen ind_id = group(hhd_id day_of_birth month_of_birth year_of_birth male)
-
-
 
 * generate survey date
 rename v070 survey_month
 rename v075 survey_year 
 rename v055 survey_week 
+
+* some birthdays are 9999/99/99
+
+egen ind_id = group(hhd_id day_of_birth month_of_birth year_of_birth male resident_identifier)
+
+* no duplicates yet
+
 
 * reference week: sat - sun preceding the week set to interview for the household
 * each month of the survey has 4 reference weeks
@@ -89,6 +96,7 @@ rename v055 survey_week
 tempfile temp
 save `temp', replace
 
+use `temp', clear
 
 * the following chunk of code generates the date of the sunday at the beginning of the reference week
 * first we find what are the weeks 
@@ -144,24 +152,16 @@ forval i = 1/4 {
 format interview_date* sunday* day1 %tdDDMonCCYY
 
 keep survey_year survey_month survey_week sunday_endofweek 
+* no duplicates
 
-merge 1:n survey_year survey_month survey_week using `temp'
+merge 1:n survey_year survey_month survey_week using `temp', keep(3)
+
+tempfile nodup
+save `nodup', replace
 
 rename v211 statistical_weight_no_adjusting
-* This variable has 6 integers and 1 decimal separated by a dot
-* (person's stastitical weight corrected for non-occured interviews without adjusting for population projection)
-*    Variable |        Obs        Mean    Std. Dev.       Min        Max
-*-------------+---------------------------------------------------------
-*        v211 |  7,086,772    414.0406    246.0739         19     4101.9
-
 rename v215 statistical_weight_adjusted
 gen sample_wgt = statistical_weight_adjusted
-* This variable has 6 integers and 1 decimal separated by a dot
-* (person's stastitical weight corrected for non-occured interviews adjusting for population projection - used for indexes calculations)
-
-*    Variable |        Obs        Mean    Std. Dev.       Min        Max
-*-------------+---------------------------------------------------------
-*        v215 |  7,086,772    473.2924     281.812       20.6       5367
 drop v*
 
 gen saturday_endofweek = sunday_endofweek - 1
@@ -170,8 +170,10 @@ gen month = month(saturday_endofweek)
 gen day = day(saturday_endofweek)
 drop if year < 2002 | year > 2010
 
+*4,130,200 obs, no duplicates
+
 keep metropolitan_region ind_id year month day mins_worked age male high_risk hhsize sample_wgt
 
-save "${ROOT_INT_DATA}/surveys/BRA_PME_time_use.dta", replace
+save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace
 
-export delimited using "${ROOT_INT_DATA}/surveys/BRA_PME_time_use.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.csv", replace

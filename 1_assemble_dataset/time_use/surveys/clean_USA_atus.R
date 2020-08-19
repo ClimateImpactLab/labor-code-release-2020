@@ -46,7 +46,7 @@
 
 # Based on the above, I will only clean atussum and atusresp, and the spatial
 # data, because those contain all the data we need.
-
+source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
 # set up the environment
 library(tidyverse)
 library(magrittr)
@@ -58,14 +58,14 @@ library(testthat)
 library(arules)
 library(parallel)
 library(foreign)
-cilpath.r:::cilpath()
 
 cores = detectCores()
 
 ####################
 # 1. Load raw data #
 ####################
-input = glue("/local/shsiang/Dropbox/GCP/WORKSHOP_STUDENT_FOLDERS/D'Agostino_TimeUseUSA/Data/Raw/Data/")
+
+input = glue("{ROOT_INT_DATA}/surveys/USA_ATUS/raw/")
 
 # clean time diary data
 atussum = fread(glue("{input}/atussum_0314/atussum_0314.dat")) %>%
@@ -360,7 +360,7 @@ imputed_geo = mcmapply(
 		find_nearest_geo,
 		pid=cps_unmatched$id, 
 		hh=cps_unmatched$hhid,
-		mc.cores=detectCores()) %>%
+		mc.cores=20) %>%
 	rbindlist(fill=TRUE) %>%
 	select(-date)
 
@@ -398,16 +398,10 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		) 
 
 
-#fwrite(
-#	final, 
-#	glue('{DB}',
-#		'/Global ACP/labor/replication/1_preparation/time_use/USA/',
-#		'atus_replicated.csv')
-#	)
-fwrite(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/USA_ATUS_time_use_cps.csv")
-write.dta(final, "/shares/gcp/estimation/labor/time_use_data/intermediate/USA_ATUS_time_use_cps.dta")
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.dta"))
 
 location_names = final %>% 
 	select(state, master_county_name) %>%
 	distinct()
-fwrite(location_names, "/shares/gcp/estimation/labor/time_use_data/intermediate/USA_ATUS_time_use_location_names.csv")
+fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/IND_ITUS/USA_ATUS_location_names.csv"))
