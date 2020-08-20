@@ -55,7 +55,7 @@ if "${combine_surveys}" == "YES" {
 	* generate crosswalk and convert the location names in the survey data to admin ids
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
-	* shell python "$REPO/gcp-labor/1_preparation/merge/combine_surveys.py"
+	shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
 	import delimited using "$temp_path/all_time_use.csv", clear
 	count
 
@@ -189,7 +189,7 @@ if "${combine_surveys}" == "YES" {
 
 	* filter out remaining holidays
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_holidays_marked.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta", clear
 	
 	* drop holidays if we want
 	if "${drop_holidays}" == "YES" {
@@ -394,7 +394,7 @@ foreach t_version in $t_version_list {
 			gen week_fe = date
 			replace week_fe = week(week_fe)
 			
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}${n_ll}.dta", replace
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}.dta", replace
 		}
 	}
 }
