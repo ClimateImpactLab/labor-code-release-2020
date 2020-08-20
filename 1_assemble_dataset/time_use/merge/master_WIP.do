@@ -128,7 +128,7 @@ if "${combine_surveys}" == "YES" {
 	****** adjust weight ********
 	*****************************
 	
-	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/merge/reweight.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	
 	
 	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
@@ -188,7 +188,7 @@ if "${combine_surveys}" == "YES" {
 	*****************************
 
 	* filter out remaining holidays
-	rsource using "$DIR_REPO_LABOR/gcp-1_assemble_dataset/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	use "$temp_path/all_time_use_holidays_marked.dta", clear
 	
 	* drop holidays if we want
