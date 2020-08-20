@@ -82,7 +82,10 @@ rename v055 survey_week
 
 * some birthdays are 9999/99/99
 
-egen ind_id = group(hhd_id day_of_birth month_of_birth year_of_birth male resident_identifier)
+replace year_of_birth = survey_year - age if year_of_birth == 9999
+replace day_of_birth = 1 if  day_of_birth == 99
+replace month_of_birth = 1 if  month_of_birth == 99
+egen ind_id = group(hhd_id day_of_birth month_of_birth year_of_birth male)
 
 * no duplicates yet
 
@@ -170,9 +173,18 @@ gen month = month(saturday_endofweek)
 gen day = day(saturday_endofweek)
 drop if year < 2002 | year > 2010
 
-*4,130,200 obs, no duplicates
 
+* find repeated observations: if a individual is observed on the same day for multiple times
+duplicates tag ind_id year month day, gen(ndup)
+
+* give them a new ind_id that takes into account that they are different individuals in the same household
+egen ind_id_new = group(ind_id resident_identifier)
+* the max of ind_id is 1,949,927, only assign new ind_id to repeated obs
+replace ind_id = 2000000 + ind_id_new if ndup > 0
+
+drop ind_id_new
 keep metropolitan_region ind_id year month day mins_worked age male high_risk hhsize sample_wgt
+
 
 save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace
 

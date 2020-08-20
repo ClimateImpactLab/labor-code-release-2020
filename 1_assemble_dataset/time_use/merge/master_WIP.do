@@ -125,28 +125,13 @@ if "${combine_surveys}" == "YES" {
 	save "$temp_path/all_time_use_pop_merged.dta", replace
 
 	*****************************
-	****** filter holidays ********
-	*****************************
-
-	* filter out remaining holidays
-	rsource using "$DIR_REPO_LABOR/gcp-1_assemble_dataset/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_holidays_marked.dta", clear
-	
-	* drop holidays if we want
-	if "${drop_holidays}" == "YES" {
-		drop if is_holiday == 1		
-	}
-	save "$temp_path/all_time_use_holidays_dropped.dta", replace
-	
-
-	*****************************
 	****** adjust weight ********
 	*****************************
 	
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/merge/reweight.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	
 	
-	use "$temp_path/all_time_use_holidays_dropped_reweighted.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
 
 	* generate new weights: population weights separated by high and low risk
 	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
@@ -195,8 +180,23 @@ if "${combine_surveys}" == "YES" {
 
 	drop *sum_sample
 
-	save "$temp_path/all_time_use_clustered.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered.dta", replace
 
+
+	*****************************
+	****** filter holidays ********
+	*****************************
+
+	* filter out remaining holidays
+	rsource using "$DIR_REPO_LABOR/gcp-1_assemble_dataset/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	use "$temp_path/all_time_use_holidays_marked.dta", clear
+	
+	* drop holidays if we want
+	if "${drop_holidays}" == "YES" {
+		drop if is_holiday == 1		
+	}
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
+	
 
 }
 
@@ -307,7 +307,7 @@ foreach t_version in $t_version_list {
 
 			* this is the cleaned and merged time use data file
 			* with weights generated, income merged, and holidays labeled
-			use "$temp_path/all_time_use_clustered.dta", clear
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", clear
 			cap drop adm1_id_old
 
 			cap restore, not

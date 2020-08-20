@@ -30,7 +30,7 @@ options(digits=15)
 
 input_file <- glue(
   '{ROOT_INT_DATA}/temp/',
-  'all_time_use_holidays_dropped.dta')
+  'all_time_use_pop_merged.dta')
 
 #####################################
 
@@ -121,6 +121,6 @@ df$pop_adj_sample_wgt <- df$pop_adj_sample_wgt/sum_all #normalize pop_adj_sample
 #save dataset
 output_file <- glue(
   '{ROOT_INT_DATA}/temp/',
-  'all_time_use_holidays_dropped_reweighted.dta')
+  'all_time_use_pop_merged_reweighted.dta')
 write.dta(df, output_file)
 
