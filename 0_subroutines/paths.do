@@ -1,17 +1,38 @@
+*********************
+*	STATA PATHS
+*********************
 * set up paths for stata programs
 * the user needs to determine where the repo is located
 * and where the large raw data files are
-global ROOT_REPO = "/home/liruixue/repos"
-global ROOT_INT_DATA = "/shares/gcp/estimation/labor/code_release_int_data"
 
-* generate the rest of the paths according to the first two
-global DIR_OUTPUT = "${DIR_REPO_LABOR}/output"
-global DIR_EXT_DATA = "${DIR_REPO_LABOR}/data"
 
-global DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
+* for use on our internal remote servers
+* remove this once the data has been shifted to an external location
+if "`c(hostname)'" == "battuta" {
+	gl shares_path "/mnt/sacagawea_shares"
+}
+else {
+	gl shares_path "/shares"
+}
 
-global DIR_EXT_DATA = "${DIR_REPO_LABOR}/data"
-global DIR_FIG = "${DIR_EXT_DATA}/figures"
+* set repo path
+gl ROOT_REPO = "/home/liruixue/repos"
+gl DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
 
-global DIR_STER = "${DIR_EXT_DATA}/sters"
+* set internal data path
+gl ROOT_INT_DATA = "${shares_path}/gcp/estimation/labor/code_release_int_data"
+
+* set external data path
+gl DIR_EXT_DATA = "${DIR_REPO_LABOR}/data"
+
+* set output folder paths
+gl DIR_OUTPUT = "${DIR_REPO_LABOR}/output"
+
+gl DIR_FIG = "${DIR_OUTPUT}/figures"
+
+gl DIR_STER = "${DIR_OUTPUT}/ster"
+
+gl DIR_RF = "${DIR_OUTPUT}/rf"
+
+
 
