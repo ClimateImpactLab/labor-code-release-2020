@@ -15,12 +15,15 @@ else {
 	gl shares_path "/shares"
 }
 
+* set internal data path
+gl ROOT_INT_DATA = "${shares_path}/gcp/estimation/labor/code_release_int_data"
+
 * set repo path
 gl ROOT_REPO = "/home/liruixue/repos"
 gl DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
 
-* set internal data path
-gl ROOT_INT_DATA = "${shares_path}/gcp/estimation/labor/code_release_int_data"
+* set logs path
+gl DIR_LOG = "${DIR_REPO_LABOR}/logs"
 
 * set external data path
 gl DIR_EXT_DATA = "${DIR_REPO_LABOR}/data"
@@ -34,5 +37,6 @@ gl DIR_STER = "${DIR_OUTPUT}/ster"
 
 gl DIR_RF = "${DIR_OUTPUT}/rf"
 
+gl DIR_TABLE = "${DIR_OUTPUT}/table"
 
 
