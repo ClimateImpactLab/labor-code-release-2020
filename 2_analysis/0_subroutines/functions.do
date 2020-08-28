@@ -200,3 +200,49 @@ prog def collect_spline_terms
 	}
 
 end
+
+***************************************
+*	CONVERT_TABLE
+
+* 	change a response function CSV
+*	into a Latex table
+***************************************
+
+cap prog drop convert_table
+prog def convert_table
+
+	syntax , categories(string)
+
+	keep yhat* se* temp
+
+	foreach j in `categories' {
+
+		* get stars
+		gen t_stats`j' 	= abs(yhat_`j'/se_`j')
+		gen p`j' 		= ""
+		replace p`j' 	= "*" if t_stats`j' > 1.645
+		replace p`j' 	= "**" if t_stats`j' > 1.960
+		replace p`j' 	= "***" if t_stats`j' > 2.576
+
+		* reformat yhat
+		gen double `j'1 = round(yhat_`j', 0.01)
+		format `j'1 %03.2f
+		tostring `j'1, replace force
+		replace `j'1 = `j'1 + p`j'
+		
+		* reformat standard errors
+		gen double `j'2 = round(se_`j', 0.01)
+		format `j'2 %03.2f
+		tostring `j'2, replace force
+		replace `j'2 = "(" + `j'2 + ")"
+
+	}
+
+	* reshape to table format (yhat with se below)
+	reshape long `categories', i(temp) j(line)
+	sort temp line
+	tostring temp, replace force
+	replace temp = "" if line == 2
+	keep `categories' temp
+
+end

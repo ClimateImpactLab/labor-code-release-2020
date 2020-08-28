@@ -6,10 +6,6 @@
 run "/home/kschwarz/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
-* log results
-cap log close 
-log using "${DIR_LOG}/rf_uninteracted_reg_FEs.smcl", replace
-
 * select dataset and output folder
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
 loc rf_folder 	"${DIR_RF}/uninteracted_reg_comlohi"
@@ -82,9 +78,6 @@ foreach row_values in full_response table_values {
 	export delim `rf_name', replace
 
 }
-
-
-cap log close 
 	   
 	  
 
