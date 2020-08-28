@@ -1,0 +1,74 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/save_temp_distribution.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}28 Aug 2020, 16:16:59
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset                      "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc output_folder       "${c -(}DIR_OUTPUT{c )-}/temp_dist"  
+{txt}
+{com}. 
+. * other selections
+. global bin_step 0.1
+{txt}
+{com}. global weight_list risk_adj_sample_wgt
+{txt}
+{com}. 
+. *****************************
+. *       GET DENSITY OF TEMP DIST
+. ***************************** 
+. 
+. use $dataset, clear
+{txt}(Written by R.              )
+
+{com}. 
+. * generate absolute density variables
+. gen no_wgt_comm = 1
+{txt}
+{com}. gen no_wgt_low = 1 if high_risk == 0
+{txt}(2,423,974 missing values generated)
+
+{com}. gen no_wgt_high = 1 if high_risk == 1
+{txt}(4,175,414 missing values generated)
+
+{com}. 
+. * gen weighted density variables
+. foreach weight in $weight_list {c -(}
+{txt}  2{com}.         gen `weight'_comm = `weight'
+{txt}  3{com}.         gen `weight'_low = `weight' if high_risk == 0
+{txt}  4{com}.         gen `weight'_high = `weight' if high_risk == 1
+{txt}  5{com}. {c )-}
+{txt}(2,423,974 missing values generated)
+(4,175,414 missing values generated)
+
+{com}. 
+. qui sum real_temp, det
+{txt}
+{com}. 
+. loc max = ceil(r(max))
+{txt}
+{com}. loc min = floor(r(min))
+{txt}
+{com}. 
+. egen double bin = cut(real_temp), at(`min'($bin_step)`max')
+{txt}
+{com}. 
+. gcollapse (sum) *_comm *_low *_high, by(bin)
+{res}{txt}{res}{txt}{res}{txt}
+{com}. rename bin temp
+{res}{txt}
+{com}. 
+. export delim "`output_folder'/no_chn_temp_dist.csv", replace
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/temp_dist/no_chn_temp_dist.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/temp_dist/no_chn_temp_dist.csv saved
+
+{com}. 
+. 
+{txt}end of do-file
+
+
+{com}. exit, clear
