@@ -7,4 +7,4 @@
 
 cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 basename=combined_uninteracted_spline_empshare_noFE
-python quantiles.py "/home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_test ${basename}-pop-levels
+python -i quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_test ${basename}-pop-levels
