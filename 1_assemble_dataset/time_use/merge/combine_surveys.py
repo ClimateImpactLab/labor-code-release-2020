@@ -27,12 +27,12 @@ countries = shp_list.shp_id.unique()
 cw = {}
 
 # for country in countries: 
-for country in ['USA','MEX','BRA','FRA','GBR','ESP','IND']:
+for country in ['USA','MEX','BRA','FRA','GBR','ESP','IND','CHN']:
     print(country)
     cw[country] = pd.read_csv(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".csv")
 
 # survey_names = ['USA_ATUS','CHN_CHNS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE']
-survey_names = ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS' ,'IND_ITUS','MEX_ENOE']
+survey_names = ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS' ,'IND_ITUS','MEX_ENOE','CHN_CHNS']
 surveys = {}
 for s in survey_names:
   surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use.csv")
@@ -94,7 +94,7 @@ surveys['MEX_ENOE'] = surveys['MEX_ENOE'].merge(
 
 all_surveys = pd.DataFrame()
 # for s in ['USA_ATUS','CHN_CHNS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE']:
-for s in ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE']:
+for s in ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE','CHN_CHNS']:
   print(s)
   all_surveys = pd.concat([all_surveys,surveys[s]], axis = 0)
 

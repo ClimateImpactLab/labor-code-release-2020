@@ -13,7 +13,7 @@ import cilpath
 import time
 import datetime
 
-data_folder = DIR_INT_DATA + "/surveys/CHN_CHNS/"
+data_folder = paths.ROOT_INT_DATA + "/surveys/CHN_CHNS/"
 
 
 # read a few files that contain variables we want, then combine them 
@@ -93,9 +93,9 @@ chns_new_data = chns_new_data.apply(lambda x: convert_date(x), axis = 1)
 chns_new_data = chns_new_data[['commid','year','month','day','idind','mins_worked','age','male','high_risk','hhsize','sample_wgt']]
 chns_new_data.columns = ['commid','year','month','day','ind_id','mins_worked','age','male','high_risk','hhsize','sample_wgt']
 
-chns_new_data.to_csv("/shares/gcp/estimation/labor/time_use_data/intermediate/CHN_CHNS_time_use.csv")
-chns_new_data.to_stata("/shares/gcp/estimation/labor/time_use_data/intermediate/CHN_CHNS_time_use.dta")
-chns_new_data[['commid']].to_csv("/shares/gcp/estimation/labor/time_use_data/intermediate/CHN_CHNS_time_use_location_names.csv")
+chns_new_data.to_csv(paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/CHN_CHNS_time_use.csv")
+chns_new_data.to_stata(paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/CHN_CHNS_time_use.dta")
+chns_new_data[['commid']].to_csv(paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/CHN_CHNS_location_names.csv")
 
 
 #chns_new_data[['commid','year','month','day','idind','interview_year','interview_month','interview_day']].to_csv("/shares/gcp/estimation/labor/time_use_data/intermediate/CHN_CHNS_time_use_interview_dates.csv")
