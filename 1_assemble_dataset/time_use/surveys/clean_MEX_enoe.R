@@ -23,7 +23,7 @@
 # first avoids incorrect conversion we also set stringsAsFactors=FALSE in an abundance
 # of caution. see this SO post for more information: 
 # https://stackoverflow.com/questions/6917518/r-as-numeric-function-not-returning-correct-from-data-frame
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)

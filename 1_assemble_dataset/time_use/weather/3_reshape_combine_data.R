@@ -21,7 +21,7 @@ setup <- function(){
   }
 setup()
 
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 paths <- function(ctry, admin){
 

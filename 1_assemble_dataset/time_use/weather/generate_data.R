@@ -1,7 +1,7 @@
 #Hit command+k+1 to fold functions. Better to read ! 
 #Below functions are commented out tons of examples of arguments to run. Don't read. 
 
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 setup <- function(){
 
