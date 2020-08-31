@@ -7,7 +7,9 @@
 
 cd "/home/liruixue/repos/impact-calculations"
 conda activate risingverse
-./aggregate.sh ../labor-code-release-2020/3_projection/1_run_projections/aggregation_pop.yml 5
+./aggregate.sh ../labor-code-release-2020/3_projection/1_run_projections/aggregation_gdp.yml
+
+./aggregate.sh ../labor-code-release-2020/3_projection/1_run_projections/aggregation_gdp.yml
 
 cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 basename=combined_uninteracted_spline_empshare_noFE

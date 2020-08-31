@@ -57,7 +57,7 @@ if "${combine_surveys}" == "YES" {
 	* combine the surveys into all_time_use.csv
 	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
 	import delimited using "$temp_path/all_time_use.csv", clear
-	
+
 	count
 
 	* drop UK old data due to quality concerns and data missing issue
@@ -148,12 +148,12 @@ if "${combine_surveys}" == "YES" {
 	replace risk_adj_sample_wgt = risk_adj_sample_wgt / risk_sum * total_risk_share
 	drop total_risk_share risk_prop risk_sum sample_wgt
 
-	// Sample weights by ADM2-by-year
+	* Sample weights by ADM2-by-year
 	gegen adm2_year_tot_wgt = total(adm2_adj_sample_wgt), by(adm2_id year)
 	gen adm2_year_adj_sample_wgt = adm2_adj_sample_wgt/adm2_year_tot_wgt
 	drop adm2_year_tot_wgt
 
-	// Representative unit sample weights - by rep_unit and year
+	* Representative unit sample weights - by rep_unit and year
 	gen rep_unit = adm1_id
 	replace rep_unit = adm0_id if inlist(iso, "USA", "GBR", "FRA")
 
@@ -165,7 +165,7 @@ if "${combine_surveys}" == "YES" {
 	gen rep_unit_year_sample_wgt = risk_adj_sample_wgt/rep_unit_year_tot_wgt
 	gegen test_sum_2 = total(rep_unit_year_sample_wgt), by(rep_unit year)
 
-	// test new weights - remove once successfully run!
+	* test new weights - remove once successfully run!
 	count if (round(test_sum) != 1) | (round(test_sum_2) != 1)
 	if `r(N)' != 0 {
 		di "Whoops, you biffed it! Sample weights don't add to 1."
@@ -198,7 +198,6 @@ if "${combine_surveys}" == "YES" {
 	}
 	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
 	
-
 }
 
 
