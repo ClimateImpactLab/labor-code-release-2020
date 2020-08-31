@@ -19,7 +19,7 @@ else {
 gl ROOT_INT_DATA = "${shares_path}/gcp/estimation/labor/code_release_int_data"
 
 * set repo path
-gl ROOT_REPO = "/home/liruixue/repos"
+gl ROOT_REPO = "/home/`c(username)'/repos"
 gl DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
 
 * set logs path
