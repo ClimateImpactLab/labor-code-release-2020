@@ -35,7 +35,7 @@ set maxvar 32767
 pause off
 cap ssc install unique
 
-do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/setup_paths_stata.do"
 
 *************************************************************************
 * 				PART B. Import Pen World Tables Data					*			

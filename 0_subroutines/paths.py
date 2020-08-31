@@ -1,6 +1,8 @@
 # set up paths for python scripts
+import getpass
+username = getpass.getuser()
 
-ROOT_REPO = "/home/liruixue/repos"
+ROOT_REPO = f"/home/{username}/repos"
 ROOT_INT_DATA = "/shares/gcp/estimation/labor/code_release_int_data"
 
 DIR_OUTPUT = ROOT_REPO + "/output"

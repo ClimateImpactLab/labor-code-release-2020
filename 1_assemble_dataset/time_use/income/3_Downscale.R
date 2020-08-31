@@ -16,7 +16,7 @@ library(cilpath.r)
 library(data.table)
 
 
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R")
+source("~/repos/labor-code-release-2020/0_subroutines/setup_paths_R.R")
 
 source(glue("{DIR_REPO_POST_PROJ}/income/downscale_function.R"))
 

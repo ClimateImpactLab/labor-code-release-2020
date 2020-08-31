@@ -1,6 +1,6 @@
 * this code cleans 
 
-do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 use "$ROOT_INT_DATA/surveys/BRA_PME/pme_all_lodown.dta", clear
 
