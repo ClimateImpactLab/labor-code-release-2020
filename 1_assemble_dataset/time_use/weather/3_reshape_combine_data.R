@@ -565,19 +565,19 @@ transf_columns <- c("splines_nochn","splines_wchn","polynomials", "prcp")
 # transf_columns <- c("bins")
 # transf_columns <- c("splines_wchn")
 
-for (country in names(countries)) {
-  for (t in t_version_list) {
+# for (country in names(countries)) {
+#   for (t in t_version_list) {
        
-    transf_list = get_transf(t_version=t)
-    climate_source = "GMFD"
-    admin = countries[names(countries) == country][[1]]
+#     transf_list = get_transf(t_version=t)
+#     climate_source = "GMFD"
+#     admin = countries[names(countries) == country][[1]]
 
-    # reshaping
-    args = expand.grid(climate_source=climate_source,ctry=country, transf=unlist(transf_list[names(transf_list) %in% transf_columns]), admin=admin, yearly=FALSE)
-    # browser()
-    mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=1)
-  }
-}
+#     # reshaping
+#     args = expand.grid(climate_source=climate_source,ctry=country, transf=unlist(transf_list[names(transf_list) %in% transf_columns]), admin=admin, yearly=FALSE)
+#     # browser()
+#     mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=1)
+#   }
+# }
 
 for (country in names(countries)) {
   for (t in t_version_list) {
@@ -591,7 +591,7 @@ for (country in names(countries)) {
     mcmapply(combine, ctry=args$ctry, climate_source=args$climate_source, var=args$var, admin=args$admin, t_version=args$t_version, mc.cores=1)
 
     # renaming
-    rename(climate_source=climate_source,ctry=country, rename_splines_nochn=FALSE,rename_splines_wchn=TRUE, rename_precip=FALSE, rename_polynomials=FALSE,admin=admin, t_version=t)
+    rename(climate_source=climate_source,ctry=country, rename_splines_nochn=TRUE,rename_splines_wchn=TRUE, rename_precip=TRUE, rename_polynomials=TRUE,admin=admin, t_version=t)
   }
 }
 
