@@ -1,0 +1,5 @@
+outputdir: outputs/labor/impacts-woodwork/combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
+# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+weighting: population 
+infix: pop-allvars
+only-variables: ["rebased","response","response22","clip"]
