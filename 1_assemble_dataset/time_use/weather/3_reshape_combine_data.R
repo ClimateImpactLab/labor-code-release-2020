@@ -51,7 +51,7 @@ get_transf <- function(t_version){
   polynomials <- c()
   prcp <- c()
   splines_nochn <- c()
-  # splines_wchn <- c()
+  splines_wchn <- c()
   
   # long_run <- c()
 
@@ -109,7 +109,7 @@ get_transf <- function(t_version){
 
   for (i in c(0,1)){
     splines_nochn <- c(splines_nochn, glue("{t_version}_rcspline_3kn_27_37_39_term{i}"))
-    # splines_wchn <- c(splines_nochn, glue("{t_version}_rcspline_nochn_{k}kn_old_term{i}"))
+    splines_wchn <- c(splines_wchn, glue("{t_version}_rcspline_3kn_21_37_41_term{i}"))
 
   }
 
@@ -121,7 +121,7 @@ get_transf <- function(t_version){
 
 
   # transformations <- list(bins=bins, polynomials=polynomials, polynomials_above_below=polynomials_above_below, prcp=prcp, splines=splines, splines_nochn = splines_nochn, splines_nochn_best = splines_nochn_best, yearly=yearly)
-  transformations <- list(polynomials=polynomials, prcp=prcp, splines_nochn = splines_nochn)
+  transformations <- list(polynomials=polynomials, prcp=prcp, splines_nochn = splines_nochn, splines_wchn = splines_wchn)
 
   return(transformations)
 
@@ -226,7 +226,7 @@ reshape <- function(ctry, transf, climate_source, admin, yearly){
 
 
     dt[,year:=as.numeric(substr(day_of_sample,start=2,stop=5))][,month:=as.numeric(substr(day_of_sample,start=8,stop=9))][,day:=as.numeric(substr(day_of_sample,start=12,stop=13))][,day_of_sample:=NULL]
-
+    print(glue("writing {p$outputdir}/{climate_source}_{ctry}_{transf}_{admin}.csv"))
     fwrite(dt, glue("{p$outputdir}/{climate_source}_{ctry}_{transf}_{admin}.csv"))
 
   }
@@ -375,7 +375,7 @@ combine <- function(ctry, climate_source, admin, var, t_version){
 
   print("var")
   print(var)
-  var = ifelse(var %in% c("polynomials", "splines_nochn"), glue("{t_version}_{var}"), glue("{var}"))
+  var = ifelse(var %in% c("polynomials", "splines_nochn","splines_wchn"), glue("{t_version}_{var}"), glue("{var}"))
   print(var)
   print("here")
   # print(var)
@@ -438,7 +438,7 @@ combine <- function(ctry, climate_source, admin, var, t_version){
 
 
 
-rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines_nochn,rename_precip, rename_polynomials){
+rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines_nochn,rename_splines_wchn, rename_precip, rename_polynomials){
 
   print(glue("renaming {ctry}"))
   paths = paths(ctry=ctry,admin=admin)
@@ -446,6 +446,7 @@ rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines
   polynomials_new <- c()
   prcp_new <- c()
   splines_nochn_new <- c()
+  splines_wchn_new <- c()
   
   # long_run_new <- c()
 
@@ -464,6 +465,7 @@ rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines
 
   for (i in c(0,1)){
     splines_nochn_new <- c(splines_nochn_new, glue("{t_version}_rcspl_27_37_39_3kn_t{i}"))
+    splines_wchn_new <- c(splines_wchn_new, glue("{t_version}_rcspl_21_37_41_3kn_t{i}"))
      
   }
 
@@ -481,6 +483,13 @@ rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines
     splines_nochn_dt <- fread(glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_splines_nochn_{admin}.csv"))
     setnames(splines_nochn_dt, old=transf_list$splines_nochn, new=splines_nochn_new)
     haven::write_dta(splines_nochn_dt, glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_splines_nochn_{admin}.dta"))
+
+  }
+
+  if (rename_splines_wchn==TRUE) {
+    splines_wchn_dt <- fread(glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_splines_wchn_{admin}.csv"))
+    setnames(splines_wchn_dt, old=transf_list$splines_wchn, new=splines_wchn_new)
+    haven::write_dta(splines_wchn_dt, glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_splines_wchn_{admin}.dta"))
 
   }
 
@@ -535,10 +544,10 @@ remove_csvs <- function (ctry, climate_source, variable, admin){
 # reshape and aggregate for daily vars
 t_version_list = c('tmax')
 ###### change the number!!!
-countries <- vector(mode = "list", length = 7)
+countries <- vector(mode = "list", length = 8)
 ###### use the correct set of countries! for no chn splines use second line
-# names(countries) <- c('GBR','FRA','ESP','IND','CHN','USA','MEX','BRA')
-names(countries) <- c('BRA','GBR','FRA','ESP','IND','USA','MEX')
+names(countries) <- c('GBR','FRA','ESP','IND','CHN','USA','MEX','BRA')
+# names(countries) <- c('BRA','GBR','FRA','ESP','IND','USA','MEX')
 
 countries$BRA <- "adm2"
 countries$GBR <- "adm1"
@@ -546,14 +555,15 @@ countries$FRA <- "adm1"
 countries$ESP <- "adm1"
 countries$IND <- "adm2"
 # for no chn splines comment out the following line!
-# countries$CHN <- "adm3"
+countries$CHN <- "adm3"
 countries$USA <- "adm2"
 countries$MEX <- "adm2"
 
 # splines_nochn should be run separately! 
-transf_columns <- c("splines_nochn","polynomials", "prcp")
+transf_columns <- c("splines_nochn","splines_wchn","polynomials", "prcp")
 # transf_columns <- c("splines","polynomials","polynomials_above_below")
 # transf_columns <- c("bins")
+# transf_columns <- c("splines_wchn")
 
 for (country in names(countries)) {
   for (t in t_version_list) {
@@ -565,7 +575,7 @@ for (country in names(countries)) {
     # reshaping
     args = expand.grid(climate_source=climate_source,ctry=country, transf=unlist(transf_list[names(transf_list) %in% transf_columns]), admin=admin, yearly=FALSE)
     # browser()
-    mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=6)
+    mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=1)
   }
 }
 
@@ -578,13 +588,10 @@ for (country in names(countries)) {
 
     # combining
     args = expand.grid(climate_source=climate_source,ctry=country, var=transf_columns, admin=admin, t_version=t)
-
-    #There is a problem with precip....
-    # combine(ctry=country, climate_source="GMFD", var="prcp", admin=admin, t_version=t)
-    # mcmapply(combine, ctry=args$ctry, climate_source=args$climate_source, var=args$var, admin=args$admin, t_version=args$t, mc.cores=10)
+    mcmapply(combine, ctry=args$ctry, climate_source=args$climate_source, var=args$var, admin=args$admin, t_version=args$t_version, mc.cores=1)
 
     # renaming
-    rename(climate_source=climate_source,ctry=country, rename_splines_nochn=TRUE, rename_precip=TRUE, rename_polynomials=TRUE,admin=admin, t_version=t)
+    rename(climate_source=climate_source,ctry=country, rename_splines_nochn=FALSE,rename_splines_wchn=TRUE, rename_precip=FALSE, rename_polynomials=FALSE,admin=admin, t_version=t)
   }
 }
 

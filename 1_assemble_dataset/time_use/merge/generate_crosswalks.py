@@ -60,10 +60,10 @@ adm3_shp_identifiers['CHN'][['NAME_1_lower','NAME_2_lower','NAME_3_lower']] = ad
 adm2_shp_identifiers['CHN'][['NAME_1_lower','NAME_2_lower']] = adm2_shp_identifiers['CHN'][['NAME_1','NAME_2']].apply(lambda x: x.str.lower())
 
 # read commid used in time use data, drop duplicates and null values
-time_use_identifiers['CHN'] = pd.DataFrame(pd.read_csv(time_use_data_folder + "/intermediate/CHN_CHNS_time_use_location_names.csv")['commid'].drop_duplicates()).dropna(how='all')
+time_use_identifiers['CHN'] = pd.DataFrame(pd.read_csv(paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/CHN_CHNS_location_names.csv")['commid'].drop_duplicates()).dropna(how='all')
 
 # match commid to string names using a lookup table from Vishan
-CHNS_commid_lookup = pd.read_excel(paths.DB + "/Global ACP/labor/1_preparation/time_use/china/crosswalks/commid_调查点.xlsx", sheet_name='Sheet')[['Province_en','City_en','District_en','Commid']].dropna(how = "all")
+CHNS_commid_lookup = pd.read_excel("/mnt/CIL_labor/1_preparation/time_use/china/crosswalks/commid_调查点.xlsx", sheet_name='Sheet')[['Province_en','City_en','District_en','Commid']].dropna(how = "all")
 CHNS_commid_lookup.columns = CHNS_commid_lookup.columns.str.lower()
 
 # merge the two above to get commid + string names of those locations
@@ -118,9 +118,9 @@ cw['CHN']["iso"] = 'CHN'
 cw['CHN']["adm1_id"] = 20000000 + cw['CHN']['province_en'].astype('category').cat.codes.astype("int32") * 100000
 cw['CHN']["adm2_id"] = cw['CHN']["adm1_id"] + cw['CHN']['city_en'].astype('category').cat.codes.astype("int32") * 100
 cw['CHN']["adm3_id"] = cw['CHN']["adm2_id"] + cw['CHN']['district_en'].astype('category').cat.codes.astype("int32")
-cw['CHN']["adm1_id_old"] = 20000000 + cw['CHN']['province_en'].astype('category').cat.codes.astype("int32") * 10000
+# cw['CHN']["adm1_id_old"] = 20000000 + cw['CHN']['province_en'].astype('category').cat.codes.astype("int32") * 10000
 
-cw['CHN'] = cw['CHN'][['iso','commid','NAME_1','NAME_2', 'NAME_3', 'GID_3', 'adm0_id', 'adm1_id','adm2_id','adm3_id','adm1_id_old']].drop_duplicates()
+cw['CHN'] = cw['CHN'][['iso','commid','NAME_1','NAME_2', 'NAME_3', 'GID_3', 'adm0_id', 'adm1_id','adm2_id','adm3_id']].drop_duplicates()
 
 #cw['CHN'].to_csv("/shares/gcp/estimation/labor/time_use_data/intermediate/shapefile_to_timeuse_crosswalk_CHN.csv")
 
@@ -474,4 +474,11 @@ for country in ['USA','MEX','BRA','FRA','GBR','ESP','IND']:
     cw[country]['adm3_id'] = cw[country]['adm2_id']
     cw[country].to_csv(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".csv")
     cw[country].to_stata(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".dta")
+
+# TO-DO: china crosswalk paths not updated, and cannot be saved to dta
+# for country in countries: 
+for country in ['CHN']:
+    cw[country].to_csv(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".csv")
+    # cw[country].to_stata(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".dta")
+
 

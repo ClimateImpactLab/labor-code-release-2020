@@ -19,14 +19,14 @@ global t_version_list tmax
 global chn_week_list chn_prev_week
 
 * possible values: splines_wchn, splines_nochn, polynomials, bins
-global variables_list splines_nochn
+global variables_list splines_wchn
 
 * set which parts of the code we want to run and how many lead/lag weeks we want
 * possible values: YES or NO
 global drop_holidays "YES"
 global clean_raw_surveys "NO"
 global combine_surveys "YES"
-global include_chn "NO" 
+global include_chn "YES" 
 
 * set the following global to lcl or no_ll
 global leadlag "no_ll"
@@ -42,7 +42,7 @@ local countries_all CHN USA MEX BRA GBR FRA ESP IND
 
 if "${clean_raw_surveys}" == "YES"{
 	* clean surveys of individual countries/* 
-	 */shell python "$DIR_REPO_LABOR/time_use/surveys/clean_CHN_chns.py"
+	shell python "$DIR_REPO_LABOR/time_use/surveys/clean_CHN_chns.py"
 	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_WEU_mtus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_IND_itus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_MEX_enoe.py", rpath("/usr/bin/R") roptions(`"--vanilla"')
@@ -55,8 +55,9 @@ if "${combine_surveys}" == "YES" {
 	* generate crosswalk and convert the location names in the survey data to admin ids
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
-	shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
+	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
 	import delimited using "$temp_path/all_time_use.csv", clear
+	
 	count
 
 	* drop UK old data due to quality concerns and data missing issue
