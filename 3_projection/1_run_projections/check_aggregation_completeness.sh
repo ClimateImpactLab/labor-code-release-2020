@@ -6,7 +6,7 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork"
 output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay" 
 
-aggregation_scenario="-pop-allvars"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete
@@ -66,9 +66,9 @@ done
 
 
 # uncomment to look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
