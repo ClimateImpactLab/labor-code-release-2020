@@ -1,7 +1,7 @@
 # filter out all countries' holidays
 # author: Simon Greenhill, sgreenhill@uchicago.edu
 # date: 2/27/2020
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(data.table)

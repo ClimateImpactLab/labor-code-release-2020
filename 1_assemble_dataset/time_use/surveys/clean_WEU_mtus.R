@@ -36,7 +36,7 @@
 # 3. Write sanity checks for the combined data (eg, daily hours add up to 24, ages in reasonable range)
 
 # set up the environment
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(tidyverse)
 library(magrittr)
 library(glue)

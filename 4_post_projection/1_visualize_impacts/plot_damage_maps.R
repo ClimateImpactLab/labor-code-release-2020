@@ -1,8 +1,8 @@
 # Produces maps displayed in the energy paper. Uses Functions in mapping.R
 # done 26 aug 2020
 rm(list = ls())
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("/home/liruixue/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}

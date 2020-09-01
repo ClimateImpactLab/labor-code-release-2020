@@ -14,7 +14,7 @@
 
 #clean environment
 rm(list = ls())
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 #load packages
 library(readstata13)

@@ -46,7 +46,7 @@
 
 # Based on the above, I will only clean atussum and atusresp, and the spatial
 # data, because those contain all the data we need.
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 # set up the environment
 library(tidyverse)
 library(magrittr)

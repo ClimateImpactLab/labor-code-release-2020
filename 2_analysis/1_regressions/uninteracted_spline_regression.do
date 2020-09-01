@@ -1,11 +1,11 @@
 cilpath 
 
-do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 cap log close 
-*log using "/home/kschwarz/exclude_log.smcl", replace
+*log using "/home/`c(username)'/exclude_log.smcl", replace
 
-global REPO = "/home/kschwarz/repos"
+global REPO = "/home/`c(username)'/repos"
 global code_dir "${REPO}/gcp-labor"
 
 

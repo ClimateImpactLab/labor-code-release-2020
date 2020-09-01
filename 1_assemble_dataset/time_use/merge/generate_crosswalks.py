@@ -3,7 +3,7 @@
 # then read climate data files, take the identifier columns, and match the two (pretty manually for some countries)
 
 import sys
-sys.path.insert(0, '/home/liruixue/repos/labor-code-release-2020/0_subroutines') 
+sys.path.insert(0, '~/repos/labor-code-release-2020/0_subroutines') 
 import paths
 
 import pandas as pd

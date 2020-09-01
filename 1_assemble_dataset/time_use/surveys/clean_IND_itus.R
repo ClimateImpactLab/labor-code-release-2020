@@ -25,7 +25,7 @@
 # I will clean these blocks individually and then merge them together
 
 # set up the environment
-source("/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
