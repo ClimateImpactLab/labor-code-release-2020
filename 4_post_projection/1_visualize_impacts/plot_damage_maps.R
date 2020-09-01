@@ -9,6 +9,8 @@ if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr)
+library(glue)
+library(parallel)
 
 source(paste0(DIR_REPO_LABOR, "/4_post_projection/0_utils/mapping.R"))
 
@@ -22,25 +24,53 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 #############################################
 # map of overall impact in 2099
 
-  # Load in the impacts-pc data, and convert it to GJ
-df= read_csv(
-  paste0(ROOT_INT_DATA, '/projection_outputs/mapping_data/', 
-         'SSP3-rcp45_test.csv')) 
 
-df_plot = df %>% dplyr::filter(year == 2099)
-# df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
-# Set scaling factor for map color bar
+plot_impact_map = function(rcp, ssp, adapt, year, risk){
+  df= read_csv(
+    glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{risk}_{adapt}_map.csv')) 
 
-p = join.plot.map(map.df = mymap, 
-                   df = df_plot, 
-                   df.key = "region", 
-                   plot.var = "mean", 
-                   topcode = F, 
-                   color.scheme = "div", 
-                   colorbar.title = paste0("mins worked"), 
-                   map.title = paste0("SSP3-rcp45"))
+  df_plot = df %>% 
+              dplyr::filter(year == 2099) %>% 
+              dplyr::mutate(mean = -mean)
+              # we were converting minutes to minutes lost
 
-ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.pdf"), p)
+  # find the scales for nice plotting
+  bound = ceiling(max(abs(df_plot$mean)))
+  scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+  rescale_value <- scale_v*bound
+  
+
+  p = join.plot.map(map.df = mymap, 
+                     df = df_plot, 
+                     df.key = "region", 
+                     plot.var = "mean", 
+                     topcode = T, 
+                     topcode.ub = max(rescale_value),
+                     breaks_labels_val = seq(-bound, bound, bound/3),
+                     color.scheme = "div", 
+                     rescale_val = rescale_value,
+                     colorbar.title = paste0("mins lost"), 
+                     map.title = glue("{ssp}-{rcp}-{risk}-{adapt}"))
+
+  ggsave(glue("{DIR_FIG}/{ssp}-{rcp}-{risk}-{adapt}_impacts_map.pdf"), p)
+}
+
+map_args = expand.grid(rcp=c("rcp45"),
+                       ssp=c("SSP2","SSP3","SSP4"),
+                       adapt=c("fulladapt","noadapt"),
+                       year=c(2010,2099),
+                       risk=c("high","low","highlow")
+                       )
+
+mcmapply(plot_impact_map, 
+  rcp=map_args$rcp, 
+  ssp=map_args$ssp, 
+  year=map_args$year, 
+  risk=map_args$risk, 
+  adapt=map_args$adapt,
+  mc.cores = 5)
+
+
 
 
 

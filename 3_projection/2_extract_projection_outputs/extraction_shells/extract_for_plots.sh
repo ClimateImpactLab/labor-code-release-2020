@@ -28,17 +28,18 @@ python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection
 python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_fulladapt_map ${basename} -${basename}-histclim
 python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
 
-
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_unrebased.yml --suffix=_highlow_fulladapt_map ${basename} -${basename}-histclim
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_unrebased.yml --suffix=_highlow_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
+python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_rebased.yml --suffix=_highlow_fulladapt_map ${basename} -${basename}-histclim
+python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_rebased.yml --suffix=_highlow_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
 
 # extract noadapt
 basename=combined_uninteracted_spline_empshare_noFE-noadapt
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_fulladapt_map ${basename} -${basename}-histclim
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
 
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_fulladapt_map ${basename} -${basename}-histclim
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
+# python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_noadapt_map ${basename} 
+# python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_noadapt_timeseries ${basename}-pop-allvars-aggregated 
 
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_unrebased.yml --suffix=_highlow_fulladapt_map ${basename} -${basename}-histclim
-python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_unrebased.yml --suffix=_highlow_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
+# python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_noadapt_map ${basename} 
+# python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_noadapt_timeseries ${basename}-pop-allvars-aggregated 
+
+# python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_rebased.yml --suffix=_highlow_noadapt_map ${basename} 
+python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hilo_rebased.yml --suffix=_highlow_noadapt_timeseries ${basename}-pop-allvars-aggregated 
+
