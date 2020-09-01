@@ -22,7 +22,7 @@ cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 # extract fulladapt
 basename=combined_uninteracted_spline_empshare_noFE
 
-python -i quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_fulladapt_map ${basename} -${basename}-histclim
+python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_fulladapt_map ${basename} -${basename}-histclim
 python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_hi_unrebased.yml --suffix=_high_fulladapt_timeseries ${basename}-pop-allvars-aggregated -${basename}-histclim-pop-allvars-aggregated
 
 python -u quantiles.py /home/liruixue/repos/labor-code-release-2020/3_projection/2_extract_projection_outputs/extraction_configs/median_mean_lo_unrebased.yml --suffix=_low_fulladapt_map ${basename} -${basename}-histclim
