@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/home/kschwarz/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
@@ -11,7 +11,7 @@ cap log close
 log using "${DIR_LOG}/uninteracted_reg_comlohi.smcl", replace
 
 * select dataset and output folder
-gl dataset 		"${ROOT_INT_DATA}/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections

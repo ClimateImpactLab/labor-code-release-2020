@@ -1,7 +1,7 @@
 * liruixue@uchicago.edu
 clear all
 
-do "/home/liruixue/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 set more off
 set trace off
