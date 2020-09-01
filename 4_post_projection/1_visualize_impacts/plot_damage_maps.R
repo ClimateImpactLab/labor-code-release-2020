@@ -22,10 +22,10 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 #############################################
 # map of overall impact in 2099
 
-  # Load in the impacts-pc data, and convert it to GJ
+
 df= read_csv(
   paste0(ROOT_INT_DATA, '/projection_outputs/mapping_data/', 
-         'SSP3-rcp45_test.csv')) 
+         'SSP3-rcp85_high_fulladapt_map.csv')) 
 
 df_plot = df %>% dplyr::filter(year == 2099)
 # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
@@ -40,7 +40,7 @@ p = join.plot.map(map.df = mymap,
                    colorbar.title = paste0("mins worked"), 
                    map.title = paste0("SSP3-rcp45"))
 
-ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.pdf"), p)
+ggsave(paste0(DIR_FIG,"SSP3-rcp85_high_rulladapt_impacts_map.pdf"), p)
 
 
 
