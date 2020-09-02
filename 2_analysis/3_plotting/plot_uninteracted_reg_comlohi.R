@@ -27,7 +27,7 @@ rf = read_csv(
 		"uninteracted_reg_comlohi_full_response.csv"))
 
 temp_dist = read_csv(
-  glue("{DIR_OUTPUT}/temp_dist/no_chn_temp_dist.csv")
+  glue("{DIR_OUTPUT}/temp_dist/nochn_temp_dist.csv")
 )
 
 data = mclapply(
@@ -72,6 +72,6 @@ q = ggplot(hist) +
       guides(alpha=FALSE)
 
 # Combine and export
-pdf(glue('{DIR_FIG}/uninteracted_reg_comlohi.pdf'))
+pdf(glue('{DIR_FIG}/rf_plots/uninteracted_reg_comlohi.pdf'))
 p/q
 dev.off()

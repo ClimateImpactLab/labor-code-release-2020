@@ -28,9 +28,8 @@ rf = read_csv(
 		"uninteracted_reg_w_chn_full_response.csv"))
 
 
-# note this needs to change!!! once you generate the temp dist for with-china data
 temp_dist = read_csv(
-  glue("{DIR_OUTPUT}/temp_dist/no_chn_temp_dist.csv")
+  glue("{DIR_OUTPUT}/temp_dist/wchn_temp_dist.csv")
 )
 
 data = mclapply(
@@ -75,7 +74,7 @@ q = ggplot(hist) +
       guides(alpha=FALSE)
 
 # Combine and export
-pdf(glue('{DIR_FIG}/uninteracted_reg_w_chn.pdf'))
+pdf(glue('{DIR_FIG}/rf_plots/uninteracted_reg_w_chn.pdf'))
 p/q
 dev.off()
   
