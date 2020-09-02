@@ -1,0 +1,99 @@
+# an R script for running labor extractions
+# run the following two lines in shell
+
+conda activate risingverse-py27
+cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
+
+
+library(glue)
+library(parallel)
+
+extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
+
+	basename <- "combined_uninteracted_spline_empshare_noFE"
+	if (adapt == "fulladapt") {
+		basename_command <- glue("{basename} -{basename}-histclim")
+	}else if (adapt == "noadapt") {
+		basename_command <- glue("{basename}-{adapt}")
+	}
+
+	if (risk == "allrisk") {
+		rebased <- "rebased"
+	}else {
+		rebased <- "unrebased"
+	}
+
+
+	quantiles_command = paste0("python -u quantiles.py ",
+		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+		"2_extract_projection_outputs/extraction_configs/",
+		glue("median_mean_{risk}_{rebased}.yml "),
+		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}_{year}_map "),
+		glue("--years=[{year}] {basename_command}")
+		)
+
+	print(quantiles_command)
+	system(quantiles_command)
+}
+
+
+extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,region="global"){
+	basename <- "combined_uninteracted_spline_empshare_noFE"
+	if (adapt == "fulladapt") {
+		basename_command <- glue("{basename}{aggregation}-aggregated -{basename}-histclim{aggregation}-aggregated")
+	}else if (adapt == "noadapt") {
+		basename_command <- glue("{basename}-{adapt}{aggregation}-aggregated")
+	}
+
+	if (risk == "allrisk") {
+		rebased <- "rebased"
+	}else {
+		rebased <- "unrebased"
+	}
+
+	quantiles_command = paste0("python -u quantiles.py ",
+		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+		"2_extract_projection_outputs/extraction_configs/",
+		glue("median_mean_{risk}_{rebased}.yml "),
+		glue("--only-iam={iam} --only-ssp={ssp} --region=global --suffix=_{iam}_{risk}_{adapt}_{region}_timeseries "),
+		glue("{basename_command}")
+		)
+
+	print(quantiles_command)
+	system(quantiles_command)
+}
+
+extract_timeseries(rcp="rcp45",ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+
+extract_map(rcp="rcp45",ssp="SSP2",adapt="fulladapt",year=2020,risk="highrisk",iam="low")
+
+map_args = expand.grid(rcp=c("rcp85","rcp45"),
+                       ssp=c("SSP2","SSP3","SSP4"),
+                       adapt=c("fulladapt","noadapt"),
+                       year=c(2010,2020,2098,2099,2100),
+                       risk=c("highrisk","lowrisk","allrisk"),
+                       iam=c("high","low")
+                       )
+
+mcmapply(extract_map, 
+  rcp=map_args$rcp, 
+  ssp=map_args$ssp, 
+  iam=map_args$iam,
+  year=map_args$year, 
+  risk=map_args$risk, 
+  adapt=map_args$adapt,
+  mc.cores = 30)
+
+mcmapply(extract_timeseries, 
+  rcp=map_args$rcp, 
+  ssp=map_args$ssp, 
+  iam=map_args$iam,
+  risk=map_args$risk, 
+  aggregation="-pop-allvars",
+  adapt=map_args$adapt,
+  region="global",
+  mc.cores = 70)
+
+
+
+
