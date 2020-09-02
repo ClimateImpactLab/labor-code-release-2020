@@ -28,10 +28,15 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 plot_impact_map = function(rcp, ssp, adapt, year, risk){
   df= read_csv(
     glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{risk}_{adapt}_map.csv')) 
+  browser()
+
+
+df = read_csv("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/mapping_data/SSP3-rcp85_high_highrisk_fulladapt_map.csv")
 
   df_plot = df %>% 
-              dplyr::filter(year == 2099) %>% 
+              dplyr::filter(year == 2100) %>% 
               dplyr::mutate(mean = -mean)
+  df_plot
               # we were converting minutes to minutes lost
 
   # find the scales for nice plotting
@@ -55,7 +60,11 @@ plot_impact_map = function(rcp, ssp, adapt, year, risk){
   ggsave(glue("{DIR_FIG}/{ssp}-{rcp}-{risk}-{adapt}_impacts_map.pdf"), p)
 }
 
-map_args = expand.grid(rcp=c("rcp45"),
+
+plot_impact_map(rcp="rcp85",ssp="SSP2",adapt="fulladapt",year=2099,risk="high")
+
+
+map_args = expand.grid(rcp=c("rcp85"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        adapt=c("fulladapt","noadapt"),
                        year=c(2010,2099),
