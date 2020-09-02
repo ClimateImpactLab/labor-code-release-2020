@@ -47,7 +47,7 @@ paths <- function(ctry, admin){
 
 get_transf <- function(t_version){
 
-  # bins <- c() 
+  bins <- c() 
   polynomials <- c()
   prcp <- c()
   splines_nochn <- c()
@@ -57,43 +57,43 @@ get_transf <- function(t_version){
 
   # create variable names
 
-  # for (i in seq(-40, 59)){
+  for (i in seq(-40, 59)){
     
-  #   if (i<0){
-  #     i <- abs(i)
+    if (i<0){
+      i <- abs(i)
       
-  #     if (i==40){
-  #       negative_limit <- glue("{t_version}_bins_nInf_n{i}C")
-  #       bins <- c(bins, negative_limit)
-  #       j <- i-1
-  #       negative_limit <- glue("{t_version}_bins_n{i}C_n{j}C")
-  #       bins <- c(bins, negative_limit)
-  #     }
+      if (i==40){
+        negative_limit <- glue("{t_version}_bins_nInf_n{i}C")
+        bins <- c(bins, negative_limit)
+        j <- i-1
+        negative_limit <- glue("{t_version}_bins_n{i}C_n{j}C")
+        bins <- c(bins, negative_limit)
+      }
       
-  #     else if (i==1){
-  #       j <- i - 1
-  #       negative_limit <- glue("{t_version}_bins_n{i}C_{j}C")
-  #       bins <- c(bins, negative_limit)
-  #     }
+      else if (i==1){
+        j <- i - 1
+        negative_limit <- glue("{t_version}_bins_n{i}C_{j}C")
+        bins <- c(bins, negative_limit)
+      }
       
-  #     else {
-  #       j <- i - 1
-  #       negative_name <- glue("{t_version}_bins_n{i}C_n{j}C")
-  #       bins <- c(bins, negative_name)
-  #     }
-  #   }
+      else {
+        j <- i - 1
+        negative_name <- glue("{t_version}_bins_n{i}C_n{j}C")
+        bins <- c(bins, negative_name)
+      }
+    }
     
-  #   else{
-  #     j <- i + 1 
-  #     positive_name <- glue("{t_version}_bins_{i}C_{j}C")
-  #     bins <- c(bins, positive_name)
+    else{
+      j <- i + 1 
+      positive_name <- glue("{t_version}_bins_{i}C_{j}C")
+      bins <- c(bins, positive_name)
       
-  #     if (i==59){
-  #       positive_limit <- glue("{t_version}_bins_{j}C_Inf")
-  #       bins <- c(bins, positive_limit)
-  #     }
-  #   }
-  # }
+      if (i==59){
+        positive_limit <- glue("{t_version}_bins_{j}C_Inf")
+        bins <- c(bins, positive_limit)
+      }
+    }
+  }
 
   for (k in c(1,2,3,4)){
     polyname <- glue("{t_version}_poly_{k}")
@@ -121,7 +121,7 @@ get_transf <- function(t_version){
 
 
   # transformations <- list(bins=bins, polynomials=polynomials, polynomials_above_below=polynomials_above_below, prcp=prcp, splines=splines, splines_nochn = splines_nochn, splines_nochn_best = splines_nochn_best, yearly=yearly)
-  transformations <- list(polynomials=polynomials, prcp=prcp, splines_nochn = splines_nochn, splines_wchn = splines_wchn)
+  transformations <- list(bins=bins, polynomials=polynomials, prcp=prcp, splines_nochn = splines_nochn, splines_wchn = splines_wchn)
 
   return(transformations)
 
@@ -438,11 +438,12 @@ combine <- function(ctry, climate_source, admin, var, t_version){
 
 
 
-rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines_nochn,rename_splines_wchn, rename_precip, rename_polynomials){
+rename <- function(ctry, climate_source, admin, t_version='tmax', rename_bins, rename_splines_nochn,rename_splines_wchn, rename_precip, rename_polynomials){
 
   print(glue("renaming {ctry}"))
   paths = paths(ctry=ctry,admin=admin)
 
+  # bins_new <- c()
   polynomials_new <- c()
   prcp_new <- c()
   splines_nochn_new <- c()
@@ -507,11 +508,10 @@ rename <- function(ctry, climate_source, admin, t_version='tmax', rename_splines
   }
 
 
-  # if (rename_bins==TRUE) {
-  #   bins <- fread(glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_bins_{admin}.csv"))
-  #   haven::write_dta(bins, glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_bins_{admin}.dta"))
-
-  # }
+  if (rename_bins==TRUE) {
+    bins <- fread(glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_bins_{admin}.csv"))
+    haven::write_dta(bins, glue("{paths$outputdir}/{climate_source}_{ctry}_{t_version}_bins_{admin}.dta"))
+  }
 
   return("renamed stuff")
   }
@@ -560,24 +560,24 @@ countries$USA <- "adm2"
 countries$MEX <- "adm2"
 
 # splines_nochn should be run separately! 
-transf_columns <- c("splines_nochn","splines_wchn","polynomials", "prcp")
+# transf_columns <- c("splines_nochn","splines_wchn","polynomials", "prcp")
 # transf_columns <- c("splines","polynomials","polynomials_above_below")
-# transf_columns <- c("bins")
+transf_columns <- c("bins")
 # transf_columns <- c("splines_wchn")
 
-# for (country in names(countries)) {
-#   for (t in t_version_list) {
+for (country in names(countries)) {
+  for (t in t_version_list) {
        
-#     transf_list = get_transf(t_version=t)
-#     climate_source = "GMFD"
-#     admin = countries[names(countries) == country][[1]]
+    transf_list = get_transf(t_version=t)
+    climate_source = "GMFD"
+    admin = countries[names(countries) == country][[1]]
 
-#     # reshaping
-#     args = expand.grid(climate_source=climate_source,ctry=country, transf=unlist(transf_list[names(transf_list) %in% transf_columns]), admin=admin, yearly=FALSE)
-#     # browser()
-#     mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=1)
-#   }
-# }
+    # reshaping
+    args = expand.grid(climate_source=climate_source,ctry=country, transf=unlist(transf_list[names(transf_list) %in% transf_columns]), admin=admin, yearly=FALSE)
+    # browser()
+    mcmapply(FUN=reshape, ctry=args$ctry, transf=args$transf, climate_source=args$climate_source, admin=args$admin, yearly=args$yearly, mc.cores=1)
+  }
+}
 
 for (country in names(countries)) {
   for (t in t_version_list) {
@@ -591,7 +591,7 @@ for (country in names(countries)) {
     mcmapply(combine, ctry=args$ctry, climate_source=args$climate_source, var=args$var, admin=args$admin, t_version=args$t_version, mc.cores=1)
 
     # renaming
-    rename(climate_source=climate_source,ctry=country, rename_splines_nochn=TRUE,rename_splines_wchn=TRUE, rename_precip=TRUE, rename_polynomials=TRUE,admin=admin, t_version=t)
+    rename(climate_source=climate_source,ctry=country, rename_bins = TRUE, rename_splines_nochn=TRUE,rename_splines_wchn=TRUE, rename_precip=TRUE, rename_polynomials=TRUE,admin=admin, t_version=t)
   }
 }
 

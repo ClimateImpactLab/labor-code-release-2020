@@ -8,7 +8,7 @@ cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 library(glue)
 library(parallel)
 
-extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
+extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL,suffix=NULL){
 
 	basename <- "combined_uninteracted_spline_empshare_noFE"
 	if (adapt == "fulladapt") {
@@ -19,7 +19,9 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 
 	if (risk == "allrisk") {
 		rebased <- "rebased"
-	}else {
+	} else if (risk == "riskshare") {
+		rebased <- "clipped"
+	} else {
 		rebased <- "unrebased"
 	}
 
@@ -28,7 +30,7 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/extraction_configs/",
 		glue("median_mean_{risk}_{rebased}.yml "),
-		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}_{year}_map "),
+		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{suffix}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
 		)
 
@@ -37,7 +39,7 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 }
 
 
-extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,region="global"){
+extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,region="global", suffix=NULL){
 	basename <- "combined_uninteracted_spline_empshare_noFE"
 	if (adapt == "fulladapt") {
 		basename_command <- glue("{basename}{aggregation}-aggregated -{basename}-histclim{aggregation}-aggregated")
@@ -47,7 +49,9 @@ extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,regio
 
 	if (risk == "allrisk") {
 		rebased <- "rebased"
-	}else {
+	} else if (risk == "riskshare") {
+		rebased <- "clipped"
+	} else {
 		rebased <- "unrebased"
 	}
 
@@ -55,7 +59,7 @@ extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,regio
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/extraction_configs/",
 		glue("median_mean_{risk}_{rebased}.yml "),
-		glue("--only-iam={iam} --only-ssp={ssp} --region=global --suffix=_{iam}_{risk}_{adapt}_{region}_timeseries "),
+		glue("--only-iam={iam} --only-ssp={ssp} --region=global --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
 		)
 
@@ -67,32 +71,35 @@ extract_timeseries(rcp="rcp45",ssp="SSP3",adapt="fulladapt",risk="highrisk",iam=
 
 extract_map(rcp="rcp45",ssp="SSP2",adapt="fulladapt",year=2020,risk="highrisk",iam="low")
 
-map_args = expand.grid(rcp=c("rcp85","rcp45"),
+args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        adapt=c("fulladapt","noadapt"),
-                       year=c(2010,2020,2098,2099,2100),
-                       risk=c("highrisk","lowrisk","allrisk"),
+                       year=c(2010,2020,2098),
+                       # year=c(2100),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
                        iam=c("high","low")
                        )
 
 mcmapply(extract_map, 
-  rcp=map_args$rcp, 
-  ssp=map_args$ssp, 
-  iam=map_args$iam,
-  year=map_args$year, 
-  risk=map_args$risk, 
-  adapt=map_args$adapt,
-  mc.cores = 30)
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  suffix="_raw_impacts",
+  mc.cores = 5)
 
 mcmapply(extract_timeseries, 
-  rcp=map_args$rcp, 
-  ssp=map_args$ssp, 
-  iam=map_args$iam,
-  risk=map_args$risk, 
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  risk=args$risk, 
   aggregation="-pop-allvars",
-  adapt=map_args$adapt,
+  adapt=args$adapt,
   region="global",
-  mc.cores = 70)
+  suffix="_popweighted_impacts",
+  mc.cores = 5)
 
 
 

@@ -25,7 +25,7 @@ global variables_list splines_wchn
 * possible values: YES or NO
 global drop_holidays "YES"
 global clean_raw_surveys "NO"
-global combine_surveys "YES"
+global combine_surveys "NO"
 global include_chn "YES" 
 
 * set the following global to lcl or no_ll
@@ -376,6 +376,7 @@ foreach t_version in $t_version_list {
 				erase `iso'_dt.dta
 			}
 			cap rename *27_37_39*3kn* *3kn*27_37_39*
+			cap rename *21_37_41*3kn* *3kn*21_37_41*
 			* generate the actual human readable temperature
 			if "`variables'" == "splines" {
 				gen real_temperature = `t_version'_rcspl_3kn_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
@@ -384,6 +385,10 @@ foreach t_version in $t_version_list {
 			if "`variables'" == "splines_nochn" {
 				gen real_temperature = `t_version'_rcspl_3kn_27_37_39_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_rcspl_3kn_27_37_39_t0/7 if inlist(iso, "BRA","CHN","MEX")
+			}
+			if "`variables'" == "splines_wchn" {
+				gen real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+				replace real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
 			}
 			else if "`variables'" == "polynomials" | "`variables'" == "bins" {
 				gen real_temperature = `t_version'_p1/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
