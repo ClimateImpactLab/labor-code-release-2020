@@ -1,6 +1,8 @@
 # Produces maps displayed in the energy paper. Uses Functions in mapping.R
 # done 26 aug 2020
+
 rm(list = ls())
+
 source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 # source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
@@ -26,19 +28,22 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 
 
 plot_impact_map = function(rcp, ssp, adapt, weight, risk){
-  df= read_csv(
-      glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/csv/', 
-      'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
 
+  file = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+      'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+      'rcp85/CCSM4/high/SSP3/csv/',
+      'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-levels-combined.csv')
+
+  print(file)  
+  df= read_csv(file)
+  
   df_plot = df %>% 
               dplyr::filter(year == 2099) %>% 
               dplyr::mutate(value = -value)
               # we were converting minutes to minutes lost
 
   # find the scales for nice plotting
-  bound = ceiling(max(abs(df_plot$value)))
+  bound = ceiling(max(abs(df_plot$value), na.rm=TRUE))
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
   
@@ -61,22 +66,17 @@ plot_impact_map = function(rcp, ssp, adapt, weight, risk){
 map_args = expand.grid(rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c("highriskimpacts","lowriskimpacts","rebased"),
-                       weight=c("wage","pop")
+                       risk=c("lowriskimpacts","rebased", "highriskimpacts"),
+                       weight=c("wage","pop", "gdp")
                        )
 
 print(map_args)
 
-mcmapply(plot_impact_map, 
-  rcp=map_args$rcp, 
-  ssp=map_args$ssp, 
-  risk=map_args$risk, 
-  adapt=map_args$adapt,
-  weight=map_args$weight,
-  mc.cores = 5)
-
-
-
-
-
-  
+mcmapply(plot_impact_map,
+         ssp=map_args$ssp,
+         rcp=map_args$rcp,
+         adapt=map_args$adapt,
+         risk=map_args$risk,
+         weight=map_args$weight,
+         mc.cores=5
+          )
