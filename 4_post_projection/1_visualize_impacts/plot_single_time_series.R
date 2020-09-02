@@ -1,7 +1,7 @@
 rm(list = ls())
 source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 library(glue)
+library(parallel)
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -13,23 +13,39 @@ pacman::p_load(ggplot2,
 
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
-
 # time series of popweighted impacts
+plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
 
-df= read_csv(
-  paste0('/shares/gcp/outputs/labor/impacts-woodwork/',
+  df= read_csv(
+      glue('/shares/gcp/outputs/labor/impacts-woodwork/',
       'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/', 
-        'combined_mixed_model_splines_empshare_noFE-pop-combined.csv')) 
-df_plot = df %>% dplyr::filter(is.na(region))
+      'rcp85/CCSM4/high/SSP3/csv/', 
+      'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
 
-p <- ggtimeseries(
-  df.list = list(df_plot[,c('year', 'value')] %>% as.data.frame()), # mean lines
-  x.limits = c(2010, 2099),
-  y.label = 'mins worked',
-  rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high') + 
-ggtitle("pop weighted impact - mins worked") 
+  df_plot = df %>% dplyr::filter(is.na(region))
 
-pdf(glue("{DIR_OUTPUT}/single_time_series.pdf"))
-p
-dev.off()
+  p <- ggtimeseries(
+    df.list = list(df_plot[,c('year', 'value')] %>% as.data.frame()), # mean lines
+    x.limits = c(2010, 2099),
+    y.label = 'mins worked',
+    rcp.value = rcp, ssp.value = ssp) + 
+  ggtitle(glue("{weight} weighted impact - mins worked - {risk}"))
+  ggsave(glue("{DIR_FIG}/single_mixed_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
+}
+
+map_args = expand.grid(rcp="rcp85",
+                       ssp="SSP3",
+                       adapt="fulladapt",
+                       risk=c("highriskimpacts","lowriskimpacts","rebased"),
+                       weight=c("wage","pop")
+                       )
+
+print(map_args)
+
+mcmapply(plot_impact_timeseries, 
+  rcp=map_args$rcp, 
+  ssp=map_args$ssp, 
+  risk=map_args$risk, 
+  adapt=map_args$adapt,
+  weight=map_args$weight,
+  mc.cores = 5)
