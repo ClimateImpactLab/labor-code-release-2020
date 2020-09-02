@@ -76,7 +76,8 @@ args = expand.grid(rcp=c("rcp85","rcp45"),
                        adapt=c("fulladapt","noadapt"),
                        year=c(2010,2020,2098),
                        # year=c(2100),
-                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                       # risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                       risk=c("riskshare"),
                        iam=c("high","low")
                        )
 

@@ -6,7 +6,7 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork"
 output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay" 
 
-aggregation_scenario="-wage"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete
@@ -55,7 +55,7 @@ do
 		# echo "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}"
 		n_complete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 		n_incomplete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-		# find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M
+		find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M
 		n_total=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" | wc -l)
 		
 		printf "${scenario}: \n"
