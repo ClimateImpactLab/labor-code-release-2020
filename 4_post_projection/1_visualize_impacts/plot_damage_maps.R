@@ -25,21 +25,16 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 # map of overall impact in 2099
 
 
-plot_impact_map = function(rcp, ssp, adapt, year, risk){
-  df= read_csv(
-    glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{risk}_{adapt}_map.csv')) 
-  browser()
-
-
-df = read_csv("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/mapping_data/SSP3-rcp85_high_highrisk_fulladapt_map.csv")
+plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix=""){
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) 
+  # browser()
 
   df_plot = df %>% 
-              dplyr::filter(year == 2100) %>% 
-              dplyr::mutate(mean = -mean)
-  df_plot
-              # we were converting minutes to minutes lost
+                dplyr::mutate(mean = -mean)
+                # we were converting minutes to minutes lost
 
   # find the scales for nice plotting
+  # browser()
   bound = ceiling(max(abs(df_plot$mean)))
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -55,28 +50,30 @@ df = read_csv("/shares/gcp/estimation/labor/code_release_int_data/projection_out
                      color.scheme = "div", 
                      rescale_val = rescale_value,
                      colorbar.title = paste0("mins lost"), 
-                     map.title = glue("{ssp}-{rcp}-{risk}-{adapt}"))
+                     map.title = glue("{ssp}-{rcp}-{iam}-{risk}-{adapt}-{year}"))
 
-  ggsave(glue("{DIR_FIG}/{ssp}-{rcp}-{risk}-{adapt}_impacts_map.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
 }
 
 
-plot_impact_map(rcp="rcp85",ssp="SSP2",adapt="fulladapt",year=2099,risk="high")
+plot_impact_map(rcp="rcp85",ssp="SSP2",iam="high", adapt="fulladapt",year=2098,risk="highrisk")
 
 
-map_args = expand.grid(rcp=c("rcp85"),
+args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        adapt=c("fulladapt","noadapt"),
-                       year=c(2010,2099),
-                       risk=c("high","low","highlow")
+                       year=c(2100),
+                       risk=c("highrisk","lowrisk","allrisk"),
+                       iam=c("high","low")
                        )
 
 mcmapply(plot_impact_map, 
-  rcp=map_args$rcp, 
-  ssp=map_args$ssp, 
-  year=map_args$year, 
-  risk=map_args$risk, 
-  adapt=map_args$adapt,
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
   mc.cores = 5)
 
 
