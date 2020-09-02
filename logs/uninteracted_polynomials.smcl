@@ -1,0 +1,87 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/uninteracted_polynomials.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 2 Sep 2020, 12:45:01
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. gl reg_list wchn nochn
+{txt}
+{com}. 
+. ****************************************
+. *       RUN REGRESSION - WITH AND WITHOUT CHINA
+. ****************************************
+. 
+. * with and without China
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         * for each order of polynomial in 2, 3, 4
+.         forval N_order=2(1)4 {c -(}
+{txt}  3{com}. 
+.                 * select dataset and output folder
+.                 gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_polynomials_`reg'_tmax_chn_prev_week_no_ll_0.dta"
+{txt}  4{com}.                 cap mkdir               "${c -(}DIR_STER{c )-}/uninteracted_polynomials"
+{txt}  5{com}.                 loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_polynomials"
+{txt}  6{com}. 
+.                 use $dataset, clear
+{txt}  7{com}. 
+.                 * if test code mode is on, take a random sample
+.                 if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  8{com}.                         sample 0.1
+{txt}  9{com}.                 {c )-}
+{txt} 10{com}. 
+.                 * only include non-zero observations
+.                 keep if mins_worked > 0
+{txt} 11{com}. 
+.                 * generate regression variables
+.                 gen_controls_and_FEs
+{txt} 12{com}.                 gen_treatment_polynomials `N_order' tmax this_week 1
+{txt} 13{com}. 
+.                 * differentiate treatment if reg is by risk
+.                 loc reg_treatment (${c -(}vars_T_polynomials{c )-})##i.high_risk
+{txt} 14{com}. 
+.                 * both regressions have interacted controls
+.                 local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 15{com}. 
+.                 * interact each fixed effect with the risk binary
+.                 local reg_fe ""                                 
+{txt} 16{com}.                 foreach f in $`fe' {c -(}
+{txt} 17{com}.                         local reg_fe `reg_fe' `f'#high_risk
+{txt} 18{com}.                 {c )-}
+{txt} 19{com}. 
+.                 * set the ster file name and the notes to be included
+.                 local ster_name "`reg_folder'/uninteracted_polynomials_`reg'_`N_order'.ster"
+{txt} 20{com}.                 local spec_desc "polynomial, uninteracted_polynomials_`reg', order = `N_order', tmax, differentiated treatment, fe = `fe'"
+{txt} 21{com}. 
+.                 di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 22{com}.                 qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 23{com}.                 estimates notes: "`spec_desc'"
+{txt} 24{com}.                 estimates save "`ster_name'", replace
+{txt} 25{com}. 
+.         {c )-}
+{txt} 26{com}. {c )-}
+{txt}(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_2.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_2.ster saved
+(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6 c.tmax_p3 c.tmax_p3_v1 c.tmax_p3_v2 c.tmax_p3_v3 c.tmax_p3_v4 c.tmax_p3_v5 c.tmax_p3_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_3.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_3.ster saved
+(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6 c.tmax_p3 c.tmax_p3_v1 c.tmax_p3_v2 c.tmax_p3_v3 c.tmax_p3_v4 c.tmax_p3_v5 c.tmax_p3_v6 c.tmax_p4 c.tmax_p4_v1 c.tmax_p4_v2 c.tmax_p4_v3 c.tmax_p4_v4 c.tmax_p4_v5 c.tmax_p4_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_4.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_wchn_4.ster saved
+(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
