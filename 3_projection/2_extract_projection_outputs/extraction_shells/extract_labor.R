@@ -7,11 +7,6 @@ cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 
 library(glue)
 library(parallel)
-rcps = c("rcp45","rcp85")
-ssps = c("ssp2","ssp3","ssp4")
-risk = c("highrisk","lowrisk","allrisk")
-adapt = c("noadapt","fulladapt")
-
 
 extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 
@@ -22,10 +17,17 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 		basename_command <- glue("{basename}-{adapt}")
 	}
 
+	if (risk == "allrisk") {
+		rebased <- "rebased"
+	}else {
+		rebased <- "unrebased"
+	}
+
+
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/extraction_configs/",
-		glue("median_mean_{risk}_unrebased.yml "),
+		glue("median_mean_{risk}_{rebased}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
 		)
@@ -35,7 +37,7 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation=NULL){
 }
 
 
-extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL){
+extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL,region="global"){
 	basename <- "combined_uninteracted_spline_empshare_noFE"
 	if (adapt == "fulladapt") {
 		basename_command <- glue("{basename}{aggregation}-aggregated -{basename}-histclim{aggregation}-aggregated")
@@ -43,11 +45,17 @@ extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation=NULL){
 		basename_command <- glue("{basename}-{adapt}{aggregation}-aggregated")
 	}
 
+	if (risk == "allrisk") {
+		rebased <- "rebased"
+	}else {
+		rebased <- "unrebased"
+	}
+
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/extraction_configs/",
-		glue("median_mean_{risk}_unrebased.yml "),
-		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}_timeseries "),
+		glue("median_mean_{risk}_{rebased}.yml "),
+		glue("--only-iam={iam} --only-ssp={ssp} --region=global --suffix=_{iam}_{risk}_{adapt}_{region}_timeseries "),
 		glue("{basename_command}")
 		)
 
@@ -74,6 +82,18 @@ mcmapply(extract_map,
   year=map_args$year, 
   risk=map_args$risk, 
   adapt=map_args$adapt,
-  mc.cores = 5)
+  mc.cores = 30)
+
+mcmapply(extract_timeseries, 
+  rcp=map_args$rcp, 
+  ssp=map_args$ssp, 
+  iam=map_args$iam,
+  risk=map_args$risk, 
+  aggregation="-pop-allvars",
+  adapt=map_args$adapt,
+  region="global",
+  mc.cores = 70)
+
+
 
 
