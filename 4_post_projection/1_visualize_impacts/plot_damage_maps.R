@@ -62,8 +62,9 @@ plot_impact_map(rcp="rcp85",ssp="SSP2",iam="high", adapt="fulladapt",year=2098,r
 args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        adapt=c("fulladapt","noadapt"),
-                       year=c(2100),
-                       risk=c("highrisk","lowrisk","allrisk"),
+                       year=c(2010,2020,2098),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                       # risk=c("riskshare"),
                        iam=c("high","low")
                        )
 
@@ -74,6 +75,7 @@ mcmapply(plot_impact_map,
   year=args$year, 
   risk=args$risk, 
   adapt=args$adapt,
+  suffix="_raw_impacts",
   mc.cores = 5)
 
 
