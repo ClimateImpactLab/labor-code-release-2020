@@ -104,6 +104,94 @@ program define gen_treatment_splines
 	}
 
 
+end
+
+***************************************
+*	GEN_TREATMENT_POLYNOMIALS
+
+* 	generate macro of spline terms
+*************************************** 
+
+cap program drop gen_treatment_polynomials
+program define gen_treatment_polynomials
+
+	args N_order t_version leads_lags n_ll
+
+
+	global vars_T_polynomials 
+	global vars_T_x_gdp_polynomials 
+	global vars_T_x_lr_`t_version'_polynomials
+
+
+	forval poly_order=1/`N_order'{
+	
+
+		if "`leads_lags'"=="this_week"{
+
+
+			*stacking contemporaneous week's weather 
+
+			global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'
+			global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'#c.log_gdp_pc_adm1
+			global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'#c.lr_`t_version'_p1
+
+
+			forval lag=1/6 {
+
+				global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'_v`lag'
+				global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'_v`lag'#c.log_gdp_pc_adm1
+				global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'_v`lag'#c.lr_`t_version'_p1
+
+			}
+
+
+		}
+
+		if "`leads_lags'"=="all_weeks"{
+
+			*stacking contemporaneous week's weather...
+
+			*that day
+			global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'
+			global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'#c.log_gdp_pc_adm1
+			global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'#c.lr_`t_version'_p1
+
+
+			*other days
+			forval lag=1/6 {
+
+				global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'_v`lag'
+				global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'_v`lag'#c.log_gdp_pc_adm1
+				global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'_v`lag'#c.lr_`t_version'_p1
+
+			}
+
+
+			*... and adding the n-order week lead ang lag
+
+			local weeks 
+			forval order=1/`n_ll' {
+				local weeks `weeks' wk`order' wkn`order'
+			}
+
+			foreach week in `weeks' {
+
+				*that day (n week before/after)
+				global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'_`week'
+				global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'_`week'#c.log_gdp_pc_adm1
+				global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'_`week'#c.lr_`t_version'_p1
+
+				*other days (n week before or after)
+				forval lag=1/6 {
+
+					global vars_T_polynomials ${vars_T_polynomials} c.`t_version'_p`poly_order'_`week'_v`lag'
+					global vars_T_x_gdp_polynomials ${vars_T_x_gdp_polynomials} c.`t_version'_p`poly_order'_`week'_v`lag'#c.log_gdp_pc_adm1
+					global vars_T_x_lr_`t_version'_polynomials ${vars_T_x_lr_`t_version'_polynomials} c.`t_version'_p`poly_order'_`week'_v`lag'#c.lr_`t_version'_p1
+				}
+			}
+		}
+	}
+
 end 
 
 ***************************************

@@ -18,15 +18,15 @@ global t_version_list tmax
 * possible values: chn_week_list chn_prev7days chn_prev_week
 global chn_week_list chn_prev_week
 
-* possible values: splines_wchn, splines_nochn, polynomials, bins
-global variables_list splines_wchn
+* possible values: splines_wchn, splines_nochn, polynomials_wchn, polynomials_nochn, bins_nochn, bins_wchn
+global variables_list bins_nochn
 
 * set which parts of the code we want to run and how many lead/lag weeks we want
 * possible values: YES or NO
 global drop_holidays "YES"
 global clean_raw_surveys "NO"
 global combine_surveys "NO"
-global include_chn "YES" 
+global include_chn "NO" 
 
 * set the following global to lcl or no_ll
 global leadlag "no_ll"
@@ -41,7 +41,7 @@ local countries_all CHN USA MEX BRA GBR FRA ESP IND
 
 
 if "${clean_raw_surveys}" == "YES"{
-	* clean surveys of individual countries/* 
+	* clean surveys of individual countries 
 	shell python "$DIR_REPO_LABOR/time_use/surveys/clean_CHN_chns.py"
 	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_WEU_mtus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_IND_itus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
@@ -221,7 +221,6 @@ program define merge_climate_data_file
 
 	use "${ROOT_INT_DATA}/climate/final/`iso'/`adm_level'/GMFD_`iso'_`filename'_`adm_level'.dta", clear
 
-
 	* generate date and dow in climate data for merging
 	gen date = mdy(month, day, year)
 	gen dow = dow(date)
@@ -352,10 +351,14 @@ foreach t_version in $t_version_list {
 				save `iso'_dt, replace
 
 				* merge in the climate data files
-				merge_climate_data_file `iso' `t_version'_`variables' ${leadlag} ${n_ll}
-				if "`variables'" == "bins" {
+				if strpos("`variables'","polynomials") > 0 {
 					merge_climate_data_file `iso' `t_version'_polynomials ${leadlag} ${n_ll}
-					drop `t_version'_p1_v* `t_version'_p2* `t_version'_p3* `t_version'_p4* 
+				}
+				else if strpos("`variables'","bins") > 0 {
+					merge_climate_data_file `iso' `t_version'_bins ${leadlag} ${n_ll}
+				}
+				else {
+					merge_climate_data_file `iso' `t_version'_`variables' ${leadlag} ${n_ll}
 				}
 				* merge precip
 				merge_climate_data_file `iso' prcp ${leadlag} ${n_ll}
@@ -390,7 +393,7 @@ foreach t_version in $t_version_list {
 				gen real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
 			}
-			else if "`variables'" == "polynomials" | "`variables'" == "bins" {
+			else if (strpos("`variables'", "polynomials") > 0) | (strpos("`variables'", "bins") > 0) {
 				gen real_temperature = `t_version'_p1/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_p1/7 if inlist(iso, "BRA","CHN","MEX")
 			}
