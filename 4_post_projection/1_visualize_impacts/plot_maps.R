@@ -83,8 +83,9 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="highrisk",aggregation="")
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="lowrisk",aggregation="")
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="riskshare",aggregation="")
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="")
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="")
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
+# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
 
 ################################
 # plot beta maps
@@ -128,6 +129,7 @@ plot_beta_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffi
 }
 
 plot_beta_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="")
+plot_beta_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="allrisk",aggregation="")
 
  
 
