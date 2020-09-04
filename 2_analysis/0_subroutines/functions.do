@@ -109,7 +109,7 @@ end
 ***************************************
 *	GEN_TREATMENT_POLYNOMIALS
 
-* 	generate macro of spline terms
+* 	generate macro of poly terms
 *************************************** 
 
 cap program drop gen_treatment_polynomials
@@ -195,9 +195,41 @@ program define gen_treatment_polynomials
 end 
 
 ***************************************
+*	GEN_TREATMENT_BINS
+
+* 	generate macro of bin terms
+*************************************** 
+
+cap program drop gen_treatment_bins 
+program define gen_treatment_bins
+	* all arguments are numbers 
+	* see variable labels in this file 
+	* "${DIR_DATA_INT}/regression_ready_data/labor_dataset_bins_wchn_tmax_chn_prev_week_no_ll_0_0Cto42C_3Cbins.dta"
+	* for the correspondence of bins with temperature 
+	args start_bin end_bin ref_bin below_temp above_temp
+
+	global varlist_bins_${bin_width}
+	forval t = `start_bin'/`end_bin' {
+		if `t' == `ref_bin' continue
+		global varlist_bins_${bin_width} ${varlist_bins_${bin_width}} c.b${bin_width}_`t'
+	}
+
+	global varlist_bins_${bin_width} ${varlist_bins_${bin_width}} c.below`below_temp' c.above`above_temp'
+
+	foreach v in ${varlist_bins_${bin_width}} {
+		forval lag = 1/6 {
+			global varlist_bins_${bin_width} ${varlist_bins_${bin_width}} `v'_v`lag'	
+		}
+	}
+
+	di "${varlist_bins_${bin_width}}"
+end   
+
+
+***************************************
 *	MAKE_TEMP_DIST
 
-* 	put coefficients in macros
+* 	make a list of temps accordingly
 ***************************************
 
 cap prog drop make_temp_dist
@@ -290,6 +322,112 @@ prog def collect_spline_terms
 end
 
 ***************************************
+*	COLLECT_POLYNOMIAL_TERMS
+
+* 	put coefficients in macros
+***************************************
+
+cap prog drop collect_polynomial_terms
+prog def collect_polynomial_terms
+	syntax , order(numlist) unint(string) int(string)
+
+	forval degree=1(1)`order' {
+
+		#d ;
+
+		gl `unint'`degree' =
+			"_b[tmax_p`degree'] +" +
+			"_b[tmax_p`degree'_v1] +" + 
+			"_b[tmax_p`degree'_v2] +" +
+			"_b[tmax_p`degree'_v3] +" +
+			"_b[tmax_p`degree'_v4] +" +
+			"_b[tmax_p`degree'_v5] +" +
+			"_b[tmax_p`degree'_v6] "
+		;
+
+		gl `int'`degree' = 
+			"_b[1.high_risk#c.tmax_p`degree'] +" + 
+			"_b[1.high_risk#c.tmax_p`degree'_v1] +" + 
+			"_b[1.high_risk#c.tmax_p`degree'_v2] +" +
+			"_b[1.high_risk#c.tmax_p`degree'_v3] +" + 
+			"_b[1.high_risk#c.tmax_p`degree'_v4] +" +
+			"_b[1.high_risk#c.tmax_p`degree'_v5] +" +
+			"_b[1.high_risk#c.tmax_p`degree'_v6] "
+		;
+
+		#d cr
+	}
+
+end
+
+***************************************
+*	COLLECT_BIN_TERMS
+
+* 	put coefficients in macros
+***************************************
+
+cap prog drop collect_bin_terms
+prog def collect_bin_terms
+	syntax , bins(string) unint(string) int(string)
+	
+	di in red "Bin values are hard-coded in " 		///
+	"this function (14 = (0,2) ... etc). Ensure "	///
+	"they are correct."
+
+	* get values corresponding to each bin (because
+	* bins are very randomly named)
+	gl min_below0 = -30
+	gl max_below0 = 0
+	gl min_above42 = 42
+	gl max_above42 = 60
+	gl min_14 = 0
+	gl max_14 = 3
+	forval bin=15(1)27 {
+		loc prev_bin = `bin' - 1
+		gl min_`bin' = ${min_`prev_bin'} + 3
+		gl max_`bin' = ${max_`prev_bin'} + 3
+	}
+
+	* collect numeric and string names of bins
+	numlist "14(1)27"
+	gl `bins' "`r(numlist)' above42 below0"
+
+	* collect the coefficients for each bin
+	foreach bin in $`bins' {
+
+		* add prefix for numerical bins
+		if ("`bin'" != "above42") & ("`bin'" != "below0") loc coef "b3C_`bin'"
+		else loc coef `bin'
+
+		#d ;
+
+		gl `unint'`bin' =
+			"_b[`coef'] +" +
+			"_b[`coef'_v1] +" + 
+			"_b[`coef'_v2] +" + 
+			"_b[`coef'_v3] +" + 
+			"_b[`coef'_v4] +" + 
+			"_b[`coef'_v5] +" + 
+			"_b[`coef'_v6] "
+
+		;
+
+		gl `int'`bin' = 
+			"_b[1.high_risk#c.`coef'] +" + 
+			"_b[1.high_risk#c.`coef'_v1] +" + 
+			"_b[1.high_risk#c.`coef'_v2] +" + 
+			"_b[1.high_risk#c.`coef'_v3] +" + 
+			"_b[1.high_risk#c.`coef'_v4] +" + 
+			"_b[1.high_risk#c.`coef'_v5] +" + 
+			"_b[1.high_risk#c.`coef'_v6] "
+		;
+
+		#d cr
+	}
+
+end
+
+***************************************
 *	CONVERT_TABLE
 
 * 	change a response function CSV
@@ -299,7 +437,9 @@ end
 cap prog drop convert_table
 prog def convert_table
 
-	syntax , categories(string)
+	syntax , categories(string) r2(numlist) n(numlist)
+
+	di in red "R2, N and regression categories must all have the same order."
 
 	keep yhat* se* temp
 
@@ -332,5 +472,19 @@ prog def convert_table
 	tostring temp, replace force
 	replace temp = "" if line == 2
 	keep `categories' temp
+
+	* add R2 and N
+	set obs `=_N+2'
+	replace temp = "\hline Adj. R2" 	in `=_N-1'
+	replace temp = "N" 					in `=_N'
+	loc i = 1
+	foreach cat in `categories' {
+
+		cap replace `cat' = "`: word `i' of `r2''"	in `=_N-1'
+		cap replace `cat' = "`: word `i' of `n''" 	in `=_N'
+
+		loc ++i
+	}
+
 
 end
