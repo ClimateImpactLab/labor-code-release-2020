@@ -74,6 +74,10 @@ foreach row_values in full_response table_values {
 								(T_spline1 - ref_spline1) * (${unint1} + ${int1}),	///
 								ci(lowerci_high upperci_high) se(se_high)
 
+		predictnl yhat_marg =	(T_spline0 - ref_spline0) * (${int0}) +	///
+								(T_spline1 - ref_spline1) * (${int1}),	///
+								ci(lowerci_marg upperci_marg) se(se_marg)
+
 	drop T* ref_* min*
 	export delim `rf_name', replace
 
