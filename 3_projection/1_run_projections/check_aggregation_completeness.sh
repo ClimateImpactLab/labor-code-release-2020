@@ -11,9 +11,9 @@ aggregation_scenario="-gdp"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=10
-aggregated_file_size_above=2
-# 130 for one SSP
+levels_file_size_above=40
+aggregated_file_size_above=10
+# 130 for one SSP3
 n_folders_total=520
 
 filename_stem="combined_uninteracted_spline_empshare_noFE"
@@ -55,7 +55,7 @@ do
 		# echo "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}"
 		n_complete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 		n_incomplete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-		find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M
+		# find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M
 		n_total=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" | wc -l)
 		
 		printf "${scenario}: \n"
