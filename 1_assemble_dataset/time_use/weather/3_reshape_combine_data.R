@@ -375,7 +375,7 @@ combine <- function(ctry, climate_source, admin, var, t_version){
 
   print("var")
   print(var)
-  var = ifelse(var %in% c("polynomials", "splines_nochn","splines_wchn"), glue("{t_version}_{var}"), glue("{var}"))
+  var = ifelse(var %in% c("polynomials", "splines_nochn","splines_wchn","bins"), glue("{t_version}_{var}"), glue("{var}"))
   print(var)
   print("here")
   # print(var)
@@ -580,6 +580,7 @@ for (country in names(countries)) {
 }
 
 for (country in names(countries)) {
+# for (country in c("GBR")) {   
   for (t in t_version_list) {
        
     transf_list = get_transf(t_version=t)
