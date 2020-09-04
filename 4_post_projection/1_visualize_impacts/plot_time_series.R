@@ -31,9 +31,6 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
 }
 
 
-plot_impact_timeseries(rcp="rcp85",ssp="SSP2",iam="high",
-  adapt="fulladapt",risk="highrisk",region="global")
-
 args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        iam=c("high","low"),
@@ -50,4 +47,9 @@ mcmapply(plot_impact_timeseries,
   region="global",
   mc.cores = 5)
 
+# plot only those we need
+plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="fulladapt",risk="allrisk",region="global")
+plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="noadapt",risk="allrisk",region="global")
 
