@@ -10,7 +10,7 @@ global final_path "${ROOT_INT_DATA}/regression_ready_data"
 global t_version_list tmax
 global chn_week_list  chn_prev_week
 
-global variables_list bins_nochn bins_wchn
+global variables_list bins_wchn
 global data_ll_version_list no_ll_0 
 
 foreach variables in $variables_list {
@@ -98,7 +98,7 @@ foreach variables in $variables_list {
 					}
 				}
 
-				drop `t_version'*
+				*drop `t_version'*
 			
 				save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_`data_ver'_0Cto42C_3Cbins.dta", replace
 			}

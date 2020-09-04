@@ -1,0 +1,79 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/uninteracted_bins.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 Sep 2020, 12:31:51
+{txt}
+{com}. 
+. 
+. * setting folders and data
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_bins_tmax_chn_prev_week_no_ll_0_0Cto42C_3Cbins.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_bins"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. gl reg_list nochn
+{txt}
+{com}. gl bin_width 3C
+{txt}
+{com}. 
+. ****************************************
+. *       RUN REGRESSION - WITH AND WITHOUT CHINA
+. ****************************************
+. 
+. * with and without China
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         * select dataset and output folder
+. 
+.                 use $dataset, clear
+{txt}  3{com}. 
+.                 * if test code mode is on, take a random sample
+.                 if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  4{com}.                         sample 0.1
+{txt}  5{com}.                 {c )-}
+{txt}  6{com}. 
+.                 * drop China if not included
+.                 if "`reg'" == "nochn" drop if iso == "CHN"
+{txt}  7{com}. 
+.                 * only include non-zero observations
+.                 keep if mins_worked > 0
+{txt}  8{com}. 
+.                 * generate regression variables
+.                 gen_controls_and_FEs
+{txt}  9{com}.                 * arguments are: start, end, ref, below_temp, above_temp
+.                 gen_treatment_bins 14 27 22 0 42
+{txt} 10{com}.                 
+.                 * differentiate treatment if reg is by risk
+.                 loc reg_treatment (${c -(}varlist_bins_${c -(}bin_width{c )-}{c )-})##i.high_risk
+{txt} 11{com}. 
+.                 * both regressions have interacted controls
+.                 local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 12{com}. 
+.                 * interact each fixed effect with the risk binary
+.                 local reg_fe ""                                 
+{txt} 13{com}.                 foreach f in $`fe' {c -(}
+{txt} 14{com}.                         local reg_fe `reg_fe' `f'#high_risk
+{txt} 15{com}.                 {c )-}
+{txt} 16{com}. 
+.                 * set the ster file name and the notes to be included
+.                 local ster_name "`reg_folder'/uninteracted_bins_`reg'_${c -(}bin_width{c )-}.ster"
+{txt} 17{com}.                 local spec_desc "${c -(}bin_width{c )-} bin regression with above42 and below0 bins, reg = `reg', tmax, differentiated treatment, fe = `fe'"
+{txt} 18{com}. 
+.                 di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 19{com}.                 qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 20{com}.                 estimates notes: "`spec_desc'"
+{txt} 21{com}.                 estimates save "`ster_name'", replace
+{txt} 22{com}. {c )-}
+{txt}(Written by R.              )
+(51,868 observations deleted)
+(0 observations deleted)
+c.b3C_14 c.b3C_15 c.b3C_16 c.b3C_17 c.b3C_18 c.b3C_19 c.b3C_20 c.b3C_21 c.b3C_23 c.b3C_24 c.b3C_25 c.b3C_26 c.b3C_27 c.below0 c.above42 c.b3C_14_v1 c.b3C_14_v2 c.b3C_14_v3 c.b3C_14_v4 c.b3C_14_v5 c.b3C_14_v6 c.b3C_15_v1 c.b3C_15_v2 c.b3C_15_v3 c.b3C_15_v4 c.b3C_15_v5 c.b3C_15_v6 c.b3C_16_v1 c.b3C_16_v2 c.b3C_16_v3 c.b3C_16_v4 c.b3C_16_v5 c.b3C_16_v6 c.b3C_17_v1 c.b3C_17_v2 c.b3C_17_v3 c.b3C_17_v4 c.b3C_17_v5 c.b3C_17_v6 c.b3C_18_v1 c.b3C_18_v2 c.b3C_18_v3 c.b3C_18_v4 c.b3C_18_v5 c.b3C_18_v6 c.b3C_19_v1 c.b3C_19_v2 c.b3C_19_v3 c.b3C_19_v4 c.b3C_19_v5 c.b3C_19_v6 c.b3C_20_v1 c.b3C_20_v2 c.b3C_20_v3 c.b3C_20_v4 c.b3C_20_v5 c.b3C_20_v6 c.b3C_21_v1 c.b3C_21_v2 c.b3C_21_v3 c.b3C_21_v4 c.b3C_21_v5 c.b3C_21_v6 c.b3C_23_v1 c.b3C_23_v2 c.b3C_23_v3 c.b3C_23_v4 c.b3C_23_v5 c.b3C_23_v6 c.b3C_24_v1 c.b3C_24_v2 c.b3C_24_v3 c.b3C_24_v4 c.b3C_24_v5 c.b3C_24_v6 c.b3C_25_v1 c.b3C_25_v2 c.b3C_25_v3 c.b3C_25_v4 c.b3C_25_v5 c.b3C_25_v6 c.b3C_26_v1 c.b3C_26_v2 c.b3C_26_v3 c.b3C_26_v4 c.b3C_26_v5 c.b3C_26_v6 c.b3C_27_v1 c.b3C_27_v2 c.b3C_27_v3 c.b3C_27_v4 c.b3C_27_v5 c.b3C_27_v6 c.below0_v1 c.below0_v2 c.below0_v3 c.below0_v4 c.below0_v5 c.below0_v6 c.above42_v1 c.above42_v2 c.above42_v3 c.above42_v4 c.above42_v5 c.above42_v6
+reghdfe mins_worked (c.b3C_14 c.b3C_15 c.b3C_16 c.b3C_17 c.b3C_18 c.b3C_19 c.b3C_20 c.b3C_21 c.b3C_23 c.b3C_24 c.b3C_25 c.b3C_26 c.b3C_27 c.below0 c.above42 c.b3C_14_v1 c.b3C_14_v2 c.b3C_14_v3 c.b3C_14_v4 c.b3C_14_v5 c.b3C_14_v6 c.b3C_15_v1 c.b3C_15_v2 c.b3C_15_v3 c.b3C_15_v4 c.b3C_15_v5 c.b3C_15_v6 c.b3C_16_v1 c.b3C_16_v2 c.b3C_16_v3 c.b3C_16_v4 c.b3C_16_v5 c.b3C_16_v6 c.b3C_17_v1 c.b3C_17_v2 c.b3C_17_v3 c.b3C_17_v4 c.b3C_17_v5 c.b3C_17_v6 c.b3C_18_v1 c.b3C_18_v2 c.b3C_18_v3 c.b3C_18_v4 c.b3C_18_v5 c.b3C_18_v6 c.b3C_19_v1 c.b3C_19_v2 c.b3C_19_v3 c.b3C_19_v4 c.b3C_19_v5 c.b3C_19_v6 c.b3C_20_v1 c.b3C_20_v2 c.b3C_20_v3 c.b3C_20_v4 c.b3C_20_v5 c.b3C_20_v6 c.b3C_21_v1 c.b3C_21_v2 c.b3C_21_v3 c.b3C_21_v4 c.b3C_21_v5 c.b3C_21_v6 c.b3C_23_v1 c.b3C_23_v2 c.b3C_23_v3 c.b3C_23_v4 c.b3C_23_v5 c.b3C_23_v6 c.b3C_24_v1 c.b3C_24_v2 c.b3C_24_v3 c.b3C_24_v4 c.b3C_24_v5 c.b3C_24_v6 c.b3C_25_v1 c.b3C_25_v2 c.b3C_25_v3 c.b3C_25_v4 c.b3C_25_v5 c.b3C_25_v6 c.b3C_26_v1 c.b3C_26_v2 c.b3C_26_v3 c.b3C_26_v4 c.b3C_26_v5 c.b3C_26_v6 c.b3C_27_v1 c.b3C_27_v2 c.b3C_27_v3 c.b3C_27_v4 c.b3C_27_v5 c.b3C_27_v6 c.below0_v1 c.below0_v2 c.below0_v3 c.below0_v4 c.below0_v5 c.below0_v6 c.above42_v1 c.above42_v2 c.above42_v3 c.above42_v4 c.above42_v5 c.above42_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
