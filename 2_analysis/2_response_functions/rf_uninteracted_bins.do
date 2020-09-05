@@ -84,13 +84,19 @@ foreach reg in $reg_list {
 
 			* put these temp values into the permanent variables
 			foreach risk in low high {
+
 				replace yhat_`risk' 	= yhat_`bin'_`risk' 	if yhat_`risk' ==.
 				replace se_`risk' 		= se_`bin'_`risk'		if se_`risk' ==.
 				replace lowerci_`risk' 	= lowerci_`bin'_`risk'	if lowerci_`risk' ==.
 				replace upperci_`risk' 	= upperci_`bin'_`risk'	if upperci_`risk' ==.
 				drop *_`bin'_`risk'
+		
+				* replace the ref bin with zero
+				replace yhat_`risk' = 0 if temp < ${max_${ref_bin}} & temp >= ${min_${ref_bin}}
+
 			}
 		}
+
 
 		drop mins
 		export delim `rf_name', replace
