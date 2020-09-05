@@ -16,7 +16,7 @@ loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections
 gl test_code "no"
-gl reg_list common by_risk
+gl reg_list common
 loc fe fe_adm0_wk
 
 ********************
@@ -61,8 +61,20 @@ foreach reg in $reg_list {
 	local ster_name "`reg_folder'/uninteracted_reg_`reg'.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
 
-	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
-	qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+	* set the regression weight (pop_adj for common, risk_adj for by-risk)
+	if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
+	else loc weight "risk_adj_sample_wgt"
+
+	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+	qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+
+	* count regression N by risk
+	gen included = e(sample)
+	count if included == 1 & high_risk == 1
+	estadd scalar high_N = `r(N)'
+	count if included == 1 & high_risk == 0
+	estadd scalar low_N = `r(N)'
+
 	estimates notes: "`spec_desc'"
 	estimates save "`ster_name'", replace
 

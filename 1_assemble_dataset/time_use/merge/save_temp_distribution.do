@@ -12,7 +12,7 @@ loc output_folder 	"${DIR_OUTPUT}/temp_dist"
 
 * other selections
 global bin_step 0.1
-global weight_list risk_adj_sample_wgt
+global weight_list risk_adj_sample_wgt pop_adj_sample_wgt
 
 *****************************
 *	GET DENSITY OF TEMP DIST

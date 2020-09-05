@@ -85,3 +85,20 @@ reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_
 (Written by R.              )
 (0 observations deleted)
 reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_2.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_2.ster saved
+(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6 c.tmax_p3 c.tmax_p3_v1 c.tmax_p3_v2 c.tmax_p3_v3 c.tmax_p3_v4 c.tmax_p3_v5 c.tmax_p3_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_3.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_3.ster saved
+(Written by R.              )
+(0 observations deleted)
+reghdfe mins_worked (c.tmax_p1 c.tmax_p1_v1 c.tmax_p1_v2 c.tmax_p1_v3 c.tmax_p1_v4 c.tmax_p1_v5 c.tmax_p1_v6 c.tmax_p2 c.tmax_p2_v1 c.tmax_p2_v2 c.tmax_p2_v3 c.tmax_p2_v4 c.tmax_p2_v5 c.tmax_p2_v6 c.tmax_p3 c.tmax_p3_v1 c.tmax_p3_v2 c.tmax_p3_v3 c.tmax_p3_v4 c.tmax_p3_v5 c.tmax_p3_v6 c.tmax_p4 c.tmax_p4_v1 c.tmax_p4_v2 c.tmax_p4_v3 c.tmax_p4_v4 c.tmax_p4_v5 c.tmax_p4_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_4.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_polynomials/uninteracted_polynomials_nochn_4.ster saved
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
