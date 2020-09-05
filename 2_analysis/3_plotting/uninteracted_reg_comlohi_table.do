@@ -18,17 +18,20 @@ loc table_folder 	"${DIR_TABLE}"
 import delim "`rf_folder'/uninteracted_reg_comlohi_table_values.csv", clear
 
 * get the N and R squared for each model
-foreach reg in common by_risk {
+foreach reg in by_risk common {
 
 	est use "`reg_folder'/uninteracted_reg_`reg'.ster"
 	loc N_`reg' 	= `e(N)'
+	cap loc N_high	= `e(high_N)'
+	cap loc N_low	= `e(low_N)'
+
 	loc R2_`reg'	= round(`e(r2_a)', 0.001)
 
 }
 
 convert_table, categories("comm low high marg")		///
 	r2(`R2_common' `R2_by_risk' `R2_by_risk')		///
-	n(`N_common' `N_by_risk' `N_by_risk')
+	n(`N_common' `N_low' `N_high')
 
 *********************************************
 *	ADD F TEST OF TREATMENT-RISK INTERACTION

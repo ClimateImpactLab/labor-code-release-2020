@@ -67,6 +67,14 @@ foreach reg in $reg_list {
 
 	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
 	qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+
+	* count regression N by risk
+	gen included = e(sample)
+	count if included == 1 & high_risk == 1
+	estadd scalar high_N = `r(N)'
+	count if included == 1 & high_risk == 0
+	estadd scalar low_N = `r(N)'
+
 	estimates notes: "`spec_desc'"
 	estimates save "`ster_name'", replace
 

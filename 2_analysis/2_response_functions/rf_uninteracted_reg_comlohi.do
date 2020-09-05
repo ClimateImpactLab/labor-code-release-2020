@@ -17,7 +17,7 @@ global ref_temp 27
 numlist "-20(0.1)47"
 gl full_response `r(numlist)'
 * 6 table values
-numlist "40 35 30 10 5 0"
+numlist "45 40 35 30 10 5 0"
 gl table_values `r(numlist)'
 
 ***********************************
