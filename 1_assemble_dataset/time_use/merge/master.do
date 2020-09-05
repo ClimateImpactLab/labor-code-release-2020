@@ -393,7 +393,7 @@ foreach t_version in $t_version_list {
 				gen real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
 			}
-			else if (strpos("`variables'", "polynomials") > 0) | (strpos("`variables'", "bins") > 0) {
+			else if (strpos("`variables'", "polynomials") > 0) {
 				gen real_temperature = `t_version'_p1/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_p1/7 if inlist(iso, "BRA","CHN","MEX")
 			}

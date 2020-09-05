@@ -1,0 +1,172 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/uninteracted_reg_comlohi.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 Sep 2020, 16:19:35
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_comlohi"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. gl reg_list common
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each of the two regressions
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         use $dataset, clear
+{txt}  3{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  4{com}.                 sample 0.1
+{txt}  5{com}.         {c )-}
+{txt}  6{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt}  7{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt}  8{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt}  9{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 10{com}. 
+.         * differentiate treatment if reg is by risk
+.         if "`reg'" == "by_risk" loc reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt} 11{com}.         else if "`reg'" == "common" loc reg_treatment (${c -(}vars_T_splines{c )-})
+{txt} 12{com}.         else di in red "bad reg specification -> pick 'common' or 'by_risk'"
+{txt} 13{com}. 
+.         * both regressions have interacted controls
+.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 14{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 15{com}.         foreach f in $`fe' {c -(}
+{txt} 16{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 17{com}.         {c )-}
+{txt} 18{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/uninteracted_reg_`reg'.ster"
+{txt} 19{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
+{txt} 20{com}. 
+.         * set the regression weight (pop_adj for common, risk_adj for by-risk)
+.         if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
+{txt} 21{com}.         else loc weight "risk_adj_sample_wgt"
+{txt} 22{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 23{com}.         qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 24{com}. 
+.         * count regression N by risk
+.         gen included = e(sample)
+{txt} 25{com}.         count if included == 1 & high_risk == 1
+{txt} 26{com}.         estadd scalar high_N = `r(N)'
+{txt} 27{com}.         count if included == 1 & high_risk == 0
+{txt} 28{com}.         estadd scalar low_N = `r(N)'
+{txt} 29{com}. 
+.         estimates notes: "`spec_desc'"
+{txt} 30{com}.         estimates save "`ster_name'", replace
+{txt} 31{com}. 
+.         di "COMPLETED: `reg' regression."
+{txt} 32{com}. 
+. {c )-}
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6) (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = pop_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+  2,423,958
+{err}command {bf}estadd{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+
+{com}. net install st0085.pkg
+{err}{p 0 4 2}
+file http://www.stata.com/st0085.pkg
+not found
+{p_end}
+could not load {hilite:st0085.pkg} from {hilite:http://www.stata.com/}
+{txt}{search r(601), local:r(601);}
+
+{com}. ssc install estadd, replace
+{txt}{err}{bf:ssc install}: "{bf:estadd}" not found at SSC, type {stata search estadd}
+(To find all packages at SSC that start with e, type {stata ssc describe e})
+{txt}{search r(601), local:r(601);}
+
+{com}. net install st0085_2.pkg
+{err}{p 0 4 2}
+file http://fmwww.bc.edu/repec/bocode/e/st0085_2.pkg
+not found
+{p_end}
+could not load {hilite:st0085_2.pkg} from {hilite:http://fmwww.bc.edu/repec/bocode/e/}
+{txt}{search r(601), local:r(601);}
+
+{com}. net install http://www.stata-journal.com/software/sj14-2/
+{err}{p 0 4 2}
+file http://www.stata-journal.com/software/sj14-2.pkg
+not found
+{p_end}
+could not load {hilite:sj14-2.pkg} from {hilite:http://www.stata-journal.com/software/}
+{txt}{search r(601), local:r(601);}
+
+{com}. net install st0085_2.pkg
+{err}{p 0 4 2}
+file http://www.stata-journal.com/software/st0085_2.pkg
+not found
+{p_end}
+could not load {hilite:st0085_2.pkg} from {hilite:http://www.stata-journal.com/software/}
+{txt}{search r(601), local:r(601);}
+
+{com}. ssc install estout
+{txt}checking {hilite:estout} consistency and verifying not already installed...
+installing into /home/kschwarz/ado/plus/...
+installation complete.
+
+{com}. ssc install esttab
+{txt}{err}{bf:ssc install}: "{bf:esttab}" not found at SSC, type {stata search esttab}
+(To find all packages at SSC that start with e, type {stata ssc describe e})
+{txt}{search r(601), local:r(601);}
+
+{com}. est add scalar t = `r(N)'
+{err}subcommand {bf:estimates} {bf:add} is unrecognized
+{txt}{search r(198), local:r(198);}
+
+{com}. estadd scalar t = `r(N)'
+
+{txt}added scalar:
+                  e(t) =  {res}2423958
+
+{com}. count if included == 1 & high_risk == 1
+  {res}2,423,958
+
+{com}. estadd scalar high_N = `r(N)'
+
+{txt}added scalar:
+             e(high_N) =  {res}2423958
+
+{com}. count if included == 1 & high_risk == 0
+  {res}4,175,377
+
+{com}. estadd scalar low_N = `r(N)'
+
+{txt}added scalar:
+              e(low_N) =  {res}4175377
+
+{com}. est save ${c -(}DIR_STER{c )-}/uninteracted_reg_comlohi/uninteracted_reg_common_new.ster
+{res}{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_reg_comlohi/uninteracted_reg_common_new.ster saved
+
+{com}. exit, clear
