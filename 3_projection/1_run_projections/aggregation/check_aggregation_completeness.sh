@@ -12,7 +12,7 @@ aggregation_scenario="-gdp"
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 levels_file_size_above=40
-aggregated_file_size_above=10
+aggregated_file_size_above=5
 # 130 for one SSP3
 n_folders_total=520
 

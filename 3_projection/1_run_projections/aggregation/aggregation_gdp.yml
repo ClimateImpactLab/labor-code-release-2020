@@ -3,5 +3,6 @@ outputdir: outputs/labor/impacts-woodwork/combined_uninteracted_splines_27_37_39
 levels-weighting: population * 0.00487 / population 
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: population * income
-only-variables: ["rebased","response","response22","clip"]
+# only-variables: ["rebased","response","response22","clip"]
 infix: gdp
+only-farmers: ['', 'histclim']
