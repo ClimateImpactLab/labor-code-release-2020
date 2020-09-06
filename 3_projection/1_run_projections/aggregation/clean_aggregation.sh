@@ -2,6 +2,9 @@
 # this is a piece of code that helps us clean the incomplete aggregation output
 # can be run from anywhere, just set the correct paths
 
+
+cd /shares/gcp/outputs/labor/impacts-woodwork/combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/median/rcp45/surrogate_CanESM2_89/high/SSP1
+
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork"
 output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay" 
