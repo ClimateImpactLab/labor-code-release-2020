@@ -12,12 +12,12 @@ output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyA
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 levels_file_size_above=40
-aggregated_file_size_above=2
+aggregated_file_size_above=5
 
 # 130 for one SSP
 n_folders_total=520
 
-aggregation_scenario="gdp"
+aggregation_scenario="wage"
 filename_stem="combined_uninteracted_spline_empshare_noFE"
 
 cd "${output_root}/${output_dir}"
@@ -25,7 +25,7 @@ cd "${output_root}/${output_dir}"
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
 # action=delete
-action=print
+action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
