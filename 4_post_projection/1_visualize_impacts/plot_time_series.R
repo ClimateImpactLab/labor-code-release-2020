@@ -16,7 +16,7 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
 
 # time series of popweighted impacts
-plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregation="", suffix=""){
+plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = DIR_FIG){
   
   # browser()
   df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
@@ -27,14 +27,16 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
     y.label = 'mins worked',
     rcp.value = rcp, ssp.value = ssp) + 
   ggtitle("pop weighted impact - mins worked") 
-  ggsave(glue("{DIR_FIG}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
+  ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
 }
 
 
 args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP2","SSP3","SSP4"),
                        iam=c("high","low"),
-                       adapt=c("fulladapt","noadapt"),
+                       # adapt=c("fulladapt","noadapt","incadapt"),
+                       adapt=c("incadapt"),
+                       aggregation = "-pop-allvars",
                        risk=c("highrisk","lowrisk","allrisk")
                        )
 
@@ -44,7 +46,10 @@ mcmapply(plot_impact_timeseries,
   iam=args$iam,
   risk=args$risk, 
   adapt=args$adapt,
+  aggregation=args$aggregation,
   region="global",
+  suffix="_popweighted_impacts",
+  output_folder = glue("{DIR_FIG}/all_timeseries/"),
   mc.cores = 5)
 
 # plot only those we need
