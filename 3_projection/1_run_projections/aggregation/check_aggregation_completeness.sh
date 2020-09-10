@@ -2,11 +2,26 @@
 # this is a piece of code that helps us check the completeness of aggregation output
 # can be run from anywhere, just set the correct paths
 
+
+
+# combined_uninteracted_spline_empshare_noFE-gdp-aggregated.nc4
+# 314 complete, 166 incomplete, total 480/520 files
+# incadapt:
+# combined_uninteracted_spline_empshare_noFE-incadapt-gdp-aggregated.nc4
+# 366 complete, 0 incomplete, total 366/520 files
+# noadapt:
+# combined_uninteracted_spline_empshare_noFE-noadapt-gdp-aggregated.nc4
+# 432 complete, 0 incomplete, total 432/520 files
+# histclim:
+# combined_uninteracted_spline_empshare_noFE-histclim-gdp-aggregated.nc4
+# 313 complete, 167 incomplete, total 480/520 files
+
+
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork"
 output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay" 
 
-aggregation_scenario="-wage"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete

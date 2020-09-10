@@ -6,3 +6,6 @@ folder = "/median/rcp85/surrogate_GFDL-ESM2G_01/low/SSP4/"
 
 dt = xr.open_dataset("combined_uninteracted_spline_empshare_noFE.nc4")
 df = dt.to_dataframe()
+
+
+# check why we have issues with 2099
