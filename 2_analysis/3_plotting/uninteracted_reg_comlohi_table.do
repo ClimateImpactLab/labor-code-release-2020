@@ -41,7 +41,15 @@ convert_table, categories("comm low high marg")		///
 set obs `=_N+2'
 est use "`reg_folder'/uninteracted_reg_by_risk.ster"
 collect_spline_terms, splines(0 1) unint(unint) int(int)
-test ($int0 + $int1) = 0
+gl test = subinstr(								///
+			subinstr(							///
+			subinstr(							///
+			"$int0 $int1", "+", "", .),			///
+			"_b[","",.),						///
+			"]","",.)
+
+di "TESTING $test"
+test $test
 
 * F test
 loc F = round(`r(F)', 0.001)
