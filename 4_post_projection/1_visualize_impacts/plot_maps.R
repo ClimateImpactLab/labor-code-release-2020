@@ -25,7 +25,7 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 # map of overall impact in 2099
 
 
-plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix=""){
+plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
   df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
 
   df_plot = df %>% 
@@ -51,40 +51,42 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
                      colorbar.title = paste0("mins lost"), 
                      map.title = glue("{ssp}-{rcp}-{iam}-{risk}-{adapt}{aggregation}-{year}"))
 
-  ggsave(glue("{DIR_FIG}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
+  ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
 }
 
 
 
-# the following two blocks can plot everything
-# args = expand.grid(rcp=c("rcp85","rcp45"),
-#                        ssp=c("SSP2","SSP3","SSP4"),
-#                        adapt=c("fulladapt","noadapt"),
-#                        year=c(2010,2020,2098),
-#                        risk=c("highrisk","lowrisk","allrisk","riskshare"),
-#                        # risk=c("riskshare"),
-#                        iam=c("high","low"),
-#                        aggregation=c("","-pop-allvars","-wage","-gdp")
-#                        )
+the following two blocks can plot everything
+args = expand.grid(rcp=c("rcp85","rcp45"),
+                       ssp=c("SSP2","SSP3","SSP4"),
+                       adapt=c("fulladapt","noadapt","incadapt"),
+                       year=c(2010,2020,2098),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                       # risk=c("riskshare"),
+                       iam=c("high","low"),
+                       # aggregation=c("","-pop-allvars","-wage","-gdp")
+                       aggregation=c("","-pop-allvars")
+                       )
 
-# mcmapply(plot_impact_map, 
-#   rcp=args$rcp, 
-#   ssp=args$ssp, 
-#   iam=args$iam,
-#   year=args$year, 
-#   risk=args$risk, 
-#   adapt=args$adapt,
-#   # suffix="_raw_impacts",
-#   aggregation=args$aggregation,
-#   mc.cores = 10)
+mcmapply(plot_impact_map, 
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  # suffix="_raw_impacts",
+  output_folder = glue("{DIR_FIG}/all_maps/"),
+  aggregation=args$aggregation,
+  mc.cores = 10)
 
 
 # now ony plot the ones we need
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="highrisk",aggregation="")
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="lowrisk",aggregation="")
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="riskshare",aggregation="")
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="")
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="")
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="highrisk",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="lowrisk",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="", output_folder = DIR_FIG)
 # plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
 
 ################################

@@ -1,5 +1,5 @@
 results-root: /shares/gcp/outputs/labor/impacts-woodwork/combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
-output-dir: /shares/gcp/estimation/labor/code_release_int_data/projection_outputs/mapping_data
+output-dir: /shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data
 file-organize: [ssp, rcp]
 do-montecarlo: no
 only-rcp: null
@@ -8,3 +8,4 @@ only-iam: null
 column: response
 evalqvals: ['mean']
 output-format: edfcsv
+ignore-missing: yes
