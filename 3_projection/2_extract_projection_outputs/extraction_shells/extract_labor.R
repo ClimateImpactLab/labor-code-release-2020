@@ -9,7 +9,7 @@ library(glue)
 library(parallel)
 
 
-extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="",suffix=""){
+extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
 	basename <- "combined_uninteracted_spline_empshare_noFE"
 
@@ -53,7 +53,7 @@ extract_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="",suffix="
 }
 
 
-extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation="",region="global", suffix=""){
+extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="global", suffix=""){
 
 
 	basename <- "combined_uninteracted_spline_empshare_noFE"
@@ -98,9 +98,9 @@ extract_timeseries = function(rcp, ssp, iam, adapt, risk, aggregation="",region=
 	system(quantiles_command)
 }
 
-extract_timeseries(rcp="rcp45",ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
 
-extract_map(rcp="rcp85",ssp="SSP3",adapt="fulladapt",year=2099,risk="highrisk",iam="high",aggregatio="-pop-allvars")
+extract_map(ssp="SSP3",adapt="incadapt",year=2099,risk="allrisk",iam="low",aggregation="")
 
 # args = expand.grid(rcp=c("rcp85","rcp45"),
 #                        ssp=c("SSP2","SSP3","SSP4"),
@@ -114,19 +114,17 @@ extract_map(rcp="rcp85",ssp="SSP3",adapt="fulladapt",year=2099,risk="highrisk",i
 #                        )
 
 
-args = expand.grid(rcp=c("rcp85","rcp45"),
-                       ssp=c("SSP2","SSP3","SSP4"),
-                       adapt=c("incadapt"),
-                       year=c(2010,2020,2098),
-                       # year=c(2100),
-                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                       # risk=c("riskshare"),
-                       aggregation=c("","-pop-allvars"),
-                       iam=c("high","low")
-                       )
+args = expand.grid(ssp=c("SSP2","SSP3","SSP4"),
+                   adapt=c("incadapt"),
+                   year=c(2010,2020,2098),
+                   # year=c(2100),
+                   risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   # risk=c("riskshare"),
+                   aggregation=c("","-pop-allvars"),
+                   iam=c("high","low")
+                 )
 
 mcmapply(extract_map, 
-  rcp=args$rcp, 
   ssp=args$ssp, 
   iam=args$iam,
   year=args$year, 
@@ -137,7 +135,6 @@ mcmapply(extract_map,
   mc.cores = 5)
 
 mcmapply(extract_timeseries, 
-  rcp=args$rcp, 
   ssp=args$ssp, 
   iam=args$iam,
   risk=args$risk, 

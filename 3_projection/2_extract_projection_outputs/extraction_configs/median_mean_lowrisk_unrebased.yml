@@ -8,3 +8,4 @@ only-iam: null
 column: response22
 evalqvals: ['mean']
 output-format: edfcsv
+ignore-missing: yes
