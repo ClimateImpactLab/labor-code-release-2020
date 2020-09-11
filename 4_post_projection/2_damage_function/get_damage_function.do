@@ -48,14 +48,16 @@ set more off, perm
 pause on 
 set scheme s1mono
 
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+
 * Directories
-global dbroot = "/Users/ruixueli/Dropbox"
-global datadir = "$dbroot/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp/dylan_check"
-global outputdir = "$datadir"
-global plot_outputdir = "$outputdir"
+* global dbroot = "/Users/ruixueli/Dropbox"
+* global datadir = "$dbroot/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp/dylan_check"
+* global outputdir = "$datadir"
+* global plot_outputdir = "$outputdir"
 
 * DYLAN: change this to where you put the damage functions, I guess
-global wd ="/Users/ruixueli/Desktop/repos/damage-function/programs"
+global wd ="${DIR_REPO_LABOR}/4_post_projection/2_damage_function/subroutines"
 cd $wd
 
 do damage_function
@@ -68,7 +70,8 @@ loc sector = "labor"
 loc ff = "poly4_below0bin"
 
 * Are you estimating global or impact region level damage functions?
-loc scale = "global" // (choices: "global" or "ir")
+loc scale = "global" 
+* (choices: "global" or "ir")
 
 * SSP
 loc ssp = "3"
@@ -80,7 +83,8 @@ loc subset = 2085
 loc mc = ""
 
 * damages or lifeyears or costs or deaths (for mortality only)
-loc value = "wages" // "damages" // "lifeyears"
+loc value = "wages" 
+*// "damages" // "lifeyears"
 
 * controls
 loc run_regs = "true"
@@ -95,48 +99,27 @@ loc yearlist 2020 2050 2070 2097
 **********************************************************************************
 
 clear
-/*
-   if "`scale'" == "global" {
-   if "`value'" == "damages" {
-   import delimited "$datadir/damages/global/`sector'_`scale'_damages`mc'_`ff'_SSP`ssp'", varnames(1) 
-   gen mod = "high" 
-   replace mod= "low" if model == "IIASA GDP" //????????
-   ren *mt* *mt_epa*
-   }
-   }
-*/
 
-import delimited "$datadir/valuecsv-1.3.csv", varnames(1)
+*** a few datasets for debugging ***
+* output of this piece of code
+*insheet using /home/liruixue/repos/labor-code-release-2020/output/damage_function/damage_function_estimation.csv, clear
+* the input valuescsv that we used in the fed
+*insheet using /shares/gcp/outputs/labor/impacts-fedconference-oct2019/median/valuecsv-1.3.csv, clear
+*** a few datasets for debugging ***
 
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_global.csv", varnames(1) clear
+rename value wages
 **********************************************************************************
 * STEP 2: Generate damages in Bn 2019 USD
 **********************************************************************************
 if "`value'" == "damages" | "`value'" == "costs" | "`value'" == "wo_costs" | "`value'" == "wages"  {
-	if "`sector'" == "mortality" {
-		merge m:1 mod using "$datadir/adjustments/vsl_adjustments.dta",nogen
-		loc vvlist = "vsl vly mt"
-		loc aalist = "epa"
-		loc sslist = "scaled popavg" 
-		foreach vv in `vvlist' {
-			foreach aa in `aalist' {
-				foreach ss in `sslist' {
-
-					* Total impacts (full adapt plus costs), full adapt, costs, share of gdp FA+C
-					gen cil_`vv'_`aa'_`ss' = (monetized_deaths_`vv'_`aa'_`ss' + monetized_costs_`vv'_`aa'_`ss')*(1/1000000000)*inf_adj*income_adj*vsl_adj
-					gen cil_`vv'_`aa'_`ss'_wo = (monetized_deaths_`vv'_`aa'_`ss')*(1/1000000000)*inf_adj*income_adj*vsl_adj
-					gen cil_`vv'_`aa'_`ss'_costs = (monetized_costs_`vv'_`aa'_`ss')*(1/1000000000)*inf_adj*income_adj*vsl_adj
-
-				}
-			}
-		}
-	}
-	else if "`sector'" == "labor" {
-		rename cil_damages_total cil_vv_aa_ss
+		rename wages cil_vv_aa_ss
+      replace cil_vv_aa_ss = -cil_vv_aa_ss
 		loc vvlist = "vv"
 		loc aalist = "aa"
 		loc sslist = "ss" 
-	}
 }
+
 
 destring year, replace force
 drop if missing(year)
@@ -145,20 +128,15 @@ drop if gcm == "bcc-csm1-1"
 drop if year == 2100
 *tempfile clean_wages
 *save "`clean_wages'", replace
-
+*/mnt/norgay_gcp/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp
 **********************************************************************************
 * STEP 3: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
+cap mkdir "$DIR_REPO_LABOR/output/damage_function"
 if "`run_regs'" == "true" {
-
 	if "`quantilereg'" == "false" {
 		*macro list
-		get_df_coefs , output_file("$outputdir/labor_df_nov6") ///
-			var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') ///
-			var1_name(ph1) var2_name(ph2) var3_name(ph3) ///
-			polyorder(2) subset(`subset') dropbox_path("$dbroot")
-
+		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function/damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
 	}
-
 }
 
