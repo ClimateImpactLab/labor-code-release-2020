@@ -19,7 +19,10 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = DIR_FIG){
   
   # browser()
-  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
+  if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
+    return()
+  }
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
 
   p <- ggtimeseries(
     df.list = list(df[,c('year', 'mean')] %>% as.data.frame()), # mean lines
@@ -32,13 +35,21 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
 
 
 args = expand.grid(rcp=c("rcp85","rcp45"),
-                       ssp=c("SSP2","SSP3","SSP4"),
+                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                        iam=c("high","low"),
-                       # adapt=c("fulladapt","noadapt","incadapt"),
-                       adapt=c("incadapt"),
-                       aggregation = "-pop-allvars",
-                       risk=c("highrisk","lowrisk","allrisk")
+                       adapt=c("fulladapt","noadapt","incadapt","histclim"),
+                       aggregation =c("-pop-allvars"),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare")
                        )
+
+args = expand.grid(rcp=c("rcp85","rcp45"),
+                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                       iam=c("high","low"),
+                       adapt=c("fulladapt","histclim"),
+                       aggregation =c("-gdp","-wage"),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare")
+                       )
+
 
 mcmapply(plot_impact_timeseries, 
   rcp=args$rcp, 
@@ -48,9 +59,11 @@ mcmapply(plot_impact_timeseries,
   adapt=args$adapt,
   aggregation=args$aggregation,
   region="global",
-  suffix="_popweighted_impacts",
+  # suffix="_popweighted_impacts",
   output_folder = glue("{DIR_FIG}/all_timeseries/"),
-  mc.cores = 5)
+  mc.cores = 60)
+
+
 
 # plot only those we need
 plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",

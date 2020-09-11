@@ -48,6 +48,8 @@ set more off, perm
 pause on 
 set scheme s1mono
 
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+
 * Directories
 global dbroot = "/Users/ruixueli/Dropbox"
 global datadir = "$dbroot/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp/dylan_check"

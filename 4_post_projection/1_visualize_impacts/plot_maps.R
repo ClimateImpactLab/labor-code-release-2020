@@ -26,7 +26,13 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 
 
 plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
-  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/mapping_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
+  
+
+  if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
+    return()
+  }
+
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
 
   df_plot = df %>% 
                 dplyr::mutate(mean = -mean)
@@ -56,16 +62,15 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
 
 
 
-the following two blocks can plot everything
+# the following two blocks can plot everything
 args = expand.grid(rcp=c("rcp85","rcp45"),
-                       ssp=c("SSP2","SSP3","SSP4"),
-                       adapt=c("fulladapt","noadapt","incadapt"),
-                       year=c(2010,2020,2098),
+                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                       adapt=c("fulladapt","noadapt","incadapt","histclim"),
+                       year=c(2020,2099),
                        risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                       # risk=c("riskshare"),
                        iam=c("high","low"),
-                       # aggregation=c("","-pop-allvars","-wage","-gdp")
-                       aggregation=c("","-pop-allvars")
+                       aggregation=c("","-pop-allvars-levels","-wage-levels","-gdp-levels")
+                       # aggregation=c("", "-pop-allvars-levels")
                        )
 
 mcmapply(plot_impact_map, 
@@ -78,7 +83,7 @@ mcmapply(plot_impact_map,
   # suffix="_raw_impacts",
   output_folder = glue("{DIR_FIG}/all_maps/"),
   aggregation=args$aggregation,
-  mc.cores = 10)
+  mc.cores = 40)
 
 
 # now ony plot the ones we need
