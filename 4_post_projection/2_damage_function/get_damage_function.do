@@ -51,13 +51,13 @@ set scheme s1mono
 do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 * Directories
-global dbroot = "/Users/ruixueli/Dropbox"
-global datadir = "$dbroot/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp/dylan_check"
-global outputdir = "$datadir"
-global plot_outputdir = "$outputdir"
+* global dbroot = "/Users/ruixueli/Dropbox"
+* global datadir = "$dbroot/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp/dylan_check"
+* global outputdir = "$datadir"
+* global plot_outputdir = "$outputdir"
 
 * DYLAN: change this to where you put the damage functions, I guess
-global wd ="/Users/ruixueli/Desktop/repos/damage-function/programs"
+global wd ="${DIR_REPO_LABOR}/4_post_projection/2_damage_function/subroutines"
 cd $wd
 
 do damage_function
