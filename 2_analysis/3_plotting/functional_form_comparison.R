@@ -21,7 +21,7 @@ source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro
-reg = "nochn"
+reg = "wchn"
 # note splines dataset needs to be manually set!!
 # because I named it like an idiota
 
@@ -62,7 +62,7 @@ forms = lapply(forms,
                  select,
                  c(yhat_low,yhat_high,temp))
 
-# this damn forloop exists because R is a terrible
+# this silly forloop exists because R is a terrible
 # language and I am v sad about it
 for(i in 1:length(forms)) {
   
@@ -81,9 +81,9 @@ for(i in 1:length(forms)) {
 df = Reduce(function(x,y) merge(x = x, y = y, by = c("temp","risk")), 
        forms)
 
-#######################
-# LOW PLOT
-#######################
+##########
+# PLOT
+##########
 
 p = ggplot(df, aes(x=temp)) +
   geom_line(aes(y = bins, color = "bins")) + 
@@ -101,3 +101,9 @@ p = ggplot(df, aes(x=temp)) +
 pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}.pdf'))
 plot(p)
 dev.off()
+
+################
+# EXPORT DATA
+################
+
+write_csv(df, glue('{DIR_RF}/functional_form_comparison_{reg}.csv'))
