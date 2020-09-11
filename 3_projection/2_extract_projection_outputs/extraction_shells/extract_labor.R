@@ -120,7 +120,7 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","histclim"),
                    year=c(2010,2020,2099),
                    risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                   aggregation=c("-gdp"),
+                   aggregation=c("-gdp","-wage"),
                    iam=c("high","low")
                  )
 
@@ -141,7 +141,7 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 60)
+  mc.cores = 10)
 
 
 
