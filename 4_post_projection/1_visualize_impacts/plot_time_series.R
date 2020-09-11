@@ -46,7 +46,7 @@ args = expand.grid(rcp=c("rcp85","rcp45"),
                        ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                        iam=c("high","low"),
                        adapt=c("fulladapt","histclim"),
-                       aggregation =c("-gdp","-wage"),
+                       aggregation =c("-gdp-aggregated","-wage-aggregated"),
                        risk=c("highrisk","lowrisk","allrisk","riskshare")
                        )
 
@@ -61,7 +61,7 @@ mcmapply(plot_impact_timeseries,
   region="global",
   # suffix="_popweighted_impacts",
   output_folder = glue("{DIR_FIG}/all_timeseries/"),
-  mc.cores = 60)
+  mc.cores = 50)
 
 
 
