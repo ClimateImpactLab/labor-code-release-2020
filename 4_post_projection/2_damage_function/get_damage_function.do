@@ -99,17 +99,6 @@ loc yearlist 2020 2050 2070 2097
 **********************************************************************************
 
 clear
-/*
-   if "`scale'" == "global" {
-   if "`value'" == "damages" {
-   import delimited "$datadir/damages/global/`sector'_`scale'_damages`mc'_`ff'_SSP`ssp'", varnames(1) 
-   gen mod = "high" 
-   replace mod= "low" if model == "IIASA GDP" //????????
-   ren *mt* *mt_epa*
-   }
-   }
-*/
-
 import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP5_damage_function_valuescsv_global.csv", varnames(1)
 rename value wages
 **********************************************************************************
@@ -138,7 +127,7 @@ cap mkdir "$DIR_REPO_LABOR/output/damage_function"
 if "`run_regs'" == "true" {
 	if "`quantilereg'" == "false" {
 		*macro list
-		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function/") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("$ROOT_INT_DATA") identifier_list("wages")
+		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function/damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
 	}
 }
 
