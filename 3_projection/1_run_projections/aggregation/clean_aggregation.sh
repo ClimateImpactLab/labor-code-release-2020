@@ -12,7 +12,7 @@ output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyA
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 levels_file_size_above=40
-aggregated_file_size_above=5
+aggregated_file_size_above=10
 
 # 130 for one SSP
 n_folders_total=520
@@ -25,14 +25,14 @@ cd "${output_root}/${output_dir}"
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
 # action=delete
-action=print
+action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
 # if no process is running, set time_limit to empty string
 # so that all incomplete files can be deleted
-# time_limit=""
-time_limit=" -mtime +1 "
+time_limit=""
+# time_limit=" -mtime +1 "
 
 # clean status-aggregate.txt files
 files=$(find . -name "status-aggregate.txt" ${time_limit} -${action})
