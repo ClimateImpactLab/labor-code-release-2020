@@ -99,13 +99,22 @@ loc yearlist 2020 2050 2070 2097
 **********************************************************************************
 
 clear
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP5_damage_function_valuescsv_global.csv", varnames(1)
+
+*** a few datasets for debugging ***
+* output of this piece of code
+*insheet using /home/liruixue/repos/labor-code-release-2020/output/damage_function/damage_function_estimation.csv, clear
+* the input valuescsv that we used in the fed
+*insheet using /shares/gcp/outputs/labor/impacts-fedconference-oct2019/median/valuecsv-1.3.csv, clear
+*** a few datasets for debugging ***
+
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_global.csv", varnames(1) clear
 rename value wages
 **********************************************************************************
 * STEP 2: Generate damages in Bn 2019 USD
 **********************************************************************************
 if "`value'" == "damages" | "`value'" == "costs" | "`value'" == "wo_costs" | "`value'" == "wages"  {
 		rename wages cil_vv_aa_ss
+      replace cil_vv_aa_ss = -cil_vv_aa_ss
 		loc vvlist = "vv"
 		loc aalist = "aa"
 		loc sslist = "ss" 
@@ -119,7 +128,7 @@ drop if gcm == "bcc-csm1-1"
 drop if year == 2100
 *tempfile clean_wages
 *save "`clean_wages'", replace
-
+*/mnt/norgay_gcp/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp
 **********************************************************************************
 * STEP 3: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
