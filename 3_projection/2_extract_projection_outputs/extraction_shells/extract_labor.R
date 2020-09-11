@@ -1,8 +1,8 @@
 # an R script for running labor extractions
-# run the following two lines in shell
-
+# run the following three lines in shell
 conda activate risingverse-py27
 cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
+R
 
 
 library(glue)
@@ -98,31 +98,32 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 	system(quantiles_command)
 }
 
+# tests
 extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+
+extract_timeseries(ssp="SSP4",adapt="histclim",risk="lowrisk",iam="high",aggregation="-gdp")
+
 
 extract_map(ssp="SSP3",adapt="incadapt",year=2099,risk="allrisk",iam="low",aggregation="")
 
-# args = expand.grid(rcp=c("rcp85","rcp45"),
-#                        ssp=c("SSP2","SSP3","SSP4"),
-#                        adapt=c("fulladapt","noadapt"),
-#                        year=c(2010,2020,2098),
-#                        # year=c(2100),
-#                        risk=c("highrisk","lowrisk","allrisk","riskshare"),
-#                        # risk=c("riskshare"),
-#                        aggregation=c("","-wage","-gdp","","-pop-allvars"),
-#                        iam=c("high","low")
-#                        )
-
-
-args = expand.grid(ssp=c("SSP2","SSP3","SSP4"),
-                   adapt=c("incadapt"),
-                   year=c(2010,2020,2098),
-                   # year=c(2100),
+# no aggregation and pop weights
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   year=c(2010,2020,2099),
                    risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                   # risk=c("riskshare"),
                    aggregation=c("","-pop-allvars"),
                    iam=c("high","low")
                  )
+
+# gdp and dollar value aggregation
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","histclim"),
+                   year=c(2010,2020,2099),
+                   risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   aggregation=c("-gdp"),
+                   iam=c("high","low")
+                 )
+
 
 mcmapply(extract_map, 
   ssp=args$ssp, 
@@ -131,18 +132,17 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  # suffix="",
-  mc.cores = 5)
+  mc.cores = 40)
 
 mcmapply(extract_timeseries, 
   ssp=args$ssp, 
   iam=args$iam,
   risk=args$risk, 
-  aggregation="-pop-allvars",
+  aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  suffix="_popweighted_impacts",
-  mc.cores = 5)
+  mc.cores = 60)
+
 
 
 
