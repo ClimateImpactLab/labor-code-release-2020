@@ -106,8 +106,23 @@ clear
 * the input valuescsv that we used in the fed
 *insheet using /shares/gcp/outputs/labor/impacts-fedconference-oct2019/median/valuecsv-1.3.csv, clear
 *** a few datasets for debugging ***
+* gdp
+*import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_gdp.csv", varnames(1) clear
+* wage
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_wage.csv", varnames(1) clear
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_global.csv", varnames(1) clear
+* pop
+*import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_popweights.csv", varnames(1) clear
+
+*sort gcm
+*list if year == 2099
+*count if year == 2099
+*count if year == 2099 & value == 0
+
+*list if year == 2100
+
+*count if year == 2100
+
 rename value wages
 **********************************************************************************
 * STEP 2: Generate damages in Bn 2019 USD
@@ -123,9 +138,11 @@ if "`value'" == "damages" | "`value'" == "costs" | "`value'" == "wo_costs" | "`v
 
 destring year, replace force
 drop if missing(year)
-drop if gcm == "MIROC-ESM" 
-drop if gcm == "bcc-csm1-1" 
+*drop if gcm == "MIROC-ESM" 
+*drop if gcm == "bcc-csm1-1" 
 drop if year == 2100
+drop if year == 2099 & cil_vv_aa_ss == 0
+* surrogates and MIROC5 are dropped
 *tempfile clean_wages
 *save "`clean_wages'", replace
 */mnt/norgay_gcp/Global ACP/ClimateLaborGlobalPaper/Paper/Datasets/Rae_temp
