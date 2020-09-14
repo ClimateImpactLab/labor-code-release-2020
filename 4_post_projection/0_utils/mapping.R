@@ -184,8 +184,8 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
     
     #plot
     p.map <- ggplot(data = shp_plot, aes(x=long, y=lat)) +
-      geom_polygon(aes(group=group, fill=mainvar_lim)) + # IR polygons
-      geom_polygon(data = na.df, aes(group=group), fill = na.color) + # NA regions
+      geom_polygon(aes(group=group, fill=mainvar_lim), color = NA) + # IR polygons
+      geom_polygon(data = na.df, aes(group=group), fill = na.color, color = NA) + # NA regions
       #geom_path(color = "black", size=0.1, alpha=1) + #IR outlines
       coord_equal() +
       theme_bw() +     
