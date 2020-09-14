@@ -141,7 +141,7 @@ drop if missing(year)
 *drop if gcm == "MIROC-ESM" 
 *drop if gcm == "bcc-csm1-1" 
 drop if year == 2100
-drop if year == 2099 & cil_vv_aa_ss == 0
+drop if year == 2099 
 * surrogates and MIROC5 are dropped
 *tempfile clean_wages
 *save "`clean_wages'", replace
