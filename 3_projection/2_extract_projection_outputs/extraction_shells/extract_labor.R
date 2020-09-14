@@ -61,6 +61,8 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 	# if aggregation is "", no need to add -levels since it's not aggregated files
 	if (aggregation != "") {
 		aggregation <- paste0(aggregation, "-aggregated")
+	} else {
+		return()
 	}	
 
 	# do not substract histclim for noadapt
@@ -90,7 +92,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/extraction_configs/",
 		glue("median_mean_{risk}_{calculation}.yml "),
-		glue("--only-iam={iam} --only-ssp={ssp} --region=global --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
+		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
 		)
 
@@ -99,21 +101,17 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
-
-extract_timeseries(ssp="SSP4",adapt="histclim",risk="lowrisk",iam="high",aggregation="-gdp")
-
-
-extract_map(ssp="SSP3",adapt="incadapt",year=2099,risk="allrisk",iam="low",aggregation="")
 
 # no aggregation and pop weights
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    year=c(2010,2020,2099),
                    risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                   aggregation=c("","-pop-allvars"),
+                   # aggregation=c("","-pop-allvars"),
+                   aggregation=c(""),
                    iam=c("high","low")
                  )
+
 
 # gdp and dollar value aggregation
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
@@ -141,7 +139,7 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 10)
+  mc.cores = 30)
 
 
 

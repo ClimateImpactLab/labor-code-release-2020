@@ -1,7 +1,7 @@
 *****************************************************************************************************
 * Programs for: DAMAGE FUNCTION ESTIMATION FOR SCC -- CALCULATION INCLUDING POST-2100 EXTRAPOLATION
 *****************************************************************************************************
-
+*TO-DO: change back to 2099 
 //Orginal Author: Tamma Carleton
 *** NOTE: Updated 10-08-18 to include a constraint that the fitted functions pass
 *** 	  through (0,0) where 0 on the x-axis refers to the 2001-2010 GMST value
@@ -11,7 +11,7 @@
 
 Programs and their general purpose:
   * note: helper functions have not been designed to be called by other scripts
-	* 1) [helper function] poly2_insample_damage_function: estimates a poly2 damage function for in sample years (2015-2099)
+	* 1) [helper function] poly2_insample_damage_function: estimates a poly2 damage function for in sample years (2015-2098)
 		* Runs a regression in which the damage function is nonparametrically estimated for each year 't'
 			using data only from the 5 years around 't'
 	* 2) [helper function] poly2_outsample_damage_function: estimates a poly2 damage function for out of sample years (2100-2300) 
@@ -34,7 +34,7 @@ Program parameter definitions:
 		this variable is only internally used. 
 	* var*_list [string]: list of var* options (explanation by example below)
 	* var*_name [string]: name of var* (explanation by example below)
-	* subset [integer]: the damage function linearly interacted with time uses years `subset'-2099 of a given value for estimation
+	* subset [integer]: the damage function linearly interacted with time uses years `subset'-2098 of a given value for estimation
 	* output_file [string]: df coefficients are saved at output_file... note: this name should not have a file type!! 
 		ie don't put output_file = /path/to/file/name.dta or /path/to/file/name.csv instead put output_file = /path/to/file/name
 	* polyorder [integer]: damage functino polynomial order
@@ -78,7 +78,7 @@ program define poly2_insample_damage_function
 
 syntax , var1_value(string) var2_value(string) var3_value(string)
 
-	foreach yr of numlist 2015/2099 {
+	foreach yr of numlist 2015/2098 {
 		
 		di "Estimating damage function for `yr'..."
 		qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
@@ -102,11 +102,11 @@ syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer
 	local base_year = 2010
 	cap gen t = year - `base_year' // only generate if doesnt already exist
 
-	di "Estimating damage function linearly interacted with time on values between `subset' and 2099..."
+	di "Estimating damage function linearly interacted with time on values between `subset' and 2098..."
 	qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t  if year >= `subset'
 
 
-	foreach yr of numlist 2100/2300 {
+	foreach yr of numlist 2099/2300 {
 
 		di "Calculating damage function for `yr'..."
 
