@@ -16,12 +16,13 @@ library(glue)
 library(data.table)
 library(plyr)
 library(tidyverse)
+library(tidyr)
 
 source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro
-reg = "wchn"
+reg = "nochn"
 # note splines dataset needs to be manually set!!
 # because I named it like an idiota
 
@@ -81,29 +82,69 @@ for(i in 1:length(forms)) {
 df = Reduce(function(x,y) merge(x = x, y = y, by = c("temp","risk")), 
        forms)
 
-##########
-# PLOT
-##########
+####################
+# PLOT - SINGLE PANEL
+####################
 
-p = ggplot(df, aes(x=temp)) +
-  geom_line(aes(y = bins, color = "bins")) + 
-  geom_line(aes(y = poly_2, color = "poly_2")) +
-  geom_line(aes(y = poly_3, color = "poly_3")) + 
-  geom_line(aes(y = poly_4, color = "poly_4")) + 
-  geom_line(aes(y = spline, color = "spline")) +
-  facet_wrap(~ risk) +
-  ggtitle("Functional Form Comparison") +
+# p = ggplot(df, aes(x=temp)) +
+#   geom_line(aes(y = bins, color = "bins")) + 
+#   geom_line(aes(y = poly_2, color = "poly_2")) +
+#   geom_line(aes(y = poly_3, color = "poly_3")) + 
+#   geom_line(aes(y = poly_4, color = "poly_4")) + 
+#   geom_line(aes(y = spline, color = "spline")) +
+#   facet_wrap(~ risk) +
+#   ggtitle("Functional Form Comparison") +
+#   ylab("Change in mins worked") + xlab("Temperature (C)") +
+#   scale_color_manual(values = 
+#                        c("darkred", "steelblue",
+#                          "orange", "violet", "darkgreen"))  
+# 
+# pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}.pdf'))
+# plot(p)
+# dev.off()
+
+####################
+# PLOT - MULTI PANEL
+####################
+
+df_long <- gather(df, form, value, poly_2:spline, factor_key=TRUE)
+
+df_high = df_long %>% dplyr::filter(risk == "high")
+df_low =  df_long %>% dplyr::filter(risk == "low")
+
+a = ggplot(df_high, aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) +
+  geom_line(aes(y = bins, color = "bins")) +
+  facet_wrap(~ form) +
+  ggtitle("Functional Form Comparison: High Risk") +
   ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
   scale_color_manual(values = 
-                       c("darkred", "steelblue",
-                         "orange", "violet", "darkgreen"))  
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))
 
-pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}.pdf'))
-plot(p)
+b = ggplot(df_low, aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) +
+  geom_line(aes(y = bins, color = "bins")) +
+  facet_wrap(~ form) +
+  ggtitle("Functional Form Comparison: Low Risk") +
+  ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = 
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))
+
+pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}_high.pdf'))
+plot(a)
 dev.off()
 
-################
-# EXPORT DATA
+pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}_low.pdf'))
+plot(b)
+dev.off()
+
+
+###############
+# EXPORT DATA 
 ################
 
 write_csv(df, glue('{DIR_RF}/functional_form_comparison_{reg}.csv'))
