@@ -24,6 +24,16 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
   }
   df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
 
+  if (aggregation == "-pop-allvars-aggregated") {
+    plot_title <- "Pop Weighted Impacts - Mins Worked"
+  } else if (aggregation == "-gdp-aggregated") {
+    plot_title <- "Impacts as Percentage of GDP"
+  } else if (aggregation == "-wage-aggregated") {
+    plot_title <- "Impacts in Dollars"
+  } else {
+    print("wrong aggregation!")
+    return()
+  }
   # browser()
   p <- ggtimeseries(
     df.list = list(df[,c('year', 'mean')] %>% as.data.frame()), # mean lines
@@ -31,7 +41,7 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
     y.label = 'mins worked',
     rcp.value = rcp, ssp.value = ssp, end.yr = 2100,
     legend.breaks = adapt) + 
-  ggtitle("pop weighted impact - mins worked") 
+  ggtitle(plot_title) 
   ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
 }
 

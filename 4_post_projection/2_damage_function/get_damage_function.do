@@ -124,6 +124,7 @@ import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_f
 *count if year == 2100
 
 rename value wages
+replace wages = wages / 1000000000000
 **********************************************************************************
 * STEP 2: Generate damages in Bn 2019 USD
 **********************************************************************************
@@ -139,6 +140,7 @@ if "`value'" == "damages" | "`value'" == "costs" | "`value'" == "wo_costs" | "`v
 destring year, replace force
 drop if missing(year)
 *drop if gcm == "MIROC-ESM" 
+drop if year < 2010
 *drop if gcm == "bcc-csm1-1" 
 drop if year == 2100
 drop if year == 2099 

@@ -20,9 +20,17 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
 	# do not substract histclim for noadapt
 	if (adapt == "incadapt") {
-		basename_command <- glue("{basename}-incadapt{aggregation} -{basename}-histclim{aggregation}")
+		if (risk != "riskshare") {
+			basename_command <- glue("{basename}-incadapt{aggregation} -{basename}-histclim{aggregation}")
+		} else {
+			basename_command <- glue("{basename}-incadapt{aggregation}")
+		}
 	} else if (adapt == "fulladapt") {
-		basename_command <- glue("{basename}{aggregation} -{basename}-histclim{aggregation}")
+		if (risk != "riskshare") {
+			basename_command <- glue("{basename}{aggregation} -{basename}-histclim{aggregation}")
+		} else {
+			basename_command <- glue("{basename}{aggregation}")
+		}
 	} else if (adapt == "noadapt") {
 		basename_command <- glue("{basename}-noadapt{aggregation}")
 	} else if (adapt == "histclim") {
@@ -30,6 +38,8 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 	} else {
 		print("wrong specification of adaptation scenario!\n")
 	}
+
+
 
 	# a suffix that's used to choose the config file name
 	if (risk == "allrisk") {
@@ -67,9 +77,17 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 	# do not substract histclim for noadapt
 	if (adapt == "incadapt") {
-		basename_command <- glue("{basename}-incadapt{aggregation} -{basename}-histclim{aggregation}")
+		if (risk != "riskshare") {
+			basename_command <- glue("{basename}-incadapt{aggregation} -{basename}-histclim{aggregation}")
+		} else {
+			basename_command <- glue("{basename}-incadapt{aggregation}")
+		}
 	} else if (adapt == "fulladapt") {
-		basename_command <- glue("{basename}{aggregation} -{basename}-histclim{aggregation}")
+		if (risk != "riskshare") {
+			basename_command <- glue("{basename}{aggregation} -{basename}-histclim{aggregation}")
+		} else {
+			basename_command <- glue("{basename}{aggregation}")
+		}
 	} else if (adapt == "noadapt") {
 		basename_command <- glue("{basename}-noadapt{aggregation}")
 	} else if (adapt == "histclim") {
@@ -101,12 +119,20 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="riskshare",iam="high",aggregation="")
+
+
+# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
+# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="high",aggregation="")
 
 # no aggregation and pop weights
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
-                   year=c(2010,2020,2099),
-                   risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   year=c(2010,2020,2098,2040, 2060,2080,2099,2100),
+                   # risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   risk="riskshare",
                    # aggregation=c("","-pop-allvars"),
                    aggregation=c(""),
                    iam=c("high","low")
@@ -116,8 +142,9 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
 # gdp and dollar value aggregation
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","histclim"),
-                   year=c(2010,2020,2099),
-                   risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   year=c(2010,2020,2098,2040, 2060, 2080),
+                   risk="riskshare",
+                   # risk=c("highrisk","lowrisk","allrisk","riskshare"),
                    aggregation=c("-gdp","-wage"),
                    iam=c("high","low")
                  )
@@ -130,7 +157,7 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 40)
+  mc.cores = 30)
 
 mcmapply(extract_timeseries, 
   ssp=args$ssp, 
