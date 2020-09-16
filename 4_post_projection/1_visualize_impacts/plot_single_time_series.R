@@ -16,11 +16,17 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 # time series of popweighted impacts
 plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
 
+  # df= read_csv(
+  #     glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+  #     'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+  #     'rcp85/CCSM4/high/SSP3/csv/', 
+  #     'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
+
   df= read_csv(
       glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/csv/', 
-      'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
+      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+      'rcp85/CCSM4/high/SSP3/csv/',
+      'uninteracted_main_model-{risk}-{weight}-levels-combined.csv'))
 
   df_plot = df %>% dplyr::filter(is.na(region))
 
@@ -30,7 +36,7 @@ plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
     y.label = 'mins worked',
     rcp.value = rcp, ssp.value = ssp) + 
   ggtitle(glue("{weight} weighted impact - mins worked - {risk}"))
-  ggsave(glue("{DIR_FIG}/single_mixed_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
+  ggsave(glue("{DIR_FIG}/single_edge_restriction_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
 }
 
 map_args = expand.grid(rcp="rcp85",
