@@ -25,6 +25,7 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 # map of overall impact in 2099
 
 
+
 plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
   
 
@@ -56,6 +57,12 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
     df_plot = df
     scale_v = c(1, 0.2, 0.05, 0.005, 0, -0.005, -0.05, -0.2, -1)
   }
+
+  if (risk == "riskshare") {
+    bound = 1
+    scale_v = c(1, 0.2, 0.05, 0.005, 0, -0.005, -0.05, -0.2, -1)
+  }
+
     
   # find the scales for nice plotting
   # browser()
@@ -76,11 +83,11 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
                      rescale_val = rescale_value,
                      colorbar.title = paste0(plot_title), 
                      map.title = glue("{ssp}-{rcp}-{iam}-{risk}-{adapt}{aggregation}-{year}"))
-  browser()
+  # browser()
 
   ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
-  
 }
+  
 
 
 # now ony plot the ones we need
@@ -88,7 +95,11 @@ plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,r
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="lowrisk",aggregation="", output_folder = DIR_FIG)
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="", output_folder = DIR_FIG)
 
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2040,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2060,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2080,risk="riskshare",aggregation="", output_folder = DIR_FIG)
+
 # plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="", output_folder = DIR_FIG)
 # plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
 
@@ -116,15 +127,6 @@ plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,r
 #   aggregation=args$aggregation,
 #   mc.cores = 40)
 
-
-# now ony plot the ones we need
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="highrisk",aggregation="", output_folder = DIR_FIG)
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="lowrisk",aggregation="", output_folder = DIR_FIG)
-plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="", output_folder = DIR_FIG)
-
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="riskshare",aggregation="", output_folder = DIR_FIG)
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="", output_folder = DIR_FIG)
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
 
 ################################
 # plot beta maps
@@ -172,4 +174,48 @@ for (yr in c(2020,2040,2060,2080,2098,2099)) {
 }
 
  
+
+# plot gdp maps 
+cov_file= read_csv(glue('/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv'),
+    skip = 114)
+
+cov_loggdppc = cov_file %>%dplyr::select("year","region", "loggdppc") %>% unique()
+
+plot_cov_map = function(cov_file, year, output_folder = DIR_FIG){
+
+  # browser()
+  df_plot = cov_file %>% dplyr::filter(year == !!year)
+  
+    
+  # find the scales for nice plotting
+  
+  rescale_value <- c(0,1,2,3,4,5,6,7,8,9,10,11,12)
+  p = join.plot.map(map.df = mymap, 
+                     df = df_plot, 
+                     df.key = "region", 
+                     plot.var = "loggdppc", 
+                     topcode = T, 
+                     topcode.lb = 0,
+                     topcode.ub = 12,
+                     breaks_labels_val = rescale_value,
+                     color.scheme = "seq", 
+                     color.values = c("#c92116", "#ec603f", "#fd9b64","#fdc370", "#fee69b","#fef7d1", "#f0f7d9"),
+                     # outlines = F,
+                     rescale_val = rescale_value,
+                     colorbar.title = "loggdppc", 
+                     map.title = glue("ssp3-rcp85-high-loggdppc-{year}")
+                     )
+  # browser()
+
+  ggsave(glue("{output_folder}/ssp3-rcp85-high-loggdppc_{year}_map.png"), p)
+}
+
+plot_cov_map(cov_file = cov_loggdppc, 2020)
+
+for (yr in c(2020,2040,2060,2080,2098,2099)) {
+  plot_cov_map(cov_file = cov_loggdppc, yr)
+}
+
+
+
 
