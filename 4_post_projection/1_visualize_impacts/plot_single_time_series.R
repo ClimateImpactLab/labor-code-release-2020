@@ -22,11 +22,13 @@ plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
   #     'rcp85/CCSM4/high/SSP3/csv/', 
   #     'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
 
+
+  # YOU NEED TO GET THIS ONE EXTRACTED -- THE AGGREGATED VERSION
   df= read_csv(
       glue('/shares/gcp/outputs/labor/impacts-woodwork/',
       'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
       'rcp85/CCSM4/high/SSP3/csv/',
-      'uninteracted_main_model-{risk}-{weight}-levels-combined.csv'))
+      'uninteracted_main_model-{risk}-{weight}-combined.csv'))
 
   df_plot = df %>% dplyr::filter(is.na(region))
 
