@@ -28,7 +28,7 @@ plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
       glue('/shares/gcp/outputs/labor/impacts-woodwork/',
       'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
       'rcp85/CCSM4/high/SSP3/csv/',
-      'uninteracted_main_model-{risk}-{weight}-combined.csv'))
+      'uninteracted_main_model-{risk}-{weight}-aggregated-combined.csv'))
 
   df_plot = df %>% dplyr::filter(is.na(region))
 
