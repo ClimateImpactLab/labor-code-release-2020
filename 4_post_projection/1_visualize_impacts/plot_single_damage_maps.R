@@ -29,10 +29,15 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 
 plot_impact_map = function(rcp, ssp, adapt, weight, risk){
 
+  # file = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+  #     'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+  #     'rcp85/CCSM4/high/SSP3/csv/',
+  #     'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-levels-combined.csv')
+
   file = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
       'rcp85/CCSM4/high/SSP3/csv/',
-      'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-levels-combined.csv')
+      'uninteracted_main_model-{risk}-{weight}-levels-combined.csv')
 
   print(file)  
   df= read_csv(file)
@@ -60,7 +65,7 @@ plot_impact_map = function(rcp, ssp, adapt, weight, risk){
                      colorbar.title = paste0("mins lost"), 
                      map.title = glue("{ssp}-{rcp}-{risk}-{adapt}"))
 
-  ggsave(glue("{DIR_FIG}/single_mixed_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_map.pdf"), p)
+  ggsave(glue("{DIR_FIG}/single_edge_restriction_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_map.pdf"), p)
 }
 
 map_args = expand.grid(rcp="rcp85",
