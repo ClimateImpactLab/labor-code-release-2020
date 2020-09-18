@@ -17,28 +17,26 @@ library(parallel)
 source(paste0(DIR_REPO_LABOR, "/4_post_projection/0_utils/mapping.R"))
 
 #############################################
-# 1. Load in a world shapefile, containing Impact Region boundaries, and convert to a 
-#     dataframe for plotting
+# 1. Load in a world shapefile, containing Impact Region boundaries, 
+# and convert to a dataframe for plotting
+#############################################
 
 mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nytimes"))
 
+#################
+# FUNCTION
+#################
 
-#############################################
-# map of overall impact in 2099
+plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, suffix){
 
-
-plot_impact_map = function(rcp, ssp, adapt, weight, risk){
-
-  # file = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-  #     'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-  #     'rcp85/CCSM4/high/SSP3/csv/',
-  #     'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-levels-combined.csv')
-
-  file = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/csv/',
-      'uninteracted_main_model-{risk}-{weight}-levels-combined.csv')
-
+  if (adapt != "") {
+      file = glue('{folder}/{name}-{risk}-{weight}-levels-combined.csv')
+      title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt})")
+  } else {
+      file = glue('{folder}/{name}-{risk}-combined.csv')
+      title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt})")
+  }
+  
   print(file)  
   df= read_csv(file)
   
@@ -63,25 +61,145 @@ plot_impact_map = function(rcp, ssp, adapt, weight, risk){
                      color.scheme = "div", 
                      rescale_val = rescale_value,
                      colorbar.title = paste0("mins lost"), 
-                     map.title = glue("{ssp}-{rcp}-{risk}-{adapt}"))
+                     map.title = title)
 
-  ggsave(glue("{DIR_FIG}/single_edge_restriction_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_map.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_map.pdf"), p)
 }
 
-map_args = expand.grid(rcp="rcp85",
+
+######################
+# EDGE RESTRICTION MODEL
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+      'rcp85/CCSM4/high/SSP3/csv/')
+name = 'uninteracted_main_model'
+output = 'single_edge_restriction_model'
+
+map_args = expand.grid(folder= folder,
+                       name=name,
+                       output=output,
+                       rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
                        risk=c("lowriskimpacts","rebased", "highriskimpacts"),
-                       weight=c("wage","pop", "gdp")
+                       weight=c("wage","pop", "gdp"),
+                       suffix=("levels")
+                       )
+
+map_args = map_args %>% rbind(
+          expand.grid(folder= folder,
+                       name=name,
+                       output=output,
+                       rcp="rcp85",
+                       ssp="SSP3",
+                       adapt="",
+                       risk=c("lowriskimpacts","rebased", "highriskimpacts"),
+                       weight="",
+                       suffix=""
+                       )
                        )
 
 print(map_args)
 
 mcmapply(plot_impact_map,
+         folder= map_args$folder,
+         name=map_args$name,
+         output=output,
          ssp=map_args$ssp,
          rcp=map_args$rcp,
          adapt=map_args$adapt,
          risk=map_args$risk,
          weight=map_args$weight,
+         suffix=map_args$suffix,
          mc.cores=5
           )
+
+
+######################
+# MAIN MODEL - CHECK
+######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+#         'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#         'median/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'combined_uninteracted_spline_empshare_noFE'
+# output = 'main_model_check'
+
+# map_args = expand.grid(folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="",
+#                        risk=c("response22","rebased", "response"),
+#                        weight="",
+#                        suffix=""
+#                        )
+
+# print(map_args)
+
+# mcmapply(plot_impact_map,
+#          folder= map_args$folder,
+#          name=map_args$name,
+#          output=output,
+#          ssp=map_args$ssp,
+#          rcp=map_args$rcp,
+#          adapt=map_args$adapt,
+#          risk=map_args$risk,
+#          weight=map_args$weight,
+#          suffix=map_args$suffix,
+#          mc.cores=5
+#           )
+
+######################
+# MIXED MODEL
+######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+#       'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#       'rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'combined_mixed_model_splines_empshare_noFE'
+# output = 'single_mixed_model'
+
+# map_args = expand.grid(folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="fulladapt",
+#                        risk=c("lowriskimpacts","rebased", "highriskimpacts"),
+#                        weight=c("wage","pop", "gdp"),
+#                        suffix=("levels")
+#                        )
+
+# map_args = map_args %>% rbind(
+#           expand.grid(folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="",
+#                        risk=c("lowriskimpacts","rebased", "highriskimpacts"),
+#                        weight="",
+#                        suffix=""
+#                        )
+#                        )
+
+# print(map_args)
+
+# mcmapply(plot_impact_map,
+#          folder= map_args$folder,
+#          name=map_args$name,
+#          output=output,
+#          ssp=map_args$ssp,
+#          rcp=map_args$rcp,
+#          adapt=map_args$adapt,
+#          risk=map_args$risk,
+#          weight=map_args$weight,
+#          suffix=map_args$suffix,
+#          mc.cores=5
+#           )
