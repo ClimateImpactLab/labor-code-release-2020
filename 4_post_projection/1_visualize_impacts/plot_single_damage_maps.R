@@ -88,8 +88,8 @@ map_args = expand.grid(folder= folder,
                        suffix=("levels")
                        )
 
-map_args = map_args %>% rbind(
-          expand.grid(folder= folder,
+# map_args = map_args %>% rbind(
+map_args = expand.grid(folder= folder,
                        name=name,
                        output=output,
                        rcp="rcp85",
@@ -99,7 +99,7 @@ map_args = map_args %>% rbind(
                        weight="",
                        suffix=""
                        )
-                       )
+                      # )
 
 print(map_args)
 
