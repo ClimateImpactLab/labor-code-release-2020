@@ -45,7 +45,7 @@ map_args = expand.grid(rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
                        risk=c("highriskimpacts","lowriskimpacts","rebased"),
-                       weight=c("wage","pop")
+                       weight=c("wage","pop", "gdp")
                        )
 
 print(map_args)
