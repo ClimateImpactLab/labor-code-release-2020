@@ -13,22 +13,13 @@ pacman::p_load(ggplot2,
 
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
-# time series of popweighted impacts
-plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
+# time series of weighted impacts
+plot_impact_timeseries = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
-  # df= read_csv(
-  #     glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-  #     'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-  #     'rcp85/CCSM4/high/SSP3/csv/', 
-  #     'combined_mixed_model_splines_empshare_noFE-{risk}-{weight}-combined.csv')) 
+  file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
+  title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt})")
 
-
-  # YOU NEED TO GET THIS ONE EXTRACTED -- THE AGGREGATED VERSION
-  df= read_csv(
-      glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/csv/',
-      'uninteracted_main_model-{risk}-{weight}-aggregated-combined.csv'))
+  df = read_csv(file)
 
   df_plot = df %>% dplyr::filter(is.na(region))
 
@@ -37,23 +28,78 @@ plot_impact_timeseries = function(rcp, ssp, adapt, model, risk, weight){
     x.limits = c(2010, 2099),
     y.label = 'mins worked',
     rcp.value = rcp, ssp.value = ssp) + 
-  ggtitle(glue("{weight} weighted impact - mins worked - {risk}"))
-  ggsave(glue("{DIR_FIG}/single_edge_restriction_model/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
+  ggtitle(title)
+  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
 }
 
-map_args = expand.grid(rcp="rcp85",
+
+######################
+# MAIN MODEL - CHECK
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+        'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+        'median/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'combined_uninteracted_spline_empshare_noFE'
+output = 'main_model_check'
+
+map_args = expand.grid(folder= folder,
+                       name=name,
+                       output=output,
+                       rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c("highriskimpacts","lowriskimpacts","rebased"),
-                       weight=c("wage","pop", "gdp")
+                       risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+                       weight=c("wage","gdp","pop")
                        )
 
 print(map_args)
 
-mcmapply(plot_impact_timeseries, 
-  rcp=map_args$rcp, 
-  ssp=map_args$ssp, 
-  risk=map_args$risk, 
-  adapt=map_args$adapt,
-  weight=map_args$weight,
-  mc.cores = 5)
+mcmapply(plot_impact_timeseries,
+         folder= map_args$folder,
+         name=map_args$name,
+         output=output,
+         ssp=map_args$ssp,
+         rcp=map_args$rcp,
+         adapt=map_args$adapt,
+         risk=map_args$risk,
+         weight=map_args$weight,
+         mc.cores=5
+          )
+
+
+######################
+# EDGE RESTRICTION MODEL
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+      'rcp85/CCSM4/high/SSP3/csv/')
+
+name = 'uninteracted_main_model'
+output = 'single_edge_restriction_model'
+
+map_args = expand.grid(folder= folder,
+                       name=name,
+                       output=output,
+                       rcp="rcp85",
+                       ssp="SSP3",
+                       adapt="fulladapt",
+                       risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+                       weight=c("wage","gdp","pop")
+                       )
+
+print(map_args)
+
+mcmapply(plot_impact_timeseries,
+         folder= map_args$folder,
+         name=map_args$name,
+         output=output,
+         ssp=map_args$ssp,
+         rcp=map_args$rcp,
+         adapt=map_args$adapt,
+         risk=map_args$risk,
+         weight=map_args$weight,
+         mc.cores=5
+          )
