@@ -130,21 +130,28 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 # no aggregation and pop weights
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
-                   year=c(2010,2020,2098,2040, 2060,2080,2099,2100),
-                   # risk=c("highrisk","lowrisk","allrisk","riskshare"),
-                   risk="riskshare",
-                   # aggregation=c("","-pop-allvars"),
-                   aggregation=c(""),
+                   year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
+                   risk=c("highrisk","lowrisk","allrisk"),
+                   # risk="riskshare",
+                   aggregation=c("","-pop-allvars"),
                    iam=c("high","low")
                  )
 
 
-# gdp and dollar value aggregation
+mcmapply(extract_map, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  aggregation=args$aggregation,
+  mc.cores = 60)
+
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                   adapt=c("fulladapt","histclim"),
-                   year=c(2010,2020,2098,2040, 2060, 2080),
-                   risk="riskshare",
-                   # risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                   adapt=c("fulladapt", "histclim"),
+                   year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
+                   risk=c("highrisk","lowrisk","allrisk"),
+                   # risk="riskshare",
                    aggregation=c("-gdp","-wage"),
                    iam=c("high","low")
                  )
@@ -157,7 +164,44 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 30)
+  mc.cores = 60)
+
+
+
+
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
+                   # risk=c("highrisk","lowrisk","allrisk"),
+                   risk="riskshare",
+                   aggregation=c(""),
+                   iam=c("high","low")
+                 )
+
+
+mcmapply(extract_map, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  aggregation=args$aggregation,
+  mc.cores = 60)
+
+
+
+
+
+# gdp and dollar value aggregation
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   # adapt=c("fulladapt","histclim"),
+                   # risk="riskshare",
+                   risk=c("highrisk","lowrisk","allrisk"),
+                   aggregation=c("-pop-allvars"),
+                   iam=c("high","low")
+                 )
+
 
 mcmapply(extract_timeseries, 
   ssp=args$ssp, 
@@ -166,9 +210,25 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 30)
+  mc.cores = 60)
+
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","histclim"),
+                   # adapt=c("fulladapt","histclim"),
+                   # risk="riskshare",
+                   risk=c("highrisk","lowrisk","allrisk"),
+                   aggregation=c("-wage","gdp"),
+                   iam=c("high","low")
+                 )
 
 
-
+mcmapply(extract_timeseries, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  risk=args$risk, 
+  aggregation=args$aggregation,
+  adapt=args$adapt,
+  region="global",
+  mc.cores = 60)
 
 
