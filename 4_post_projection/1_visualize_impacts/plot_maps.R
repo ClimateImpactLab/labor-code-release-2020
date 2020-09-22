@@ -26,68 +26,133 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 
 
 
+
 plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
-  
 
   if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
     return()
   }
 
-  if (aggregation == "-pop-allvars-aggregated") {
+  # browser()
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
+
+  if (aggregation == "-pop-allvars-levels") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
-  } else if (aggregation == "-gdp-aggregated") {
-    plot_title <- "Impacts as Percentage of GDP"
-  } else if (aggregation == "-wage-aggregated") {
-    plot_title <- "Impacts in Dollars"
+
+  } else if (aggregation == "-gdp-levels") {
+    plot_title <- "Damages as Percentage of GDP"
+    df_plot <- df %>% dplyr::mutate(mean = -mean * 100)     
+    
+    bound = ceiling(max(abs(df_plot$mean), na.rm=TRUE))
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- scale_v*bound
+    ub = max(rescale_value,na.rm = TRUE)
+    lb = -ub
+    # browser()
+    breaks_labels = seq(-bound, bound, bound/4)
+    color_scheme = "div"
+  
+  } else if (aggregation == "-wage-levels") {
+    plot_title <- "Damages in Million Dollars"
+    df_plot <- df %>% dplyr::mutate(mean = -mean / 1000000000) 
+  
+    bound = ceiling(max(abs(df_plot$mean)))
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- scale_v*bound
+    ub = max(rescale_value,na.rm = TRUE)
+    lb = -ub
+    breaks_labels = seq(-bound, bound, bound/4)
+    color_scheme = "div"
+  
   } else if (aggregation == "") {
     plot_title <- "Impacts in Minutes Worked per Worker"
+    bound = 30
+    df_plot <- df 
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- scale_v*bound
+    ub = max(rescale_value)
+    lb = -ub
+    breaks_labels = seq(-bound, bound, bound/3)
+    color_scheme = "div"
+  
   } else {
+  
     print("wrong aggregation!")
     return()
-  }
-
-  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
-  bound = 30
-
-  if ((aggregation == "-wage-levels" ) || (aggregation == "-gdp-levels")) {
-    df_plot = df %>% dplyr::mutate(mean = -mean)
-    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
-    # invert the sign for dollar values and gdp percentage
-  } else {
-    df_plot = df
-    scale_v = c(1, 0.2, 0.05, 0.005, 0, -0.005, -0.05, -0.2, -1)
+  
   }
 
   if (risk == "riskshare") {
-    bound = 1
-    scale_v = c(1, 0.2, 0.05, 0.005, 0, -0.005, -0.05, -0.2, -1)
+    rescale_value <- seq(0,1,0.2)
+    ub = 1
+    lb = 0
+    breaks_labels = rescale_value
+    color_scheme = "seq"
   }
 
-    
-  # find the scales for nice plotting
-  # browser()
-  # bound = ceiling(max(abs(df_plot$mean)))
-  
-  rescale_value <- scale_v*bound
 
-  # browser()
   p = join.plot.map(map.df = mymap, 
                      df = df_plot, 
                      df.key = "region", 
                      plot.var = "mean", 
                      topcode = T, 
-                     topcode.ub = max(rescale_value),
-                     breaks_labels_val = seq(-bound, bound, bound/3),
-                     color.scheme = "div", 
-                     # outlines = F,
+                     topcode.lb = lb,
+                     topcode.ub = ub,
+                     breaks_labels_val = breaks_labels,
+                     color.scheme = color_scheme, 
                      rescale_val = rescale_value,
-                     colorbar.title = paste0(plot_title), 
+                     colorbar.title = plot_title, 
                      map.title = glue("{ssp}-{rcp}-{iam}-{risk}-{adapt}{aggregation}-{year}"))
-  # browser()
-
-  ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
-}
   
+  ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
+  # return(p)
+}
+
+# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-wage-levels", output_folder = DIR_FIG)
+
+
+# the following two blocks can plot everything
+args = expand.grid(rcp=c("rcp85","rcp45"),
+                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                       adapt=c("fulladapt","noadapt","incadapt","histclim"),
+                       year=c(2020,2098,2099),
+                       risk=c("highrisk","lowrisk","allrisk","riskshare"),
+                       iam=c("high","low"),
+                       aggregation=c("")
+                       )
+
+mcmapply(plot_impact_map, 
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  output_folder = glue("{DIR_FIG}/all_maps/"),
+  aggregation=args$aggregation,
+  mc.cores = 40)
+
+
+args = expand.grid(rcp=c("rcp85","rcp45"),
+                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                       adapt=c("fulladapt","histclim"),
+                       year=c(2020,2098,2099),
+                       risk=c("highrisk","lowrisk","allrisk"),
+                       iam=c("high","low"),
+                       aggregation=c("-wage-levels","-gdp-levels")
+                       )
+
+mcmapply(plot_impact_map, 
+  rcp=args$rcp, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  output_folder = glue("{DIR_FIG}/all_maps/"),
+  aggregation=args$aggregation,
+  mc.cores = 30)
+
 
 
 # now ony plot the ones we need
@@ -100,32 +165,10 @@ plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2040,r
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2060,risk="riskshare",aggregation="", output_folder = DIR_FIG)
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2080,risk="riskshare",aggregation="", output_folder = DIR_FIG)
 
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2020,risk="riskshare",aggregation="", output_folder = DIR_FIG)
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2098,risk="allrisk",aggregation="-gdp")
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2080,risk="",aggregation="", output_folder = DIR_FIG)
 
 
-# # the following two blocks can plot everything
-# args = expand.grid(rcp=c("rcp85","rcp45"),
-#                        ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-#                        adapt=c("fulladapt","noadapt","incadapt","histclim"),
-#                        year=c(2020,2099),
-#                        risk=c("highrisk","lowrisk","allrisk","riskshare"),
-#                        iam=c("high","low"),
-#                        aggregation=c("","-pop-allvars-levels","-wage-levels","-gdp-levels")
-#                        # aggregation=c("", "-pop-allvars-levels")
-#                        )
 
-# mcmapply(plot_impact_map, 
-#   rcp=args$rcp, 
-#   ssp=args$ssp, 
-#   iam=args$iam,
-#   year=args$year, 
-#   risk=args$risk, 
-#   adapt=args$adapt,
-#   # suffix="_raw_impacts",
-#   output_folder = glue("{DIR_FIG}/all_maps/"),
-#   aggregation=args$aggregation,
-#   mc.cores = 40)
 
 
 ################################
@@ -173,11 +216,11 @@ for (yr in c(2020,2040,2060,2080,2098,2099)) {
   plot_beta_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="allrisk",aggregation="")
 }
 
- 
+ # doing!!!1
 
 # plot gdp maps 
-cov_file= read_csv(glue('/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv'),
-    skip = 114)
+cov_file= read_csv(glue('/shares/gcp/outputs/labor/impacts-woodwork/projection_combined_uninteracted_splines_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/projection_combined_uninteracted_splines_by_risk_empshare_noFE-allcalcs-combined_uninteracted_spline_empshare_noFE.csv'),
+ skip = 25)
 
 cov_loggdppc = cov_file %>%dplyr::select("year","region", "loggdppc") %>% unique()
 
@@ -210,7 +253,6 @@ plot_cov_map = function(cov_file, year, output_folder = DIR_FIG){
   ggsave(glue("{output_folder}/ssp3-rcp85-high-loggdppc_{year}_map.png"), p)
 }
 
-plot_cov_map(cov_file = cov_loggdppc, 2020)
 
 for (yr in c(2020,2040,2060,2080,2098,2099)) {
   plot_cov_map(cov_file = cov_loggdppc, yr)
