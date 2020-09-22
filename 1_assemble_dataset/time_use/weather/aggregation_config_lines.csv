@@ -15,3 +15,4 @@ IND,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/IND/segment_weights/IND_adm1
 MEX,"""NOM_ENT""",ROOT_INT_DATA/climate/spatial_data/MEX/segment_weights/Ag_ESOC_shapefiles_Mexican States_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
 USA,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/USA/segment_weights/USA_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
 CHN,"""NAME_1""",ROOT_INT_DATA/climate/spatial_data/CHN/segment_weights/CHN_adm1_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm1
+WORLD,"""ISO""",ROOT_INT_DATA/climate/spatial_data/WORLD/segment_weights/gadm28_adm0_GMFD_grid_segment_weights_area_pop.csv ,GMFD ,popwt ,1979,2012,year ,adm0
