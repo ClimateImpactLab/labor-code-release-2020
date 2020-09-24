@@ -1,7 +1,7 @@
 
 
 import sys
-sys.path.insert(0, '~/repos/labor-code-release-2020/0_subroutines') 
+sys.path.insert(0, '/home/liruixue/repos/labor-code-release-2020/0_subroutines') 
 import paths
 
 import pandas
@@ -132,6 +132,7 @@ for i in range(0, len(lines_agg),1):
 			file.write("\n")
 			file.write("}")
 			file.close()
+
 
 
 
