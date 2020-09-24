@@ -13,3 +13,4 @@ USA,"'NAME_1', 'NAME_2'",/shares/gcp/estimation/labor/code_release_int_data/clim
 CHN,"'NAME_1', 'NAME_2'",/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/CHN,CHN_adm2_corrected,CHN,pop,adm2,GMFD
 CHN,'NAME_1',/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/CHN,CHN_adm1,CHN,pop,adm1,GMFD
 CHN,'GID_3',/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/CHN,gadm36_CHN_3,CHN,pop,adm3,GMFD
+WORLD,'ISO',/shares/gcp/estimation/labor/code_release_int_data/climate/spatial_data/WORLD,gadm28_adm0,WORLD,pop,adm0,GMFD
