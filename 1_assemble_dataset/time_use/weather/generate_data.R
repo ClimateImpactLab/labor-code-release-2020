@@ -119,6 +119,14 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 # mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=3)
 
 
+args_weights = args_for_weights(climate_source_list = "GMFD",
+	countries_list =c("WORLD"),
+	admin_list = "adm0"
+)
+
+mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=1)
+
+
 
 ######### below is the latest time we generated climate data for all countries ############
 # all_variables <- c(
@@ -182,6 +190,18 @@ args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
 
 mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
 transf=args_aggregate$transf, mc.cores=1)
+
+
+args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+	countries_list = c("WORLD"),
+	admin_list = "adm0",
+	level = "yearly",
+	var_list = "lrtmax"
+)
+
+mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+transf=args_aggregate$transf, mc.cores=1)
+
 
 
 
