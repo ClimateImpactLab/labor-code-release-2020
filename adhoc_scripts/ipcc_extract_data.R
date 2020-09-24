@@ -74,17 +74,6 @@ command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/qu
 	)
 system(command)
 
-high_min = read_csv(paste0(extracted_data_dir,
-					"/SSP3-rcp85_high_highrisk_fulladapt-pop-aggregated_ipcc.csv"))
-
-
-low_min = read_csv(paste0(extracted_data_dir,
-					"/SSP3-rcp85_high_lowrisk_fulladapt-pop-aggregated_ipcc.csv"))
-
-share = read_csv(paste0(extracted_data_dir,
-					"/SSP3-rcp85_high_riskshare_fulladapt-pop-aggregated_ipcc.csv"))
-
-
 command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 	"2_extract_projection_outputs/extraction_configs/",
@@ -109,15 +98,9 @@ command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/qu
 system(command)
 
 
-high_pct = read_csv("")
 
-low_pct = read_csv("")
-
-
-
-
-
-
+# the rest of the processing is done in energy code release repo
+# adhoc_scripts/energy_ipcc_data.R
 
 
 
