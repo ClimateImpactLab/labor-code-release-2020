@@ -57,6 +57,8 @@ df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates'
 deciles = get_deciles(df_covariates)
 
 
+##############################################
+# plot pop weighted per capita damage
 # Load in impacts data
 df_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/SSP3-rcp85_high_allrisk_fulladapt-wage-levels_2099_map.csv'))%>%
   mutate(damage = mean) %>%  
@@ -91,5 +93,45 @@ ggsave(p, file = paste0(DIR_FIG,
     "/SSP3-high_rcp85-total-damages_by_inc_decile.pdf"), 
     width = 8, height = 6)
 
+
+
+
+#################################################
+# plot damage in percentage GDP by income decile
+
+# Load in impacts data
+df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_2099_map.csv'))%>%
+  mutate(pct_gdp = mean) %>%  
+  left_join(deciles, by = "region")
+
+# Join with 2099 population data
+df_gdp99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+                                   '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
+  dplyr::select(region, gdp99)
+
+df_pct_gdp_impacts = df_pct_gdp_impacts %>% 
+    left_join(df_gdp99, by = "region") %>% 
+    mutate(pct_x_gdp = pct_gdp * gdp99)
+
+# Collapse to decile level
+df_plot = df_pct_gdp_impacts %>% 
+  group_by(decile) %>% 
+  summarize(total_pct_x_gdp_2099 = sum(pct_x_gdp, na.rm = TRUE), 
+            total_gdp_2099 = sum(gdp99, na.rm = TRUE))%>%
+  mutate(mean_pct_gdp = total_pct_x_gdp_2099 / total_gdp_2099 )
+
+
+# Plot and save 
+p = ggplot(data = df_plot) +
+  geom_bar(aes( x=decile, y = mean_pct_gdp ), 
+           position="dodge", stat="identity", width=.8) + 
+  theme_minimal() +
+  ylab("Impact of Climate Change, Percentage GDP") +
+  xlab("2012 Income Decile") +
+  scale_x_discrete(limits = seq(1,10))
+
+ggsave(p, file = paste0(DIR_FIG, 
+    "/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
+    width = 8, height = 6)
 
 
