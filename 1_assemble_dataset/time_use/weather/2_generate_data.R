@@ -104,58 +104,80 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 
 
 
-######### below is the latest time we generated climate data for all countries ############
-all_variables <- c(
-	"prcp_poly",
-	"tmax_rcspline_nochn_3kn",
-	"tmax_rcspline_wchn_3kn",
-	"tmax_poly",
-	"tmax_bin"
+args_weights = args_for_weights(climate_source_list = "GMFD",
+	countries_list = c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
+	admin_list = "adm1"
 )
 
-
-args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-	countries_list = c("BRA", "IND", "USA", "MEX"),
-	admin_list = "adm2",
-	level = "daily",
-	var_list = all_variables
-)
+mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
 
 
-mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-transf=args_aggregate$transf, mc.cores=1)
+
+# ######### below is the latest time we generated climate data for all countries ############
+# all_variables <- c(
+# 	"prcp_poly",
+# 	"tmax_rcspline_nochn_3kn",
+# 	"tmax_rcspline_wchn_3kn",
+# 	"tmax_poly",
+# 	"tmax_bin"
+# )
 
 
-args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-	countries_list = c("FRA","GBR","ESP"),
-	admin_list = "adm1",
-	level = "daily",
-	var_list = all_variables
-)
-
-mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-transf=args_aggregate$transf, mc.cores=1)
+# args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+# 	countries_list = c("BRA", "IND", "USA", "MEX"),
+# 	admin_list = "adm2",
+# 	level = "daily",
+# 	var_list = all_variables
+# )
 
 
-args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-	countries_list = "CHN",
-	admin_list = "adm3",
-	level = "daily",
-	var_list = all_variables
-)
-
-mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-transf=args_aggregate$transf, mc.cores=1)
+# mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+# transf=args_aggregate$transf, mc.cores=1)
 
 
-args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-	countries_list = c("CHN"),
-	admin_list = "adm1",
-	level = "yearly",
-	var_list = c("lrtmax")
-)
-mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-transf=args_aggregate$transf, mc.cores=1)
+# args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+# 	countries_list = c("FRA","GBR","ESP"),
+# 	admin_list = "adm1",
+# 	level = "daily",
+# 	var_list = all_variables
+# )
+
+# mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+# transf=args_aggregate$transf, mc.cores=1)
+
+
+# args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+# 	countries_list = "CHN",
+# 	admin_list = "adm3",
+# 	level = "daily",
+# 	var_list = all_variables
+# )
+
+# mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+# transf=args_aggregate$transf, mc.cores=1)
+
+
+# # args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+# # 	countries_list = c("CHN"),
+# # 	admin_list = "adm1",
+# # 	level = "yearly",
+# # 	var_list = c("lrtmax")
+# # )
+# # mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+# # transf=args_aggregate$transf, mc.cores=1)
+
+
+# args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+# 	countries_list =c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
+# 	admin_list = "adm1",
+# 	level = "yearly",
+# 	var_list = c("lrtmax")
+# )
+# mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+# transf=args_aggregate$transf, mc.cores=1)
+
+
+
 
 
 message(glue("date the code finished to run : {Sys.Date()}"))
