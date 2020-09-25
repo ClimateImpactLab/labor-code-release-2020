@@ -4,7 +4,7 @@ do_historical: true
 do_farmers: true
 singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
 extrapolation:
-  indepvar: [ tasmax, tasmax_rcspline ]
+  indepvar: tasmax
   scaling: 0
   margin: .1
   bounds: (-19.16888, 46.12079)
