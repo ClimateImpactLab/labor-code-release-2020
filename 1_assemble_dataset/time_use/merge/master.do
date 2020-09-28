@@ -19,14 +19,14 @@ global t_version_list tmax
 global chn_week_list chn_prev_week
 
 * possible values: splines_wchn, splines_nochn, polynomials_wchn, polynomials_nochn, bins_nochn, bins_wchn
-global variables_list bins_nochn
+global variables_list polynomials_wchn
 
 * set which parts of the code we want to run and how many lead/lag weeks we want
 * possible values: YES or NO
 global drop_holidays "YES"
 global clean_raw_surveys "NO"
 global combine_surveys "NO"
-global include_chn "NO" 
+global include_chn "YES" 
 
 * set the following global to lcl or no_ll
 global leadlag "no_ll"
@@ -363,7 +363,7 @@ foreach t_version in $t_version_list {
 				* merge precip
 				merge_climate_data_file `iso' prcp ${leadlag} ${n_ll}
 				* merge long run climate
-				*merge_long_run `iso'
+				merge_long_run `iso'
 
 				restore
 			}

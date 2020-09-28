@@ -1,3 +1,5 @@
+# this is the wrong one, 
+# the correct one is extract_value_csv.sh
 conda activate risingverse-py27
 cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 R
