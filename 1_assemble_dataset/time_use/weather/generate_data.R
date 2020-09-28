@@ -112,11 +112,22 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 
 
 # args_weights = args_for_weights(climate_source_list = "GMFD",
-# 	countries_list =c("FRA","GBR","ESP"),
+# 	countries_list =c("FRA","GBR","ESP","BRA", "IND", "USA", "MEX","CHN"),
 # 	admin_list = "adm1"
 # )
 
-# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=3)
+# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=8)
+
+
+
+
+# WORLD adm0 weights
+# args_weights = args_for_weights(climate_source_list = "GMFD",
+# 	countries_list =c("WORLD"),
+# 	admin_list = "adm0"
+# )
+
+# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=1)
 
 
 
@@ -182,6 +193,18 @@ args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
 
 mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
 transf=args_aggregate$transf, mc.cores=1)
+
+
+args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+	countries_list = c("WORLD"),
+	admin_list = "adm0",
+	level = "yearly",
+	var_list = "lrtmax"
+)
+
+mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+transf=args_aggregate$transf, mc.cores=1)
+
 
 
 
