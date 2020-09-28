@@ -104,12 +104,12 @@ do_aggregate = function(country, climate_source, admin_level, transf){
 
 
 
-args_weights = args_for_weights(climate_source_list = "GMFD",
-	countries_list = c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
-	admin_list = "adm1"
-)
+# args_weights = args_for_weights(climate_source_list = "GMFD",
+# 	countries_list = c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
+# 	admin_list = "adm1"
+# )
 
-mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
+# mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weights$climate_source, admin_level=args_weights$admin_level, mc.cores=2)
 
 
 
@@ -157,24 +157,26 @@ mcmapply(FUN=do_weights, country=args_weights$country, climate_source=args_weigh
 # transf=args_aggregate$transf, mc.cores=1)
 
 
-# # args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-# # 	countries_list = c("CHN"),
-# # 	admin_list = "adm1",
-# # 	level = "yearly",
-# # 	var_list = c("lrtmax")
-# # )
-# # mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-# # transf=args_aggregate$transf, mc.cores=1)
+# generate long run data
+args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+	countries_list =c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
+	admin_list = "adm1",
+	level = "yearly",
+	var_list = c("lrtmax")
+)
+mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+transf=args_aggregate$transf, mc.cores=1)
 
 
-# args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
-# 	countries_list =c("BRA", "IND", "USA", "MEX","FRA","GBR","ESP","CHN"),
-# 	admin_list = "adm1",
-# 	level = "yearly",
-# 	var_list = c("lrtmax")
-# )
-# mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
-# transf=args_aggregate$transf, mc.cores=1)
+# generate long run data
+args_aggregate = args_for_aggregate(climate_source_list = "GMFD",
+	countries_list =c("WORLD"),
+	admin_list = "adm0",
+	level = "yearly",
+	var_list = c("lrtmax")
+)
+mcmapply(FUN=do_aggregate, country=args_aggregate$country, climate_source=args_aggregate$climate_source, admin_level=args_aggregate$admin_level,
+transf=args_aggregate$transf, mc.cores=1)
 
 
 
