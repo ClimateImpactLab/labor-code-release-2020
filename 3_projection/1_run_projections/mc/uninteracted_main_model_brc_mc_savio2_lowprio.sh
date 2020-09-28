@@ -8,7 +8,7 @@
 # QoS:
 #SBATCH --qos=savio_lowprio
 # Wall clock limit:
-#SBATCH --time=98:00:00
+#SBATCH --time=70:00:00
 
 ## Command(s) to run:
 
