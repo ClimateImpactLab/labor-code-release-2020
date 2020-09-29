@@ -52,12 +52,15 @@ foreach f in $`fe' {
 	local reg_fe `reg_fe' `f'#high_risk
 }
 
+* get weight
+loc weight "risk_adj_sample_wgt"
+
 * set the ster file name and the notes to be included
 local ster_name "`reg_folder'/uninteracted_reg_w_chn.ster"
 local spec_desc "rcspline, 3 knots (${spline}), tmax, differentiated treatment, fe = $fe"
 
-di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
-qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
 estimates notes: "`spec_desc'"
 estimates save "`ster_name'", replace
 

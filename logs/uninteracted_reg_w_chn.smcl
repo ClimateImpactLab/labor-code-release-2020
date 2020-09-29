@@ -1,0 +1,91 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/uninteracted_reg_w_chn.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}28 Sep 2020, 16:02:44
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_wchn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_w_chn"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. gl spline 21_37_41
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. use $dataset, clear
+{txt}(Written by R.              )
+
+{com}. 
+. * if test code mode is on, take a random sample
+. if "${c -(}test_code{c )-}"=="yes" {c -(}
+.         sample 0.1
+. {c )-}
+{txt}
+{com}. 
+. * only include non-zero observations
+. keep if mins_worked > 0
+{txt}(0 observations deleted)
+
+{com}. 
+. * get rid of some awkward naming
+. rename *${c -(}spline{c )-}_* **
+{res}{txt}
+{com}. 
+. * generate regression variables
+. gen_controls_and_FEs
+{txt}
+{com}. gen_treatment_splines rcspl 3 tmax this_week 1
+{txt}
+{com}. 
+. * differentiate treatment if reg is by risk
+. loc reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt}
+{com}. 
+. * both regressions have interacted controls
+. local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt}
+{com}. 
+. * interact each fixed effect with the risk binary
+. local reg_fe ""                                 
+{txt}
+{com}. foreach f in $`fe' {c -(}
+{txt}  2{com}.         local reg_fe `reg_fe' `f'#high_risk
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. * get weight
+. loc weight "risk_adj_sample_wgt"
+{txt}
+{com}. 
+. * set the ster file name and the notes to be included
+. local ster_name "`reg_folder'/uninteracted_reg_w_chn.ster"
+{txt}
+{com}. local spec_desc "rcspline, 3 knots (${c -(}spline{c )-}), tmax, differentiated treatment, fe = $fe"
+{txt}
+{com}. 
+. di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{txt}
+{com}. qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt}
+{com}. estimates notes: "`spec_desc'"
+{txt}
+{com}. estimates save "`ster_name'", replace
+{res}{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_reg_w_chn/uninteracted_reg_w_chn.ster saved
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
