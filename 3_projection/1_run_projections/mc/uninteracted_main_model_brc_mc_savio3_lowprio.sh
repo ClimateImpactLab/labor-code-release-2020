@@ -1,6 +1,6 @@
 #!/bin/bash
 # Job name:
-#SBATCH --job-name=labor_mc
+#SBATCH --job-name=mc_lowprio
 # Partition:
 #SBATCH --partition=savio3
 # Account:
