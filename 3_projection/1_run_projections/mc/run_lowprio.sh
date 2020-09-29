@@ -2,6 +2,13 @@
 
 cd /global/scratch/liruixue/repos
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio_lowprio.sh
+
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio2_lowprio.sh
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_savio3_lowprio.sh
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model_brc_mc_saviobigmem_lowprio.sh

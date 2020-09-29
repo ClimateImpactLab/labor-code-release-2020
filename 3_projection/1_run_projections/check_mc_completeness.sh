@@ -3,7 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
+output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
+# output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
 output_dir="batch0" 
 
 # the size of files above which we consider complete

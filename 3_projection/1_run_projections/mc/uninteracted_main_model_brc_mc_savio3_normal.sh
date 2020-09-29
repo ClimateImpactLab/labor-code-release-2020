@@ -9,6 +9,7 @@
 #SBATCH --qos=laika_savio3_normal
 # Wall clock limit:
 #SBATCH --time=98:00:00
+#SBATCH --requeue
 
 ## Command(s) to run:
 
