@@ -4,10 +4,14 @@ basename=combined_uninteracted_spline_empshare_noFE
 folder=/shares/gcp/outputs/labor/impacts-woodwork/clipping_extrema/median/rcp85/CCSM4/high/SSP3
 csv_folder=${folder}/csv
 
+# diagnostics for high risk
+# python single.py  --column=response ${folder}/${basename}.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-raw.csv
+python single.py  --column=response ${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-histclim.csv
+
 # pure outputs (mins per worker per day)
-python single.py  --column=rebased ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-rebased-combined.csv
-python single.py  --column=response22 ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-combined.csv
-python single.py  --column=response ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-combined.csv
+# python single.py  --column=rebased ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-rebased-combined.csv
+# python single.py  --column=response22 ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-combined.csv
+# python single.py  --column=response ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-combined.csv
 
 # # levels output (for mapping)
 # python single.py  --column=rebased ${folder}/${basename}-pop-levels.nc4 -${folder}/${basename}-histclim-pop-levels.nc4 | tee ${csv_folder}/${basename}-rebased-pop-levels-combined.csv
