@@ -21,12 +21,12 @@ python single.py  --column=response ${folder}/${basename}.nc4 -${folder}/${basen
 # python single.py  --column=highriskimpacts ${folder}/${basename}-wage-levels.nc4 -${folder}/${basename}-histclim-wage-levels.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-wage-levels-combined.csv
 
 # aggregate output (for timeseries)
-python single.py  --column=rebased ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-pop-aggregated-combined.csv
-python single.py  --column=rebased ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-gdp-aggregated-combined.csv
-python single.py  --column=rebased ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-wage-aggregated-combined.csv
-python single.py  --column=response22 ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-pop-aggregated-combined.csv
-python single.py  --column=response22 ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-gdp-aggregated-combined.csv
-python single.py  --column=response22 ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-wage-aggregated-combined.csv
-python single.py  --column=response ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-pop-aggregated-combined.csv
-python single.py  --column=response ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-gdp-aggregated-combined.csv
-python single.py  --column=response ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-wage-aggregated-combined.csv
+# python single.py  --column=rebased ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-pop-aggregated-combined.csv
+# python single.py  --column=rebased ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-gdp-aggregated-combined.csv
+# python single.py  --column=rebased ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-wage-aggregated-combined.csv
+# python single.py  --column=response22 ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-pop-aggregated-combined.csv
+# python single.py  --column=response22 ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-wage-aggregated-combined.csv
+# python single.py  --column=response ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-pop-aggregated-combined.csv
+# python single.py  --column=response ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-wage-aggregated-combined.csv
+# python single.py  --column=response ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-gdp-aggregated-combined.csv
+# python single.py  --column=response22 ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-gdp-aggregated-combined.csv

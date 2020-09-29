@@ -22,7 +22,7 @@ plot_impact_timeseries = function(IR=NA, folder, name, output, rcp, ssp, adapt, 
 
   # file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
   file = glue('{folder}/{name}-{risk}-combined.csv')
-  title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt}, IR = {IR})")
+  title = glue("minutes per worker per day -- {risk} ({weight}-aggregated, {ssp}, {rcp}, {adapt}, IR = {IR})")
 
   df = read_csv(file)
 
@@ -42,36 +42,38 @@ plot_impact_timeseries = function(IR=NA, folder, name, output, rcp, ssp, adapt, 
 # MAIN MODEL - CHECK
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-#         'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-#         'median/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+        'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+        'median/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'combined_uninteracted_spline_empshare_noFE'
-# output = 'main_model_check'
+name = 'combined_uninteracted_spline_empshare_noFE'
+output = 'main_model_check/USA.14.608'
 
-# map_args = expand.grid(folder= folder,
-#                        name=name,
-#                        output=output,
-#                        rcp="rcp85",
-#                        ssp="SSP3",
-#                        adapt="fulladapt",
-#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-#                        weight=c("wage","gdp","pop")
-#                        )
+map_args = expand.grid(IR = 'USA.14.608',
+                       folder= folder,
+                       name=name,
+                       output=output,
+                       rcp="rcp85",
+                       ssp="SSP3",
+                       adapt="fulladapt",
+                       risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+                       weight=c("wage","gdp","pop")
+                       )
 
-# print(map_args)
+print(map_args)
 
-# mcmapply(plot_impact_timeseries,
-#          folder= map_args$folder,
-#          name=map_args$name,
-#          output=output,
-#          ssp=map_args$ssp,
-#          rcp=map_args$rcp,
-#          adapt=map_args$adapt,
-#          risk=map_args$risk,
-#          weight=map_args$weight,
-#          mc.cores=5
-#           )
+mcmapply(plot_impact_timeseries,
+         IR= map_args$IR,
+         folder= map_args$folder,
+         name=map_args$name,
+         output=output,
+         ssp=map_args$ssp,
+         rcp=map_args$rcp,
+         adapt=map_args$adapt,
+         risk=map_args$risk,
+         weight=map_args$weight,
+         mc.cores=5
+          )
 
 
 ######################

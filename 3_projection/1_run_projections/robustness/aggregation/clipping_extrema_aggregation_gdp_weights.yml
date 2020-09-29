@@ -4,5 +4,5 @@ targetdir: /shares/gcp/outputs/labor/impacts-woodwork/clipping_extrema/median/rc
 levels-weighting: population * 0.00487 / population 
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: population * income
-only-variables: ["rebased","highriskimpacts","lowriskimpacts","clip"]
+only-variables: ["rebased","response","response22","clip"]
 infix: gdp
