@@ -9,6 +9,7 @@
 #SBATCH --qos=savio_lowprio
 # Wall clock limit:
 #SBATCH --time=70:00:00
+#SBATCH --requeue
 
 ## Command(s) to run:
 
