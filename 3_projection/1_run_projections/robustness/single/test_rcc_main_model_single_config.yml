@@ -1,5 +1,5 @@
 mode: writecalcs
-outputdir: /shares/gcp/outputs/labor/impacts-woodwork/test_rcc
+outputdir: /shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model
 do_historical: true
 do_farmers: true
 singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
@@ -12,7 +12,7 @@ econcovar:
 timerate: day
 climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
 models:
-  - csvvs: /home/kschwarz/repos/labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model.csvv
+  - csvvs: /home/liruixue/repos/labor-code-release-2020/3_projection/1_run_projections/mc/uninteracted_main_model.csvv
     covariates: [ loggdppc, climtasmax, climtas, climtas-poly-2, climtas-poly-3, climtas-poly-4 ]
     knots: [ 27, 37, 39 ]
     description: labor productivity
