@@ -1,11 +1,7 @@
 mode: writecalcs
-outputdir: /shares/gcp/outputs/labor/impacts-woodwork/clipping_extrema
+outputdir: /shares/gcp/outputs/labor/impacts-woodwork/unclipped_mixed_model
 do_historical: true
 do_farmers: true
-only-models: [ "CCSM4" ]
-only-iam: "high"
-only-ssp: "SSP3"
-only-rcp: "rcp85"
 singledir: combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
 climcovar:
     class: mean
@@ -45,9 +41,6 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
-            clipping: baselinemaxima  # TEST
-            clip-mintemp: 10    # TEST
-            clip-maxtemp: 39   # TEST
         riskshare_hi:
             csvv-subset: [6, 12]
             csvv-reunit:
