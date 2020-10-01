@@ -45,7 +45,7 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
-            clipping: downdog  # TEST
+            clipping: baselinemaxima  # TEST
             clip-mintemp: 10    # TEST
             clip-maxtemp: 39   # TEST
         riskshare_hi:
