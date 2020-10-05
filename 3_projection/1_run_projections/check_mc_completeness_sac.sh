@@ -3,16 +3,16 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
-# output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_dir="batch0" 
+# output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
+output_dir="batch1" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 output_file_size_above=30
 
 # 130 for one SSP
-n_folders_total=200
+n_folders_total=520
 
 cd "${output_root}/${output_dir}"
 
