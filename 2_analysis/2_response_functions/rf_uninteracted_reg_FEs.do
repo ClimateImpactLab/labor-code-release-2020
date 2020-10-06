@@ -15,7 +15,7 @@ loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 loc rf_folder 	"${DIR_RF}/uninteracted_reg_FEs"
 
 * other selections
-global fe_list fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my 
+global fe_list fe_adm0_y fe_adm0_my fe_adm0_m_y fe_adm0_wk fe_adm3_my 
 global ref_temp 27 
 
 * full response function
