@@ -1,0 +1,5 @@
+outputdir: outputs/labor/impacts-woodwork/labor_mc_202009
+batch: batch0
+# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+weighting: population 
+infix: pop
