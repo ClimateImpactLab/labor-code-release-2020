@@ -27,7 +27,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
     file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
   }
 
-  title = glue("minutes per worker per day -- {risk} /n ({weight}, {ssp}, {rcp}, {adapt}, IR = {IR})")
+  title = glue("minutes per worker per day -- {risk} \n ({weight}, {ssp}, {rcp}, {adapt}, IR = {IR})")
 
   df = read_csv(file)
   
