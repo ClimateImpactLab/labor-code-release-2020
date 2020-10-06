@@ -33,33 +33,82 @@ convert_table, categories("comm low high marg")		///
 	r2(`R2_common' `R2_by_risk' `R2_by_risk')		///
 	n(`N_common' `N_low' `N_high')
 
-*********************************************
-*	ADD F TEST OF TREATMENT-RISK INTERACTION
-*********************************************
+*****************
+*	ADD F TESTS
+*****************
 
-* get an F-test of the temp * high_risk interaction
+* make new rows for the F test
 set obs `=_N+2'
-est use "`reg_folder'/uninteracted_reg_by_risk.ster"
+replace temp = "F-test" in `=_N-1'
+replace temp = "F-test p-value" in `=_N'
+
+
+* get and label the terms
 collect_spline_terms, splines(0 1) unint(unint) int(int)
-gl test = subinstr(								///
+
+gl marg = subinstr(								///
 			subinstr(							///
 			subinstr(							///
 			"$int0 $int1", "+", "", .),			///
 			"_b[","",.),						///
 			"]","",.)
 
-di "TESTING $test"
-test $test
+gl main = subinstr(								///
+			subinstr(							///
+			subinstr(							///
+			"$unint0 $unint1", "+", "", .),		///
+			"_b[","",.),						///
+			"]","",.)
+
+* get common regression F test
+est use "`reg_folder'/uninteracted_reg_common.ster"
+di "TESTING $main"
+test $main
+
+* F test
+loc F = round(`r(F)', 0.001)
+replace comm = "`F'" in `=_N-1'
+
+* p-value
+loc p = round(`r(p)', 0.001)
+replace comm = "`p'" in `=_N'
+
+* get by-risk regression F test
+est use "`reg_folder'/uninteracted_reg_by_risk.ster"
+
+di "TESTING $main"
+test $main
+
+* F test
+loc F = round(`r(F)', 0.001)
+replace low = "`F'" in `=_N-1'
+
+* p-value
+loc p = round(`r(p)', 0.001)
+replace low = "`p'" in `=_N'
+
+di "TESTING $main $marg"
+test $main $marg
+
+* F test
+loc F = round(`r(F)', 0.001)
+replace high = "`F'" in `=_N-1'
+
+* p-value
+loc p = round(`r(p)', 0.001)
+replace high = "`p'" in `=_N'
+
+* get marginal effect F test
+di "TESTING $marg"
+test $marg
 
 * F test
 loc F = round(`r(F)', 0.001)
 replace marg = "`F'" in `=_N-1'
-replace temp = "F-test" in `=_N-1'
 
 * p-value
 loc p = round(`r(p)', 0.001)
 replace marg = "`p'" in `=_N'
-replace temp = "F-test p-value" in `=_N'
 
 **********
 * EXPORT
