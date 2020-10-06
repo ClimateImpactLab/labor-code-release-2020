@@ -1,0 +1,76 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/uninteracted_reg_FEs.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 5 Oct 2020, 15:59:35
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_FEs"
+{txt}
+{com}. 
+. * other selections
+. global test_code "no"
+{txt}
+{com}. global fe_list fe_adm0_m_y
+{txt}
+{com}. * fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y
+. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each fixed effect selected
+. foreach fe in $fe_list {c -(}
+{txt}  2{com}. 
+.         use $dataset, clear
+{txt}  3{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  4{com}.                 sample 0.1
+{txt}  5{com}.         {c )-}
+{txt}  6{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt}  7{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt}  8{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt}  9{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 10{com}.         local reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt} 11{com}.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 12{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 13{com}.         foreach f in $`fe' {c -(}
+{txt} 14{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 15{com}.         {c )-}
+{txt} 16{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'.ster"
+{txt} 17{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = `fe'"
+{txt} 18{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 19{com}.         qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 20{com}.         estimates notes: "`spec_desc'"
+{txt} 21{com}.         estimates save "`ster_name'", replace
+{txt} 22{com}. 
+.         di "COMPLETED: reg with `fe' fixed effects."
+{txt} 23{com}. 
+. {c )-}
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#month#high_risk) vce(cl cluster_adm1yymm)
+{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y.ster not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y.ster saved
+COMPLETED: reg with fe_adm0_m_y fixed effects.
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}

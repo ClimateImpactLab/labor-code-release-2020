@@ -1,5 +1,5 @@
 mode: writecalcs
-outputdir: /shares/gcp/outputs/labor/impacts-woodwork/clipping_extrema
+outputdir: /shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model
 do_historical: true
 do_farmers: true
 only-models: [ "CCSM4" ]
@@ -17,7 +17,7 @@ econcovar:
 timerate: day
 climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
 models:
-  - csvvs: social/parameters/labor/post_replication/combined_mixed_model_splines_empshare_noFE.csvv
+  - csvvs: social/parameters/labor/post_replication/hi_1factor_lo_unint_mixed_model_splines_empshare_noFE.csvv
     covariates: [ loggdppc, climtas, climtas-poly-2, climtas-poly-3, climtas-poly-4 ]
     knots: [ 27, 37, 39 ]
     description: labor productivity
@@ -45,9 +45,9 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
-            clipping: baselinemaxima  # TEST
-            clip-mintemp: 10    # TEST
-            clip-maxtemp: 39   # TEST
+            clipping: baselinemaxima
+            clip-mintemp: 10
+            clip-maxtemp: 39
         riskshare_hi:
             csvv-subset: [6, 12]
             csvv-reunit:
