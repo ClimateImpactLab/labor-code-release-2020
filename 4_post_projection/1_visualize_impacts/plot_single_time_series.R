@@ -18,15 +18,24 @@ pacman::p_load(ggplot2,
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
 # time series of weighted impacts
-plot_impact_timeseries = function(IR=NA, folder, name, output, rcp, ssp, adapt, weight, risk){
+plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, adapt, weight, risk){
 
-  # file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
-  file = glue('{folder}/{name}-{risk}-combined.csv')
-  title = glue("minutes per worker per day -- {risk} ({ssp}, {rcp}, {adapt}, IR = {IR})")
+  if(weight == "raw"){
+    # please note: you cannot use 'raw' weighting unless you are choosing a specific IR
+    file = glue('{folder}/{name}-{risk}-combined.csv')
+  } else {
+    file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
+  }
+
+  title = glue("minutes per worker per day -- {risk} /n ({weight}, {ssp}, {rcp}, {adapt}, IR = {IR})")
 
   df = read_csv(file)
-
-  df_plot = df %>% dplyr::filter(region == IR)
+  
+  if(IR == "globe"){
+    df_plot = df %>% dplyr::filter(is.na(region))
+  } else {
+    df_plot = df %>% dplyr::filter(region == IR)
+  }
 
   p <- ggtimeseries(
     df.list = list(df_plot[,c('year', 'value')] %>% as.data.frame()), # mean lines
@@ -36,7 +45,7 @@ plot_impact_timeseries = function(IR=NA, folder, name, output, rcp, ssp, adapt, 
   ggtitle(title)
 
   dir.create(glue("{DIR_FIG}/{output}"), showWarnings = FALSE)
-  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{risk}-{adapt}_impacts_timeseries.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{risk}-{weight}-{adapt}_impacts_timeseries.pdf"), p)
 }
 
 
@@ -44,38 +53,38 @@ plot_impact_timeseries = function(IR=NA, folder, name, output, rcp, ssp, adapt, 
 # MAIN MODEL - CHECK
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-        'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-        'median/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+#         'combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#         'median/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'combined_uninteracted_spline_empshare_noFE'
-output = 'main_model_check/SDN.6.16.75.230'
+# name = 'combined_uninteracted_spline_empshare_noFE'
+# output = 'main_model_check/SDN.6.16.75.230'
 
-map_args = expand.grid(IR = 'SDN.6.16.75.230',
-                       folder= folder,
-                       name=name,
-                       output=output,
-                       rcp="rcp85",
-                       ssp="SSP3",
-                       adapt="fulladapt",
-                       risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-                       weight=c("wage","gdp","pop")
-                       )
+# map_args = expand.grid(IR = 'SDN.6.16.75.230',
+#                        folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="fulladapt",
+#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+#                        weight=c("wage","gdp","pop")
+#                        )
 
-print(map_args)
+# print(map_args)
 
-mcmapply(plot_impact_timeseries,
-         IR= map_args$IR,
-         folder= map_args$folder,
-         name=map_args$name,
-         output=output,
-         ssp=map_args$ssp,
-         rcp=map_args$rcp,
-         adapt=map_args$adapt,
-         risk=map_args$risk,
-         weight=map_args$weight,
-         mc.cores=5
-          )
+# mcmapply(plot_impact_timeseries,
+#          IR= map_args$IR,
+#          folder= map_args$folder,
+#          name=map_args$name,
+#          output=output,
+#          ssp=map_args$ssp,
+#          rcp=map_args$rcp,
+#          adapt=map_args$adapt,
+#          risk=map_args$risk,
+#          weight=map_args$weight,
+#          mc.cores=5
+#           )
 
 
 ######################
@@ -87,9 +96,9 @@ folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
       'rcp85/CCSM4/high/SSP3/csv/')
 
 name = 'uninteracted_main_model'
-output = 'single_edge_restriction_model/SDN.6.16.75.230'
+output = 'single_edge_restriction_model/'
 
-map_args = expand.grid(IR = 'SDN.6.16.75.230',
+map_args = expand.grid(IR = "globe",
                        folder= folder,
                        name=name,
                        output=output,
