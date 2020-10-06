@@ -11,12 +11,13 @@ cap log close
 log using "${DIR_LOG}/uninteracted_reg_FEs.smcl", replace
 
 * select dataset and output folder
-gl dataset 		"${ROOT_INT_DATA}/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 
 * other selections
 global test_code "no"
-global fe_list fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my 
+global fe_list fe_adm0_m_y
+* fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y
 
 ********************
 *	RUN REGRESSION

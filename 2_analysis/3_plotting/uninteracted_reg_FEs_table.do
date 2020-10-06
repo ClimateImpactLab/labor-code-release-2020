@@ -12,7 +12,7 @@ loc rf_folder 		"${DIR_RF}/uninteracted_reg_FEs"
 loc table_folder 	"${DIR_TABLE}"
 
 * other selections
-global fe_list fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my 
+global fe_list fe_adm0_y fe_adm0_my fe_adm0_m_y fe_adm0_wk fe_adm3_my 
 
 ***********************************
 *	GENERATE LATEX TABLE
