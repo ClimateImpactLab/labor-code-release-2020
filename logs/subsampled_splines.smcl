@@ -3,245 +3,131 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/home/kschwarz/repos/labor-code-release-2020/logs/subsampled_splines.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}28 Sep 2020, 11:52:13
+ {txt}opened on:  {res} 6 Oct 2020, 16:03:24
 {txt}
 {com}. 
 . * select dataset and output folder
-. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+. loc reg_folder  "${c -(}DIR_STER{c )-}/subsampled_splines"
 {txt}
-{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/subsampled_splines"
+{com}. loc rf_folder   "${c -(}DIR_RF{c )-}/subsampled_splines"
 {txt}
-{com}. loc xtiles              "${c -(}ROOT_INT_DATA{c )-}/xtiles/rep_unit_terciles_uncollapsed.dta"
+{com}. cap mkdir `rf_folder'
 {txt}
 {com}. 
 . * other selections
-. gl test_code "no"
+. global reg_list inc_t1 inc_t2 inc_t3 inc_q2_clim_q1 inc_q2_clim_q2 inc_q1_clim_q1 inc_q1_clim_q2 
 {txt}
-{com}. gl reg_list inc_t1 inc_t2 inc_t3 inc_q1_clim_q1 inc_q1_clim_q2 inc_q2_clim_q1 inc_q2_clim_q2 // clim_t1 clim_t2 clim_t3
-{txt}
-{com}. loc fe fe_adm0_wk
+{com}. global ref_temp 27 
 {txt}
 {com}. 
-. ********************
-. *       RUN REGRESSION
-. ********************
+. * full response function
+. numlist "-20(0.1)47"
+{txt}
+{com}. gl full_response `r(numlist)'
+{txt}
+{com}. * 6 table values
+. numlist "45 40 35 30 10 5 0"
+{txt}
+{com}. gl table_values `r(numlist)'
+{txt}
+{com}. 
 . 
-. * cycle through each of the two regressions
-. foreach reg in $reg_list {c -(}
+. ***********************************
+. *       GENERATE RESPONSE FUNCTION CSVS
+. ***********************************
+. 
+. foreach row_values in full_response {c -(}
 {txt}  2{com}. 
-.         use $dataset, clear
+.         foreach reg in $reg_list {c -(}
 {txt}  3{com}. 
-.         * if test code mode is on, take a random sample
-.         if "${c -(}test_code{c )-}"=="yes" {c -(}
-{txt}  4{com}.                 sample 0.1
-{txt}  5{com}.         {c )-}
-{txt}  6{com}. 
-.         * only include non-zero observations
-.         keep if mins_worked > 0
+.                 * set the ster file name and the output CSV
+.                 local ster_name "`reg_folder'/subsampled_splines_`reg'.ster"
+{txt}  4{com}.                 local rf_name   "`rf_folder'/subsampled_splines_`reg'_`row_values'.csv"
+{txt}  5{com}.                 
+.                 * create the temp list that we want to predict for
+.                 qui make_temp_dist, list($`row_values') ref($ref_temp)
+{txt}  6{com}.                 est use `ster_name'
 {txt}  7{com}. 
-.         ********************
-.         *       SUBSET THE DATA
-.         ********************
-. 
-.         * categorize into terciles and quantiles
-.         merge m:1 rep_unit using `xtiles', keepusing(clim_t inc_t clim_q inc_q) nogen assert(3)
-{txt}  8{com}. 
-.         * this is *truly* ugly, please fix it
-.         if "`reg'" == "inc_t1" keep if inc_t == 1
-{txt}  9{com}.         if "`reg'" == "inc_t2" keep if inc_t == 2
-{txt} 10{com}.         if "`reg'" == "inc_t3" keep if inc_t == 3
-{txt} 11{com}.         if "`reg'" == "clim_t1" keep if clim_t == 1
-{txt} 12{com}.         if "`reg'" == "clim_t2" keep if clim_t == 2
-{txt} 13{com}.         if "`reg'" == "clim_t3" keep if clim_t == 3
-{txt} 14{com}.         if "`reg'" == "inc_q1_clim_q1" keep if inc_q == 1 & clim_q == 1
-{txt} 15{com}.         if "`reg'" == "inc_q1_clim_q2" keep if inc_q == 1 & clim_q == 2
-{txt} 16{com}.         if "`reg'" == "inc_q2_clim_q1" keep if inc_q == 2 & clim_q == 1
-{txt} 17{com}.         if "`reg'" == "inc_q2_clim_q2" keep if inc_q == 2 & clim_q == 2
-{txt} 18{com}. 
-.         * get rid of some awkward naming
-.         rename *27_37_39_* **
-{txt} 19{com}. 
-.         * generate regression variables
-.         gen_controls_and_FEs
-{txt} 20{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
-{txt} 21{com}. 
-.         * differentiate treatment if reg is by risk
-.         loc reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
-{txt} 22{com}. 
-.         * both regressions have interacted controls
-.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
-{txt} 23{com}.         
-.         * interact each fixed effect with the risk binary
-.         local reg_fe ""                                 
-{txt} 24{com}.         foreach f in $`fe' {c -(}
-{txt} 25{com}.                 local reg_fe `reg_fe' `f'#high_risk
-{txt} 26{com}.         {c )-}
-{txt} 27{com}. 
-.         * set the regression weight
-.         loc weight "risk_adj_sample_wgt"
-{txt} 28{com}. 
-.         * set the ster file name and the notes to be included
-.         local ster_name "`reg_folder'/subsampled_splines_`reg'.ster"
-{txt} 29{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg', weight = `weight'"
-{txt} 30{com}. 
-.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
-{txt} 31{com}.         qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
-{txt} 32{com}. 
-.         * count regression N by risk
-.         gen included = e(sample)
-{txt} 33{com}.         count if included == 1 & high_risk == 1
-{txt} 34{com}.         estadd scalar high_N = `r(N)'
-{txt} 35{com}.         count if included == 1 & high_risk == 0
-{txt} 36{com}.         estadd scalar low_N = `r(N)'
-{txt} 37{com}. 
-.         estimates notes: "`spec_desc'"
-{txt} 38{com}.         estimates save "`ster_name'", replace
-{txt} 39{com}. 
-.         di "COMPLETED: `reg' regression."
-{txt} 40{com}. 
-. {c )-}
-{txt}(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(3,725,156 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  1,050,325
-
-{txt}added scalar:
-             e(high_N) =  {res}1050325
-  1,823,905
-
-{txt}added scalar:
-              e(low_N) =  {res}1823905
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_t1.ster saved
-COMPLETED: inc_t1 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(3,223,289 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  1,247,690
-
-{txt}added scalar:
-             e(high_N) =  {res}1247690
-  2,128,409
-
-{txt}added scalar:
-              e(low_N) =  {res}2128409
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_t2.ster saved
-COMPLETED: inc_t2 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(6,250,331 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  125,943
-
-{txt}added scalar:
-             e(high_N) =  {res}125943
-  223,063
-
-{txt}added scalar:
-              e(low_N) =  {res}223063
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_t3.ster saved
-COMPLETED: inc_t3 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(5,463,845 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  468,159
-
-{txt}added scalar:
-             e(high_N) =  {res}468159
-  667,373
-
-{txt}added scalar:
-              e(low_N) =  {res}667373
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_q1_clim_q1.ster saved
-COMPLETED: inc_q1_clim_q1 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(2,881,359 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  1,307,038
-
-{txt}added scalar:
-             e(high_N) =  {res}1307038
-  2,410,990
-
-{txt}added scalar:
-              e(low_N) =  {res}2410990
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_q1_clim_q2.ster saved
-COMPLETED: inc_q1_clim_q2 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(5,460,426 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  396,583
-
-{txt}added scalar:
-             e(high_N) =  {res}396583
-  742,330
-
-{txt}added scalar:
-              e(low_N) =  {res}742330
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_q2_clim_q1.ster saved
-COMPLETED: inc_q2_clim_q1 regression.
-(Written by R.              )
-(0 observations deleted)
-{res}
-{txt}{col 5}Result{col 38}# of obs.
-{col 5}{hline 41}
-{col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
-{col 5}{hline 41}
-(5,992,534 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-  252,176
-
-{txt}added scalar:
-             e(high_N) =  {res}252176
-  354,676
-
-{txt}added scalar:
-              e(low_N) =  {res}354676
-{txt}file /home/kschwarz/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_q2_clim_q2.ster saved
-COMPLETED: inc_q2_clim_q2 regression.
+.                 * generate spline terms and collect in macros
+.                 make_spline_terms 27 37 39
+{txt}  8{com}.                 collect_spline_terms, splines(0 1) unint(unint) int(int)
+{txt}  9{com}. 
+.                 * need this blank variable to get standard errors in predictnl
+.                 gen mins_worked = .
+{txt} 10{com}. 
+.                 * predict response function by risk
+.                         predictnl yhat_low =    (T_spline0 - ref_spline0) * (${c -(}unint0{c )-}) +                       ///
+>                                                                         (T_spline1 - ref_spline1) * (${c -(}unint1{c )-}),                        ///
+>                                                                         ci(lowerci_low upperci_low) se(se_low)
+{txt} 11{com}. 
+.                         predictnl yhat_high =   (T_spline0 - ref_spline0) * (${c -(}unint0{c )-} + ${c -(}int0{c )-}) +     ///
+>                                                                         (T_spline1 - ref_spline1) * (${c -(}unint1{c )-} + ${c -(}int1{c )-}),      ///
+>                                                                         ci(lowerci_high upperci_high) se(se_high)
+{txt} 12{com}. 
+.                 drop T* ref_* min*
+{txt} 13{com}.                 export delim `rf_name', replace
+{txt} 14{com}.                 clear
+{txt} 15{com}. 
+.         {c )-}
+{txt} 16{com}. {c )-}
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t1_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t1_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t2_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t2_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t3_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_t3_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q2_clim_q1_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q2_clim_q1_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q2_clim_q2_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q2_clim_q2_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q1_clim_q1_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q1_clim_q1_full_response.csv saved
+{res}matching these splines with the transformed-after-aggregated data
+{txt}(200 real changes made)
+(0 real changes made)
+{res}{txt}(671 missing values generated)
+note: confidence intervals calculated using Z critical values
+note: confidence intervals calculated using Z critical values
+{res}{txt}(note: file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q1_clim_q2_full_response.csv not found)
+{txt}file /home/kschwarz/repos/labor-code-release-2020/output/rf/subsampled_splines/subsampled_splines_inc_q1_clim_q2_full_response.csv saved
 
 {com}. 
-. cap log close
+. cap log close 
 {smcl}
 {com}{sf}{ul off}
