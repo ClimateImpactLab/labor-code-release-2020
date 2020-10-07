@@ -45,7 +45,8 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
   ggtitle(title)
 
   dir.create(glue("{DIR_FIG}/{output}"), showWarnings = FALSE)
-  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{risk}-{weight}-{adapt}_impacts_timeseries.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/timeseries-{weight}-{risk}-{adapt}-{rcp}-{ssp}.pdf"), p)
+
 }
 
 
