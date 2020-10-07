@@ -489,3 +489,28 @@ prog def convert_table
 
 
 end
+
+***************************************
+*	SUBSAMPLE DATA
+
+* 	drop data that's not in the subsample
+***************************************
+
+cap prog drop subsample_data
+prog def subsample_data
+
+	args reg
+
+	* this is *truly* ugly, please fix it
+	if "`reg'" == "inc_t1" keep if inc_t == 1
+	if "`reg'" == "inc_t2" keep if inc_t == 2
+	if "`reg'" == "inc_t3" keep if inc_t == 3
+	if "`reg'" == "clim_t1" keep if clim_t == 1
+	if "`reg'" == "clim_t2" keep if clim_t == 2
+	if "`reg'" == "clim_t3" keep if clim_t == 3
+	if "`reg'" == "inc_q1_clim_q1" keep if inc_q == 1 & clim_q == 1
+	if "`reg'" == "inc_q1_clim_q2" keep if inc_q == 1 & clim_q == 2
+	if "`reg'" == "inc_q2_clim_q1" keep if inc_q == 2 & clim_q == 1
+	if "`reg'" == "inc_q2_clim_q2" keep if inc_q == 2 & clim_q == 2
+
+end
