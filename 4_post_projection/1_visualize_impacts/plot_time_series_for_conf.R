@@ -92,3 +92,48 @@ plot_rcp45_rcp85_timeseries = function(rcp, ssp, iam, adapt,risk, region, aggreg
 plot_rcp45_rcp85_timeseries(ssp="SSP3",iam="high",
   adapt="fulladapt",risk="allrisk",region="global", aggregation = "-gdp-aggregated")
 
+
+
+
+
+# time series of popweighted impacts
+plot_three_adapt_timeseries = function(rcp, ssp, iam,risk, region, aggregation="", suffix="", output_folder = DIR_FIG){
+  
+  # browser()
+  df_full= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_fulladapt{aggregation}{suffix}_{region}_timeseries.csv'))
+  df_inc = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_incadapt{aggregation}{suffix}_{region}_timeseries.csv'))
+  df_no  = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_noadapt{aggregation}{suffix}_{region}_timeseries.csv'))
+
+  if (aggregation == "-pop-allvars-aggregated") {
+    plot_title <- "Pop Weighted Impacts - Mins Worked"
+  } else if (aggregation == "-gdp-aggregated") {
+    plot_title <- "Impacts as Percentage of GDP"
+  } else if (aggregation == "-wage-aggregated") {
+    plot_title <- "Impacts in Dollars"
+  } else {
+    print("wrong aggregation!")
+    return()
+  }
+  # browser()
+  p <- ggtimeseries(
+    df.list = list(df_full[,c('year', 'mean')] %>% as.data.frame(),
+                   df_inc[,c('year', 'mean')] %>% as.data.frame(),
+                   df_no[,c('year', 'mean')] %>% as.data.frame()), # mean lines
+    x.limits = c(2010, 2098),
+    y.label = 'changes in mins worked',
+    end.yr = 2098,
+    legend.values=c("blue","green","red"),
+    legend.breaks = c("full adapt","inc adapt", "no adapt")) + 
+  ggtitle(plot_title) 
+  ggsave(glue("{output_folder}/{ssp}-all-adapt-scenarios_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
+}
+
+
+
+plot_three_adapt_timeseries(rcp = "rcp85", ssp="SSP3",iam="high", 
+  risk="allrisk",region="global", aggregation = "-gdp-aggregated")
+
+
+
+
+
