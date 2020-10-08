@@ -31,10 +31,10 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 
   if (adapt != "") {
       file = glue('{folder}/{name}-{risk}-{weight}-levels-combined.csv')
-      title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt})")
+      title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt}) 2099")
   } else {
       file = glue('{folder}/{name}-{risk}-combined.csv')
-      title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt})")
+      title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt}) 2099")
   }
   
   print(file)  
@@ -63,7 +63,7 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
                      colorbar.title = paste0("mins lost"), 
                      map.title = title)
 
-  ggsave(glue("{DIR_FIG}/{output}/{rcp}-{ssp}-{weight}-{risk}-{adapt}_impacts_map.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/map-{weight}-{risk}-{adapt}-{rcp}-{ssp}.pdf"), p)
 }
 
 
