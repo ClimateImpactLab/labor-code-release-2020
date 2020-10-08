@@ -21,7 +21,7 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009"
 output_dir="batch0" 
 
-aggregation_scenario="-gdp"
+aggregation_scenario="-wage"
 
 
 # the size of files above which we consider complete
@@ -31,7 +31,7 @@ aggregated_file_size_above=10
 # 130 for one SSP3
 n_folders_total=520
 
-filename_stem="combined_uninteracted_spline_empshare_noFE"
+filename_stem="uninteracted_main_model"
 
 cd "${output_root}/${output_dir}"
 
