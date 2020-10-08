@@ -217,7 +217,7 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
                    risk=c("highrisk","lowrisk","allrisk"),
-                   aggregation=c("-wage","gdp"),
+                   aggregation=c("-wage","-gdp"),
                    iam=c("high","low")
                  )
 
@@ -229,6 +229,31 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 60)
+  mc.cores = 30)
 
+
+
+args = expand.grid(ssp=c("SSP3"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   # adapt=c("fulladapt","histclim"),
+                   # risk="riskshare",
+                   risk=c("highrisk","lowrisk","allrisk"),
+                   aggregation=c("-gdp"),
+                   iam=c("high")
+                 )
+
+
+mcmapply(extract_timeseries, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  risk=args$risk, 
+  aggregation=args$aggregation,
+  adapt=args$adapt,
+  region="global",
+  mc.cores = 30)
+
+
+
+extract_timeseries(ssp="SSP3", iam="high", adapt="fulladapt", risk="allrisk",
+ aggregation="-gdp",region="global", suffix="")
 
