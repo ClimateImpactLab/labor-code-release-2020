@@ -19,7 +19,7 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork"
-output_dir="combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay" 
+output_dir="z_old_combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay_duplicates" 
 
 aggregation_scenario="-gdp"
 
