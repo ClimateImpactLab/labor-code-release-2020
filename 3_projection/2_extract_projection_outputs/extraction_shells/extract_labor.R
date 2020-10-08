@@ -148,7 +148,7 @@ mcmapply(extract_map,
   mc.cores = 60)
 
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                   adapt=c("fulladapt", "histclim"),
+                   adapt=c("fulladapt","incadapt","noadapt", "histclim"),
                    year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
                    risk=c("highrisk","lowrisk","allrisk"),
                    # risk="riskshare",
@@ -164,7 +164,7 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 60)
+  mc.cores = 20)
 
 
 
@@ -213,7 +213,7 @@ mcmapply(extract_timeseries,
   mc.cores = 60)
 
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                   adapt=c("fulladapt","histclim"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
                    risk=c("highrisk","lowrisk","allrisk"),
