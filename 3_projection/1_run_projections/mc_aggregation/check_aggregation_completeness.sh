@@ -21,7 +21,7 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009"
 output_dir="batch0" 
 
-aggregation_scenario="-pop"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete
