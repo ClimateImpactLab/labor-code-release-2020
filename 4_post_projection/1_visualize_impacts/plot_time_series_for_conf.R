@@ -100,9 +100,12 @@ plot_rcp45_rcp85_timeseries(ssp="SSP3",iam="high",
 plot_three_adapt_timeseries = function(rcp, ssp, iam,risk, region, aggregation="", suffix="", output_folder = DIR_FIG){
   
   # browser()
-  df_full= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_fulladapt{aggregation}{suffix}_{region}_timeseries.csv'))
-  df_inc = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_incadapt{aggregation}{suffix}_{region}_timeseries.csv'))
-  df_no  = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_noadapt{aggregation}{suffix}_{region}_timeseries.csv'))
+  df_full= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_fulladapt{aggregation}{suffix}_{region}_timeseries.csv')) %>%
+          mutate(mean = -mean *100) 
+  df_inc = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_incadapt{aggregation}{suffix}_{region}_timeseries.csv')) %>%
+          mutate(mean = -mean *100) 
+  df_no  = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_noadapt{aggregation}{suffix}_{region}_timeseries.csv')) %>%
+          mutate(mean = -mean *100) 
 
   if (aggregation == "-pop-allvars-aggregated") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
