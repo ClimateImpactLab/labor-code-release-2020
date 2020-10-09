@@ -125,7 +125,7 @@ plot_three_adapt_timeseries = function(rcp, ssp, iam,risk, region, aggregation="
     legend.values=c("blue","green","red"),
     legend.breaks = c("full adapt","inc adapt", "no adapt")) + 
   ggtitle(plot_title) 
-  ggsave(glue("{output_folder}/{ssp}-all-adapt-scenarios_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
+  ggsave(glue("{output_folder}/{ssp}-all-adapt-scenarios_{iam}_{risk}_{aggregation}{suffix}_{region}_timeseries.pdf"), p)
 }
 
 
