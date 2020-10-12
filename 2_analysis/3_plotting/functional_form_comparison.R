@@ -22,7 +22,7 @@ source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro
-reg = "nochn"
+reg = "wchn"
 # note splines dataset needs to be manually set!!
 # because I named it like an idiota
 
@@ -47,9 +47,13 @@ poly_4 = read_csv(
 		"uninteracted_polynomials_{reg}_4_full_response.csv"))
 
 # SET THIS MANUALLY (CHINA OR NOT)
+# spline = read_csv(
+# 		glue("{DIR_RF}/uninteracted_reg_comlohi/",
+# 		"uninteracted_reg_comlohi_full_response.csv"))
+
 spline = read_csv(
-		glue("{DIR_RF}/uninteracted_reg_comlohi/",
-		"uninteracted_reg_comlohi_full_response.csv"))
+    glue("{DIR_RF}/uninteracted_reg_w_chn/",
+    "uninteracted_reg_w_chn_full_response.csv"))
 
 forms = list(bins, poly_2, poly_3, poly_4, spline)
 names(forms) = list("bins", "poly_2", "poly_3", "poly_4", "spline")
