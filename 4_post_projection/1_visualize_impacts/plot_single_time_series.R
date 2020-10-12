@@ -92,12 +92,84 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # EDGE RESTRICTION MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-      'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-      'rcp85/CCSM4/high/SSP3/csv/')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
+#       'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#       'rcp85/CCSM4/high/SSP3/csv/')
 
-name = 'uninteracted_main_model'
-output = 'single_edge_restriction_model/'
+# name = 'uninteracted_main_model'
+# output = 'single_edge_restriction_model/'
+
+# map_args = expand.grid(IR = "globe",
+#                        folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="fulladapt",
+#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+#                        weight=c("wage","gdp","pop")
+#                        )
+
+# print(map_args)
+
+# mcmapply(plot_impact_timeseries,
+#          IR = map_args$IR,
+#          folder= map_args$folder,
+#          name=map_args$name,
+#          output=output,
+#          ssp=map_args$ssp,
+#          rcp=map_args$rcp,
+#          adapt=map_args$adapt,
+#          risk=map_args$risk,
+#          weight=map_args$weight,
+#          mc.cores=5
+#           )
+
+######################
+# CLIPPING MODEL
+######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/z_old/test_clipping_extrema_mixed_model/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'combined_mixed_model_splines_empshare_noFE'
+# output = 'single_mixed_model/'
+
+# map_args = expand.grid(IR = "globe",
+#                        folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="fulladapt",
+#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+#                        weight=c("wage","gdp","pop")
+#                        )
+
+# print(map_args)
+
+# mcmapply(plot_impact_timeseries,
+#          IR = map_args$IR,
+#          folder= map_args$folder,
+#          name=map_args$name,
+#          output=output,
+#          ssp=map_args$ssp,
+#          rcp=map_args$rcp,
+#          adapt=map_args$adapt,
+#          risk=map_args$risk,
+#          weight=map_args$weight,
+#          mc.cores=5
+#           )
+
+######################
+# WITH CHINA MODEL
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn/',
+  'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'uninteracted_main_model_w_chn'
+output = 'uninteracted_main_model_w_chn/'
 
 map_args = expand.grid(IR = "globe",
                        folder= folder,
@@ -124,40 +196,4 @@ mcmapply(plot_impact_timeseries,
          weight=map_args$weight,
          mc.cores=5
           )
-
-######################
-# CLIPPING MODEL
-######################
-
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_extrema/',
-#               'median/rcp85/CCSM4/high/SSP3/csv')
-
-# name = 'combined_uninteracted_spline_empshare_noFE'
-# output = 'single_mixed_model/USA.14.608'
-
-# map_args = expand.grid(IR = 'USA.14.608',
-#                        folder= folder,
-#                        name=name,
-#                        output=output,
-#                        rcp="rcp85",
-#                        ssp="SSP3",
-#                        adapt="fulladapt",
-#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-#                        weight=c("wage","gdp","pop")
-#                        )
-
-# print(map_args)
-
-# mcmapply(plot_impact_timeseries,
-#          IR = map_args$IR,
-#          folder= map_args$folder,
-#          name=map_args$name,
-#          output=output,
-#          ssp=map_args$ssp,
-#          rcp=map_args$rcp,
-#          adapt=map_args$adapt,
-#          risk=map_args$risk,
-#          weight=map_args$weight,
-#          mc.cores=5
-#           )
           
