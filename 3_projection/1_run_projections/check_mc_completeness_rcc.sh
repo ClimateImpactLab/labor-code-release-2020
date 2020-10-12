@@ -5,7 +5,7 @@
 # set some paths and parameters
 output_root="/project2/mgreenst/outputs/labor/montecarlos/"
 # output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_dir="batch4" 
+output_dir="batch7" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -32,7 +32,7 @@ for scenario in fulladapt incadapt noadapt histclim;
 do 
 	if [ ${scenario} = "fulladapt" ];
 	then 
-		filename_suffix=""
+		filename_suffix="" 
 	else
 		filename_suffix="-${scenario}"
 	fi
