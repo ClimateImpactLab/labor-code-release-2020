@@ -14,15 +14,15 @@ aggregated_file_size_above=10
 # 130 for one SSP
 n_folders_total=520
 
-aggregation_scenario="gdp"
-filename_stem="combined_uninteracted_spline_empshare_noFE"
+aggregation_scenario="pop"
+filename_stem="uninteracted_main_model"
 
 cd "${output_root}/${output_dir}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
 # action=delete
-action=delete
+action=print
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
