@@ -5,11 +5,11 @@
 # set some paths and parameters
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_dir="batch4" 
+output_dir="batch0" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=30
+output_file_size_above=40
 
 # 130 for one SSP
 n_folders_total=520
@@ -46,9 +46,9 @@ do
 done
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print

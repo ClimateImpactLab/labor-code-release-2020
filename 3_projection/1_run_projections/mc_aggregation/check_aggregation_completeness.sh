@@ -21,13 +21,13 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009"
 output_dir="batch0" 
 
-aggregation_scenario="-gdp"
+aggregation_scenario="-pop"
 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 levels_file_size_above=40
-aggregated_file_size_above=10
+aggregated_file_size_above=5
 # 130 for one SSP3
 n_folders_total=520
 
@@ -86,5 +86,5 @@ done
 # echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
-# find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
+find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-pop-aggregated.nc4" ';' -print
 
