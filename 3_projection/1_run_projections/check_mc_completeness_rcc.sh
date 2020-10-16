@@ -5,7 +5,7 @@
 # set some paths and parameters
 output_root="/project2/mgreenst/outputs/labor/montecarlos/"
 # output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_dir="batch6" 
+output_dir="batch1" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -51,7 +51,7 @@ done
 # echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
-find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
+# find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
 
 # use the following command to view the folders and their sizes
 # du --separate-dirs -h . |sort -h
