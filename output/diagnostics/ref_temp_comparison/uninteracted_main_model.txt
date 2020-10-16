@@ -1,0 +1,36 @@
+from file: /mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/test_rcc/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/uninteracted_main_model.nc4
+loading column: highriskimpacts
+loading column: lowriskimpacts
+loading column: rebased
+loading column: clip
+from file: /mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/test_rcc/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/uninteracted_main_model-histclim.nc4
+loading column: highriskimpacts
+loading column: lowriskimpacts
+loading column: rebased
+loading column: clip
+There were 24 warnings (use warnings() to see them)
+Model: uninteracted_main_model.nc4
+TESTING SDN.4.11.49.163 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+-17.6982830869669 = (0.710271656513214 * -25.649938583374 + (1-0.710271656513214) * -7.26760292053223) - (0.495123267173767 * -2.19229507446289 + (1-0.495123267173767) * -3.05087447166443)
+impact is -17.6982830869669, rebaser is -0.303959525272067
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+SDN.4.11.49.163 COMPLETE.
+TESTING THA.3.R3edeff05b7928bfc ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+-6.65344352490014 = (0.332272261381149 * -0.67978435754776 + (1-0.332272261381149) * -2.82554221153259) - (0.207371264696121 * 18.8660430908203 + (1-0.207371264696121) * 0.793059706687927)
+impact is -6.65344352490014, rebaser is -0.377262710705204
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+THA.3.R3edeff05b7928bfc COMPLETE.
+TESTING USA.5.221 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+0.288692997138874 = (0.046444121748209 * 17.1006107330322 + (1-0.046444121748209) * 1.15656805038452) - (0.046444121748209 * 14.3525257110596 + (1-0.046444121748209) * 0.987662792205811)
+impact is 0.288692997138874, rebaser is -0.0156763128711219
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+USA.5.221 COMPLETE.
+TESTING CAN.3.50.1276 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+0.690002560156881 = (0.10050991922617 * 9.90050983428955 + (1-0.10050991922617) * 0.495149970054626) - (0.046444121748209 * 6.86990261077881 + (1-0.046444121748209) * 0.452425271272659)
+impact is 0.690002560156881, rebaser is 0.0849142214000203
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+CAN.3.50.1276 COMPLETE.
