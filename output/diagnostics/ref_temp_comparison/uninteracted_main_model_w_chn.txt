@@ -1,0 +1,25 @@
+Model: uninteracted_main_model_w_chn.nc4
+TESTING SDN.4.11.49.163 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+-2.83933429233389 = (0.710271656513214 * 82.6085357666016 + (1-0.710271656513214) * 19.9587211608887) - (0.495123267173767 * 110.181030273438 + (1-0.495123267173767) * 25.2403221130371)
+impact is -2.83933429233389, rebaser is 0.385215387263361
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+SDN.4.11.49.163 COMPLETE.
+TESTING THA.3.R3edeff05b7928bfc ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+3.76715837765141 = (0.332272261381149 * 113.046775817871 + (1-0.332272261381149) * 25.8508815765381) - (0.207371264696121 * 133.195602416992 + (1-0.207371264696121) * 29.5668811798096)
+impact is 3.76715837765141, rebaser is 0.13356679042563
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+THA.3.R3edeff05b7928bfc COMPLETE.
+TESTING USA.5.221 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+4.43379795032128 = (0.046444121748209 * 110.762054443359 + (1-0.046444121748209) * 24.3142261505127) - (0.046444121748209 * 93.5254364013672 + (1-0.046444121748209) * 20.5040054321289)
+impact is 4.43379795032128, rebaser is -0.0282386933507951
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+USA.5.221 COMPLETE.
+TESTING CAN.3.50.1276 ....
+impact = (lambda_H_t * beta_H_t + (1-lambda_H_t) * beta_L_t) - (lambda_H_histclim * beta_H_hist + (1-lambda_H_histclim) * beta_L_hist)
+9.43598027807033 = (0.10050991922617 * 70.1387176513672 + (1-0.10050991922617) * 15.4830751419067) - (0.046444121748209 * 45.1101226806641 + (1-0.046444121748209) * 9.90548038482666)
+impact is 9.43598027807033, rebaser is 0.551648020993557
+[1] "these should match -> combined_impact_replicated, combined_impact_from_projection"
+CAN.3.50.1276 COMPLETE.
