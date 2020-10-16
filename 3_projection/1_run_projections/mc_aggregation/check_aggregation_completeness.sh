@@ -81,9 +81,9 @@ done
 
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-pop-aggregated.nc4" ';' -print
