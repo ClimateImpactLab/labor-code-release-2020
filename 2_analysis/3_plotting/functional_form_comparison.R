@@ -22,9 +22,7 @@ source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro
-reg = "wchn"
-# note splines dataset needs to be manually set!!
-# because I named it like an idiota
+reg = "nochn"
 
 #############
 # GET DATA
@@ -46,14 +44,19 @@ poly_4 = read_csv(
 		glue("{DIR_RF}/uninteracted_polynomials/",
 		"uninteracted_polynomials_{reg}_4_full_response.csv"))
 
-# SET THIS MANUALLY (CHINA OR NOT)
-# spline = read_csv(
-# 		glue("{DIR_RF}/uninteracted_reg_comlohi/",
-# 		"uninteracted_reg_comlohi_full_response.csv"))
-
-spline = read_csv(
+# because of my poor naming choices, this if statement
+# manually selects which spline to plot (w or w/o China)
+if(reg == "nochn") {
+  message("Plotting no_chn spline.")
+  spline = read_csv(
+      glue("{DIR_RF}/uninteracted_reg_comlohi/",
+      "uninteracted_reg_comlohi_full_response.csv"))
+} else if(reg == "wchn") {
+  message("Plotting w_chn spline.")
+  spline = read_csv(
     glue("{DIR_RF}/uninteracted_reg_w_chn/",
     "uninteracted_reg_w_chn_full_response.csv"))
+}
 
 forms = list(bins, poly_2, poly_3, poly_4, spline)
 names(forms) = list("bins", "poly_2", "poly_3", "poly_4", "spline")
