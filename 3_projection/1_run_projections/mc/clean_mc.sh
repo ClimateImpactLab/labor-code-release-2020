@@ -10,7 +10,7 @@ output_dir="batch0"
 output_file_size_above=5
 
 mode="delete"
-mode="print"
+# mode="print"
 cd "${output_root}/${output_dir}"
 find . -name "status-generate.txt" -${mode}
 find . -name "*.nc4" -size -${output_file_size_above}M -${mode}
