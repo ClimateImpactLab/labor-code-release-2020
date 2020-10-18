@@ -4,9 +4,9 @@
 
 # set some paths and parameters
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
-# output_root="/shares/gcp/outputs/globus_rcc_labor_transfer/transfer"
+# output_root="/shares/gcp/outputs/globus_rcc_labor_transfer/transfer/ok"
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_dir="batch5" 
+output_dir="batch0" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -47,9 +47,9 @@ do
 done
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
