@@ -19,9 +19,9 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate"
-output_dir="batch0" 
+output_dir="batch14" 
 
-aggregation_scenario="-wage"
+aggregation_scenario="-pop"
 
 
 # the size of files above which we consider complete
