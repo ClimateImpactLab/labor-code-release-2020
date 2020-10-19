@@ -11,7 +11,7 @@ library(parallel)
 
 extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
-	basename <- "combined_uninteracted_spline_empshare_noFE"
+	basename <- "uninteracted_main_model"
 
 	# if aggregation is "", no need to add -levels since it's not aggregated files
 	if (aggregation != "") {
@@ -52,7 +52,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/mc/extraction_configs/",
 		glue("median_mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
@@ -66,7 +66,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="global", suffix=""){
 
 
-	basename <- "combined_uninteracted_spline_empshare_noFE"
+	basename <- "uninteracted_main_model"
 
 	# if aggregation is "", no need to add -levels since it's not aggregated files
 	if (aggregation != "") {
@@ -108,7 +108,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/mc/extraction_configs/",
 		glue("median_mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
@@ -124,7 +124,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="riskshare",iam="high",aggregation="")
 
 
-# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
+extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
 # extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="high",aggregation="")
 
 # no aggregation and pop weights
