@@ -53,7 +53,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc/extraction_configs/",
-		glue("median_mean_{risk}_{calculation}.yml "),
+		glue("mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
 		)
@@ -109,7 +109,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc/extraction_configs/",
-		glue("median_mean_{risk}_{calculation}.yml "),
+		glue("mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
 		)
@@ -121,19 +121,40 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 # tests
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
 
-# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="riskshare",iam="high",aggregation="")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
 
 
-extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
-# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="high",aggregation="")
+# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
+# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="allrisk",iam="high",aggregation="")
 
 # no aggregation and pop weights
+
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
-                   year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
+                   year=c(2010,2020,2040,2060,2080,2098,2099),
+                   # risk=c("highrisk","lowrisk","allrisk"),
+                   risk="riskshare",
+                   aggregation=c(""),
+                   iam=c("high","low")
+                 )
+
+
+mcmapply(extract_map, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  year=args$year, 
+  risk=args$risk, 
+  adapt=args$adapt,
+  aggregation=args$aggregation,
+  mc.cores = 5)
+
+
+args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                   adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   year=c(2010,2020,2040,2060,2080,2098,2099),
                    risk=c("highrisk","lowrisk","allrisk"),
                    # risk="riskshare",
-                   aggregation=c("","-pop-allvars"),
+                   aggregation=c("","-pop"),
                    iam=c("high","low")
                  )
 
