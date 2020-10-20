@@ -141,11 +141,11 @@ b = ggplot(df_low, aes(x=temp, color=form)) +
                        c("dimgrey", "steelblue",
                          "orange", "violet", "darkgreen"))
 
-pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}_high.pdf'))
+pdf(glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_high.pdf'))
 plot(a)
 dev.off()
 
-pdf(glue('{DIR_FIG}/functional_form_comparison_{reg}_low.pdf'))
+pdf(glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_low.pdf'))
 plot(b)
 dev.off()
 
