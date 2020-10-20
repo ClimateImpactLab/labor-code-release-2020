@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009"
-output_dir="batch0" 
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate"
+output_dir="batch2" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -21,8 +21,8 @@ cd "${output_root}/${output_dir}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-# action=delete
-action=print
+action=delete
+# action=print
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
@@ -78,6 +78,6 @@ done
 
 
 # uncomment to look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
