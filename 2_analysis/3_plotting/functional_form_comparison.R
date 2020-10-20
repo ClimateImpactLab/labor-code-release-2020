@@ -21,8 +21,8 @@ library(tidyr)
 source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
-# set macro
-reg = "nochn"
+# set macro: nochn, wchn
+reg = "wchn"
 
 #############
 # GET DATA
