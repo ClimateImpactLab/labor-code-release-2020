@@ -35,6 +35,7 @@ import sys
 import pathlib
 import time
 import warnings
+import os
 from glob import glob
 warnings.filterwarnings("ignore")
 
@@ -44,32 +45,42 @@ username = getpass.getuser()
 # PARAMETERS
 ############
 
-# select: uninteracted_main_model, uninteracted_main_model_w_chn
-model = 'uninteracted_main_model_w_chn'
-
-# leave these if you want to rebase & combine for all scenarios
-# empty string is for 'fulladapt'
-scenarios = ['', '-histclim', '-incadapt', '-noadapt'] 
+# select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, mixed_model
+model = 'edge_clipping'
 
 ############
 # PATHWAYS
 ############
 
 if model == 'uninteracted_main_model_w_chn':
-    
-    proj_root = ('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn/' +
-                 'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
-    
-    output_root = ('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/' +
-                 'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
+
+    # this is the main model including China and with splines 21_37_41
+
+    prefix = 'uninteracted_main_model_w_chn'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn/'    
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/'
     
 elif model == 'uninteracted_main_model':
     
-    proj_root = ('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc/' +
-                 'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
-    
-    output_root = ('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy/' +
-                 'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
+    # this is the main model single, pure vanilla
+
+    prefix = 'uninteracted_main_model'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/test_rcc/' 
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy/'
+
+elif model == 'edge_clipping':
+
+    # this adds the linearization of the response function beyond in-sample days
+
+    prefix = 'uninteracted_main_model'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/'
+
+elif model == 'mixed_model':
+
+    # this is the mixed model with clipping for high_risk interacted
+
+    sys.exit("Yikes! Not ready yet")
 
 else:
 
@@ -77,12 +88,12 @@ else:
 
 
 # copy parent folder structure
-# for dirpath, dirnames, filenames in os.walk(proj_root):
-#     structure = os.path.join(output_root, dirpath[len(proj_root):])
-#     if not os.path.isdir(structure):
-#         os.mkdir(structure)
-#     else:
-#         print("Folder does already exits!")
+for dirpath, dirnames, filenames in os.walk(proj_root):
+    structure = os.path.join(output_root, dirpath[len(proj_root):])
+    if not os.path.isdir(structure):
+        os.mkdir(structure)
+    else:
+        print("Folder already exists.")
 
 ###############################
 # REBASE & COMBINE FUNCTION
@@ -136,10 +147,10 @@ def rebase_combine(file):
 # per file if run on Sac.
 
 # an awkward way to grab the four scenarios we want
-paths = glob(f'{proj_root}/{model}.nc4')
-paths.extend(glob(f'{proj_root}/{model}-histclim.nc4'))
-paths.extend(glob(f'{proj_root}/{model}-incadapt.nc4'))
-paths.extend(glob(f'{proj_root}/{model}-noadapt.nc4'))
+paths = list(pathlib.Path(proj_root).rglob(f'*{prefix}.nc4'))
+paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-histclim.nc4')))
+paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-incadapt.nc4')))
+paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-noadapt.nc4')))
 
 for file in paths:
     start = time.time()
