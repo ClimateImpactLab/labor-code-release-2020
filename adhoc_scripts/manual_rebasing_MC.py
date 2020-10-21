@@ -32,6 +32,7 @@ import numpy as np
 import pandas as pd
 import getpass
 import sys
+import os
 import pathlib
 import time
 import warnings
@@ -47,12 +48,12 @@ proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy
 output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy2/{str(sys.argv[1])}'
     
 # copy parent folder structure
-for dirpath, dirnames, filenames in os.walk(proj_root):
-    structure = os.path.join(output_root, dirpath[len(proj_root):])
-    if not os.path.isdir(structure):
-        os.mkdir(structure)
-    else:
-        print("Folder does already exits!")
+# for dirpath, dirnames, filenames in os.walk(proj_root):
+#     structure = os.path.join(output_root, dirpath[len(proj_root):])
+#     if not os.path.isdir(structure):
+#         os.mkdir(structure)
+#     else:
+#         print("Folder does already exits!")
 
 ###############################
 # REBASE & COMBINE FUNCTION
