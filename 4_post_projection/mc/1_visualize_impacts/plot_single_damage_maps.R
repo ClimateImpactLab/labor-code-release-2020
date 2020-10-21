@@ -40,9 +40,10 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
   print(file)  
   df= read_csv(file)
   
+  # browser()
   df_plot = df %>% 
               dplyr::filter(year == 2099) %>% 
-              dplyr::mutate(value = -value)
+              dplyr::mutate(value = -as.numeric(value))
               # we were converting minutes to minutes lost
 
   # find the scales for nice plotting
@@ -212,7 +213,7 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'uninteracted_main_model_w_chn_copy'
+name = 'uninteracted_main_model_w_chn'
 output = 'uninteracted_main_model_w_chn_copy/'
 
 # map_args = expand.grid(folder= folder,
@@ -240,6 +241,7 @@ map_args = # map_args %>% rbind(
                       #  )
 
 print(map_args)
+
 
 mcmapply(plot_impact_map,
          folder= map_args$folder,
