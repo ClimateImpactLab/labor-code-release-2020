@@ -61,33 +61,6 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # name = 'combined_uninteracted_spline_empshare_noFE'
 # output = 'main_model_check/SDN.6.16.75.230'
 
-# map_args = expand.grid(IR = 'SDN.6.16.75.230',
-#                        folder= folder,
-#                        name=name,
-#                        output=output,
-#                        rcp="rcp85",
-#                        ssp="SSP3",
-#                        adapt="fulladapt",
-#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-#                        weight=c("wage","gdp","pop")
-#                        )
-
-# print(map_args)
-
-# mcmapply(plot_impact_timeseries,
-#          IR= map_args$IR,
-#          folder= map_args$folder,
-#          name=map_args$name,
-#          output=output,
-#          ssp=map_args$ssp,
-#          rcp=map_args$rcp,
-#          adapt=map_args$adapt,
-#          risk=map_args$risk,
-#          weight=map_args$weight,
-#          mc.cores=5
-#           )
-
-
 ######################
 # EDGE RESTRICTION MODEL
 ######################
@@ -99,32 +72,6 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # name = 'uninteracted_main_model'
 # output = 'single_edge_restriction_model/'
 
-# map_args = expand.grid(IR = "globe",
-#                        folder= folder,
-#                        name=name,
-#                        output=output,
-#                        rcp="rcp85",
-#                        ssp="SSP3",
-#                        adapt="fulladapt",
-#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-#                        weight=c("wage","gdp","pop")
-#                        )
-
-# print(map_args)
-
-# mcmapply(plot_impact_timeseries,
-#          IR = map_args$IR,
-#          folder= map_args$folder,
-#          name=map_args$name,
-#          output=output,
-#          ssp=map_args$ssp,
-#          rcp=map_args$rcp,
-#          adapt=map_args$adapt,
-#          risk=map_args$risk,
-#          weight=map_args$weight,
-#          mc.cores=5
-#           )
-
 ######################
 # CLIPPING MODEL
 ######################
@@ -134,32 +81,6 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 
 # name = 'combined_mixed_model_splines_empshare_noFE'
 # output = 'single_mixed_model/'
-
-# map_args = expand.grid(IR = "globe",
-#                        folder= folder,
-#                        name=name,
-#                        output=output,
-#                        rcp="rcp85",
-#                        ssp="SSP3",
-#                        adapt="fulladapt",
-#                        risk=c("highriskimpacts","rebased", "lowriskimpacts"),
-#                        weight=c("wage","gdp","pop")
-#                        )
-
-# print(map_args)
-
-# mcmapply(plot_impact_timeseries,
-#          IR = map_args$IR,
-#          folder= map_args$folder,
-#          name=map_args$name,
-#          output=output,
-#          ssp=map_args$ssp,
-#          rcp=map_args$rcp,
-#          adapt=map_args$adapt,
-#          risk=map_args$risk,
-#          weight=map_args$weight,
-#          mc.cores=5
-#           )
 
 ######################
 # WITH CHINA MODEL
@@ -178,7 +99,7 @@ map_args = expand.grid(IR = "globe",
                        rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c("highriskimpacts","rebased", "lowriskimpacts"),
+                       risk=c("highriskimpacts","rebased_new", "lowriskimpacts"),
                        weight=c("wage","gdp","pop")
                        )
 
