@@ -15,18 +15,21 @@ impacts_root = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_co
 ReRebase<- function(nc_file, dir){
 
 	nc = nc_open(glue("{dir}/{nc_file}"), write = TRUE)
+	# browser()
 
 	# get the high risk impacts, low risk impacts, risk share, and year and region
 	unrebased_high = ncvar_get(nc, "highriskimpacts")
 	unrebased_low = ncvar_get(nc, "lowriskimpacts")
 	riskshare = ncvar_get(nc,"clip")
-	year = ncvar_get(nc, "year")
+	head(as.data.frame(riskshare))
 	region = ncvar_get(nc, "regions")
+	year = ncvar_get(nc, "year")
+	browser()
 
 	# get netcdf4 file dimensions 
 	# for adding new variables later
-	dim_year = nc$dim[['year']]	
 	dim_region = nc$dim[['region']]
+	dim_year = nc$dim[['year']]	
 
 
 	# construct a long dataset in the format of
@@ -34,6 +37,7 @@ ReRebase<- function(nc_file, dir){
 	# so that we can do calculations later 
 	dims = list(region, year)
 	names(dims) = c("regions","year")
+
 
 	dimnames(unrebased_high) = dims
 	dimnames(unrebased_low) = dims
@@ -63,13 +67,17 @@ ReRebase<- function(nc_file, dir){
 	rebaser_low = rebased_dt[, mean(lowriskimpacts[starting_index:ending_index]), by = "regions"]
 	rebaser_high = rebased_dt[, mean(highriskimpacts[starting_index:ending_index]), by = "regions"]
 
+	# rebasing_years = rebased_dt[year >=2001 & year <= 2010,] 
+	# rebaser_high_alt = rebasing_years[, mean(highriskimpacts), by = "regions"]
 
 	# merge the rebaser back in
 	setkey(rebaser_low, regions)
 	setkey(rebaser_high, regions)
-	setkey(rebased_dt, regions)
+	setkeyv(rebased_dt, c("regions", "year"))
 
 	merged = rebaser_low[rebased_dt]
+	merged2 = rebased_dt[rebaser_low]
+
 	setnames(merged,'V1',"rebaser_low")
 	merged = rebaser_high[merged]
 	setnames(merged,'V1',"rebaser_high")
@@ -77,7 +85,10 @@ ReRebase<- function(nc_file, dir){
 
 	# compute the correctly rebased column
 	merged[, rebased_new := (highriskimpacts-rebaser_high)*riskshare +(1-riskshare)*(lowriskimpacts-rebaser_low)]
+	# browser()
+	# merged[, rebased_high := highriskimpacts-rebaser_high]
 
+	# browser()
 	# add that column to the netcdf4 file
 	ncvar_rebased_new = ncvar_def(name = "rebased_new", unit = "minutes worked by individual correctly rebased", dim = list(dim_region, dim_year))
 	try(nc <- ncvar_add(nc, ncvar_rebased_new), silent = TRUE)
@@ -96,8 +107,7 @@ ReRebase<- function(nc_file, dir){
 # so not selecting all nc4 files
 # filename_stem = "uninteracted_main_model"
 filename_stem = "uninteracted_main_model_w_chn"
-filenames = c(glue("{filename_stem}.nc4"),
-	glue("{filename_stem}-noadapt.nc4"),
+filenames = c(
 	glue("{filename_stem}-incadapt.nc4"),
 	glue("{filename_stem}-histclim.nc4")
 	)
@@ -115,7 +125,7 @@ filenames = c(glue("{filename_stem}.nc4"),
 
 # testing on a single
 for (file_selector in filenames) {
-	working_folder <- "/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy"
+	working_folder <- "/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy2"
 	files <- list.files(working_folder, file_selector, all.files = TRUE, recursive = TRUE)
 	mcmapply(FUN=ReRebase, nc_file = files, dir = working_folder, mc.cores = 1)
 }
