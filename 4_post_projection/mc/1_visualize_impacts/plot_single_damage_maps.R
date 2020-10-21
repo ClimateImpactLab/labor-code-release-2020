@@ -209,24 +209,24 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 ######################
 
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn/',
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'uninteracted_main_model_w_chn'
-output = 'uninteracted_main_model_w_chn/'
+name = 'uninteracted_main_model_w_chn_copy'
+output = 'uninteracted_main_model_w_chn_copy/'
 
-map_args = expand.grid(folder= folder,
-                       name=name,
-                       output=output,
-                       rcp="rcp85",
-                       ssp="SSP3",
-                       adapt="fulladapt",
-                       risk=c("lowriskimpacts","rebased", "highriskimpacts"),
-                       weight=c("wage","pop", "gdp"),
-                       suffix=("levels")
-                       )
+# map_args = expand.grid(folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="fulladapt",
+#                        risk=c("lowriskimpacts","rebased", "highriskimpacts"),
+#                        weight=c("wage","pop", "gdp"),
+#                        suffix=("levels")
+#                        )
 
-map_args = map_args %>% rbind(
+map_args = # map_args %>% rbind(
                        expand.grid(folder= folder,
                        name=name,
                        output=output,
@@ -237,7 +237,7 @@ map_args = map_args %>% rbind(
                        weight="",
                        suffix=""
                        )
-                       )
+                      #  )
 
 print(map_args)
 
