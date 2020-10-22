@@ -1,4 +1,4 @@
-results-root: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy2
+results-root: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate
 output-dir: /shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc
 file-organize: [ssp, rcp]
 do-montecarlo: yes
