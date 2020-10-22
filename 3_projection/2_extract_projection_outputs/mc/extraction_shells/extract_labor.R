@@ -119,7 +119,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop")
 
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
 
@@ -146,7 +146,7 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 5)
+  mc.cores = 10)
 
 
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
@@ -166,7 +166,8 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 60)
+  mc.cores = 10)
+
 
 args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt", "histclim"),
@@ -219,7 +220,7 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
                    risk=c("highrisk","lowrisk","allrisk"),
-                   aggregation=c("-pop-allvars"),
+                   aggregation=c("-pop"),
                    iam=c("high","low")
                  )
 
