@@ -49,45 +49,45 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
 
 
 
-args = expand.grid(rcp=c("rcp85","rcp45"),
-                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                       iam=c("high","low"),
-                       adapt=c("fulladapt","noadapt","incadapt","histclim"),
-                       aggregation =c("-pop-aggregated"),
-                       risk=c("highrisk","lowrisk","allrisk","riskshare")
-                       )
+# args = expand.grid(rcp=c("rcp85","rcp45"),
+#                        ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+#                        iam=c("high","low"),
+#                        adapt=c("fulladapt","noadapt","incadapt","histclim"),
+#                        aggregation =c("-pop-aggregated"),
+#                        risk=c("highrisk","lowrisk","allrisk","riskshare")
+#                        )
 
 
-mcmapply(plot_impact_timeseries, 
-  rcp=args$rcp, 
-  ssp=args$ssp, 
-  iam=args$iam,
-  risk=args$risk, 
-  adapt=args$adapt,
-  aggregation=args$aggregation,
-  region="global",
-  output_folder = glue("{DIR_FIG}/all_timeseries/"),
-  mc.cores = 50)
+# mcmapply(plot_impact_timeseries, 
+#   rcp=args$rcp, 
+#   ssp=args$ssp, 
+#   iam=args$iam,
+#   risk=args$risk, 
+#   adapt=args$adapt,
+#   aggregation=args$aggregation,
+#   region="global",
+#   output_folder = glue("{DIR_FIG}/all_timeseries/"),
+#   mc.cores = 50)
 
 
-args = expand.grid(rcp=c("rcp85","rcp45"),
-                       ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                       iam=c("high","low"),
-                       adapt=c("fulladapt","histclim"),
-                       aggregation =c("-gdp-aggregated","-wage-aggregated"),
-                       risk=c("highrisk","lowrisk","allrisk","riskshare")
-                       )
+# args = expand.grid(rcp=c("rcp85","rcp45"),
+#                        ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+#                        iam=c("high","low"),
+#                        adapt=c("fulladapt","histclim"),
+#                        aggregation =c("-gdp-aggregated","-wage-aggregated"),
+#                        risk=c("highrisk","lowrisk","allrisk","riskshare")
+#                        )
 
-mcmapply(plot_impact_timeseries, 
-  rcp=args$rcp, 
-  ssp=args$ssp, 
-  iam=args$iam,
-  risk=args$risk, 
-  adapt=args$adapt,
-  aggregation=args$aggregation,
-  region="global",
-  output_folder = glue("{DIR_FIG}/all_timeseries/"),
-  mc.cores = 50)
+# mcmapply(plot_impact_timeseries, 
+#   rcp=args$rcp, 
+#   ssp=args$ssp, 
+#   iam=args$iam,
+#   risk=args$risk, 
+#   adapt=args$adapt,
+#   aggregation=args$aggregation,
+#   region="global",
+#   output_folder = glue("{DIR_FIG}/all_timeseries/"),
+#   mc.cores = 50)
 
 
 # plot only those we need
