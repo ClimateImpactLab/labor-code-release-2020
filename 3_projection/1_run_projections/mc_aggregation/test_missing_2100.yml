@@ -1,7 +1,0 @@
-outputdir: outputs/labor/impacts-woodwork/labor_mc_202009
-targetdir: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/batch10/rcp85/IPSL-CM5A-MR/high/SSP2
-# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
-levels-weighting: population * 0.00487 / population 
-aggregate-weighting-numerator: population * income * 0.00487
-aggregate-weighting-denominator: population * income
-infix: test-missing-2100
