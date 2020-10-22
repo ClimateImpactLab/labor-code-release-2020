@@ -95,8 +95,16 @@ plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
   adapt="fulladapt",risk="allrisk",region="global",aggregation = "-pop-aggregated")
 
 plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="incadapt",risk="allrisk",region="global",aggregation = "-pop-aggregated")
+
+plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
   adapt="noadapt",risk="allrisk",region="global",aggregation = "-pop-aggregated")
 
 plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
   adapt="fulladapt",risk="allrisk",region="global", aggregation = "-gdp-aggregated")
 
+plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="incadapt",risk="allrisk",region="global", aggregation = "-gdp-aggregated")
+
+plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="noadapt",risk="allrisk",region="global", aggregation = "-gdp-aggregated")
