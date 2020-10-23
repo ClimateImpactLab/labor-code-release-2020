@@ -76,7 +76,7 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 #       'edge_clipping_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
 #       'rcp85/CCSM4/high/SSP3/csv/')
 # name = 'uninteracted_main_model'
-# output = 'single_edge_restriction_model_copy'
+# output = 'single_edge_restriction_model'
 
 ######################
 # MAIN MODEL - CHECK
@@ -107,7 +107,7 @@ folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_mode
   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
 name = 'uninteracted_main_model_w_chn'
-output = 'uninteracted_main_model_w_chn_copy/'
+output = 'uninteracted_main_model_w_chn/'
 
 
 ######################
@@ -121,7 +121,7 @@ map_args = expand.grid(folder= folder,
                        ssp="SSP3",
                        adapt="fulladapt",
                        risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
-                       weight=c("wage","pop", "gdp"),
+                       weight=c("wage", "gdp", "pop"),
                        suffix=("levels")
                        )
 

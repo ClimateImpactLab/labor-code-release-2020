@@ -32,19 +32,19 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
   df = read_csv(file)
   
   if(IR == "globe"){
-    df_plot = df %>% dplyr::filter(is.na(region))
+    df_plot = df %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
   } else {
-    df_plot = df %>% dplyr::filter(region == IR)
+    df_plot = df %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100)
   }
 
   p <- ggtimeseries(
     df.list = list(df_plot[,c('year', 'value')] %>% as.data.frame()), # mean lines
-    x.limits = c(2010, 2099),
+    x.limits = c(2011, 2099),
     y.label = 'mins worked',
     rcp.value = rcp, ssp.value = ssp) + 
   ggtitle(title)
 
-  dir.create(glue("{DIR_FIG}/{output}"), showWarnings = FALSE)
+  dir.create(glue("{DIR_FIG}/{output}"), recursive=TRUE)
   ggsave(glue("{DIR_FIG}/{output}/timeseries-{weight}-{risk}-{adapt}-{rcp}-{ssp}.pdf"), p)
 
 }
@@ -66,7 +66,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 ######################
 
 # folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-#       'edge_clipping/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#       'edge_clipping_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
 #       'rcp85/CCSM4/high/SSP3/csv/')
 
 # name = 'uninteracted_main_model'
@@ -86,7 +86,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # WITH CHINA MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn/',
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
 name = 'uninteracted_main_model_w_chn'
@@ -99,8 +99,8 @@ map_args = expand.grid(IR = "globe",
                        rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c("highriskimpacts","rebased_new", "lowriskimpacts"),
-                       weight=c("wage","gdp","pop")
+                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       weight=c("wage","gdp", "pop") 
                        )
 
 print(map_args)
