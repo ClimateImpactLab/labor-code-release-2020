@@ -4,24 +4,12 @@
 
 
 
-# combined_uninteracted_spline_empshare_noFE-gdp-aggregated.nc4
-# 314 complete, 166 incomplete, total 480/520 files
-# incadapt:
-# combined_uninteracted_spline_empshare_noFE-incadapt-gdp-aggregated.nc4
-# 366 complete, 0 incomplete, total 366/520 files
-# noadapt:
-# combined_uninteracted_spline_empshare_noFE-noadapt-gdp-aggregated.nc4
-# 432 complete, 0 incomplete, total 432/520 files
-# histclim:
-# combined_uninteracted_spline_empshare_noFE-histclim-gdp-aggregated.nc4
-# 313 complete, 167 incomplete, total 480/520 files
-
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate"
-output_dir="batch0" 
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
+output_dir="batch1" 
 
-aggregation_scenario="-wage"
+aggregation_scenario="-pop"
 
 
 # the size of files above which we consider complete
@@ -86,5 +74,5 @@ done
 # echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file
-# find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-gdp-aggregated.nc4" ';' -print
+find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-pop-aggregated.nc4" ';' -print
 

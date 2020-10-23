@@ -1,6 +1,7 @@
-outputdir: outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3
+outputdir: outputs/labor/labor_mc_aggregate_copy3
 # Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
 levels-weighting: population * income * 0.00487
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: sum-to-1
 infix: wage
+batch: batch0
