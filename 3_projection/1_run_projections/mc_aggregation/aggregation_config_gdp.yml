@@ -4,4 +4,4 @@ levels-weighting: population * 0.00487 / population
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: population * income
 infix: gdp
-batch: batch0
+# batch: batch0

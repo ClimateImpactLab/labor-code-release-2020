@@ -17,11 +17,11 @@ n_folders_total=520
 aggregation_scenario="pop"
 filename_stem="uninteracted_main_model"
 
-cd "${output_root}/${output_dir}"
+cd "${output_root}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-action=delete
+action=print
 # action=print
 
 # if the projection is still running, set to the second
