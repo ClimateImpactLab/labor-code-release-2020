@@ -103,11 +103,6 @@ def rebase_combine(file):
     
     dt = xr.open_dataset(file)
 
-    # there is an inconsistency in naming between dimensions and coordinates
-    # on the recommendation of Sir Ivan, we fix this
-    #     dt = dt.rename({'regions': 'region'})
-    #     dt = dt.assign_coords({'region': dt.region})
-
     # select years & columns needed for rebasing
     base = (dt.sel(
             {"year": slice(2001,2010)}
@@ -130,8 +125,6 @@ def rebase_combine(file):
                            'units' : 'minutes worked by individual',
                            'source' : 'calculated as rebased_new = minlost_hi_rebased * riskshare_hi + minlost_lo_rebased * (1 - riskshare_hi)'}
 
-    # yuck we need this 'regions' to extract with single.py!
-    #     dt = dt.rename({'region': 'regions'})
 
     return dt
 
