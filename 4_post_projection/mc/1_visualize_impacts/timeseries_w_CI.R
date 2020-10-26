@@ -17,11 +17,11 @@ pacman::p_load(ggplot2,
                RColorBrewer)
 
 # Set paths
-DB = "/mnt/CIL_energy"
+DB_data = "/shares/gcp/estimation/labor/code_release_int_data/"
 
-DB_data = paste0(DB, "/code_release_data_pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2020"
-output = paste0(root, "/figures")
+# DB_data = paste0(DB, "/code_release_data_pixel_interaction")
+# root =  "/home/liruixue/repos/energy-code-release-2020"
+# output = paste0(root, "/figures")
 
 # Source time series plotting codes
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
@@ -54,6 +54,7 @@ get_df_list_fig_2C = function(DB_data){
   # Load in the impacts data: 
   load_df = function(rcp, adapt){
     print(rcp)
+    # df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
     df= read_csv(glue('{DB_data}/projection_outputs/extracted_data_mc/SSP3-{rcp}_high_allrisk_{adapt}-gdp-aggregated_global_timeseries.csv'))
     # df = read_csv(paste0(DB_data,   
     #                '/projection_system_outputs/time_series_data/', 
@@ -61,6 +62,7 @@ get_df_list_fig_2C = function(DB_data){
     #                      ) 
     return(df)
   }
+
   options = expand.grid(rcp = c("rcp45", "rcp85"), 
                         adapt = c("fulladapt", "noadapt"))
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
@@ -124,7 +126,7 @@ plot_ts_fig_2C = function(output, DB_data){
     df.box = plot_df$bp_85, 
     df.box.2 = plot_df$bp_45,
     x.limits = c(2010, 2099),
-    y.label = 'Hot and cold impacts: change in GJ/pc',
+    y.label = 'Impacts: min lost per person',
     legend.values = c("red", "black", "blue", "orange"), #color of mean line
     legend.breaks = c("RCP85 Full Adapt", "RCP85 No Adapt", 
                       "RCP45 Full Adapt", "RCP45 No Adapt"),
