@@ -6,10 +6,11 @@
 
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
-output_dir="batch1" 
+# output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
+output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
+output_dir="batch0" 
 
-aggregation_scenario="-pop"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete
@@ -21,7 +22,7 @@ n_folders_total=520
 
 filename_stem="uninteracted_main_model"
 
-cd "${output_root}/${output_dir}"
+cd "${output_root}"
 
 # check number of status-aggregate.txt files
 n=$(find . -name "status-aggregate.txt" | wc -l)
@@ -74,5 +75,5 @@ done
 # echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file
-find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-pop-aggregated.nc4" ';' -print
+# find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-pop-aggregated.nc4" ';' -print
 
