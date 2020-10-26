@@ -76,21 +76,25 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # CLIPPING MODEL
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/z_old/test_clipping_extrema_mixed_model/',
-#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'combined_mixed_model_splines_empshare_noFE'
-# output = 'single_mixed_model/'
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'hi_1factor_lo_unint_mixed_model/'
 
 ######################
 # WITH CHINA MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
-  'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
+#   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'uninteracted_main_model_w_chn'
-output = 'uninteracted_main_model_w_chn/'
+# name = 'uninteracted_main_model_w_chn'
+# output = 'uninteracted_main_model_w_chn/'
+
+###########
+# RUN IT
+###########
 
 map_args = expand.grid(IR = "globe",
                        folder= folder,
