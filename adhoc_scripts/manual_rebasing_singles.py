@@ -45,8 +45,8 @@ username = getpass.getuser()
 # PARAMETERS
 ############
 
-# select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, mixed_model
-model = 'uninteracted_main_model_w_chn'
+# select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, hi_1factor_lo_unint_mixed_model
+model = 'hi_1factor_lo_unint_mixed_model'
 
 ############
 # PATHWAYS
@@ -76,11 +76,13 @@ elif model == 'edge_clipping':
     proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping/'
     output_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/'
 
-elif model == 'mixed_model':
+elif model == 'hi_1factor_lo_unint_mixed_model':
 
     # this is the mixed model with clipping for high_risk interacted
 
-    sys.exit("Yikes! Not ready yet")
+    prefix = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/'
 
 else:
 

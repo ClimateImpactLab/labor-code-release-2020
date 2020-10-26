@@ -72,11 +72,11 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 # EDGE RESTRICTION MODEL
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/',
-#       'edge_clipping_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-#       'rcp85/CCSM4/high/SSP3/csv/')
-# name = 'uninteracted_main_model'
-# output = 'single_edge_restriction_model'
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'hi_1factor_lo_unint_mixed_model/'
 
 ######################
 # MAIN MODEL - CHECK
@@ -103,11 +103,11 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 # WITH CHINA
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
-  'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
+#   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'uninteracted_main_model_w_chn'
-output = 'uninteracted_main_model_w_chn/'
+# name = 'uninteracted_main_model_w_chn'
+# output = 'uninteracted_main_model_w_chn/'
 
 
 ######################
