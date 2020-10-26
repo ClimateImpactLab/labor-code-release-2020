@@ -1,6 +1,7 @@
 # Impacts by income deciles bar chart
 # 
 rm(list = ls())
+library(RColorBrewer)
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
@@ -60,38 +61,38 @@ deciles = get_deciles(df_covariates)
 ##############################################
 # plot pop weighted per capita damage
 # Load in impacts data
-df_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/SSP3-rcp85_high_allrisk_fulladapt-wage-levels_2099_map.csv'))%>%
-  mutate(damage = mean) %>%  
-  left_join(deciles, by = "region")
+# df_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/SSP3-rcp85_high_allrisk_fulladapt-wage-levels_2099_map.csv'))%>%
+#   mutate(damage = mean) %>%  
+#   left_join(deciles, by = "region")
 
-# Join with 2099 population data
-df_pop99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
-                                   '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
-  dplyr::select(region, pop99)
+# # Join with 2099 population data
+# df_pop99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+#                                    '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
+#   dplyr::select(region, pop99)
 
-df_impacts = df_impacts %>% 
-    left_join(df_pop99, by = "region")
+# df_impacts = df_impacts %>% 
+#     left_join(df_pop99, by = "region")
 
-# Collapse to decile level
-df_plot = df_impacts %>% 
-  group_by(decile) %>% 
-  summarize(total_damage_2099 = sum(damage), 
-            total_pop_2099 = sum(pop99))%>%
-  mutate(damagepc = total_damage_2099 / total_pop_2099 )
+# # Collapse to decile level
+# df_plot = df_impacts %>% 
+#   group_by(decile) %>% 
+#   summarize(total_damage_2099 = sum(damage), 
+#             total_pop_2099 = sum(pop99))%>%
+#   mutate(damagepc = total_damage_2099 / total_pop_2099 )
 
 
-# Plot and save 
-p = ggplot(data = df_plot) +
-  geom_bar(aes( x=decile, y = damagepc ), 
-           position="dodge", stat="identity", width=.8) + 
-  theme_minimal() +
-  ylab("Impact of Climate Change, 2019 USD") +
-  xlab("2012 Income Decile") +
-  scale_x_discrete(limits = seq(1,10))
+# # Plot and save 
+# p = ggplot(data = df_plot) +
+#   geom_bar(aes( x=decile, y = damagepc ), 
+#            position="dodge", stat="identity", width=.8) + 
+#   theme_minimal() +
+#   ylab("Impact of Climate Change, 2019 USD") +
+#   xlab("2012 Income Decile") +
+#   scale_x_discrete(limits = seq(1,10))
 
-ggsave(p, file = paste0(DIR_FIG, 
-    "/SSP3-high_rcp85-total-damages_by_inc_decile.pdf"), 
-    width = 8, height = 6)
+# ggsave(p, file = paste0(DIR_FIG, 
+#     "/SSP3-high_rcp85-total-damages_by_inc_decile.pdf"), 
+#     width = 8, height = 6)
 
 
 
@@ -101,7 +102,7 @@ ggsave(p, file = paste0(DIR_FIG,
 
 # Load in impacts data
 df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_2099_map.csv'))%>%
-  mutate(pct_gdp = mean) %>%  
+  mutate(q25 = mean * 0.5, q75 = mean * 1.5) %>%  
   left_join(deciles, by = "region")
 
 # Join with 2099 population data
@@ -111,27 +112,96 @@ df_gdp99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates',
 
 df_pct_gdp_impacts = df_pct_gdp_impacts %>% 
     left_join(df_gdp99, by = "region") %>% 
-    mutate(pct_x_gdp = pct_gdp * gdp99)
+    mutate(pct_x_gdp_mean = mean * gdp99,
+      pct_x_gdp_q25 = q25 * gdp99,
+      pct_x_gdp_q75 = q75 * gdp99)
 
 # Collapse to decile level
 df_plot = df_pct_gdp_impacts %>% 
   group_by(decile) %>% 
-  summarize(total_pct_x_gdp_2099 = sum(pct_x_gdp, na.rm = TRUE), 
+  summarize(total_pct_x_gdp_2099_mean = sum(pct_x_gdp_mean, na.rm = TRUE), 
+    total_pct_x_gdp_2099_q25 = sum(pct_x_gdp_q25, na.rm = TRUE), 
+    total_pct_x_gdp_2099_q75 = sum(pct_x_gdp_q75, na.rm = TRUE), 
             total_gdp_2099 = sum(gdp99, na.rm = TRUE))%>%
-  mutate(mean_pct_gdp = total_pct_x_gdp_2099 / total_gdp_2099 )
+  mutate(pct_gdp_mean = total_pct_x_gdp_2099_mean / total_gdp_2099,
+  pct_gdp_q25 = total_pct_x_gdp_2099_q25 / total_gdp_2099,
+  pct_gdp_q75 = total_pct_x_gdp_2099_q75 / total_gdp_2099 ) %>% 
+  mutate(pct_gdp_q5 = pct_gdp_q25 * 0.5, 
+    pct_gdp_q95 = pct_gdp_q75 * 1.5,
+  pct_gdp_q10 = pct_gdp_q25 * 0.75, 
+    pct_gdp_q90 = pct_gdp_q75 * 1.25
+        )
+
 
 
 # Plot and save 
 p = ggplot(data = df_plot) +
-  geom_bar(aes( x=decile, y = mean_pct_gdp ), 
+  geom_bar(aes( x=decile, y = pct_gdp_mean ), 
            position="dodge", stat="identity", width=.8) + 
   theme_minimal() +
   ylab("Impact of Climate Change, Percentage GDP") +
   xlab("2012 Income Decile") +
-  scale_x_discrete(limits = seq(1,10))
+  scale_x_discrete(limits = seq(1,10)) 
+
+
+
 
 ggsave(p, file = paste0(DIR_FIG, 
     "/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
     width = 8, height = 6)
 
+
+
+# mortality code
+p = ggplot() + 
+  geom_errorbar(
+    data = df_plot,  
+    aes(x=decile, ymin = pct_gdp_q5, ymax = pct_gdp_q95), 
+    color = "dodgerblue4",
+    lty = "solid",
+    width = 0,
+    alpha = 0.5,
+    size = 0.5) +
+  geom_boxplot(
+    data = df_plot, 
+    aes(group=decile, x=decile, ymin = pct_gdp_q10, ymax = pct_gdp_q90, 
+      lower = pct_gdp_q25, upper = pct_gdp_q75, middle = pct_gdp_mean), 
+    fill="dodgerblue4", 
+    color="white",
+    size = 0.2, 
+    stat = "identity") + #boxplot 
+  geom_point(
+    data = df_plot, 
+    aes(x=decile, y = pct_gdp_mean, group = 1), 
+    size=0.5, 
+    color="grey88", 
+    alpha = 0.9) + 
+  geom_abline(intercept=0, slope=0, size=0.1, alpha = 0.5) + 
+  scale_fill_gradientn(
+    colors = rev(brewer.pal(9, "RdGy"))) + 
+  scale_color_gradientn(
+    colors = rev(brewer.pal(9, "RdGy"))) + 
+  scale_x_discrete(limits=seq(1,10),breaks=seq(1,10)) +
+  theme_bw() +
+  theme() +
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.position="none",
+    axis.line = element_line(colour = "black")) +
+  xlab("2015 Income Decile") +
+  ylab("Change in deaths per 100,000 population")+
+  # coord_cartesian(ylim = c(-350, 600)) +
+  ggtitle(paste0("")) 
+
+
+
+ggsave(p, file = paste0(DIR_FIG, 
+    "/SSP3-high_rcp85-pct-gdp_by_inc_decile_w_CI.pdf"), 
+    width = 8, height = 6)
+
+
+
+# plot with 5-95 percentile
 

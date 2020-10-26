@@ -9,7 +9,7 @@ library(parallel)
 for (do_ssp in 1:5) {
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/mc/extraction_configs/",
 		"damage_function_valuescsv.yml ",
 		"--suffix=_damage_function_valuescsv_wage --only-ssp=SSP", 
 		do_ssp, 
@@ -23,7 +23,7 @@ for (do_ssp in 1:5) {
 	# 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/mc/extraction_configs/",
 		"damage_function_valuescsv.yml ",
 		"--suffix=_damage_function_valuescsv_popweights --only-ssp=SSP", 
 		do_ssp, 
@@ -37,7 +37,7 @@ for (do_ssp in 1:5) {
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/mc/extraction_configs/",
 		"damage_function_valuescsv.yml  --only-ssp=SSP", 
 		do_ssp, 
 		" --region=global ",

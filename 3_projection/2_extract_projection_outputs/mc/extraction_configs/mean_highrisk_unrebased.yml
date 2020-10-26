@@ -1,4 +1,4 @@
-results-root: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate
+results-root: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3
 output-dir: /shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc
 file-organize: [ssp, rcp]
 do-montecarlo: yes
@@ -6,6 +6,6 @@ only-rcp: null
 only-models: all
 only-iam: null
 column: highriskimpacts
-evalqvals: ['mean']
+evalqvals: [0.01, 0.05, 0.10, 0.25, 'mean', 0.75, 0.90, 0.95, 0.99]
 output-format: edfcsv
 ignore-missing: no

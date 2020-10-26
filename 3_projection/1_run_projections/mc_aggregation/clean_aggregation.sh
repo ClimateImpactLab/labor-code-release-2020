@@ -3,25 +3,25 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate"
-output_dir="batch2" 
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
+output_dir="/" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=40
+levels_file_size_above=50
 aggregated_file_size_above=10
 
 # 130 for one SSP
 n_folders_total=520
 
-aggregation_scenario="pop"
+aggregation_scenario="wage"
 filename_stem="uninteracted_main_model"
 
 cd "${output_root}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-action=print
+action=delete
 # action=print
 
 # if the projection is still running, set to the second
