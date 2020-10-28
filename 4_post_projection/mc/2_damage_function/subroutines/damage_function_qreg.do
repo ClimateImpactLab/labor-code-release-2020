@@ -74,36 +74,54 @@ Here are some guidelines for damage data frame formatting that hopefully help:
 		var3_name = "placeholder2"
 */
 
-program define poly2_insample_damage_function
+program define poly2_insample_damage_function_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string)
+syntax , var1_value(string) var2_value(string) var3_value(string) pp(integer)
 
 	foreach yr of numlist 2015/2098 {
 		
 		di "Estimating damage function for `yr'..."
-		qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+		* qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
 
 		// get max and min GMST anomaly for damage function year
 		qui summ anomaly if year == `yr', det 
 		local amin = `r(min)'
 		local amax =  `r(max)'
 
+
+		cap qreg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp')
+
+		if _rc!=0 {
+			di "didn't converge first time, so we are upping the iterations and trying again"
+			cap qui areg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp')
+			if _rc!=0 {
+				di "didn't converge second time, so we are upping the iterations and trying again"
+				cap qui areg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp')
+				if _rc!=0 {
+					di "didn't converge after trying some pretty high numbers for iterations - somethings probably wrong here!"
+					break
+				}
+			}
+		}
+
+
 		di "Storing damage function coefficients for `yr'..."
-		post damage_coeffs ("`var1_value'") ("`var2_value'") ("`var3_value'") (`yr') (_b[_cons]) (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
+		post damage_coeffs ("`var1_value'") ("`var2_value'") ("`var3_value'") (`pp') (`yr') (_b[_cons]) (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
 	}
 
 end
 
-program define poly2_outsample_damage_function
+program define poly2_outsample_damage_function_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer)
+syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(integer)
 
 	// define time variable to regress 
 	local base_year = 2010
 	cap gen t = year - `base_year' // only generate if doesnt already exist
 
 	di "Estimating damage function linearly interacted with time on values between `subset' and 2098..."
-	qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t  if year >= `subset'
+	*qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t  if year >= `subset'
+	cap qreg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year >= `subset', quantile(`pp')
 
 
 	foreach yr of numlist 2099/2300 {
@@ -117,14 +135,14 @@ syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer
 		di "Storing damage function coefficients for `yr'..."
 
 		* NOTE: we don't have future min and max, so assume they go through all GMST values 	
-		post damage_coeffs ("`var1_value'") ("`var2_value'") ("`var3_value'") (`yr') (`cons') (`beta1') (`beta2') (0) (11)
+		post damage_coeffs ("`var1_value'") ("`var2_value'") ("`var3_value'") (`pp') (`yr') (`cons') (`beta1') (`beta2') (0) (11)
 
 	}
 end
 
 
-program define get_df_coefs
-syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string)
+program define get_df_coefs_qreg
+syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string) pp(integer)
 	
 
 	di "Ensuring functionality exists for poly`polyorder' damage functions."
@@ -158,10 +176,10 @@ syntax , output_file(string) var1_list(string) var2_list(string) var3_list(strin
 				di "Storing damage function coefficients for `var1' `var2' `var3'..."
 
 				di "Storing insample poly`polyorder' damage function coefficients..."
-				poly`polyorder'_insample_damage_function , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'")
+				poly`polyorder'_insample_damage_function_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") pp(`pp')
 				
 				di "Storing outsample poly`polyorder' damage function coefficients..."
-				poly`polyorder'_outsample_damage_function , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") subset(`subset')
+				poly`polyorder'_outsample_damage_function_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") subset(`subset') pp(`pp')
 			}
 		}
 	}

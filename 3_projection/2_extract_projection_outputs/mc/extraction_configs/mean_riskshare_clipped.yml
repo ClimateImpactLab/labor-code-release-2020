@@ -8,4 +8,4 @@ only-iam: null
 column: clip
 evalqvals: [0.01, 0.05, 0.10, 0.25, 'mean', 0.75, 0.90, 0.95, 0.99]
 output-format: edfcsv
-ignore-missing: no
+ignore-missing: yes

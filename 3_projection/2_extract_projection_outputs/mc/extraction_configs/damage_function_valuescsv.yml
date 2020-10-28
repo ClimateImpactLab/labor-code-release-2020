@@ -7,4 +7,4 @@ only-models: all
 only-iam: null
 column: rebased_new
 output-format: valuescsv
-ignore-missing: nos
+ignore-missing: yes
