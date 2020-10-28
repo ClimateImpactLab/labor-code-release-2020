@@ -36,7 +36,7 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
         # replicate figure 2C
 
 # Function for formatting a vector of the distribution of the data for a given year, for use in the box plots.
-get.boxplot.vect <- function(df = NULL, yr = 2099) {
+get.boxplot.vect <- function(df = NULL, yr = 2098) {
   boxplot <- c(as.numeric(df[df$year==yr,'q5']), 
                as.numeric(df[df$year==yr,'q10']),
                as.numeric(df[df$year==yr,'q25']),
@@ -60,24 +60,27 @@ get_df_list_fig_2C = function(DB_data){
     #                '/projection_system_outputs/time_series_data/', 
     #                'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
     #                      ) 
+    df = df %>% mutate(rcp = rcp, adapt_scen = adapt)
     return(df)
   }
+  # browser()
 
+  d = load_df("rcp45","fulladapt")
   options = expand.grid(rcp = c("rcp45", "rcp85"), 
                         adapt = c("fulladapt", "noadapt"))
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
-              MoreArgs = list(fuel = fuel), SIMPLIFY = FALSE) %>% 
+            SIMPLIFY = FALSE) %>% 
     bind_rows()
 
   # Subset and format for plotting
 
   bp_45 = df %>%
     dplyr::filter(rcp == "rcp45", adapt_scen == "fulladapt") %>%
-    get.boxplot.vect(yr = 2099)
+    get.boxplot.vect(yr = 2098)
   
   bp_85 = df %>%
     dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
-    get.boxplot.vect(yr = 2099 )
+    get.boxplot.vect(yr = 2098 )
   
   u_85 = df %>% 
     dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>% 
@@ -112,6 +115,7 @@ get_df_list_fig_2C = function(DB_data){
 plot_ts_fig_2C = function(output, DB_data){
   
   plot_df = get_df_list_fig_2C(DB_data = DB_data)
+  browser()
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
@@ -125,7 +129,7 @@ plot_ts_fig_2C = function(output, DB_data){
     uncertainty.color.2 = "blue",
     df.box = plot_df$bp_85, 
     df.box.2 = plot_df$bp_45,
-    x.limits = c(2010, 2099),
+    x.limits = c(2010, 2098),
     y.label = 'Impacts: min lost per person',
     legend.values = c("red", "black", "blue", "orange"), #color of mean line
     legend.breaks = c("RCP85 Full Adapt", "RCP85 No Adapt", 

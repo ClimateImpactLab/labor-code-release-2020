@@ -19,7 +19,7 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 # output_folder_mc = paste0(DIR_FIG, "/mc/")
 
 # time series of popweighted impacts
-plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = glue("{DIR_FIG}/mc/"){
+plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = glue("{DIR_FIG}/mc/")){
   
   # browser()
   if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
@@ -31,7 +31,7 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
   if (aggregation == "-pop-aggregated") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
   } else if (aggregation == "-gdp-aggregated") {
-    plot_title <- "Impacts as Percentage of GDP"
+    plot_title <- "Impacts as Fraction of GDP"
   } else if (aggregation == "-wage-aggregated") {
     plot_title <- "Impacts in Dollars"
   } else {
@@ -46,6 +46,8 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
     rcp.value = rcp, ssp.value = ssp, end.yr = 2100,
     legend.breaks = adapt) + 
   ggtitle(plot_title) 
+
+  # browser()
   ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf"), p)
   print(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.pdf saved"))
 

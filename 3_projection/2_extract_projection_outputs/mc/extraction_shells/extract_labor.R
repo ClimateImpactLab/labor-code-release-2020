@@ -50,6 +50,15 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 		calculation <- "unrebased"
 	} 
 
+	# quantiles_command = paste0("python -u quantiles.py ",
+	# 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+	# 	"2_extract_projection_outputs/mc/extraction_configs/",
+	# 	glue("mean_{risk}_{calculation}.yml "),
+	# 	glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
+	# 	glue("--years=[{year}] {basename_command}",
+	# 	glue(" >> /home/liruixue/logs/{ssp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.txt 2>&1 &"))
+	# 	)
+
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc/extraction_configs/",
@@ -106,6 +115,15 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 	}
 
 
+	# quantiles_command = paste0("python -u quantiles.py ",
+	# 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+	# 	"2_extract_projection_outputs/mc/extraction_configs/",
+	# 	glue("mean_{risk}_{calculation}.yml "),
+	# 	glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
+	# 	glue("{basename_command}",
+	# 	glue(" >> /home/liruixue/logs/{ssp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.txt 2>&1 &"))
+	# 	)
+
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc/extraction_configs/",
@@ -119,17 +137,18 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-gdp")
 
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
 
 
-# extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="riskshare",iam="low",aggregation="")
+extract_map(ssp="SSP3",adapt="fulladapt",year=2098,risk="allrisk",iam="high",aggregation="")
 # extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="allrisk",iam="high",aggregation="")
 
 # no aggregation and pop weights
 
-args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+args = expand.grid(ssp=c("SSP3"),
+	# ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    year=c(2010,2020,2040,2060,2080,2098,2099),
                    # risk=c("highrisk","lowrisk","allrisk"),
@@ -146,10 +165,11 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 10)
+  mc.cores = 20)
 
 
-args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+args = expand.grid(ssp=c("SSP3"),
+	# ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    year=c(2010,2020,2040,2060,2080,2098,2099),
                    risk=c("highrisk","lowrisk","allrisk"),
@@ -166,7 +186,7 @@ mcmapply(extract_map,
   risk=args$risk, 
   adapt=args$adapt,
   aggregation=args$aggregation,
-  mc.cores = 10)
+  mc.cores = 20)
 
 
 
@@ -175,7 +195,9 @@ mcmapply(extract_map,
 # time series
 
 # gdp and dollar value aggregation
-args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+args = expand.grid(
+	# ssp=c("SSP3"),
+				   ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
@@ -192,10 +214,12 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 60)
+  mc.cores = 20)
 
 
-args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+args = expand.grid(
+	# ssp=c("SSP3"),
+	ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    risk="riskshare",
@@ -212,6 +236,6 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 30)
+  mc.cores = 20)
 
 
