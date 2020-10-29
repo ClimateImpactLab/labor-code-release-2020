@@ -76,7 +76,7 @@ Here are some guidelines for damage data frame formatting that hopefully help:
 
 program define poly2_insample_df_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string) pp(integer)
+syntax , var1_value(string) var2_value(string) var3_value(string) pp(float)
 
 	foreach yr of numlist 2015/2098 {
 		
@@ -113,7 +113,7 @@ end
 
 program define poly2_outsample_df_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(integer)
+syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(float)
 
 	// define time variable to regress 
 	local base_year = 2010
@@ -142,7 +142,7 @@ end
 
 
 program define get_df_coefs_qreg
-syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string) pp(integer)
+syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string) pp(float)
 	
 
 	di "Ensuring functionality exists for poly`polyorder' damage functions."
