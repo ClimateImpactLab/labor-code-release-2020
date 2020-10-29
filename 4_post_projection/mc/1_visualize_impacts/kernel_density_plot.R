@@ -109,47 +109,60 @@ ggkd <- function(df.kd = NULL,
 }
 
 
-for (rcp in c('rcp45', 'rcp85')) {
-# 
-  # df = read_csv(paste0(input.dir, rcp, '-SSP3_montecarlos_low_fulladaptcostsub_valuescsv_impact_map.csv')) %>%
-  #     dplyr::mutate(value = value*100000) %>%
-  #     dplyr::filter(region %in% hist.reg$region, year %in% 2099) %>%
-  #     data.frame()
+# for (rcp in c('rcp45', 'rcp85')) {
+# # 
+#   # df = read_csv(paste0(input.dir, rcp, '-SSP3_montecarlos_low_fulladaptcostsub_valuescsv_impact_map.csv')) %>%
+#   #     dplyr::mutate(value = value*100000) %>%
+#   #     dplyr::filter(region %in% hist.reg$region, year %in% 2099) %>%
+#   #     data.frame()
   
-  for (reg in hist.reg$region) {
-    message(reg)
-    gg2 = ggkd(df.kd = dplyr::filter(df, region==reg) , ir.name = reg,
-    x.label = "Change in deaths per 100,000 population", topcode.ub = 600, topcode.lb = -300) +
-    scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) +
-    scale_y_continuous(limits = c(0,0.014))
-    ggsave(paste0(dir,'/7_impacts_maps_hist/histograms/', histlist[[reg]],"_", reg,'_2099_',rcp,'.pdf'), plot=gg2, width = 7, height = 7)
-  }
-}
+#   for (reg in hist.reg$region) {
+#     message(reg)
+#     gg2 = ggkd(df.kd = dplyr::filter(df, region==reg) , ir.name = reg,
+#     x.label = "Change in deaths per 100,000 population", topcode.ub = 600, topcode.lb = -300) +
+#     scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) +
+#     scale_y_continuous(limits = c(0,0.014))
+#     ggsave(paste0(dir,'/7_impacts_maps_hist/histograms/', histlist[[reg]],"_", reg,'_2099_',rcp,'.pdf'), plot=gg2, width = 7, height = 7)
+#   }
+# }
 
 
 
-# (10)New York, 5(Delhi), (8)Shanghai,  
-# (9) Durham, (1)Kinshasa Urban
-# (2) Nairobi West, (3)Motihari, (4)Refai
-# (6) Xiushan, (7)Loei, 
-regions = c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
-  "GBR.1.24","COD.7.29.103",
-  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
-  "CHN.3.19.116", "THA.20"
+
+regions = c(
+  "COD.7.29.103", # (1)Kinshasa Urban
+  "KEN.4.22.108.460.1627", # (2) Nairobi West
+  "IND.5.89.289", # (3)Motihari
+  "MMR.14.59.273", # (4)Refai
+  "IND.10.121.371", # (5) Delhi
+  "CHN.3.19.116", # (6) Xiushan
+  "THA.20", #(7)Loei
+  "CHN.25.262.1764",  # (8) Shanghai
+  "GBR.1.24", # (9) Durham
+  "USA.33.1862" # (10)New York
   )
 
 
-
-input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
-df = read_csv(paste0(input.dir, "/SSP3-valuescsv_pop_global.csv")) %>%
-      # dplyr::mutate(value = value*100000) %>%
-      dplyr::filter(year %in% 2099) %>%
-      data.frame()
-  
-gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = "global",
-    x.label = "Change in deaths per 100,000 population", topcode.ub = 600, topcode.lb = -300) +
-    scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) +
-    scale_y_continuous(limits = c(0,0.014))
+for (rg in regions) {
+  input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
+  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_wage_",rg,".csv")) %>%
+        # dplyr::mutate(value = value*100000) %>%
+        dplyr::filter(year %in% 2099) %>%
+        dplyr::mutate(value = value / 1000000) %>%
+        data.frame() 
     
+  gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
+      y.label = "density", x.label = "billion dollar")
+  # +
+  #     scale_y_continuous(limits = c(0,1))
+  
+      #  , topcode.ub = 100, topcode.lb = -50) +
+      # scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) 
+    
+  # browser()
+  ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099.pdf"), plot=gg2, width = 7, height = 7)
+      
+}
+
     
 

@@ -61,13 +61,13 @@ global wd ="${DIR_REPO_LABOR}/4_post_projection/2_damage_function/subroutines"
 cd $wd
 
 do damage_function
-
+do damage_function_qreg
 
 * Sector
 loc sector = "labor"
 
 * Functional form
-loc ff = "poly4_below0bin"
+* loc ff = "poly4_below0bin"
 
 * Are you estimating global or impact region level damage functions?
 loc scale = "global" 
@@ -109,7 +109,7 @@ clear
 * gdp
 *import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_gdp.csv", varnames(1) clear
 * wage
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP`ssp'_damage_function_valuescsv_wage.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP`ssp'-_damage_function_valuescsv_global.csv", varnames(1) clear
 
 * pop
 *import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_popweights.csv", varnames(1) clear
@@ -151,11 +151,28 @@ drop if year == 2099
 **********************************************************************************
 * STEP 3: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
+
+
+
 cap mkdir "$DIR_REPO_LABOR/output/damage_function"
 if "`run_regs'" == "true" {
 	if "`quantilereg'" == "false" {
 		*macro list
-		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function/SSP`ssp'_damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
+		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
 	}
+
+   if "`quantilereg'" == "true" {
+      forvalues pp = 5(5)95 {
+         di "`pp'"
+         loc p = `pp'/100
+         loc quantiles_to_eval "`quantiles_to_eval' `p'"
+      }
+      *macro list
+      foreach pp of numlist `quantiles_to_eval' {
+         di "`pp'"
+         get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(`pp')
+      }
+   }
+   
 }
 

@@ -34,22 +34,32 @@ for (do_ssp in 3:3) {
 	get_valuescsv(ssp_arg, "global","gdp")
 }
 
+regions = c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
+  "GBR.1.24","COD.7.29.103",
+  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
+  "CHN.3.19.116", "THA.20"
+  )
+
 args = expand.grid(ssp=c("SSP3"),
 	# ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                       aggregation =c("wage"),
-                       region = c("SDN.6.16.75.230")
-                       )
-get_valuescsv("SSP3", "SDN.6.16.75.230","wage")
+                       aggregation =c("gdp"),
+                       region =  c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
+								  "GBR.1.24","COD.7.29.103",
+								  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
+								  "CHN.3.19.116", "THA.20"
+								  )
+                         )
+# get_valuescsv("SSP3", "SDN.6.16.75.230","wage")
 
 
 mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, ssp = args$ssp, mc.cores = 10)
 
 # testing
-test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
-	"SSP3-valuescsv_pop_global.csv"))
+# test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
+# 	"SSP3-valuescsv_pop_global.csv"))
 
-test = test %>% filter(rcp == "rcp45", year == "2075") 
+# test = test %>% filter(rcp == "rcp45", year == "2075") 
 
-print(test[order(test$value),], n = 1000)
+# print(test[order(test$value),], n = 1000)
 
 
