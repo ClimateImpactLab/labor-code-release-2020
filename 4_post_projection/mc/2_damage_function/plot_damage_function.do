@@ -27,7 +27,7 @@ save `GMST_anom', replace
 * * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
 * **********************************************************************************
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_wage.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3_damage_function_valuescsv_wage.csv", varnames(1) clear
 drop if year < 2010 | year >= 2099
 merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
 

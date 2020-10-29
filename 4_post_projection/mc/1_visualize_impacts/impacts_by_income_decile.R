@@ -55,9 +55,14 @@ df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates'
 
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)
-region_names <- 
 
+region_names <- read_csv(paste0(DIR_REPO_LABOR, "/data/misc/hierarchy.csv"), skip = 31) %>% 
+  filter(is_terminal) %>%
+  mutate(region = region_key) %>%
+  dplyr::select(region, name)
 
+deciles_w_name = merge(deciles, region_names, by = "region")
+write_csv(deciles_w_name, paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
 # deciles %>% filter(region == "CHN.3.19.116") 
 # print(deciles %>% filter(decile == 9) , n = 100)
 

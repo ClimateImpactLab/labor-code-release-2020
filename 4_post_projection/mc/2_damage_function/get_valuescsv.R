@@ -9,10 +9,10 @@ library(parallel)
 
 quantiles_command = paste0("python -u quantiles.py ",
 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-	"2_extract_projection_outputs/extraction_configs/",
+	"2_extract_projection_outputs/mc/extraction_configs/",
 	"damage_function_valuescsv.yml ",
 	"--suffix=_damage_function_valuescsv_global --region=global ",
-	"combined_uninteracted_spline_empshare_noFE-wage-aggregated -combined_uninteracted_spline_empshare_noFE-histclim-wage-aggregated "
+	"uninteracted_main_model-wage-aggregated -uninteracted_main_model-histclim-wage-aggregated "
 	)
 
 print(quantiles_command)
