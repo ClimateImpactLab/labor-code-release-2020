@@ -7,7 +7,8 @@ pacman::p_load(ggplot2,
                dplyr,
                readr,
                glue,
-               parallel)
+               parallel,
+               data.table)
 
 
 source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
@@ -21,8 +22,7 @@ pacman::p_load(ggplot2,
 
 
 DB_data = paste0("/mnt/CIL_energy/code_release_data_pixel_interaction")
-
-
+  
 # Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
 
 get_deciles = function(df){
@@ -55,6 +55,8 @@ df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates'
 
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)
+region_names <- 
+
 
 # deciles %>% filter(region == "CHN.3.19.116") 
 # print(deciles %>% filter(decile == 9) , n = 100)
