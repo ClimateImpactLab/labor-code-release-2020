@@ -1,7 +1,7 @@
 # Kernel Density Plotting Function
 
 # This function returns a kernel density plot from a specific impact region from projection impacts
-# Updated 19 Aug 2018 by Trinetta Chong 
+# Updated 29 Oct 2020 by Ruixue Li 
 
 #----------------------------------------------------------------------------------
 
@@ -29,8 +29,11 @@ ggkd <- function(df.kd = NULL,
                  x.label = NULL, y.label = "Density", 
                  kd.color = "grey50") {
   
-  ir_fin <- df.kd
 
+  # browser()
+  df.kd = df.kd %>% filter(!is.na(value))
+
+  ir_fin <- df.kd  
   ir_mean <- weighted.mean(ir_fin$value, ir_fin$weight) #calculate weighted mean
   
   #calculate weighted standard deviation
@@ -108,10 +111,10 @@ ggkd <- function(df.kd = NULL,
 
 for (rcp in c('rcp45', 'rcp85')) {
 # 
-  df = read_csv(paste0(input.dir, rcp, '-SSP3_montecarlos_low_fulladaptcostsub_valuescsv_impact_map.csv')) %>%
-      dplyr::mutate(value = value*100000) %>%
-      dplyr::filter(region %in% hist.reg$region, year %in% 2099) %>%
-      data.frame()
+  # df = read_csv(paste0(input.dir, rcp, '-SSP3_montecarlos_low_fulladaptcostsub_valuescsv_impact_map.csv')) %>%
+  #     dplyr::mutate(value = value*100000) %>%
+  #     dplyr::filter(region %in% hist.reg$region, year %in% 2099) %>%
+  #     data.frame()
   
   for (reg in hist.reg$region) {
     message(reg)
@@ -124,4 +127,29 @@ for (rcp in c('rcp45', 'rcp85')) {
 }
 
 
+
+# (10)New York, 5(Delhi), (8)Shanghai,  
+# (9) Durham, (1)Kinshasa Urban
+# (2) Nairobi West, (3)Motihari, (4)Refai
+# (6) Xiushan, (7)Loei, 
+regions = c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
+  "GBR.1.24","COD.7.29.103",
+  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
+  "CHN.3.19.116", "THA.20"
+  )
+
+
+
+input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
+df = read_csv(paste0(input.dir, "/SSP3-valuescsv_pop_global.csv")) %>%
+      # dplyr::mutate(value = value*100000) %>%
+      dplyr::filter(year %in% 2099) %>%
+      data.frame()
+  
+gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = "global",
+    x.label = "Change in deaths per 100,000 population", topcode.ub = 600, topcode.lb = -300) +
+    scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) +
+    scale_y_continuous(limits = c(0,0.014))
+    
+    
 

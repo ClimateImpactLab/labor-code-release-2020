@@ -8,3 +8,8 @@ do
 	sleep 15m
 done
 
+for i in {3..14}
+do 
+	rm -r batch${i}/rcp85/bcc-csm1-1/	
+done
+

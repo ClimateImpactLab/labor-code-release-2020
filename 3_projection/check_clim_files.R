@@ -123,6 +123,7 @@ ApplyReadAndCheck <- function(impacts.folder, adapt='*-incadapt.nc4', impacts.va
 
 
 	files <- list.files(impacts.folder, adapt, all.files = TRUE, recursive = TRUE)
+	browser()
 	specs <- mapply(FUN=DecomposeTargetDir, target_dir=files, MoreArgs = list(impacts.folder=impacts.folder), SIMPLIFY = FALSE)
 	checks <- mcmapply(FUN=ReadAndCheck, spec=specs, MoreArgs=list(impacts.var=impacts.var, years_search=years_search), SIMPLIFY=FALSE, mc.cores=threads)
 	out <- rbindlist(checks)
@@ -141,18 +142,15 @@ nc_adapt_to_suf <- function(adapt){
 	return(sufs[[adapt]])
 }
 
-# folder = 
 
-for (batch_n in 0:0) {
-	batch <- glue("batch{batch_n}")
-	impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{batch}")
-	impacts.var <- "rebased_new"
-	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate/"
-	output_title <- batch
-	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, output_title)
-	print(glue("batch{batch_n}"))
-	print(results %>% dplyr::filter(obs > 0))
-}
+
+impacts.folder <- glue("/shares/gcp/climate/BCSD/hierid/popwt")
+impacts.var <- "rebased_new"
+output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate/"
+output_title <- batch
+results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-histclim.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, output_title)
+print(glue("batch{batch_n}"))
+print(results %>% dplyr::filter(obs > 0))
 
 
 

@@ -65,7 +65,10 @@ get_df_list_fig_2C = function(DB_data){
   }
   # browser()
 
-  d = load_df("rcp45","fulladapt")
+  # d = load_df("rcp45","fulladapt")
+  # d = load_df("rcp85","noadapt")
+
+  # print(d, n = 120)
   options = expand.grid(rcp = c("rcp45", "rcp85"), 
                         adapt = c("fulladapt", "noadapt"))
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
@@ -115,12 +118,12 @@ get_df_list_fig_2C = function(DB_data){
 plot_ts_fig_2C = function(output, DB_data){
   
   plot_df = get_df_list_fig_2C(DB_data = DB_data)
-  browser()
+  # browser()
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
                    plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_45[,c('year', 'mean')]%>% as.data.frame(),
+                   # plot_df$df_45[,c('year', 'mean')]%>% as.data.frame(),
                    plot_df$df_45.na[,c('year', 'mean')]%>% as.data.frame()), # mean lines
     df.u = plot_df$df.u %>% as.data.frame(), 
     ub = "q90_85", lb = "q10_85", #uncertainty - first layer
@@ -140,5 +143,9 @@ plot_ts_fig_2C = function(output, DB_data){
   return(p)
 }
 
+output = DIR_FIG
 p = plot_ts_fig_2C(output = output, DB_data = DB_data)
+
+
+
 
