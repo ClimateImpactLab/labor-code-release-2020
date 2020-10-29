@@ -14,7 +14,7 @@ do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 glob DB_data "/mnt/CIL_energy/code_release_data_pixel_interaction"
 
 glob root "$DIR_REPO_LABOR"
-glob output "$DIR_FIG"
+glob output "$DIR_FIG/mc/"
 
 
 *Load in GMTanom data file, save as a tempfile 
@@ -27,7 +27,7 @@ save `GMST_anom', replace
 * * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
 * **********************************************************************************
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3_damage_function_valuescsv_wage.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-_damage_function_valuescsv_global.csv", varnames(1) clear
 drop if year < 2010 | year >= 2099
 merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
 
