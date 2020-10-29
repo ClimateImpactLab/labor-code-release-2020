@@ -56,6 +56,8 @@ df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates'
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)
 
+# deciles %>% filter(region == "CHN.3.19.116") 
+# print(deciles %>% filter(decile == 9) , n = 100)
 
 ##############################################
 # plot pop weighted per capita damage

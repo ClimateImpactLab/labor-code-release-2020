@@ -17,34 +17,39 @@ get_valuescsv <- function(ssp, region, aggregation){
 		" --region=", region, " ",
 		"--suffix=valuescsv_", aggregation, "_", region, " ", 
 		"uninteracted_main_model-",aggregation, 
-		"-aggregated -uninteracted_main_model-histclim-",
-		aggregation, "-aggregated "
+		"-levels -uninteracted_main_model-histclim-",
+		aggregation, "-levels "
 		)
 
 	print(quantiles_command)
 	system(quantiles_command)
 }
 
+get_valuescsv("SSP3", "global","pop")
+
 for (do_ssp in 3:3) {
 	ssp_arg = paste0("SSP", do_ssp)
 	get_valuescsv(ssp_arg, "global","pop")
 	get_valuescsv(ssp_arg, "global","wage")
-	# get_valuescsv(do_ssp, "global","gdp")
-
+	get_valuescsv(ssp_arg, "global","gdp")
 }
 
-args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                       aggregation =c("pop","wage","gdp"),
-                       region = c("global","SDN.6.16.75.230","USA.14.608")
+args = expand.grid(ssp=c("SSP3"),
+	# ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+                       aggregation =c("wage"),
+                       region = c("SDN.6.16.75.230")
                        )
+get_valuescsv("SSP3", "SDN.6.16.75.230","wage")
 
 
 mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, ssp = args$ssp, mc.cores = 10)
 
 # testing
-# test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
-# 	"SSP3-valuescsv_pop_global.csv"))
+test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
+	"SSP3-valuescsv_pop_global.csv"))
 
+test = test %>% filter(rcp == "rcp45", year == "2075") 
 
+print(test[order(test$value),], n = 1000)
 
 
