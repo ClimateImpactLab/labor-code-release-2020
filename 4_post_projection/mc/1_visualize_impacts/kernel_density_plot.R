@@ -145,14 +145,14 @@ regions = c(
 
 for (rg in regions) {
   input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
-  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_wage_",rg,".csv")) %>%
+  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_gdp_",rg,".csv")) %>%
         # dplyr::mutate(value = value*100000) %>%
         dplyr::filter(year %in% 2099) %>%
-        dplyr::mutate(value = value / 1000000) %>%
+        dplyr::mutate(value = value * 100) %>%
         data.frame() 
     
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
-      y.label = "density", x.label = "billion dollar")
+      y.label = "density", x.label = "percentage GDP")
   # +
   #     scale_y_continuous(limits = c(0,1))
   

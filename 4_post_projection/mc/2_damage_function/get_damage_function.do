@@ -143,7 +143,7 @@ drop if missing(year)
 drop if year < 2010
 *drop if gcm == "bcc-csm1-1" 
 drop if year == 2100
-drop if year == 2099 
+*drop if year == 2099 
 * surrogates and MIROC5 are dropped
 *tempfile clean_wages
 *save "`clean_wages'", replace
@@ -151,15 +151,16 @@ drop if year == 2099
 **********************************************************************************
 * STEP 3: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
+get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(5)
 
 
-
+/* 
 cap mkdir "$DIR_REPO_LABOR/output/damage_function_mc"
 if "`run_regs'" == "true" {
-	if "`quantilereg'" == "false" {
-		*macro list
-		get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
-	}
+   if "`quantilereg'" == "false" {
+      *macro list
+      get_df_coefs , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/")
+   }
 
    if "`quantilereg'" == "true" {
       forvalues pp = 5(5)95 {
@@ -170,9 +171,12 @@ if "`run_regs'" == "true" {
       *macro list
       foreach pp of numlist `quantiles_to_eval' {
          di "`pp'"
-         get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(`pp')
+         get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(0.05)
       }
    }
    
 }
+ */
 
+
+*pp(0.05)
