@@ -76,8 +76,8 @@ Here are some guidelines for damage data frame formatting that hopefully help:
 
 program define poly2_insample_df_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string) pp(float)
-
+syntax , var1_value(string) var2_value(string) var3_value(string) pp(integer)
+	loc pp = `pp'/100
 	foreach yr of numlist 2015/2098 {
 		
 		di "Estimating damage function for `yr'..."
@@ -113,15 +113,15 @@ end
 
 program define poly2_outsample_df_qreg
 
-syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(float)
-
+syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(integer)
+	loc pp = `pp'/100
 	// define time variable to regress 
 	local base_year = 2010
 	cap gen t = year - `base_year' // only generate if doesnt already exist
 
 	di "Estimating damage function linearly interacted with time on values between `subset' and 2098..."
 	*qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t  if year >= `subset'
-	cap qreg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly if year >= `subset', quantile(`pp')
+	cap qreg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t if year >= `subset', quantile(`pp')
 
 
 	foreach yr of numlist 2099/2300 {
@@ -142,7 +142,9 @@ end
 
 
 program define get_df_coefs_qreg
-syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string) pp(float)
+syntax , output_file(string) var1_list(string) var2_list(string) var3_list(string) var1_name(string) var2_name(string) var3_name(string) polyorder(integer) subset(integer) dropbox_path(string) pp(integer) 
+
+*pp(float)
 	
 
 	di "Ensuring functionality exists for poly`polyorder' damage functions."
@@ -166,7 +168,7 @@ syntax , output_file(string) var1_list(string) var2_list(string) var3_list(strin
 
 	di "Setting up postfile..."
 
-	postfile damage_coeffs str10(`var1_name') str10(`var2_name') str10(`var3_name') year cons beta1 beta2 anomalymin anomalymax using "`output_file'", replace
+	postfile damage_coeffs str10(`var1_name') str10(`var2_name') str10(`var3_name') pp year cons beta1 beta2 anomalymin anomalymax using "`output_file'", replace
 
 	di "Storing damage function coefficients for all value types..."
 	foreach var1 in `var1_list' {
@@ -193,3 +195,6 @@ syntax , output_file(string) var1_list(string) var2_list(string) var3_list(strin
 	di "Erasing postfile"
 	erase "`output_file'.dta"
 end
+
+
+di "done"
