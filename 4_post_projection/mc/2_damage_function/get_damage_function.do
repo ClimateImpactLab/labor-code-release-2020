@@ -57,7 +57,7 @@ do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 * global plot_outputdir = "$outputdir"
 
 * DYLAN: change this to where you put the damage functions, I guess
-global wd ="${DIR_REPO_LABOR}/4_post_projection/2_damage_function/subroutines"
+global wd ="${DIR_REPO_LABOR}/4_post_projection/mc/2_damage_function/subroutines"
 cd $wd
 
 do damage_function
@@ -74,7 +74,7 @@ loc scale = "global"
 * (choices: "global" or "ir")
 
 * SSP
-loc ssp = "5"
+loc ssp = "3"
 
 * How many years to include in the parametric regression?
 loc subset = 2085
@@ -154,7 +154,7 @@ drop if year == 2099
 
 
 
-cap mkdir "$DIR_REPO_LABOR/output/damage_function"
+cap mkdir "$DIR_REPO_LABOR/output/damage_function_mc"
 if "`run_regs'" == "true" {
 	if "`quantilereg'" == "false" {
 		*macro list

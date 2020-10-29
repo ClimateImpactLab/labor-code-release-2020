@@ -74,7 +74,7 @@ Here are some guidelines for damage data frame formatting that hopefully help:
 		var3_name = "placeholder2"
 */
 
-program define poly2_insample_damage_function_qreg
+program define poly2_insample_df_qreg
 
 syntax , var1_value(string) var2_value(string) var3_value(string) pp(integer)
 
@@ -111,7 +111,7 @@ syntax , var1_value(string) var2_value(string) var3_value(string) pp(integer)
 
 end
 
-program define poly2_outsample_damage_function_qreg
+program define poly2_outsample_df_qreg
 
 syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer) pp(integer)
 
@@ -176,10 +176,10 @@ syntax , output_file(string) var1_list(string) var2_list(string) var3_list(strin
 				di "Storing damage function coefficients for `var1' `var2' `var3'..."
 
 				di "Storing insample poly`polyorder' damage function coefficients..."
-				poly`polyorder'_insample_damage_function_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") pp(`pp')
+				poly`polyorder'_insample_df_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") pp(`pp')
 				
 				di "Storing outsample poly`polyorder' damage function coefficients..."
-				poly`polyorder'_outsample_damage_function_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") subset(`subset') pp(`pp')
+				poly`polyorder'_outsample_df_qreg , var1_value("`var1'") var2_value("`var2'") var3_value("`var3'") subset(`subset') pp(`pp')
 			}
 		}
 	}
