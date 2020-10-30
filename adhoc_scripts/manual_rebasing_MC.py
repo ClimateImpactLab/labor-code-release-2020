@@ -43,9 +43,9 @@ username = getpass.getuser()
 ############
 # PATHWAYS
 ############
-
-proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_aggregate/{str(sys.argv[1])}'
-output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
+# # 
+# proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
+# output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
     
 # copy parent folder structure
 # for dirpath, dirnames, filenames in os.walk(proj_root):
@@ -98,22 +98,29 @@ def rebase_combine(file):
 # It should take ~1 second per file if run on Bat, or else 2-4 seconds
 # per file if run on Sac.
 
-paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
 
-for file in paths:
-    start = time.time()
-    ds = rebase_combine(file)
-    end = time.time()
-    print(end - start)
-    
-    start = time.time()
-    output = pathlib.Path(str(file).replace(proj_root, output_root))
-    end = time.time()
-    print(end - start)
-    
-    start = time.time() 
-    ds.to_netcdf(output)
-    end = time.time()
-    print(end - start)
-    
-    print(output)
+for batch in range(0,15) :
+
+    proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}/rcp45/bcc-csm1-1/'
+    output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}/rcp45/bcc-csm1-1/'
+
+    paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
+
+
+    for file in paths:
+        start = time.time()
+        ds = rebase_combine(file)
+        end = time.time()
+        print(end - start)
+        
+        start = time.time()
+        output = pathlib.Path(str(file).replace(proj_root, output_root))
+        end = time.time()
+        print(end - start)
+        
+        start = time.time() 
+        ds.to_netcdf(output)
+        end = time.time()
+        print(end - start)
+        
+        print(output)
