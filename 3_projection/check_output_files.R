@@ -127,7 +127,7 @@ ApplyReadAndCheck <- function(impacts.folder, adapt='*-incadapt.nc4', impacts.va
 	checks <- mcmapply(FUN=ReadAndCheck, spec=specs, MoreArgs=list(impacts.var=impacts.var, years_search=years_search), SIMPLIFY=FALSE, mc.cores=threads)
 	out <- rbindlist(checks)
 	# fwrite(out, file.path(output_dir, glue('checks_{output_title}.csv')))
-	fwrite(out %>% dplyr::filter(obs > 0), file.path(output_dir, glue('issues_{output_title}.csv')))
+	# fwrite(out %>% dplyr::filter(obs > 0), file.path(output_dir, glue('issues_{output_title}.csv')))
 	return(out)
 }
 
@@ -143,13 +143,13 @@ nc_adapt_to_suf <- function(adapt){
 
 # folder = 
 
-for (batch_n in 0:0) {
+for (batch_n in 0:14) {
 	batch <- glue("batch{batch_n}")
 	impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{batch}")
-	impacts.var <- "rebased_new"
-	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate/"
+	impacts.var <- "rebased"
+	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/"
 	output_title <- batch
-	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, output_title)
+	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-histclim.nc4', impacts.var, years_search=seq(1981,2099), threads=40, output_dir, output_title)
 	print(glue("batch{batch_n}"))
 	print(results %>% dplyr::filter(obs > 0))
 }

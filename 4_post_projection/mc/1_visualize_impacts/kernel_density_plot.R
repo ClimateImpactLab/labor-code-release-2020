@@ -139,7 +139,8 @@ regions = c(
   "THA.20", #(7)Loei
   "CHN.25.262.1764",  # (8) Shanghai
   "GBR.1.24", # (9) Durham
-  "USA.33.1862" # (10)New York
+  "USA.33.1862", # (10)New York
+  "THA.3.R3edeff05b7928bfc" # Thailand, which decile? 
   )
 
 
