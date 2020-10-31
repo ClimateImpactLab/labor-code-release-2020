@@ -99,28 +99,58 @@ def rebase_combine(file):
 # per file if run on Sac.
 
 
-for batch in range(0,15) :
+# for batchno in range(0,15) :
 
-    proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}/rcp45/bcc-csm1-1/'
-    output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}/rcp45/bcc-csm1-1/'
+    # proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch{}/rcp85/bcc-csm1-1/'.format(batchno)
+    # output_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy4/batch{}/rcp85/bcc-csm1-1/'.format(batchno)
 
-    paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
+#     paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
 
+#     # import pathlib
 
-    for file in paths:
-        start = time.time()
-        ds = rebase_combine(file)
-        end = time.time()
-        print(end - start)
+#     for file in paths:
+#         start = time.time()
+#         ds = rebase_combine(file)
+#         end = time.time()
+#         print(end - start)
         
-        start = time.time()
-        output = pathlib.Path(str(file).replace(proj_root, output_root))
-        end = time.time()
-        print(end - start)
+#         start = time.time()
+#         output = pathlib.Path(str(file).replace(proj_root, output_root))
+
+#         output_path = pathlib.Path(output)
+#         output_path.parent.mkdir(parents=True, exist_ok=True)
+
+#         end = time.time()
+#         print(end - start)
         
-        start = time.time() 
-        ds.to_netcdf(output)
-        end = time.time()
-        print(end - start)
+#         start = time.time() 
+#         ds.to_netcdf(output)
+#         end = time.time()
+#         print(end - start)
         
-        print(output)
+#         print(output)
+
+
+
+
+file = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4"
+# start = time.time()
+ds = rebase_combine(file)
+# end = time.time()
+# print(end - start)
+
+# start = time.time()
+output = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy4/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4"
+
+output_path = pathlib.Path(output)
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+# end = time.time()
+# print(end - start)
+
+# start = time.time() 
+ds.to_netcdf(output)
+# end = time.time()
+# print(end - start)
+
+print(output)
