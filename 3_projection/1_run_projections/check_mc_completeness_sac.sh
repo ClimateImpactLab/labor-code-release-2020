@@ -10,7 +10,7 @@ output_dir="/"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=40
+output_file_size_above=50
 
 # 130 for one SSP
 n_folders_total=7800
