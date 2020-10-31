@@ -146,10 +146,10 @@ nc_adapt_to_suf <- function(adapt){
 for (batch_n in 0:14) {
 	batch <- glue("batch{batch_n}")
 	impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{batch}")
-	impacts.var <- "rebased"
+	impacts.var <- "rebased_new"
 	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/"
 	output_title <- batch
-	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-histclim.nc4', impacts.var, years_search=seq(1981,2099), threads=40, output_dir, output_title)
+	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-histclim.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, output_title)
 	print(glue("batch{batch_n}"))
 	print(results %>% dplyr::filter(obs > 0))
 }
