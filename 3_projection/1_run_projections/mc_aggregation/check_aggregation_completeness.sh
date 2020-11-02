@@ -2,15 +2,12 @@
 # this is a piece of code that helps us check the completeness of aggregation output
 # can be run from anywhere, just set the correct paths
 
-
-
-
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3"
 output_dir="/" 
 
-aggregation_scenario="-wage"
+aggregation_scenario="-gdp"
 
 
 # the size of files above which we consider complete
@@ -71,7 +68,7 @@ done
 
 # uncomment to look for files with HDF error
 # printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep error)
 # echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file

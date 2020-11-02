@@ -143,16 +143,15 @@ nc_adapt_to_suf <- function(adapt){
 	return(sufs[[adapt]])
 }
 
-# folder = 
-
-for (batch_n in 1:4) {
+for (batch_n in 10:12) {
+	
 	batch <- glue("batch{batch_n}")
+	print(glue("batch{batch_n}"))
 	impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{batch}")
 	impacts.var <- "rebased_new"
 	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/"
 	output_title <- batch
-	results = ApplyReadAndCheck(impacts.folder, adapt='*.nc4', impacts.var, years_search=seq(1981,2099), threads=40, output_dir, output_title)
-	print(glue("batch{batch_n}"))
+	results = ApplyReadAndCheck(impacts.folder, adapt='*.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, output_title)
 	# print(results %>% dplyr::filter(obs > 0))
 }
 
