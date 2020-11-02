@@ -17,6 +17,7 @@ library(dplyr)
 #' @return a data frame or a data table with (length(dimvars) + 1) columns. 
 nc_to_DT <- function(nc_file, impact_var, dimvars=list(region='regions', year='year'), to.data.frame=TRUE, print.nc=FALSE){
 
+	# print(nc_file)
 	nc = nc_open(nc_file)
 	if(print.nc) print(nc)
 	value = ncvar_get(nc, impact_var)
@@ -46,40 +47,41 @@ ReadAndCheck <- function(spec, impacts.var, years_search){
 
 	DT <- nc_to_DT(nc_file=file.path(impacts.folder, rcp, climate_model, iam, ssp, impacts.file), impact_var=impacts.var, to.data.frame=FALSE)
 
-	DT <- DT[year %in% years_search]
+	# DT <- DT[year %in% years_search]
 
-	infDT <- DT[is.infinite(get(impacts.var))]
-	nanDT <- DT[is.nan(get(impacts.var))]
-	largeDT <- DT[get(impacts.var) > 10000000]
-	smallDT <- DT[get(impacts.var) < 10000000]
+	# infDT <- DT[is.infinite(get(impacts.var))]
+	# nanDT <- DT[is.nan(get(impacts.var))]
+	# largeDT <- DT[get(impacts.var) > 10000000]
+	# smallDT <- DT[get(impacts.var) < 10000000]
 
-	zeroDT <- DT[get(impacts.var)==0]
-	shouldbe_DT <- as.data.table(expand.grid(region=fread('/shares/gcp/regions/hierarchy.csv')[is_terminal==TRUE][[1]], year=years_search, stringsAsFactors = FALSE))
+	# zeroDT <- DT[get(impacts.var)==0]
+	# shouldbe_DT <- as.data.table(expand.grid(region=fread('/shares/gcp/regions/hierarchy.csv')[is_terminal==TRUE][[1]], year=years_search, stringsAsFactors = FALSE))
 
-	infDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='inf', 
-		obs=nrow(infDT), regions=length(unique(infDT[, region])), years=length(unique(infDT[,year])))
+	# infDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='inf', 
+	# 	obs=nrow(infDT), regions=length(unique(infDT[, region])), years=length(unique(infDT[,year])))
 
 
-	nanDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='nan',
-		obs=nrow(nanDT), regions=length(unique(nanDT[, region])), years=length(unique(nanDT[,year])))
+	# nanDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='nan',
+	# 	obs=nrow(nanDT), regions=length(unique(nanDT[, region])), years=length(unique(nanDT[,year])))
 
-	zeroDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='zero',
-		obs=nrow(zeroDT), regions=length(unique(zeroDT[, region])), years=length(unique(zeroDT[,year])))
+	# zeroDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='zero',
+	# 	obs=nrow(zeroDT), regions=length(unique(zeroDT[, region])), years=length(unique(zeroDT[,year])))
 
-	largeDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='large',
-		obs=nrow(largeDT), regions=length(unique(largeDT[, region])), years=length(unique(largeDT[,year])))
+	# largeDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='large',
+	# 	obs=nrow(largeDT), regions=length(unique(largeDT[, region])), years=length(unique(largeDT[,year])))
 
-	smallDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='small',
-		obs=nrow(smallDT), regions=length(unique(smallDT[, region])), years=length(unique(smallDT[,year])))
+	# smallDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='small',
+	# 	obs=nrow(smallDT), regions=length(unique(smallDT[, region])), years=length(unique(smallDT[,year])))
 
-	missing_obs <- nrow(shouldbe_DT)-nrow(DT)
+	# missing_obs <- nrow(shouldbe_DT)-nrow(DT)
 
-	missDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='missing',
-		obs=missing_obs, regions=length(unique(shouldbe_DT[!(region %in% DT[,region]),region])), years=length(unique(shouldbe_DT[!(year %in% DT[,year]),year])))
+	# missDT <- data.table(rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, type='missing',
+	# 	obs=missing_obs, regions=length(unique(shouldbe_DT[!(region %in% DT[,region]),region])), years=length(unique(shouldbe_DT[!(year %in% DT[,year]),year])))
 	
-	out <- rbind(infDT, nanDT, zeroDT, missDT)
+	# out <- rbind(infDT, nanDT, zeroDT, missDT)
 
-	return(out)
+	# out <- c(0)
+	return(1)
 }
 
 
@@ -125,10 +127,10 @@ ApplyReadAndCheck <- function(impacts.folder, adapt='*-incadapt.nc4', impacts.va
 	files <- list.files(impacts.folder, adapt, all.files = TRUE, recursive = TRUE)
 	specs <- mapply(FUN=DecomposeTargetDir, target_dir=files, MoreArgs = list(impacts.folder=impacts.folder), SIMPLIFY = FALSE)
 	checks <- mcmapply(FUN=ReadAndCheck, spec=specs, MoreArgs=list(impacts.var=impacts.var, years_search=years_search), SIMPLIFY=FALSE, mc.cores=threads)
-	out <- rbindlist(checks)
+	# out <- rbindlist(checks)
 	# fwrite(out, file.path(output_dir, glue('checks_{output_title}.csv')))
 	# fwrite(out %>% dplyr::filter(obs > 0), file.path(output_dir, glue('issues_{output_title}.csv')))
-	return(out)
+	return(0)
 }
 
 
@@ -143,15 +145,15 @@ nc_adapt_to_suf <- function(adapt){
 
 # folder = 
 
-for (batch_n in 3:11) {
+for (batch_n in 1:4) {
 	batch <- glue("batch{batch_n}")
 	impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{batch}")
 	impacts.var <- "rebased_new"
 	output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/"
 	output_title <- batch
-	results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-pop-levels.nc4', impacts.var, years_search=seq(1981,2099), threads=40, output_dir, output_title)
+	results = ApplyReadAndCheck(impacts.folder, adapt='*.nc4', impacts.var, years_search=seq(1981,2099), threads=40, output_dir, output_title)
 	print(glue("batch{batch_n}"))
-	print(results %>% dplyr::filter(obs > 0))
+	# print(results %>% dplyr::filter(obs > 0))
 }
 
 
