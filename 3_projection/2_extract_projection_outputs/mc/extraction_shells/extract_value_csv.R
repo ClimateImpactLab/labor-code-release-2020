@@ -8,7 +8,7 @@ library(tidyverse)
 library(dplyr)
 # extract dollar values
 
-get_valuescsv <- function(ssp, region, aggregation){
+get_valuescsv <- function(ssp, region, aggregation, file_type){
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
@@ -17,15 +17,16 @@ get_valuescsv <- function(ssp, region, aggregation){
 		" --region=", region, " ",
 		"--suffix=valuescsv_", aggregation, "_", region, " ", 
 		"uninteracted_main_model-",aggregation, 
-		"-levels -uninteracted_main_model-histclim-",
-		aggregation, "-levels "
+		file_type, " -uninteracted_main_model-histclim-",
+		aggregation, file_type
 		)
 
 	print(quantiles_command)
 	system(quantiles_command)
 }
 
-get_valuescsv("SSP3", "global","pop")
+get_valuescsv("SSP3", "global","wage", "-aggregated")
+get_valuescsv("SSP3", "global","wage", "-aggregated")
 
 for (do_ssp in 3:3) {
 	ssp_arg = paste0("SSP", do_ssp)
@@ -56,10 +57,10 @@ mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, ss
 
 # testing
 # test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
-# 	"SSP3-valuescsv_pop_global.csv"))
+# 	"SSP3-valuescsv_wage_global.csv"))
 
-# test = test %>% filter(rcp == "rcp45", year == "2075") 
+display = test %>% filter(rcp == "rcp45", year == "2075") 
 
-# print(test[order(test$value),], n = 1000)
+print(display[order(display$value),], n = 1000)
 
 
