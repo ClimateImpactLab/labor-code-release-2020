@@ -159,7 +159,7 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
 
 # now ony plot the ones we need
 output_folder_mc = paste0(DIR_FIG, "/mc/")
-for (yr in c(2010,2020,2040,2060,2080,2098)) {
+for (yr in c(2010,2020,2040,2060,2080,2099)) {
   plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="highrisk",aggregation="", output_folder = output_folder_mc)
   plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="lowrisk",aggregation="", output_folder = output_folder_mc)
   plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="allrisk",aggregation="", output_folder = output_folder_mc)
