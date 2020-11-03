@@ -108,44 +108,31 @@ ggkd <- function(df.kd = NULL,
   return(p)
 }
 
-
-# for (rcp in c('rcp45', 'rcp85')) {
-# # 
-#   # df = read_csv(paste0(input.dir, rcp, '-SSP3_montecarlos_low_fulladaptcostsub_valuescsv_impact_map.csv')) %>%
-#   #     dplyr::mutate(value = value*100000) %>%
-#   #     dplyr::filter(region %in% hist.reg$region, year %in% 2099) %>%
-#   #     data.frame()
-  
-#   for (reg in hist.reg$region) {
-#     message(reg)
-#     gg2 = ggkd(df.kd = dplyr::filter(df, region==reg) , ir.name = reg,
-#     x.label = "Change in deaths per 100,000 population", topcode.ub = 600, topcode.lb = -300) +
-#     scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) +
-#     scale_y_continuous(limits = c(0,0.014))
-#     ggsave(paste0(dir,'/7_impacts_maps_hist/histograms/', histlist[[reg]],"_", reg,'_2099_',rcp,'.pdf'), plot=gg2, width = 7, height = 7)
-#   }
-# }
-
-
-
-
 regions = c(
   "COD.7.29.103", # (1)Kinshasa Urban
-  "KEN.4.22.108.460.1627", # (2) Nairobi West
-  "IND.5.89.289", # (3)Motihari
-  "MMR.14.59.273", # (4)Refai
-  "IND.10.121.371", # (5) Delhi
-  "CHN.3.19.116", # (6) Xiushan
-  "THA.20", #(7)Loei
-  "CHN.25.262.1764",  # (8) Shanghai
-  "GBR.1.24", # (9) Durham
-  "USA.33.1862", # (10)New York
-  "THA.3.R3edeff05b7928bfc" # Thailand, which decile? 
+  "KEN.4.22.R2947e0197ea9b378", # (2) Nairobi West
+  "MMR.14.62.285", # (3)Rangoon, Burma (Yangon (Rangoon))
+  "VNM.2.18.Ra5f28dabe4b12dfc", # (4)Hanoi, Vietnam 
+  "IND.10.121.371", # (5) Delh
+  "CHN.1.14.66", # (6) Suzhou, China
+  "PRK.11.170", #(7)Pyongyang, Korea, North
+  "PER.15.135.1340",  # (8) Lima, Peru 
+  "JPN.22.962", # (9) Kyoto, Japan 
+  "AUS.11.Rea19393e048c00bc"
   )
+# code to find the cities in deciles: 
+
+# all_IRs = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
+# cities_500 = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/unit_population_projections_geography_500kcities_years_all_SSP3.csv")) %>%
+#             mutate(region = Region_ID) %>%
+#             dplyr::select(city, country, region)
+# cities_w_deciles = merge(cities_500, all_IRs, by = "region")
+# cities_w_deciles %>% dplyr::filter(decile == 10)
 
 
 for (rg in regions) {
   input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
+
   df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_gdp_",rg,".csv")) %>%
         # dplyr::mutate(value = value*100000) %>%
         dplyr::filter(year %in% 2099) %>%
@@ -165,5 +152,11 @@ for (rg in regions) {
       
 }
 
-    
+
+
+
+
+
+
+
 

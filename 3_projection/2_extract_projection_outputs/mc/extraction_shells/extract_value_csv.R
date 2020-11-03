@@ -25,42 +25,43 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 	system(quantiles_command)
 }
 
-get_valuescsv("SSP3", "global","wage", "-aggregated")
-get_valuescsv("SSP3", "global","wage", "-aggregated")
 
-for (do_ssp in 3:3) {
+for (do_ssp in 1:5) {
 	ssp_arg = paste0("SSP", do_ssp)
-	get_valuescsv(ssp_arg, "global","pop")
-	get_valuescsv(ssp_arg, "global","wage")
-	get_valuescsv(ssp_arg, "global","gdp")
+	get_valuescsv(ssp_arg, "global","pop", "-aggregated")
+	get_valuescsv(ssp_arg, "global","wage", "-aggregated")
+	get_valuescsv(ssp_arg, "global","gdp", "-aggregated")
 }
 
-regions = c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
-  "GBR.1.24","COD.7.29.103",
-  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
-  "CHN.3.19.116", "THA.20"
+regions = c(
+  "COD.7.29.103", # (1)Kinshasa
+  "KEN.4.22.R2947e0197ea9b378", # (2) Nairobi West
+  "MMR.14.62.285", # (3)Rangoon, Burma (Yangon (Rangoon))
+  "VNM.2.18.Ra5f28dabe4b12dfc", # (4)Hanoi, Vietnam 
+  "IND.10.121.371", # (5) Delh
+  "CHN.1.14.66", # (6) Suzhou, China
+  "PRK.11.170", #(7)Pyongyang, Korea, North
+  "PER.15.135.1340",  # (8) Lima, Peru 
+  "JPN.22.962", # (9) Kyoto, Japan 
+  "AUS.11.Rea19393e048c00bc"
   )
 
+
 args = expand.grid(ssp=c("SSP3"),
-	# ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-                       aggregation =c("gdp"),
-                       region =  c("USA.33.1862", "IND.10.121.371", "CHN.25.262.1764", 
-								  "GBR.1.24","COD.7.29.103",
-								  "KEN.4.22.108.460.1627", "IND.5.89.289", "MMR.14.59.273", 
-								  "CHN.3.19.116", "THA.20"
-								  )
+                   aggregation =c("gdp"),
+                   region =  regions,
+                   file_type = "-levels"
                          )
-# get_valuescsv("SSP3", "SDN.6.16.75.230","wage")
 
 
-mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, ssp = args$ssp, mc.cores = 10)
+mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, file_type = args$file_type, ssp = args$ssp, mc.cores = 10)
 
 # testing
 # test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
 # 	"SSP3-valuescsv_wage_global.csv"))
 
-display = test %>% filter(rcp == "rcp45", year == "2075") 
+# display = test %>% filter(rcp == "rcp45", year == "2075") 
 
-print(display[order(display$value),], n = 1000)
+# print(display[order(display$value),], n = 1000)
 
 

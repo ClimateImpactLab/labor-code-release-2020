@@ -1,5 +1,5 @@
 # Impacts by income deciles bar chart
-# 
+# DEPRECIATED
 rm(list = ls())
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}

@@ -137,12 +137,12 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-gdp")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-gdp")
 
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
 
 
-extract_map(ssp="SSP3",adapt="fulladapt",year=2098,risk="allrisk",iam="high",aggregation="")
+# extract_map(ssp="SSP3",adapt="fulladapt",year=2098,risk="allrisk",iam="high",aggregation="")
 # extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="allrisk",iam="high",aggregation="")
 
 # no aggregation and pop weights

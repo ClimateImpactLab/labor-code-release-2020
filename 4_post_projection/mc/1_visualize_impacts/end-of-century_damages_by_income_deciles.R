@@ -101,7 +101,7 @@ deciles = get_deciles(df_covariates)
 # plot damage in percentage GDP by income decile
 
 # Load in impacts data
-df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_2098_map.csv'))%>%
+df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_2099_map.csv'))%>%
   mutate(q25 = mean * 0.5, q75 = mean * 1.5) %>%  
   left_join(deciles, by = "region")
 
