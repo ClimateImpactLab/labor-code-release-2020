@@ -45,8 +45,8 @@ username = getpass.getuser()
 # PARAMETERS
 ############
 
-# select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, mixed_model
-model = 'uninteracted_main_model_w_chn'
+# select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, hi_1factor_lo_unint_mixed_model
+model = 'special_single'
 
 ############
 # PATHWAYS
@@ -76,11 +76,22 @@ elif model == 'edge_clipping':
     proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping/'
     output_root = '/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/'
 
-elif model == 'mixed_model':
+elif model == 'hi_1factor_lo_unint_mixed_model':
 
     # this is the mixed model with clipping for high_risk interacted
 
-    sys.exit("Yikes! Not ready yet")
+    prefix = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/'
+    
+elif model == 'special_single':
+    
+    # script can be adapted for a special run
+    
+    prefix = 'uninteracted_main_model'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CCSM4/high/SSP3/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CCSM4/high/SSP3/'
+    
 
 else:
 
@@ -140,8 +151,8 @@ def rebase_combine(file):
 # per file if run on Sac.
 
 # an awkward way to grab the four scenarios we want
-paths = list(pathlib.Path(proj_root).rglob(f'*{prefix}.nc4'))
-paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-histclim.nc4')))
+paths = list(pathlib.Path(proj_root).rglob(f'*{prefix}-histclim.nc4'))
+paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}.nc4')))
 paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-incadapt.nc4')))
 paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-noadapt.nc4')))
 
