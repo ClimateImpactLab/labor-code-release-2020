@@ -151,10 +151,9 @@ drop if year == 2100
 **********************************************************************************
 * STEP 3: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
-get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(5)
 
 
-/* 
+
 cap mkdir "$DIR_REPO_LABOR/output/damage_function_mc"
 if "`run_regs'" == "true" {
    if "`quantilereg'" == "false" {
@@ -176,7 +175,8 @@ if "`run_regs'" == "true" {
    }
    
 }
- */
+
+get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(5)
 
 
 *pp(0.05)

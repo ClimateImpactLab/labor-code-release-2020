@@ -27,6 +27,7 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 #############################################
 # map of overall impact in 2099
 
+
 plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
 
   if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
@@ -155,8 +156,6 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
 #   aggregation=args$aggregation,
 #   mc.cores = 30)
 
-
-
 # now ony plot the ones we need
 output_folder_mc = paste0(DIR_FIG, "/mc/")
 for (yr in c(2010,2020,2040,2060,2080,2099)) {
@@ -165,7 +164,6 @@ for (yr in c(2010,2020,2040,2060,2080,2099)) {
   plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="allrisk",aggregation="", output_folder = output_folder_mc)
   plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
 }
-
 
 plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
 
