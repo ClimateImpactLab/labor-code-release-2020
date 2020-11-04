@@ -98,8 +98,7 @@ loc yearlist 2020 2050 2070 2097
 * STEP 1: Pull in and format .csv
 **********************************************************************************
 
-clear
-
+di "SSP `ssp'"
 *** a few datasets for debugging ***
 * output of this piece of code
 *insheet using /home/liruixue/repos/labor-code-release-2020/output/damage_function/damage_function_estimation.csv, clear
@@ -109,7 +108,7 @@ clear
 * gdp
 *import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_gdp.csv", varnames(1) clear
 * wage
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP`ssp'-_damage_function_valuescsv_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP`ssp'-valuescsv_wage_global.csv", varnames(1)
 
 * pop
 *import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data/SSP3_damage_function_valuescsv_popweights.csv", varnames(1) clear
@@ -176,7 +175,7 @@ if "`run_regs'" == "true" {
    
 }
 
-get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(5)
+*get_df_coefs_qreg , output_file("$DIR_REPO_LABOR/output/damage_function_mc/SSP`ssp'_damage_function_estimation_qreg") var1_list(`vvlist') var2_list(`aalist') var3_list(`sslist') var1_name(ph1) var2_name(ph2) var3_name(ph3) polyorder(2) subset(`subset') dropbox_path("/mnt/Global_ACP/") pp(5)
 
 
 *pp(0.05)
