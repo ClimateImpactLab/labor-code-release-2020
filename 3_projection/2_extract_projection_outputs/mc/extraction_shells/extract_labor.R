@@ -196,8 +196,8 @@ mcmapply(extract_map,
 
 # gdp and dollar value aggregation
 args = expand.grid(
-	# ssp=c("SSP3"),
-				   ssp=c("SSP1","SSP2","SSP4","SSP5"),
+	ssp=c("SSP3"),
+				   # ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
@@ -218,8 +218,8 @@ mcmapply(extract_timeseries,
 
 
 args = expand.grid(
-	# ssp=c("SSP3"),
-	ssp=c("SSP1","SSP2","SSP4","SSP5"),
+	ssp=c("SSP3"),
+	# ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    risk="riskshare",
