@@ -1,7 +1,12 @@
 # this is the wrong one, 
 # the correct one is extract_value_csv.sh
 conda activate risingverse-py27
-cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
+
+library(glue)
+library(sys)
+
+user = Sys.getenv("USER")
+cd glue("/home/user/repos/prospectus-tools/gcp/extract")
 R
 
 library(glue)
