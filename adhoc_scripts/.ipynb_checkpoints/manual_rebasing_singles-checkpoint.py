@@ -88,9 +88,9 @@ elif model == 'special_single':
     
     # script can be adapted for a special run
     
-    prefix = 'uninteracted_main_model'
-    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CCSM4/high/SSP3/'
-    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CCSM4/high/SSP3/'
+    prefix = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/'
     
 
 else:

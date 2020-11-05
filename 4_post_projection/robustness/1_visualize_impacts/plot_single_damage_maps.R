@@ -72,11 +72,11 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 # EDGE RESTRICTION MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'hi_1factor_lo_unint_mixed_model/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model/'
 
 ######################
 # MAIN MODEL - CHECK
@@ -98,6 +98,16 @@ output = 'hi_1factor_lo_unint_mixed_model/'
 
 # name = 'combined_mixed_model_splines_empshare_noFE'
 # output = 'single_mixed_model/'
+
+######################
+# MIXED MODEL - 20 -35
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 
 ######################
 # WITH CHINA
