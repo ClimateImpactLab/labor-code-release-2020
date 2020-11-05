@@ -76,11 +76,21 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # CLIPPING MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model/'
+
+######################
+# MIXED MODEL - 20 -35
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
 name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'hi_1factor_lo_unint_mixed_model/'
+output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 
 ######################
 # WITH CHINA MODEL

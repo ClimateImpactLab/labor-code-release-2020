@@ -1,7 +1,7 @@
 conda activate risingverse-py27
 cd repos/prospectus-tools/gcp/extract
 basename=hi_1factor_lo_unint_mixed_model_splines_empshare_noFE
-folder=/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
+folder=/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
 csv_folder=${folder}/csv
 
 # diagnostics for high risk
