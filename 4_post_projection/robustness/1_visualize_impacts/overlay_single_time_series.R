@@ -50,7 +50,7 @@ overlay_impact_timeseries = function(IR='globe', folder1, name1, legend1, folder
       geom_line(data = df_plot2, aes(x = year, y = value, colour = 'red')) +
       xlim(2010, 2099) + 
       xlab('year') +
-      ylab('mins worked') +
+      ylab('') +
       ggtitle(title) +
       scale_color_discrete(name = "Models", labels = c(glue("{legend1}"), glue("{legend2}"))) +
       theme(legend.position="bottom")
@@ -85,49 +85,49 @@ overlay_impact_timeseries = function(IR='globe', folder1, name1, legend1, folder
 # MAIN MODEL VS WITH-CHINA MODEL 
 #######################################
 
-# # main model data
-# folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy/',
-#       'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
-#       'rcp85/CCSM4/high/SSP3/csv')
-
-# name1 = 'uninteracted_main_model'
-
-# legend1 = "no-China uninteracted (main)"
-
-# # edge restricted model data
-# folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
-#   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/',
-#   'rcp85/CCSM4/high/SSP3/csv')
-
-# name2 = 'uninteracted_main_model_w_chn'
-
-# legend2 = "with-China uninteracted"
-
-# output = 'uninteracted_main_model_w_chn/compare_main'
-
-#######################################
-# MAIN MODEL VS EDGE RESTRICTED MODEL 
-#######################################
-
 # main model data
-folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy/',
+folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/',
       'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
       'rcp85/CCSM4/high/SSP3/csv')
 
 name1 = 'uninteracted_main_model'
 
-legend1 = "uninteracted (main)"
+legend1 = "no-China uninteracted (main)"
 
 # edge restricted model data
-folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/',
-  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
+  'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/',
   'rcp85/CCSM4/high/SSP3/csv')
 
-name2 = 'uninteracted_main_model'
+name2 = 'uninteracted_main_model_w_chn'
 
-legend2 = "edge-restricted uninteracted"
+legend2 = "with-China uninteracted"
 
-output = 'single_edge_restriction_model/compare_main'
+output = 'uninteracted_main_model_w_chn/compare_main'
+
+#######################################
+# MAIN MODEL VS EDGE RESTRICTED MODEL 
+#######################################
+
+# # main model data
+# folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/',
+#       'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#       'rcp85/CCSM4/high/SSP3/csv')
+
+# name1 = 'uninteracted_main_model'
+
+# legend1 = "uninteracted (main)"
+
+# # edge restricted model data
+# folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/',
+#   'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/',
+#   'rcp85/CCSM4/high/SSP3/csv')
+
+# name2 = 'uninteracted_main_model'
+
+# legend2 = "edge-restricted uninteracted"
+
+# output = 'single_edge_restriction_model/compare_main'
 
 
 #############
@@ -144,9 +144,9 @@ map_args = expand.grid(IR = 'globe',
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
-                       type="combined",
-                       risk=c("highriskimpacts","rebased_new", "lowriskimpacts"),
-                       weight=c("pop", "gdp", "wage")
+                       adapt="fulladapt",
+                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       weight=c("gdp","wage","pop")
                        )
 
 print(map_args)
@@ -162,7 +162,7 @@ mcmapply(overlay_impact_timeseries,
         output=map_args$output,
         ssp=map_args$ssp,
         rcp=map_args$rcp,
-        type=map_args$type,
+        adapt=map_args$adapt,
         risk=map_args$risk,
         weight=map_args$weight,
         mc.cores=5
