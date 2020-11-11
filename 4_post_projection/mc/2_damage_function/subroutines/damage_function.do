@@ -104,8 +104,11 @@ syntax , var1_value(string) var2_value(string) var3_value(string) subset(integer
 
 	di "Estimating damage function linearly interacted with time on values between `subset' and 2098..."
 	qui reg cil_`var1_value'_`var2_value'_`var3_value' c.anomaly##c.anomaly##c.t  if year >= `subset'
+	Damage = t + a + a^2 + at + a^2 t 
+	the damage function when t = 2300
+	damage ~ a + a^2
 
-
+ 
 	foreach yr of numlist 2099/2300 {
 
 		di "Calculating damage function for `yr'..."
