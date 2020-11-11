@@ -52,7 +52,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/median/extraction_configs/",
 		glue("median_mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
@@ -108,7 +108,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-		"2_extract_projection_outputs/extraction_configs/",
+		"2_extract_projection_outputs/median/extraction_configs/",
 		glue("median_mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
@@ -119,7 +119,9 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-# extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="highrisk",iam="high",aggregation="-pop-allvars")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
+extract_timeseries(ssp="SSP3",adapt="incadapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
+extract_timeseries(ssp="SSP3",adapt="noadapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
 
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="riskshare",iam="high",aggregation="")
 
