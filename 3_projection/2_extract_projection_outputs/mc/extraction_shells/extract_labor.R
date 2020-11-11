@@ -238,4 +238,22 @@ mcmapply(extract_timeseries,
   region="global",
   mc.cores = 20)
 
+# debug
+args = expand.grid(
+				   ssp=c("SSP3"),
+	               adapt=c("fulladapt","incadapt","noadapt","histclim"),
+                   risk=c("allrisk"),
+                   aggregation=c("-gdp","-wage"),
+                   iam=c("high","low")
+                 )
+
+
+mcmapply(extract_timeseries, 
+  ssp=args$ssp, 
+  iam=args$iam,
+  risk=args$risk, 
+  aggregation=args$aggregation,
+  adapt=args$adapt,
+  region="global",
+  mc.cores = 20)
 
