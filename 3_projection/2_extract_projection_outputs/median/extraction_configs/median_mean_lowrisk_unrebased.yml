@@ -6,6 +6,6 @@ only-rcp: null
 only-models: all
 only-iam: null
 column: response22
-evalqvals: ['mean']
+evalqvals: [0.01, 0.05, 0.10, 0.25, 'mean', 0.75, 0.90, 0.95, 0.99]
 output-format: edfcsv
 ignore-missing: yes

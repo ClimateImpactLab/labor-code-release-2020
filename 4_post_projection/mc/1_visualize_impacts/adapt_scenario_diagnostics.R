@@ -1,6 +1,5 @@
-# %GDP full-adapt impacts time series RCP8.5 and RCP4.5 
-# (5-95, 25-75 percentiles, and end-of-century box and whiskers plots with these intervals, 
-# whiskers extending to full range) (energy fig_2C)
+# trying to figure out 
+
 
 rm(list = ls())
 source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
@@ -55,7 +54,7 @@ get_df_list_fig_2C = function(DB_data){
   load_df = function(rcp, adapt){
     print(rcp)
     # df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
-    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data_mc/SSP3-{rcp}_high_allrisk_{adapt}-gdp-aggregated_global_timeseries.csv'))
+    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data_mc/SSP3-{rcp}_high_allrisk_{adapt}-pop-aggregated_global_timeseries.csv'))
     # df = read_csv(paste0(DB_data,   
     #                '/projection_system_outputs/time_series_data/', 
     #                'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
@@ -69,7 +68,7 @@ get_df_list_fig_2C = function(DB_data){
   # d = load_df("rcp85","incadapt")
 
   # print(d, n = 120)
-  options = expand.grid(rcp = c("rcp45", "rcp85"), 
+  options = expand.grid(rcp = c( "rcp85"), 
                         adapt = c("fulladapt", "incadapt", "noadapt"))
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
             SIMPLIFY = FALSE) %>% 
@@ -78,28 +77,40 @@ get_df_list_fig_2C = function(DB_data){
   # browser()
   # Subset and format for plotting
 
-  bp_45 = df %>%
-    dplyr::filter(rcp == "rcp45", adapt_scen == "fulladapt") %>%
+  bp_full = df %>%
+    dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
     get.boxplot.vect(yr = 2099)
   
-  bp_85 = df %>%
-    dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
+  bp_inc = df %>%
+    dplyr::filter(rcp == "rcp85", adapt_scen == "incadapt") %>%
     get.boxplot.vect(yr = 2099 )
+
+  bp_no = df %>%
+    dplyr::filter(rcp == "rcp85", adapt_scen == "noadapt") %>%
+    get.boxplot.vect(yr = 2099 )
+
   
-  u_45 = df %>% 
-    dplyr::filter(rcp == "rcp45", adapt_scen == "fulladapt") %>% 
-    dplyr::select(year, q10, q90) %>%
-    rename(q10_45 = q10, 
-           q90_45 = q90)
-  u_85 = df %>% 
+  u_full = df %>% 
     dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>% 
     dplyr::select(year, q10, q90) %>%
-    rename(q10_85 = q10, 
-           q90_85 = q90)
+    rename(q10_full = q10, 
+           q90_full = q90)
+  u_inc = df %>% 
+    dplyr::filter(rcp == "rcp85", adapt_scen == "incadapt") %>% 
+    dplyr::select(year, q10, q90) %>%
+    rename(q10_inc = q10, 
+           q90_inc = q90)
+  u_no = df %>% 
+    dplyr::filter(rcp == "rcp85", adapt_scen == "noadapt") %>% 
+    dplyr::select(year, q10, q90) %>%
+    rename(q10_no = q10, 
+           q90_no = q90)
   
 
   
-  df.u = left_join(u_85, u_45, by = "year")
+  df.u = left_join(u_full, u_inc, by = "year")
+  df.u = left_join(df.u, u_no, by = "year")
+
   
   return(
       list(
@@ -110,8 +121,9 @@ get_df_list_fig_2C = function(DB_data){
         df_45.ia = df[df$rcp == "rcp45" & df$adapt_scen == "incadapt",], 
         df_85.ia = df[df$rcp == "rcp85" & df$adapt_scen == "incadapt",], 
         df.u = df.u,
-        bp_45 = bp_45, 
-        bp_85 = bp_85
+        bp_full = bp_full, 
+        bp_inc = bp_inc,
+        bp_no = bp_no
         )
     )
 }
@@ -126,27 +138,28 @@ plot_ts_fig_2C = function(output, DB_data){
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
-                   plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_45[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_45.ia[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_45.na[,c('year', 'mean')]%>% as.data.frame()), # mean lines
+                   plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame()
+                   # ,
+                   # plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame()
+                   ), # mean lines
     df.u = plot_df$df.u %>% as.data.frame(), 
-    ub = "q90_85", lb = "q10_85", #uncertainty - first layer
-    ub.2 = "q90_45", lb.2 = "q10_45", #uncertainty - second layer
+    ub = "q90_full", lb = "q10_full", #uncertainty - first layer
+    ub.2 = "q90_inc", lb.2 = "q10_inc", #uncertainty - second layer
+    # ub.3 = "q90_no", lb.3 = "q10_no", #uncertainty - second layer
     uncertainty.color = "red", 
     uncertainty.color.2 = "blue",
-    df.box = plot_df$bp_85, 
-    df.box.2 = plot_df$bp_45,
+    # uncertainty.color.3 = "green",
+    df.box = plot_df$bp_full, 
+    df.box.2 = plot_df$bp_inc,
+    # df.box.3 = plot_df$bp_no,
     x.limits = c(2010, 2099),
     y.label = 'Impacts: min lost per person',
-    legend.values = c("red", "black", "blue", "orange", "green", "pink"), #color of mean line
-    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt", "RCP85 No Adapt", 
-                      "RCP45 Full Adapt",  "RCP45 Inc Adapt", "RCP45 No Adapt"),
+    legend.values = c("red", "black"), #color of mean line
+    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt"),
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
-  print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
-  ggsave(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"), p)
+  # print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
+  ggsave(paste0(output, "/mc/diagnostics/fig", "_SSP3_full_uncertainty_time_series_pop_mc.pdf"), p)
   return(p)
 }
 
