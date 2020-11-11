@@ -3,7 +3,7 @@ conda activate risingverse-py27
 
 cd repos/prospectus-tools/gcp/extract
 basename=uninteracted_main_model_w_chn
-folder=/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
+folder=/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp45/CCSM4/high/SSP3
 csv_folder=${folder}/csv
 mkdir -p ${csv_folder}
 
