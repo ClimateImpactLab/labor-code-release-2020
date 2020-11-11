@@ -46,7 +46,7 @@ username = getpass.getuser()
 ############
 
 # select: uninteracted_main_model, uninteracted_main_model_w_chn, edge_clipping, hi_1factor_lo_unint_mixed_model
-model = 'hi_1factor_lo_unint_mixed_model'
+model = 'special_single'
 
 ############
 # PATHWAYS
@@ -83,6 +83,15 @@ elif model == 'hi_1factor_lo_unint_mixed_model':
     prefix = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
     proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model/'
     output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/'
+    
+elif model == 'special_single':
+    
+    # script can be adapted for a special run
+    
+    prefix = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+    proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35/'
+    output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/'
+    
 
 else:
 
@@ -142,8 +151,8 @@ def rebase_combine(file):
 # per file if run on Sac.
 
 # an awkward way to grab the four scenarios we want
-paths = list(pathlib.Path(proj_root).rglob(f'*{prefix}.nc4'))
-paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-histclim.nc4')))
+paths = list(pathlib.Path(proj_root).rglob(f'*{prefix}-histclim.nc4'))
+paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}.nc4')))
 paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-incadapt.nc4')))
 paths.extend(list(pathlib.Path(proj_root).rglob(f'*{prefix}-noadapt.nc4')))
 
