@@ -54,7 +54,7 @@ get_df_list_fig_2C = function(DB_data){
   load_df = function(rcp, adapt){
     print(rcp)
     # df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
-    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data_mc/SSP3-{rcp}_high_allrisk_{adapt}-gdp-aggregated_global_timeseries.csv'))
+    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data_mc/SSP3-{rcp}_high_allrisk_{adapt}-pop-aggregated_global_timeseries.csv'))
     # df = read_csv(paste0(DB_data,   
     #                '/projection_system_outputs/time_series_data/', 
     #                'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
@@ -68,7 +68,7 @@ get_df_list_fig_2C = function(DB_data){
   # d = load_df("rcp85","incadapt")
 
   # print(d, n = 120)
-  options = expand.grid(rcp = c("rcp45", "rcp85"), 
+  options = expand.grid(rcp = c( "rcp85"), 
                         adapt = c("fulladapt", "incadapt", "noadapt"))
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
             SIMPLIFY = FALSE) %>% 
@@ -159,7 +159,7 @@ plot_ts_fig_2C = function(output, DB_data){
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
   # print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
-  # ggsave(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"), p)
+  ggsave(paste0(output, "/mc/diagnostics/fig", "_SSP3_full_uncertainty_time_series_pop_mc.pdf"), p)
   return(p)
 }
 

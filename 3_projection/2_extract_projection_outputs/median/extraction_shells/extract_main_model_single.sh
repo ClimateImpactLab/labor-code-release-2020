@@ -1,11 +1,12 @@
 # do dos2unix path/to/this/file first!!
-
+source ~/miniconda3/etc/profile.d/conda.sh
 conda activate risingverse-py27
 cd repos/prospectus-tools/gcp/extract
 
 basename=uninteracted_main_model
-folder=/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
+folder=/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp45/CCSM4/high/SSP3
 csv_folder=${folder}/csv
+mkdir -p ${csv_folder}
 
 # diagnostics for high risk
 # python single.py  --column=highriskimpacts ${folder}/${basename}.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-fulladapt.csv
