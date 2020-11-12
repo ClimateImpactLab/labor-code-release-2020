@@ -1,6 +1,6 @@
-outputdir: outputs/labor/impacts-woodwork/point_estimate_google
+outputdir: outputs/labor/impacts-woodwork/point_estimate_google_rebased
 # Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
-levels-weighting: population * income * 0.00487
+levels-weighting: population * 0.00487 / population 
 aggregate-weighting-numerator: population * income * 0.00487
-aggregate-weighting-denominator: sum-to-1
-infix: wage
+aggregate-weighting-denominator: population * income
+infix: gdp
