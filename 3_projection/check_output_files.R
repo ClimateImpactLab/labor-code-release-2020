@@ -148,7 +148,7 @@ impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/point_estimat
 impacts.var <- "rebased"
 output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google/"
 # output_title <- batch
-results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model-noadapt.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, "google")
+results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, "google")
 print(results %>% dplyr::filter(obs > 0))
 # }
 
