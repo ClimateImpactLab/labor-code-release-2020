@@ -1,4 +1,3 @@
-
 uname="$USER"
 cd "/home/${uname}/repos/impact-calculations"
 for i in {1..20}

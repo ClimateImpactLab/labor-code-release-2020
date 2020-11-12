@@ -1,8 +1,6 @@
-outputdir: outputs/labor/impacts-woodwork/z_old_combined_uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay_duplicates
+outputdir: outputs/labor/impacts-woodwork/point_estimate_google
 # Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
 levels-weighting: population * income * 0.00487
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: sum-to-1
-only-variables: ["rebased","response","response22","clip"]
 infix: wage
-only-farmers: ['', 'histclim']
