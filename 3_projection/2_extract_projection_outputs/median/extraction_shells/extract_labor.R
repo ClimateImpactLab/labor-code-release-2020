@@ -11,7 +11,7 @@ library(parallel)
 
 extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
-	basename <- "combined_uninteracted_spline_empshare_noFE"
+	basename <- "uninteracted_main_model"
 
 	# if aggregation is "", no need to add -levels since it's not aggregated files
 	if (aggregation != "") {
@@ -119,9 +119,9 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
-extract_timeseries(ssp="SSP3",adapt="incadapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
-extract_timeseries(ssp="SSP3",adapt="noadapt",risk="allrisk",iam="high",aggregation="-pop-allvars")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="incadapt",risk="allrisk",iam="high",aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="noadapt",risk="allrisk",iam="high",aggregation="-pop")
 
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="riskshare",iam="high",aggregation="")
 
@@ -135,7 +135,7 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    year=c(2010,2020,2098,2040, 2060,2080,2098,2099,2100),
                    risk=c("highrisk","lowrisk","allrisk"),
                    # risk="riskshare",
-                   aggregation=c("","-pop-allvars"),
+                   aggregation=c("","-pop"),
                    iam=c("high","low")
                  )
 
@@ -200,7 +200,7 @@ args = expand.grid(ssp=c("SSP1","SSP2","SSP3","SSP4","SSP5"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
                    risk=c("highrisk","lowrisk","allrisk"),
-                   aggregation=c("-pop-allvars"),
+                   aggregation=c("-pop"),
                    iam=c("high","low")
                  )
 

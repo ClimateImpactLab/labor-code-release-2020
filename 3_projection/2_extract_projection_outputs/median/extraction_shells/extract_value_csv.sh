@@ -14,7 +14,7 @@ for (do_ssp in 1:5) {
 		"--suffix=_damage_function_valuescsv_wage --only-ssp=SSP", 
 		do_ssp, 
 		" --region=global ",
-		"combined_uninteracted_spline_empshare_noFE-wage-aggregated -combined_uninteracted_spline_empshare_noFE-histclim-wage-aggregated "
+		"uninteracted_main_model-wage-aggregated -uninteracted_main_model-histclim-wage-aggregated "
 		)
 
 	print(quantiles_command)
@@ -28,7 +28,7 @@ for (do_ssp in 1:5) {
 		"--suffix=_damage_function_valuescsv_popweights --only-ssp=SSP", 
 		do_ssp, 
 		" --region=global ",
-		"combined_uninteracted_spline_empshare_noFE-pop-allvars-aggregated -combined_uninteracted_spline_empshare_noFE-histclim-pop-allvars-aggregated "
+		"uninteracted_main_model-pop-aggregated -uninteracted_main_model-histclim-pop-aggregated "
 		)
 
 	print(quantiles_command)
@@ -42,7 +42,7 @@ for (do_ssp in 1:5) {
 		do_ssp, 
 		" --region=global ",
 		"--suffix=_damage_function_valuescsv_gdp ",
-		"combined_uninteracted_spline_empshare_noFE-gdp-aggregated -combined_uninteracted_spline_empshare_noFE-histclim-gdp-aggregated "
+		"uninteracted_main_model-gdp-aggregated -uninteracted_main_model-histclim-gdp-aggregated "
 		)
 
 	print(quantiles_command)
