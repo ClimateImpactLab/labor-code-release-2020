@@ -144,11 +144,11 @@ nc_adapt_to_suf <- function(adapt){
 	
 # batch <- glue("batch{batch_n}")
 # print(glue("batch{batch_n}"))
-impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google/")
+impacts.folder <- glue("/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/")
 impacts.var <- "rebased"
-output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google/"
+output_dir <- "/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/"
 # output_title <- batch
-results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model.nc4', impacts.var, years_search=seq(1981,2099), threads=70, output_dir, "google")
+results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model.nc4', impacts.var, years_search=seq(1981,2099), threads=10, output_dir, "google")
 print(results %>% dplyr::filter(obs > 0))
 # }
 

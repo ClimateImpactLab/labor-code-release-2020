@@ -18,7 +18,7 @@
 
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased"
 output_dir="median" 
 
 aggregation_scenario="-gdp"
@@ -31,7 +31,7 @@ aggregated_file_size_above=10
 # 130 for one SSP3
 n_folders_total=520
 
-filename_stem="combined_uninteracted_spline_empshare_noFE"
+filename_stem="uninteracted_main_model"
 
 cd "${output_root}/${output_dir}"
 
