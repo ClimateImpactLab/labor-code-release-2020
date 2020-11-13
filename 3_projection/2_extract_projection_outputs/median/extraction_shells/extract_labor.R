@@ -48,6 +48,8 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 		calculation <- "clipped"
 	} else if ((risk == "highrisk") | (risk == "lowrisk")) {
 		calculation <- "unrebased"
+	} else if (risk == "allrisk-wrong-rebasing") {
+		calculation <- "wrong_rebased"
 	} 
 
 	quantiles_command = paste0("python -u quantiles.py ",
@@ -103,7 +105,9 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 		calculation <- "clipped"
 	} else if ((risk == "highrisk") | (risk == "lowrisk")) {
 		calculation <- "unrebased"
-	}
+	} else if (risk == "allrisk-wrong-rebasing") {
+		calculation <- "wrong_rebased"
+	} 
 
 
 	quantiles_command = paste0("python -u quantiles.py ",
@@ -120,6 +124,8 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 # tests
 extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk-wrong-rebasing",iam="high",aggregation="-pop")
+
 extract_timeseries(ssp="SSP3",adapt="incadapt",risk="allrisk",iam="high",aggregation="-pop")
 extract_timeseries(ssp="SSP3",adapt="noadapt",risk="allrisk",iam="high",aggregation="-pop")
 
