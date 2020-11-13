@@ -73,6 +73,11 @@ get_df_list_fig_2C = function(DB_data){
   df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
             SIMPLIFY = FALSE) %>% 
     bind_rows()
+  # browser()
+  # add wrongly rebased allrisk impact
+  df_wrong_rebasing = read_csv(glue('{DB_data}/projection_outputs/extracted_data/median/SSP3-rcp85_high_allrisk-wrong-rebasing_fulladapt-pop-aggregated_global_timeseries.csv'))
+  df_wrong_rebasing = df_wrong_rebasing %>% mutate(rcp = "rcp85", adapt_scen = "fulladapt-wrong-rebasing") %>% filter(year <= 2099)
+  df = rbind(df, df_wrong_rebasing)
 
   # browser()
   # Subset and format for plotting
@@ -89,7 +94,10 @@ get_df_list_fig_2C = function(DB_data){
     dplyr::filter(rcp == "rcp85", adapt_scen == "noadapt") %>%
     get.boxplot.vect(yr = 2099 )
 
-  
+  bp_wrong = df %>%
+    dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt-wrong-rebasing") %>%
+    get.boxplot.vect(yr = 2099 )
+
   u_full = df %>% 
     dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>% 
     dplyr::select(year, q10, q90) %>%
@@ -120,10 +128,12 @@ get_df_list_fig_2C = function(DB_data){
         df_85.na = df[df$rcp == "rcp85" & df$adapt_scen == "noadapt",], 
         df_45.ia = df[df$rcp == "rcp45" & df$adapt_scen == "incadapt",], 
         df_85.ia = df[df$rcp == "rcp85" & df$adapt_scen == "incadapt",], 
+        df_85.wrong = df[df$rcp == "rcp85" & df$adapt_scen == "fulladapt-wrong-rebasing",], 
         df.u = df.u,
         bp_full = bp_full, 
         bp_inc = bp_inc,
-        bp_no = bp_no
+        bp_no = bp_no,
+        bp_wrong = bp_wrong
         )
     )
 }
@@ -139,7 +149,8 @@ plot_ts_fig_2C = function(output, DB_data){
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
                    plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame(),
-                   plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame()
+                   plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame(),
+                   plot_df$df_85.wrong[,c('year', 'mean')]%>% as.data.frame()
                    ), # mean lines
     df.u = plot_df$df.u %>% as.data.frame(), 
     ub = "q90_full", lb = "q10_full", #uncertainty - first layer
@@ -153,8 +164,8 @@ plot_ts_fig_2C = function(output, DB_data){
     # df.box.3 = plot_df$bp_no,
     x.limits = c(2010, 2099),
     y.label = 'Impacts: min lost per person',
-    legend.values = c("red", "black","blue"), #color of mean line
-    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt", "RCP85 No Adapt"),
+    legend.values = c("red", "black","blue","green"), #color of mean line
+    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt", "RCP85 No Adapt","RCP85 Full Adapt Wrong Rebasing"),
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
   # print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))

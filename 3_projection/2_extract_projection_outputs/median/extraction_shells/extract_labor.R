@@ -43,19 +43,19 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 
 	# a suffix that's used to choose the config file name
 	if (risk == "allrisk") {
-		calculation <- "rebased"
+		calculation <- "_rebased"
 	} else if (risk == "riskshare") {
-		calculation <- "clipped"
+		calculation <- "_clipped"
 	} else if ((risk == "highrisk") | (risk == "lowrisk")) {
-		calculation <- "unrebased"
+		calculation <- "_unrebased"
 	} else if (risk == "allrisk-wrong-rebasing") {
-		calculation <- "wrong_rebased"
+		calculation <- ""
 	} 
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/median/extraction_configs/",
-		glue("median_mean_{risk}_{calculation}.yml "),
+		glue("median_mean_{risk}{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
 		glue("--years=[{year}] {basename_command}")
 		)
@@ -100,20 +100,20 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 	# a suffix that's used to choose the config file name
 	if (risk == "allrisk") {
-		calculation <- "rebased"
+		calculation <- "_rebased"
 	} else if (risk == "riskshare") {
-		calculation <- "clipped"
+		calculation <- "_clipped"
 	} else if ((risk == "highrisk") | (risk == "lowrisk")) {
-		calculation <- "unrebased"
+		calculation <- "_unrebased"
 	} else if (risk == "allrisk-wrong-rebasing") {
-		calculation <- "wrong_rebased"
+		calculation <- ""
 	} 
 
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/median/extraction_configs/",
-		glue("median_mean_{risk}_{calculation}.yml "),
+		glue("median_mean_{risk}{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
 		glue("{basename_command}")
 		)
