@@ -65,7 +65,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 }
 
 
-extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="global", suffix=""){
+extract_timeseries = function(ssp, iam, column, adapt, model, risk, aggregation="",region="global", suffix=""){
 
 
 	basename <- "uninteracted_main_model"
@@ -103,7 +103,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/median/extraction_configs/",
 		glue("median_single_gcm_time_series.yml "),
-		glue("--only-iam={iam} --only-models=CCSM4 --column={column} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{column}_{region}_timeseries "),
+		glue("--only-iam={iam} --only-models={model} --column={column} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{column}_{region}_{model}_timeseries "),
 		glue("{basename_command}")
 		)
 
@@ -112,9 +112,9 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 }
 
 # tests
-extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",column="rebased", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="incadapt",risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="noadapt",risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="incadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="noadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
 
 
