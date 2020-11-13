@@ -54,7 +54,7 @@ get_df_list_fig_2C = function(DB_data){
   load_df = function(rcp, adapt){
     print(rcp)
     # df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
-    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data/SSP3-{rcp}_high_allrisk_{adapt}-pop-allvars-aggregated_global_timeseries.csv'))
+    df= read_csv(glue('{DB_data}/projection_outputs/extracted_data/median/SSP3-{rcp}_high_allrisk_{adapt}-pop-aggregated_global_timeseries.csv'))
     # df = read_csv(paste0(DB_data,   
     #                '/projection_system_outputs/time_series_data/', 
     #                'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
@@ -138,9 +138,8 @@ plot_ts_fig_2C = function(output, DB_data){
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
-                   plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame()
-                   # ,
-                   # plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame()
+                   plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame(),
+                   plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame()
                    ), # mean lines
     df.u = plot_df$df.u %>% as.data.frame(), 
     ub = "q90_full", lb = "q10_full", #uncertainty - first layer
@@ -154,8 +153,8 @@ plot_ts_fig_2C = function(output, DB_data){
     # df.box.3 = plot_df$bp_no,
     x.limits = c(2010, 2099),
     y.label = 'Impacts: min lost per person',
-    legend.values = c("red", "black"), #color of mean line
-    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt"),
+    legend.values = c("red", "black","blue"), #color of mean line
+    legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt", "RCP85 No Adapt"),
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
   # print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
@@ -165,7 +164,4 @@ plot_ts_fig_2C = function(output, DB_data){
 
 output = DIR_FIG
 p = plot_ts_fig_2C(output = output, DB_data = DB_data)
-
-
-
 

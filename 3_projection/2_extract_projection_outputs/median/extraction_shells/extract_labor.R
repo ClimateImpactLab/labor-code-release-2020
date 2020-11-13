@@ -66,7 +66,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="global", suffix=""){
 
 
-	basename <- "combined_uninteracted_spline_empshare_noFE"
+	basename <- "uninteracted_main_model"
 
 	# if aggregation is "", no need to add -levels since it's not aggregated files
 	if (aggregation != "") {
