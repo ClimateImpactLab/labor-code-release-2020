@@ -1,4 +1,4 @@
-# trying to figure out 
+# trying to figure out why fulladapt is worse than incadapt
 
 
 rm(list = ls())
