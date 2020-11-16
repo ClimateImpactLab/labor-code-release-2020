@@ -103,7 +103,7 @@ extract_timeseries = function(ssp, iam, column, adapt, model, risk, aggregation=
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/median/extraction_configs/",
 		glue("median_single_gcm_time_series.yml "),
-		glue("--only-iam={iam} --only-models={model} --column={column} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{column}_{region}_{model}_timeseries "),
+		glue("--only-iam={iam}  --only-models={model} --column={column} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{column}_{region}_{model}_timeseries "),
 		glue("{basename_command}")
 		)
 
@@ -112,9 +112,20 @@ extract_timeseries = function(ssp, iam, column, adapt, model, risk, aggregation=
 }
 
 # tests
-extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="incadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
-extract_timeseries(ssp="SSP3",adapt="noadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="incadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="noadapt",model = "CCSM4", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+
+
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "surrogate_GFDL-CM3_99", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "surrogate_GFDL-CM3_99", risk="allrisk",iam="high",column="rebased", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="incadapt",model = "surrogate_GFDL-CM3_99", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+# extract_timeseries(ssp="SSP3",adapt="noadapt",model = "surrogate_GFDL-CM3_99", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+
+extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "GFDL-ESM2G", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="fulladapt",model = "GFDL-ESM2G", risk="allrisk",iam="high",column="rebased", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="incadapt",model = "GFDL-ESM2G", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
+extract_timeseries(ssp="SSP3",adapt="noadapt",model = "GFDL-ESM2G", risk="allrisk",iam="high",column="rebased_new", aggregation="-pop")
 
 
