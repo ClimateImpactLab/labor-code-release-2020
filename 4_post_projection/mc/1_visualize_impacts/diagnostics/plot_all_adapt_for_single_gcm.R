@@ -21,18 +21,18 @@ source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
 # Function that takes in the long data, subsets it and returns a list of dataframes 
 # and vectors needed to plot the time series for a given fuel
-get_df_list_fig_2C = function(DB_data){
+get_df_list_fig_2C = function(DB_data, model){
   
   # Load in the impacts data: 
   load_df = function(adapt, model){
     df= read_csv(glue('{DB_data}/projection_outputs/extracted_data/median/SSP3-rcp85_high_allrisk_{adapt}-pop-aggregated_rebased_new_global_{model}_timeseries.csv'))
-    df = df %>% mutate(rcp = rcp, adapt_scen = adapt) %>% filter(year <= 2099)
+    df = df %>% mutate(rcp = "rcp85", adapt_scen = adapt) %>% filter(year <= 2099)
     return(df)
   }
 
-  options = expand.grid(rcp = c( "rcp85"), 
-                        adapt = c("fulladapt", "incadapt", "noadapt"))
-  df = mapply(load_df, adapt = options$adapt, model = "CCSM4",
+  # browser()
+  options = expand.grid(adapt = c("fulladapt", "incadapt", "noadapt"), model = model)
+  df = mapply(load_df, adapt = options$adapt, model = options$model,
             SIMPLIFY = FALSE) %>% 
     bind_rows()
   
@@ -48,7 +48,7 @@ get_df_list_fig_2C = function(DB_data){
         df_85 = df[df$rcp == "rcp85" & df$adapt_scen == "fulladapt",], 
         df_85.na = df[df$rcp == "rcp85" & df$adapt_scen == "noadapt",], 
         df_85.ia = df[df$rcp == "rcp85" & df$adapt_scen == "incadapt",], 
-        df_85.wrong = df[df$rcp == "rcp85" & df$adapt_scen == "fulladapt-wrong-rebasing",], 
+        df_85.wrong = df[df$rcp == "rcp85" & df$adapt_scen == "fulladapt-wrong-rebasing",] 
         )
     )
 }
@@ -56,11 +56,11 @@ get_df_list_fig_2C = function(DB_data){
 
 plot_ts_fig_2C = function(output, DB_data, model){
   
-  plot_df = get_df_list_fig_2C(DB_data = DB_data) 
+  plot_df = get_df_list_fig_2C(DB_data = DB_data, model = model) 
   # browser()
   
   p <- ggtimeseries(
-    df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
+    df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame(), 
                    plot_df$df_85.ia[,c('year', 'mean')]%>% as.data.frame(),
                    plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame(),
                    plot_df$df_85.wrong[,c('year', 'mean')]%>% as.data.frame()
@@ -77,5 +77,5 @@ plot_ts_fig_2C = function(output, DB_data, model){
 }
 
 output = DIR_FIG
-p = plot_ts_fig_2C(output = output, DB_data = DB_data, model = "CCSM4")
+p = plot_ts_fig_2C(output = output, DB_data = DB_data, model = "GFDL-ESM2G")
 

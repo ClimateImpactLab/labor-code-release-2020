@@ -27,9 +27,9 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 # FUNCTION
 #################
 
-plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, suffix){
+plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
-  if (adapt != "") {
+  if (weight != "") {
       file = glue('{folder}/{name}-{risk}-{weight}-levels-combined.csv')
       title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt}) 2099")
   } else {
@@ -58,12 +58,13 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
                      topcode = T, 
                      topcode.ub = max(rescale_value),
                      breaks_labels_val = seq(-bound, bound, bound/3),
-                     color.scheme = "div", 
+                     color.scheme = "div",
+                     plot.lakes=F,
                      rescale_val = rescale_value,
                      colorbar.title = paste0("mins lost"), 
                      map.title = title)
 
-  dir.create(file.path(DIR_FIG, output), recursive = TRUE)
+  dir.create(file.path(glue("{DIR_FIG}"), output), recursive = TRUE)
   ggsave(glue("{DIR_FIG}/{output}/map-{weight}-{risk}-{adapt}-{rcp}-{ssp}.pdf"), p)
 }
 
@@ -103,11 +104,11 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk, 
 # MIXED MODEL - 20 -35
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'hi_1factor_lo_unint_mixed_model_20_35/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 
 ######################
 # WITH CHINA
@@ -119,6 +120,22 @@ output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 # name = 'uninteracted_main_model_w_chn'
 # output = 'uninteracted_main_model_w_chn/'
 
+#################################
+# FULLADAPT-INCADAPT DIAGNOSTICS
+#################################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/',
+  'median/rcp85/surrogate_GFDL-CM3_99/high/SSP3/csv')
+output = 'diagnostics/fulladapt_incadapt_surrogate_GFDL-CM3_99/'
+
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/',
+#   'median/rcp85/CCSM4/high/SSP3/csv')
+# output = 'diagnostics/fulladapt_incadapt_CCSM4/'
+
+
+name = 'uninteracted_main_model'
+
 
 ######################
 # RUN THE FUNCTION
@@ -129,24 +146,25 @@ map_args = expand.grid(folder= folder,
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
-                       adapt="fulladapt",
-                       risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
-                       weight=c("wage", "gdp", "pop"),
-                       suffix=("levels")
+                       adapt="fulladapt_incadapt",
+                       #risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
+                       # weight=c("wage", "gdp", "pop")
+                       risk=c("rebased_new", "rebased"),
+                       weight=c("")
                        )
 
-map_args = map_args %>% rbind(
-                       expand.grid(folder= folder,
-                       name=name,
-                       output=output,
-                       rcp="rcp85",
-                       ssp="SSP3",
-                       adapt="",
-                       risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
-                       weight="",
-                       suffix=""
-                       )
-                       )
+# map_args = map_args %>% rbind(
+#                        expand.grid(folder= folder,
+#                        name=name,
+#                        output=output,
+#                        rcp="rcp85",
+#                        ssp="SSP3",
+#                        adapt="",
+#                        risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
+#                        weight="",
+#                        suffix=""
+#                        )
+#                        )
 
 print(map_args)
 
@@ -159,6 +177,5 @@ mcmapply(plot_impact_map,
          adapt=map_args$adapt,
          risk=map_args$risk,
          weight=map_args$weight,
-         suffix=map_args$suffix,
          mc.cores=5
           )
