@@ -2,22 +2,6 @@
 # Manual riskshare checks
 ########################
 
-'''
-
-# No continent fixed effects
-# risk share regression
-risk_share =  2.069939 + .0005812 * t1 -.0007979 * t2 +  .0000107 * t3 + 2.96e-07 * t4 -.1647593 * log_inc -.0152579 * Americas + .117274 * Asia + .0677578 * Europe
-
-# first derivative
-first_deriv = .0005812 -.0007979 * 2 * t + .0000107 * 3 * t^2 + 2.96e-07 * 4 * t^3
-
-# points of inflection
-t≈-52.8095
-t≈0.366951
-t≈25.3311
-
-'''
-
 import pandas as pd
 import xarray as xr
 
