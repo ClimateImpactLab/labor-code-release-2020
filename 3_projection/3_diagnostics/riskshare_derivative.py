@@ -48,7 +48,7 @@ def compare_riskshare(region, name) :
 
 	risk_share_csvv =  2.3722374409202 -0.0081779717139058 * t**1 -0.0015973225364699 * t**2 +  5.86088469882e-05 * t**3 -1.7980748713e-07 * t**4 -0.178702997711924 * log_inc
 
-	print(f"Predicted FULLADAPT high risk share (loginc = {log_inc}, LRT = {t}) : is {risk_share_csvv}. \n")
+	print(f"Predicted FULLADAPT high risk share (loginc = {log_inc}, LRT = {t}) is : {risk_share_csvv}. \n")
 
 
 	# histclim
@@ -58,7 +58,7 @@ def compare_riskshare(region, name) :
 
 	risk_share_csvv =  2.3722374409202 -0.0081779717139058 * t**1 -0.0015973225364699 * t**2 +  5.86088469882e-05 * t**3 -1.7980748713e-07 * t**4 -0.178702997711924 * log_inc
 
-	print(f"Predicted HISTCLIM high risk share (loginc = {log_inc}, LRT = {t}) : is {risk_share_csvv}. \n")
+	print(f"Predicted HISTCLIM high risk share (loginc = {log_inc}, LRT = {t}) is : {risk_share_csvv}. \n")
 
 	# projection system outputs
 
