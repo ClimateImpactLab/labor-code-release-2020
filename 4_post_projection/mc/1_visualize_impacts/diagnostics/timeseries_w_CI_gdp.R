@@ -144,7 +144,7 @@ plot_ts_fig_2C = function(output, DB_data){
     legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt", "RCP85 No Adapt", 
                       "RCP45 Full Adapt",  "RCP45 Inc Adapt", "RCP45 No Adapt"),
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
-  ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
+  ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty MC %GDP")) 
   print(paste0(output, "/mc/diagnostics/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
   ggsave(paste0(output, "/mc/diagnostics/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"), p)
   return(p)

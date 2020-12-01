@@ -21,7 +21,7 @@
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased"
 output_dir="median" 
 
-aggregation_scenario="-gdp"
+aggregation_scenario="-wage"
 
 
 # the size of files above which we consider complete
