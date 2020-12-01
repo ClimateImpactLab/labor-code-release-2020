@@ -1,0 +1,5 @@
+outputdir: outputs/labor/impacts-woodwork
+# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+targetdir: /shares/gcp/outputs/labor/impacts-woodwork/uninteracted_splines_27_37_39_by_risk_empshare_noFE_test_15yr_income/rcp85/CCSM4/high/SSP3
+weighting: population 
+infix: pop
