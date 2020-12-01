@@ -157,7 +157,7 @@ plot_ts_fig_2C = function(output, DB_data){
     legend.values = c("red", "black"), #color of mean line
     legend.breaks = c("RCP85 Full Adapt", "RCP85 Inc Adapt"),
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
-  ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty")) 
+  ggtitle(paste0("high", "-rcp85","-SSP3", "-fulluncertainty MC")) 
   # print(paste0(output, "/mc/fig", "_SSP3_fulluncertainty_time_series_gdp.pdf"))
   ggsave(paste0(output, "/mc/diagnostics/fig", "_SSP3_full_uncertainty_time_series_pop_mc.pdf"), p)
   return(p)
