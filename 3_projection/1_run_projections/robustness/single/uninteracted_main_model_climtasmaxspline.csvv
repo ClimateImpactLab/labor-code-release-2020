@@ -10,10 +10,10 @@ variables:
   climtasmax: long run average daily maximum temperature [C]
   outcome: labor productivity [minutes worked by individual]
   loggdppc: 15-year moving average of log GDP per capita [log USD2000]
-  climtasmaxspline: [0.64, 29.01] 
-  climtasmaxspline^2: [0.4096, 841.5801]
-  climtasmaxspline^3: [0.262144, 24414.238701]
-  climtasmaxspline^4: [0.16777216, 708257.06471601]
+  climtasmaxspline: poly 1 daily mean temperature bounded between 0.64 and 29.01 [C] 
+  climtasmaxspline^2: square of climtaxmaspline bounded between 0.4096 and 841.5801 [C^2]
+  climtasmaxspline^3: cube of climtasmaxspline bounded between 0.262144 and 24414.238701 [C^3]
+  climtasmaxspline^4: poly 4 of climtasmaxspline bounded between 0.16777216 and 708257.06471601 [C^4]
   outcome: share of high-risk labor [unitless]
 ...
 observations
