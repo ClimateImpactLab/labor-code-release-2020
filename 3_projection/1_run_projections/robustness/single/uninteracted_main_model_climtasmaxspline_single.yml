@@ -16,7 +16,6 @@ models:
   - csvvs: /home/nsharma/repos/labor-code-release-2020/3_projection/1_run_projections/robustness/single/uninteracted_main_model_climtasmaxspline.csvv
     covariates: 
         - loggdppc
-        - climtasmax
         - climtasmaxspline: [0.64, 29.01]
         - climtasmaxspline-poly-2: [0.4096, 841.5801]
         - climtasmaxspline-poly-3: [0.262144, 24414.238701]
