@@ -17,7 +17,7 @@ library(data.table)
 library(plyr)
 library(tidyverse)
 library(tidyr)
-
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R")
 source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
@@ -148,6 +148,87 @@ dev.off()
 pdf(glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_low.pdf'))
 plot(b)
 dev.off()
+
+
+
+# limit the top and bottom bin also to width of 3
+a = ggplot(df_high %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) +
+  geom_line(aes(y = bins, color = "bins")) +
+  facet_grid(~ form) +
+  ggtitle("Functional Form Comparison: High Risk") +
+  ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = 
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank())
+
+b = ggplot(df_low %>%filter(temp >= -3, temp <= 45), aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) +
+  geom_line(aes(y = bins, color = "bins")) +
+  facet_grid(~ form) +
+  ggtitle("Functional Form Comparison: Low Risk") +
+  ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = 
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank())
+
+ggsave(a, file = glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_high_short_ends.pdf'),
+   width = 16, height = 4)
+ggsave(b, file = glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_low_short_ends.pdf'),
+   width = 16, height = 4)
+
+
+# plot with points in the middle of the bin instead of lines
+
+
+# limit the top and bottom bin also to width of 3
+a = ggplot(df_high %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) + 
+  geom_point(aes(y = bins), data = df_high %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
+  geom_line(aes(y = bins), data = df_high %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
+  facet_grid(~ form) +
+  ggtitle("Functional Form Comparison: High Risk") +
+  ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = 
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank())
+
+b = ggplot(df_low %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
+  geom_line(aes(y = value)) + 
+  geom_point(aes(y = bins), data = df_low %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
+  geom_line(aes(y = bins), data = df_low %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
+  facet_grid(~ form) +
+  ggtitle("Functional Form Comparison: Low Risk") +
+  ylab("Change in mins worked") + xlab("Temperature (C)") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = 
+                       c("dimgrey", "steelblue",
+                         "orange", "violet", "darkgreen"))+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank())
+
+ggsave(a, file = glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_high_point.pdf'),
+  width = 16, height = 4)
+ggsave(b, file = glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg}_low_point.pdf'),
+  width = 16, height = 4)
+
 
 
 ###############
