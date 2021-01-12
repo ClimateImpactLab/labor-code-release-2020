@@ -13,3 +13,8 @@ d_mean_30_gdp_15 = pd.read_csv(path_mean_30_gdp_15 + "rcp85/CCSM4/high/SSP3/unin
 d_bartlett_30_gdp_30 = pd.read_csv(path_bartlett_30_gdp_30 + "rcp85/CCSM4/high/SSP3/uninteracted_main_model_test_bartlett-allcalcs-uninteracted_main_model_test_bartlett.csv", skiprows = 26)[cols]
 
 d_climtas = xr.open_dataset("/shares/gcp/outputs/temps/rcp85/CCSM4/climtas.nc4").to_dataframe().reset_index()
+
+d_mean_30_gdp_30[d_mean_30_gdp_30.year == 2099]
+d_mean_30_gdp_15[d_mean_30_gdp_15.year == 2099]
+d_bartlett_30_gdp_30[d_bartlett_30_gdp_30.year == 2100]
+d_climtas[d_climtas.year == 2099]
