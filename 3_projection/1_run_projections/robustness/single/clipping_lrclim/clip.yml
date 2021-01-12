@@ -1,5 +1,4 @@
-mode: montecarlo
-mc_n: 15
+mode: writecalcs
 outputdir: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3
 do_historical: true
 do_farmers: true
