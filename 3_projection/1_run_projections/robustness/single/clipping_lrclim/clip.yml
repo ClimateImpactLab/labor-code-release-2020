@@ -1,5 +1,5 @@
 mode: writecalcs
-outputdir: /shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3
+outputdir: /shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim
 do_historical: true
 do_farmers: true
 singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
