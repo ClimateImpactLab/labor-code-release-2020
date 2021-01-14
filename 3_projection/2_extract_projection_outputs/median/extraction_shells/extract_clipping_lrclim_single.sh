@@ -13,17 +13,17 @@ do
 	for var in rebased_new lowriskimpacts highriskimpacts 
 	do 
 		# pure outputs (mins per worker per day) (for mapping)
-		python single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4
+		nohup python single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4  | cat > ${csv_folder}/${basename}-${var}.csv
 
 		for agg in pop gdp wage 
 		do 
 			# levels output (for mapping)
-			python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 -${folder}/${basename}-histclim-${agg}-levels.nc4
+			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 -${folder}/${basename}-histclim-${agg}-levels.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
 			# aggregate output (for timeseries)
-			python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 -${folder}/${basename}-histclim-${agg}-aggregated.nc4
-		end
-	end
-end
+			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 -${folder}/${basename}-histclim-${agg}-aggregated.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+		done
+	done
+done
 
 # extract noadapt - don't subtract histclim
 for basename in clip-noadapt 
@@ -31,14 +31,17 @@ do
 	for var in rebased_new lowriskimpacts highriskimpacts 
 	do 
 		# pure outputs (mins per worker per day) (for mapping)
-		python single.py  --column=${var} ${folder}/${basename}.nc4
+		nohup python single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
 
 		for agg in pop gdp wage 
 		do 
 			# levels output (for mapping)
-			python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 
+			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
 			# aggregate output (for timeseries)
-			python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 
-		end
-	end
-end
+			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+		done
+	done
+done
+
+
+
