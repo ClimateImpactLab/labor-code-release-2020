@@ -10,10 +10,10 @@ mkdir -p ${csv_folder}
 # extract fulladapt and incadapt - need to subtract histclim
 for basename in clip clip-incadapt 
 do 
-	for var in rebased_new lowriskimpacts highriskimpacts 
+	for var in rebased_new lowriskimpacts highriskimpacts
 	do 
 		# pure outputs (mins per worker per day) (for mapping)
-		nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/clip-histclim.nc4  | cat > ${csv_folder}/${basename}-${var}.csv
+		nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/clip-histclim.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
 
 		for agg in pop gdp wage 
 		do 
@@ -43,5 +43,15 @@ do
 	done
 done
 
+
+
+# extract fulladapt and incadapt - need to subtract histclim
+for basename in clip clip-incadapt clip-noadapt clip-histclim 
+do 
+	for var in clip
+	do 
+		nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
+	done
+done
 
 
