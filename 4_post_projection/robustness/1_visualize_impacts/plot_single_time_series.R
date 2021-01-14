@@ -86,11 +86,21 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # MIXED MODEL - 20 -35
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_20_35_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'hi_1factor_lo_unint_mixed_model_20_35/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model_20_35/'
+
+######################
+# MIXED MODEL - DOWNDOG
+######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model_downdog/'
 
 ######################
 # WITH CHINA MODEL
@@ -101,6 +111,16 @@ output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 
 # name = 'uninteracted_main_model_w_chn'
 # output = 'uninteracted_main_model_w_chn/'
+
+######################
+# MAIN MODEL - CLIPPING LR TEMP
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+        'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'clip'
+output = 'main_model_clipping_lrtemp'
 
 ###########
 # RUN IT
