@@ -91,13 +91,23 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # output = 'main_model_check'
 
 ######################
+# MAIN MODEL - CLIPPING LR TEMP
+######################
+
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+        'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'clip'
+output = 'main_model_clipping_lrtemp'
+
+######################
 # MIXED MODEL
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/z_old/test_clipping_extrema_mixed_model/',
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy',
 #   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'combined_mixed_model_splines_empshare_noFE'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
 # output = 'single_mixed_model/'
 
 ######################
@@ -124,9 +134,9 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # FULLADAPT-INCADAPT DIAGNOSTICS
 #################################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/',
-  'median/rcp85/surrogate_GFDL-CM3_99/high/SSP3/csv')
-output = 'diagnostics/fulladapt_incadapt_surrogate_GFDL-CM3_99/'
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/',
+#   'median/rcp85/surrogate_GFDL-CM3_99/high/SSP3/csv')
+# output = 'diagnostics/fulladapt_incadapt_surrogate_GFDL-CM3_99/'
 
 
 # folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased/',
@@ -134,7 +144,7 @@ output = 'diagnostics/fulladapt_incadapt_surrogate_GFDL-CM3_99/'
 # output = 'diagnostics/fulladapt_incadapt_CCSM4/'
 
 
-name = 'uninteracted_main_model'
+# name = 'uninteracted_main_model'
 
 
 ######################
@@ -146,11 +156,11 @@ map_args = expand.grid(folder= folder,
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
-                       adapt="fulladapt_incadapt",
-                       #risk=c("lowriskimpacts","rebased_new", "highriskimpacts"),
-                       # weight=c("wage", "gdp", "pop")
-                       risk=c("rebased_new", "rebased"),
-                       weight=c("")
+                       adapt="fulladapt",
+                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       weight=c("wage","gdp", "pop") 
+                       #risk=c("rebased_new", "rebased"),
+                       #weight=c("")
                        )
 
 # map_args = map_args %>% rbind(
@@ -164,7 +174,7 @@ map_args = expand.grid(folder= folder,
 #                        weight="",
 #                        suffix=""
 #                        )
-#                        )
+#                       )
 
 print(map_args)
 
