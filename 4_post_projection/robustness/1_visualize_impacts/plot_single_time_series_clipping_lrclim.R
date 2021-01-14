@@ -85,5 +85,5 @@ mcmapply(plot_impact_timeseries,
          rcp=ts_args$rcp,
          aggregation=ts_args$aggregation,
          varname=ts_args$varname,
-         mc.cores=10
+         mc.cores=20
         )
