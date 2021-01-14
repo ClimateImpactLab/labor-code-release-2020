@@ -30,18 +30,25 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname){
 
   # browser()
+  
   if (aggregation != "") {
       file <- glue('{folder}/{name}-{varname}-{aggregation}-levels.csv')
       colorbar_title = aggregation
-      title <- glue("{name} {varname} {aggregation}-weighted impacts ({ssp}, {rcp}) 2099")
+      title <- glue("{varname} {aggregation}-weighted impacts ({ssp}, {rcp}) 2099")
   } else {
       file <- glue('{folder}/{name}-{varname}.csv')
       colorbar_title = "mins lost"
       title <- glue("{name} {varname} raw impacts ({ssp}, {rcp}) 2099")
   }
   
+  if (varname == "clip") {
+    file <- glue('{folder}/{name}-{varname}.csv')
+    colorbar_title = "risk share"
+    title <- glue("{name} risk share raw impacts ({ssp}, {rcp}) 2099")
+    
+  }
   print(file)  
-  df= read.csv(file)
+  df= read_csv(file)
   
   df_plot = df %>% 
               dplyr::filter(year == 2099) %>% 
@@ -92,7 +99,7 @@ map_args = expand.grid(folder= folder,
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
-                       varname=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       varname=c( "highriskimpacts","rebased_new", "lowriskimpacts","clip"),
                        aggregation = c("", "gdp") 
                        )
 # testing code
@@ -108,5 +115,8 @@ mcmapply(plot_impact_map,
          rcp=map_args$rcp,
          aggregation=map_args$aggregation,
          varname=map_args$varname,
-         mc.cores=5
+         mc.cores=20
         )
+
+
+

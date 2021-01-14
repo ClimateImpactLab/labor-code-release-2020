@@ -53,7 +53,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ag
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('//shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
 output = 'main_model_clipping_lrtemp'
 
