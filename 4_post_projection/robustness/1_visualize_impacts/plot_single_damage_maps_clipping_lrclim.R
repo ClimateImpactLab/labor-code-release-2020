@@ -51,9 +51,14 @@ plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname)
   df= read_csv(file)
   
   df_plot = df %>% 
-              dplyr::filter(year == 2099) %>% 
+              dplyr::filter(year == 2099) 
+
+  if (varname != "clip") {
+    df_plot = df_plot %>% 
               dplyr::mutate(value = -as.numeric(value))
+  }
               # we were converting minutes to minutes lost
+
 
   # find the scales for nice plotting
   bound = ceiling(max(abs(df_plot$value), na.rm=TRUE))
