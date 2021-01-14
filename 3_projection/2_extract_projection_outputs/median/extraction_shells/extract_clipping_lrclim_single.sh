@@ -13,14 +13,14 @@ do
 	for var in rebased_new lowriskimpacts highriskimpacts 
 	do 
 		# pure outputs (mins per worker per day) (for mapping)
-		nohup python single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4  | cat > ${csv_folder}/${basename}-${var}.csv
+		nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/clip-histclim.nc4  | cat > ${csv_folder}/${basename}-${var}.csv
 
 		for agg in pop gdp wage 
 		do 
 			# levels output (for mapping)
-			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 -${folder}/${basename}-histclim-${agg}-levels.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
+			nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 -${folder}/clip-histclim-${agg}-levels.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
 			# aggregate output (for timeseries)
-			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 -${folder}/${basename}-histclim-${agg}-aggregated.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+			nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 -${folder}/clip-histclim-${agg}-aggregated.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
 		done
 	done
 done
@@ -31,14 +31,14 @@ do
 	for var in rebased_new lowriskimpacts highriskimpacts 
 	do 
 		# pure outputs (mins per worker per day) (for mapping)
-		nohup python single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
+		nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
 
 		for agg in pop gdp wage 
 		do 
 			# levels output (for mapping)
-			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
+			nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
 			# aggregate output (for timeseries)
-			nohup python single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+			nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
 		done
 	done
 done
