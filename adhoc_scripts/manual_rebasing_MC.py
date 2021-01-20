@@ -44,8 +44,8 @@ username = getpass.getuser()
 # PATHWAYS
 ############
 # # 
-# proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
-# output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
+# proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_re-rebased/{str(sys.argv[1])}'
+# output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/{str(sys.argv[1])}'
     
 # copy parent folder structure
 # for dirpath, dirnames, filenames in os.walk(proj_root):
@@ -101,7 +101,7 @@ def rebase_combine(file):
 
 # for batchno in range(0,15) :
 
-    # proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch{}/rcp85/bcc-csm1-1/'.format(batchno)
+    # proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch{}/rcp85/bcc-csm1-1/'.format(batchno)
     # output_root = '/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy4/batch{}/rcp85/bcc-csm1-1/'.format(batchno)
 
 #     paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
@@ -133,7 +133,7 @@ def rebase_combine(file):
 
 
 
-file = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4"
+file = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4"
 # start = time.time()
 ds = rebase_combine(file)
 # end = time.time()

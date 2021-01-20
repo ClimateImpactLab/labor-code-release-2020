@@ -5,7 +5,7 @@
 # set some paths and parameters
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
 # output_root="/shares/gcp/outputs/globus_rcc_labor_transfer/transfer/ok"
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/"
 output_dir="/" 
 
 # the size of files above which we consider complete

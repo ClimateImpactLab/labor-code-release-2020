@@ -18,9 +18,9 @@ set maxvar 32767
 pause on
 
 cilpath
-global lab "$DB/labor/"
-global mig "$DB/Wilkes_InternalMigrationGlobal/"
-global Inc_DATA "$DB/Global ACP/MORTALITY/Replication_2018/2_Data"
+global lab "$OUTPUT/CIL_labor/"
+global mig "$OUTPUT/CIL_Migration/"
+global Inc_DATA "$OUTPUT/Global_ACP//MORTALITY/Replication_2018/2_Data"
 
 ****************************
 * 1. set up tools and data *
@@ -31,7 +31,7 @@ cap program drop better_reclink
 program better_reclink
 	args country insample
 	di "`country'"
-	insheet using "$lab/1_preparation/IPUMS/data/shp/world_geolev1_2019/geolev1_names.csv", clear
+	insheet using "$lab/1_preparation/employment_shares/data/shp/world_geolev1_2019/geolev1_names.csv", clear
 	rename cntry_name country
 	keep if country  == "`country'"
 	reclink country admin_name using `insample', ///
@@ -52,7 +52,7 @@ program better_reclink
 end
 
 * get list of countries in IPUMS labor data
-insheet using "$lab/1_preparation/IPUMS/data/required_clim_data.csv", clear
+insheet using "$lab/1_preparation/employment_shares/data/required_clim_data.csv", clear
 keep country
 tempfile countnames
 save `countnames', replace
@@ -1190,7 +1190,7 @@ foreach c in `countries' {
 		di "----skipping `c' (no tempfile)----"
 	}
 	else {
-		qui insheet using "$lab/1_preparation/IPUMS/data/required_clim_data.csv", clear
+		qui insheet using "$lab/1_preparation/employment_shares/data/required_clim_data.csv", clear
 		
 		* max of the income data is 2014, so cut off here
 		qui replace required_end = 2014 if required_end > 2014
@@ -1260,7 +1260,7 @@ pause
 tempfile main
 save `main'
 
-import delim using "$lab/1_preparation/IPUMS/data/adm1_empshares.csv", clear
+import delim using "$lab/1_preparation/employment_shares/data/adm1_empshares.csv", clear
 keep year geolev1 country_str geolev1_pop
 rename geolev1 geolevel1
 rename country_str country
@@ -1277,4 +1277,4 @@ drop if country == "Germany"
 drop if mi(geolev1_pop)
 drop max_year min_year cntry_code bpl_code
 
-export delimited using "$lab/1_preparation/IPUMS/data/income/income_pop_merged.csv", replace
+export delimited using "$lab/1_preparation/employment_shares/data/income/income_pop_merged.csv", replace
