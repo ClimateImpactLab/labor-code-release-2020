@@ -23,46 +23,7 @@ output = '/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/
 projection.packages <- paste0(REPO,"/labor-code-release-2020/3_projection/packages_programs_inputs/")
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
-###########################################
-# 1 Data for plotting city response functions for figure 2A
-
-# Min and max temperature for each city - this is just for plotting aesthetics 
-min_max_temp = read_csv(paste0(db, 
-	'IEA_Replication/Data/Miscellaneous/Cities_12_MinMax.csv'), skip = 4) %>%
-		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
-	write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_2015_min_max.csv'))
-
-city_list = read_csv(paste0(db, 
-	'IEA_Replication/Data/Miscellaneous/City_List.csv')) %>%
-		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
-		dplyr::rename(region = hierid) %>%
-		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
-
-# Covariates are from a single run allcalcs file
-cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
-  skip = 114) %>% 
-	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
-
-covariates = cov_electricity_single %>%
-		dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc) %>%
-		dplyr::filter(year %in% c(2015, 2099))%>%
-		dplyr::right_join(city_list, by = "region") %>%
-		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))
-
-
-###########################################
-
-# 2 Data for figure 2B bar chart
-# Just need population for each impact region (since we have KWh/capita info from the projection)
-# this has to be run where "../server.yml" exists
-
 pop = get_pop() 
-pop_df = pop %>% 
-	dplyr::filter(ssp == "SSP3") %>%
-	dplyr::select(region, pop, year) 
-
-write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
-	'SSP3_IR_level_population.csv'))
 
 # Get population and gdp values: 
 inf = paste0("/mnt/Global_ACP/MORTALITY", 
@@ -70,14 +31,30 @@ inf = paste0("/mnt/Global_ACP/MORTALITY",
 con_df = read_dta(inf) 
 conversion_value = con_df$inf_adj[1]
 
-###########################################
-# 3 Data for figure 3A map
+############################################################
+# 5 Get data needed for income decile plot 
 
-gdppc = get_gdppc_all_regions('high', 'SSP3')
+# 2012
+gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
+	mutate(gdppc = gdppc * conversion_value) 
 
-gdppc = gdppc %>%
-	mutate(gdppc = gdppc * conversion_value)
+df = gdppc %>% 
+	dplyr::filter(year == 2012)
 
+# Get 2012 population projections
+pop12 = pop %>% 
+	dplyr::filter(ssp == "SSP3") %>%
+	dplyr::filter(year == 2010) %>% 
+	dplyr::select(region, pop)
+
+df = left_join(df, pop12, by = "region") %>% 
+	dplyr::select(region, year, gdppc, pop)
+
+write_csv(df, paste0(output,
+	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
+
+
+# 2099
 
 # Population values are every 5 years. We use flat interpolation (a step function)
 # in between. So the 2099 population is assigned to the value we have in 2095. 
@@ -96,54 +73,7 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 	dplyr::select(region, pop99, gdppc99) %>%
 	mutate(gdp99 = gdppc99 *pop99)
 
-write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
+write_csv(covs, paste0(output, 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
 
-###########################################
-# 4 Figure 3B Time series data 
-gdppc = get_gdppc_all_regions('high', 'SSP3')
-
-gdp = convert_global_gdp(gdppc,'SSP3') 
-gdp$year = seq(2010,2100,1) 
-
-gdp = gdp %>% as.data.frame() %>% 
-	mutate(gdp = gdp * conversion_value)
-
-write_csv(gdp, paste0(output, 
-	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
-
-# also get SSP2 gdp time series for referee comments
-gdppc = get_gdppc_all_regions('high', 'SSP2')
-
-gdp = convert_global_gdp(gdppc,'SSP2') 
-gdp$year = seq(2010,2100,1) 
-
-gdp = gdp %>% as.data.frame() %>% 
-    mutate(gdp = gdp * conversion_value)
-
-write_csv(gdp, paste0(output, 
-    '/projection_system_outputs/covariates/SSP2-global-gdp-time_series.csv'))
-
-
-
-############################################################
-# 5 Get data needed for income decile plot 
-
-gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
-	mutate(gdppc = gdppc * conversion_value) 
-
-df = gdppc %>% 
-	dplyr::filter(year == 2012)
-
-# Get 2012 population projections
-pop12 = pop %>% 
-	dplyr::filter(ssp == "SSP3") %>%
-	dplyr::filter(year == 2010) %>% 
-	dplyr::select(region, pop)
-
-df = left_join(df, pop12, by = "region") %>% 
-	dplyr::select(region, year, gdppc, pop)
-
-write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
-	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
