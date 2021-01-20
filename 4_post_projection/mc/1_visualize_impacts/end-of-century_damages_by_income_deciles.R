@@ -21,8 +21,7 @@ pacman::p_load(ggplot2,
                readr)
 
 
-DB_data = paste0("/mnt/CIL_energy/")
-
+DB_data = '/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates/'
 
 # Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
 
@@ -51,51 +50,11 @@ get_deciles = function(df){
 }
 
 # Load in pop and income data
-df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+df_covariates = read_csv(paste0(DB_data,  
                         '/SSP3-high-IR_level-gdppc-pop-2012.csv'))
 
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)
-
-
-##############################################
-# plot pop weighted per capita damage
-# Load in impacts data
-# df_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/SSP3-rcp85_high_allrisk_fulladapt-wage-levels_2099_map.csv'))%>%
-#   mutate(damage = mean) %>%  
-#   left_join(deciles, by = "region")
-
-# # Join with 2099 population data
-# df_pop99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
-#                                    '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
-#   dplyr::select(region, pop99)
-
-# df_impacts = df_impacts %>% 
-#     left_join(df_pop99, by = "region")
-
-# # Collapse to decile level
-# df_plot = df_impacts %>% 
-#   group_by(decile) %>% 
-#   summarize(total_damage_2099 = sum(damage), 
-#             total_pop_2099 = sum(pop99))%>%
-#   mutate(damagepc = total_damage_2099 / total_pop_2099 )
-
-
-# # Plot and save 
-# p = ggplot(data = df_plot) +
-#   geom_bar(aes( x=decile, y = damagepc ), 
-#            position="dodge", stat="identity", width=.8) + 
-#   theme_minimal() +
-#   ylab("Impact of Climate Change, 2019 USD") +
-#   xlab("2012 Income Decile") +
-#   scale_x_discrete(limits = seq(1,10))
-
-# ggsave(p, file = paste0(DIR_FIG, 
-#     "/SSP3-high_rcp85-total-damages_by_inc_decile.pdf"), 
-#     width = 8, height = 6)
-
-
-
 
 #################################################
 # plot damage in percentage GDP by income decile
@@ -105,9 +64,8 @@ df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted
   mutate(q25 = mean * 0.5, q75 = mean * 1.5) %>%  
   left_join(deciles, by = "region")
 
-# Join with 2099 population data
-df_gdp99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
-                                   '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
+# Join with 2099 population dataSSP3-high-IR_level-gdppc_pop-2099
+df_gdp99= read_csv(paste0(DB_data, '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
   dplyr::select(region, gdp99)
 
 df_pct_gdp_impacts = df_pct_gdp_impacts %>% 
