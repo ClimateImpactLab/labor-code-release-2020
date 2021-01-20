@@ -3,7 +3,7 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/project2/mgreenst/outputs/labor/labor_mc_aggregate_copy3/"
+output_root="/project2/mgreenst/outputs/labor/labor_mc_re-rebased/"
 # output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_202009/"
 output_dir="batch10" 
 

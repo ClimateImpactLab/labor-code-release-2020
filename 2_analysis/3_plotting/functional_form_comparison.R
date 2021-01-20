@@ -22,7 +22,7 @@ source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
 source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro: nochn, wchn
-reg = "wchn"
+reg = "nochn"
 
 #############
 # GET DATA

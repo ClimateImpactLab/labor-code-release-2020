@@ -24,8 +24,8 @@ username = getpass.getuser()
 # PATHWAYS
 ############
 # # 
-# proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
-# output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
+# proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_re-rebased/{str(sys.argv[1])}'
+# output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/{str(sys.argv[1])}'
     
 # copy parent folder structure
 # for dirpath, dirnames, filenames in os.walk(proj_root):
@@ -63,10 +63,10 @@ def rebase_combine(file):
 
 
 
-files = ["/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4",
-	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch2/rcp85/surrogate_GFDL-ESM2G_06/high/SSP2/uninteracted_main_model-incadapt.nc4",
-	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch4/rcp45/BNU-ESM/high/SSP1/uninteracted_main_model-noadapt.nc4",
-	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/batch4/rcp45/MIROC-ESM/low/SSP4/uninteracted_main_model-incadapt.nc4"]
+files = ["/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch5/rcp45/CESM1-BGC/high/SSP4/uninteracted_main_model-noadapt.nc4",
+	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch2/rcp85/surrogate_GFDL-ESM2G_06/high/SSP2/uninteracted_main_model-incadapt.nc4",
+	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch4/rcp45/BNU-ESM/high/SSP1/uninteracted_main_model-noadapt.nc4",
+	"/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/batch4/rcp45/MIROC-ESM/low/SSP4/uninteracted_main_model-incadapt.nc4"]
 
 
 for file in files:

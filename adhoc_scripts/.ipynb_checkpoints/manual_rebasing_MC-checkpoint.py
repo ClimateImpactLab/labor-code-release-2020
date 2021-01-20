@@ -45,7 +45,7 @@ username = getpass.getuser()
 ############
 
 proj_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy/labor_mc_aggregate/{str(sys.argv[1])}'
-output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy3/{str(sys.argv[1])}'
+output_root = f'/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/{str(sys.argv[1])}'
     
 # copy parent folder structure
 # for dirpath, dirnames, filenames in os.walk(proj_root):
