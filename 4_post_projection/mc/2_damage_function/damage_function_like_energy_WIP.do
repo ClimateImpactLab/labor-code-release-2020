@@ -87,7 +87,7 @@ cap rename temp anomaly
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
 tempfile coeffs
-postfile damage_coeffs  year cons beta1 beta2 anomalymin anomalymax using "`coeffs'", replace
+postfile damage_coeffs str20(var_type) year cons beta1 beta2 anomalymin anomalymax using "`coeffs'", replace
 
 gen t = year-2010
 
@@ -108,7 +108,7 @@ foreach vv in value {
   }
   
   * Linear extrapolation for years post-2100 
-    qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
+  qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
   
   * Generate predicted coeffs for each year post 2100 with linear extrapolation
   foreach yr of numlist 2100/2300 {
