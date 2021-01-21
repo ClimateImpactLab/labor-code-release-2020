@@ -99,6 +99,14 @@ gen t = year-2010
 timer clear
 timer on 1
 
+forvalues pp = 5(5)95 {
+  di "`pp'"
+  loc p = `pp'/100
+  loc quantiles_to_eval "`quantiles_to_eval' `p'"
+}
+di "`quantiles_to_eval'"
+
+
 foreach vv in value {
   foreach pp of numlist `quantiles_to_eval' {
     di "`pp'"
