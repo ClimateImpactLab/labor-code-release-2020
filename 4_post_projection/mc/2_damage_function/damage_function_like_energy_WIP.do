@@ -13,7 +13,9 @@ glob DB "/mnt"
 glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resampled_data"
 
-glob root "$DIR_REPO_LABOR"
+do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "$DIR_REPO_LABOR/0_subroutines/paths.do"
+
 glob output "$DIR_FIG/mc/"
 
 
@@ -28,7 +30,7 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP`ssp'-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
 drop if year < 2015 | year > 2099
 replace value = value / 1000000000000
 
@@ -57,7 +59,9 @@ cap rename temp anomaly
 
 loc title = "Labor"
 loc ytitle = "Trillion USD"
-
+loc ystep = 20 
+loc ymax = 100 
+loc ymin = 0
 
    * Nonparametric model for use pre-2100 
 foreach yr of numlist 2099/2099 {
@@ -71,7 +75,7 @@ foreach yr of numlist 2099/2099 {
 }
 
 loc gr
-loc gr `gr' sc valie anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
+loc gr `gr' sc value anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
 loc gr `gr' sc value anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
 loc gr `gr' line yhat_2099 anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
 loc gr `gr' rarea y95_2099 y05_2099 anomaly if year == 2099 , col(grey%5) lwidth(none) ||
@@ -80,7 +84,7 @@ di "Graphing time..."
 sort anomaly
 graph twoway `gr', yline(0, lwidth(vthin)) ///
       ytitle(`ytitle') xtitle("GMST Anomaly") ///
-        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("`fuel'", replace) ///
+        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("wages", replace) ///
         xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) ///
         title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  ///
         yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
@@ -99,8 +103,6 @@ loc slope = `Dy'/`Dx'
 di "average slope is `slope'"
 
 graph export "$output/damage_function_2099_SSP3.pdf", replace 
-restore
-
 
 **********************************************************************************
 * STEP 3: HISTOGRAMS OF GMSTs 
