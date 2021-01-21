@@ -80,7 +80,7 @@ loc ssp = "3"
 loc subset = 2085
 
 * Monte carlo = "_MC" or Median = ""
-loc mc = ""
+loc mc = "_MC"
 
 * damages or lifeyears or costs or deaths (for mortality only)
 loc value = "wages" 
@@ -88,7 +88,7 @@ loc value = "wages"
 
 * controls
 loc run_regs = "true"
-loc quantilereg = "false"
+loc quantilereg = "true"
 loc paper_plots = "true"
 loc diag_plots = "true"
 loc time_plots = "true"

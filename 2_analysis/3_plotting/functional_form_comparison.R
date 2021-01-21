@@ -154,6 +154,7 @@ dev.off()
 # limit the top and bottom bin also to width of 3
 a = ggplot(df_high %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
   geom_line(aes(y = value)) +
+  scale_y_continuous(breaks = seq(-80,40,20), limits = c(-80,40)) +
   geom_line(aes(y = bins, color = "bins")) +
   facet_grid(~ form) +
   ggtitle("Functional Form Comparison: High Risk") +
@@ -169,6 +170,7 @@ a = ggplot(df_high %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) 
 
 b = ggplot(df_low %>%filter(temp >= -3, temp <= 45), aes(x=temp, color=form)) +
   geom_line(aes(y = value)) +
+  scale_y_continuous(breaks = seq(-80,40,20), limits = c(-80,40)) +
   geom_line(aes(y = bins, color = "bins")) +
   facet_grid(~ form) +
   ggtitle("Functional Form Comparison: Low Risk") +
@@ -190,10 +192,10 @@ ggsave(b, file = glue('{DIR_FIG}/functional_form/functional_form_comparison_{reg
 
 # plot with points in the middle of the bin instead of lines
 
-
 # limit the top and bottom bin also to width of 3
 a = ggplot(df_high %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
   geom_line(aes(y = value)) + 
+  scale_y_continuous(breaks = seq(-80,40,20), limits = c(-80,40)) +
   geom_point(aes(y = bins), data = df_high %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
   geom_line(aes(y = bins), data = df_high %>% filter(temp >= -3, temp <= 45, temp %% 3 ==0)) +
   facet_grid(~ form) +
@@ -215,6 +217,7 @@ b = ggplot(df_low %>%filter(temp >= -3, temp <= 45 ), aes(x=temp, color=form)) +
   facet_grid(~ form) +
   ggtitle("Functional Form Comparison: Low Risk") +
   ylab("Change in mins worked") + xlab("Temperature (C)") +
+  scale_y_continuous(breaks = seq(-80,40,20), limits = c(-80,40)) +
   theme(legend.position = "none") +
   scale_color_manual(values = 
                        c("dimgrey", "steelblue",

@@ -118,8 +118,10 @@ regions = c(
   "PRK.11.170", #(7)Pyongyang, Korea, North
   "PER.15.135.1340",  # (8) Lima, Peru 
   "JPN.22.962", # (9) Kyoto, Japan 
-  "AUS.11.Rea19393e048c00bc"
+  "AUS.11.Rea19393e048c00bc" 
   )
+
+
 # code to find the cities in deciles: 
 
 # all_IRs = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
