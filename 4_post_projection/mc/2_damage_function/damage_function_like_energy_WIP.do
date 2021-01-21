@@ -32,7 +32,7 @@ loc type = "wages"
 
 import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
 drop if year < 2015 | year > 2099
-replace value = value / 1000000000000
+replace value = -value / 1000000000000
 
 merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
 tempfile master
@@ -59,17 +59,17 @@ cap rename temp anomaly
 
 loc title = "Labor"
 loc ytitle = "Trillion USD"
-loc ystep = 20 
-loc ymax = 100 
-loc ymin = 0
+loc ystep = 10
+loc ymax = 40 
+loc ymin = -10
 
    * Nonparametric model for use pre-2100 
 foreach yr of numlist 2099/2099 {
-        qui reg value c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
-        cap qui predict yhat_`yr' if year>=`yr'-2 & year <= `yr'+2 
-        qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+      qui reg value c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+      cap qui predict yhat_`yr' if year>=`yr'-2 & year <= `yr'+2 
+      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
       predict y05_`yr' if year>=`yr'-2 & year <= `yr'+2
-      qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
       predict y95_`yr' if year>=`yr'-2 & year <= `yr'+2
  
 }
