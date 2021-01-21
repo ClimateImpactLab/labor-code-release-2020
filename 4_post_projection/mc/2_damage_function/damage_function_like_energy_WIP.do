@@ -1,23 +1,11 @@
-*****************************************
-* Quantile regression for SCC uncertainty 
-* CALCULATION INCLUDING POST-2100 EXTRAPOLATION
-*****************************************
-/* 
-This script does the following:
-  * 1) Pulls in a .csv containing damages at global or impact region level. The .csv 
-      should be SSP-specific, and contain damages in current year USD for every
-      RCP-GCM-IAM-year combination. 
-  * 2) Runs a quantile regression in which the quantiles of the damage function are 
-      nonparametrically estimated for each year 't'
-      using data only from the 5 years around 't'
-  * 3) Runs a second regression in which GMST is interacted linearly with time. 
-  * 4) Predicts quantile regression coefficients for all years 2015-2300, with post-2100 extrapolation 
-      conducted using the linear temporal interaction model and pre-2100 using the nonparametric model
-  * 5) Saves a csv of quantile regression coefficients to be used by the SCC uncertainty calculation derived from the FAIR 
-      simple climate model
+/*
+
+Purpose: Figure 3C plotting, to show evolution of total energy damage function over time
+
 */
+
 **********************************************************************************
-* SET UP -- Change paths and input choices to fit desired output
+* 1 SET UP -- Change paths and input choices to fit desired output
 **********************************************************************************
 
 clear all
@@ -34,132 +22,75 @@ do "$DIR_REPO_LABOR/0_subroutines/paths.do"
 
 glob output "$DIR_FIG/mc/"
 
-* SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP3" 
+* **********************************************************************************
+* 2 Feather plot for pre- and post-2100 damage functions
+* **********************************************************************************
 
-* Model toggle  - options are "main", "lininter", or "lininter_double"
-loc model = "main"
-
-* What year do we use data from for determining DF estimates used for the out of sample extrapolation
-loc subset = 2085
-
-
-loc model_tag = ""
-
-
-**********************************************************************************
-
-*Load in GMTanom data file, save as a tempfile 
+* import and reformat the gmst anomaly data, used for defining the range of GMST we plot each damage funciton for 
 insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
-drop if year < 2015 | year > 2099
 tempfile GMST_anom
 save `GMST_anom', replace
+preserve
+  qui bysort year: egen minT=min(temp)
+  qui bysort year: egen maxT=max(temp)
+  qui replace minT=round(minT,0.1)
+  qui replace maxT=round(maxT,0.1)
+  qui keep year minT maxT
+  qui duplicates drop year, force
+  tempfile ref
+  qui save `ref', replace
+restore
 
-* **********************************************************************************
-* * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
-* **********************************************************************************
-loc type = "wages"
+* Load in damage function coefficients, and subset to just price014 (main model) 
+insheet using "$DIR_REPO_LABOR/output/damage_function_mc/df_mean_output_SSP3.csv", comma names clear 
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
-drop if year < 2015 | year > 2099
-replace value = -value / 1000000000000
+* Create expanded dataset by valuation and by year
+* Just keep data every 5 years
+gen roundyr = round(year, 5)
+keep if year==roundyr
+drop roundyr
 
-merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
-tempfile master
-save `master', replace
+* Expand to get obs every quarter degree
+expand 40, gen(newobs)
+sort year
 
-qui bysort year: egen minT=min(temp)
-qui bysort year: egen maxT=max(temp)
-qui replace minT=round(minT,0.1)
-qui replace maxT=round(maxT,0.1)
-qui keep year minT maxT
-qui duplicates drop year, force
-
-merge 1:m year using `master', nogen assert(3)
-
-
-* **********************************************************************************
-* * STEP 2: Estimate damage functions and plot, pre-2100
-* **********************************************************************************
-
-cap rename temp anomaly
-
-* What year do we use data from for determining DF estimates used for the out of sample extrapolation
-loc subset = 2085
-
-**  INITIALIZE FILE WE WILL POST RESULTS TO
-capture postutil clear
-tempfile coeffs
-postfile damage_coeffs str20(var_type) year pctile cons beta1 beta2 anomalymin anomalymax using "`coeffs'", replace   
+* Generate anomaly and prediction for every quarter degree
+bysort year: gen anomaly = _n/4
+gen y = cons + beta1*anomaly + beta2*anomaly^2
 
 
-** Regress, and output coeffs 
-gen t = year-2010
-
-timer clear
-timer on 1
-
-forvalues pp = 5(5)95 {
-  di "`pp'"
-  loc p = `pp'/100
-  loc quantiles_to_eval "`quantiles_to_eval' `p'"
-}
-di "`quantiles_to_eval'"
+* convert to trillion
+*replace y = y / 1000
 
 
-foreach vv in value {
-  foreach pp of numlist `quantiles_to_eval' {
-    di "`pp'"
-    * Nonparametric model for use pre-2100 
-    foreach yr of numlist 2015/2099 { 
-      di "`vv' `yr' `pp'"   
-      * Need to save the min and max temperature for each year for plotting
-      qui summ anomaly if year == `yr', det 
-      loc amin = `r(min)'
-      loc amax =  `r(max)'
-      
-      cap qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp')
+* Merge in range and drop unsupported temperature 
+merge m:1 year using `ref'
+qui replace y=. if anomaly<minT & year<=2099
+qui replace y=. if anomaly>maxT & year<=2099
 
-      if _rc!=0 {
-        di "didn't converge first time, so we are upping the iterations and trying again"
-        cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp') wlsiter(20)
-        if _rc!=0 {
-          di "didn't converge second time, so we are upping the iterations and trying again"
-          cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp') wlsiter(40)
-          if _rc!=0 {
-            di "didn't converge after trying some pretty high numbers for iterations - somethings probably wrong here!"
-            break
-          }
-        }
-      }
-    
-      * Save coefficients for all years prior to 2100
-      post damage_coeffs ("`vv'") (`yr') (`pp') (_b[_cons]) (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
-    }
-    
-    * Linear extrapolation for years post-2100 
-    qui qreg `vv' c.anomaly##c.anomaly##c.t if year >= `subset', quantile(`pp')
-
-    foreach yr of numlist 2100/2300 {
-      di "`vv' `yr' `pp'"
-      loc cons = _b[_cons] + _b[t]*(`yr'-2010)
-      loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
-      loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
-      
-      * NOTE: we don't have future min and max, so assume they go through all GMST values   
-      post damage_coeffs ("`vv'") (`yr') (`pp') (`cons') (`beta1') (`beta2') (0) (11)   
-    }
-  }
+* initialise graphing local
+loc gr 
+* Pre-2100 nonparametric lines
+foreach yr of numlist 2015(10)2099 {
+di "`yr'"
+loc gr `gr' line y anomaly if year == `yr', color(edkblue) ||
 }
 
-postclose damage_coeffs
-timer off 1
-timer list
-di "Time to completion = `r(t1)'"
+* Post-2100 extrapolation line
+foreach yr of numlist 2150 2200 2250 2300 {
+loc gr `gr' line y anomaly if year == `yr', color(gs5*.5) ||
+}
 
-**********************************************************************************
-* STEP 3: WRITE AND SAVE OUTPUT 
-**********************************************************************************
- 
-use "`coeffs'", clear
-outsheet using "$DIR_REPO_LABOR/output/damage_function_mc/df_qreg_output_`ssp'`model_tag'.csv", comma replace 
+* 2100 line
+loc gr `gr' line y anomaly if year == 2100, color(black) ||
+sort anomaly
+
+* Plot and save
+graph tw `gr', yline(0, lwidth(vthin)) ///
+  ytitle("Trillion 2019 USD" ) xtitle("GMST Anomaly") ///
+  title("Total Labor Damage Function, Evolution Over Time", size(small)) ///
+  xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
+  ylabel(, labsize(small)) 
+
+graph export "$output/fig_3C_labor_damage_function_evolution_SSP3.pdf", replace 
+graph drop _all
