@@ -88,10 +88,10 @@ plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname)
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/main_model_flat_edges_single_copy/',
         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-output = 'main_model_clipping_lrtemp'
+output = 'main_model_flat_edges_single'
 
 ######################
 # RUN THE FUNCTION
@@ -100,7 +100,7 @@ output = 'main_model_clipping_lrtemp'
 
 
 map_args = expand.grid(folder= folder,
-                       name=c("clip","clip-incadapt","clip-noadapt"),
+                       name=c("labor-climtasmaxclip","labor-climtasmaxclip-incadapt","labor-climtasmaxclip-noadapt"),
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
