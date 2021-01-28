@@ -11,10 +11,11 @@
 *************
 
 clear all
+set rmsg on
 set more off
 
 cilpath
-local laborDB "$DB/Global ACP/labor/1_preparation"
+local laborDB "/mnt/CIL_labor/1_preparation"
 
 **************
 * 2. Extract *
@@ -22,7 +23,7 @@ local laborDB "$DB/Global ACP/labor/1_preparation"
 * Note that this code is provided by IPUMS
 
 * IPUMS required the working directory to be where the data are
-cd $SHARES/estimation/Labor/IPUMS
+cd "/mnt/sacagawea_shares/gcp/estimation/Labor_archive/IPUMS"
 
 quietly infix              ///
   int     country   1-3    ///
@@ -1563,7 +1564,7 @@ preserve
 	gen required_start = min_year - 30
 	gen required_end = max_year + 15
 
-	export delimited using "`laborDB'/IPUMS/data/required_clim_data.csv", replace
+	export delimited using "`laborDB'/employment_shares/data/required_clim_data_test.csv", replace
 restore
 
 *****************************************
@@ -1602,5 +1603,5 @@ assert abs(1 - shares_total) < 0.00001
 gen ind_highrisk_share = industry_share10 + industry_share20 + industry_share30 + industry_share50
 gen ind_highrisk_share_no50 = industry_share10 + industry_share20 + industry_share30
 
-export delimited using "`laborDB'/IPUMS/data/adm1_empshares.csv", replace
+export delimited using "`laborDB'/employment_shares/data/adm1_empshares_test.csv", replace
 
