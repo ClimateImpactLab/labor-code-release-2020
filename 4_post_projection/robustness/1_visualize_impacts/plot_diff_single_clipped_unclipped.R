@@ -33,7 +33,7 @@ plot_impact_map = function(folder, name, output){
   
 file <- glue('{folder}/{name}.csv')
     colorbar_title = "risk share"
-    title <- glue("{name} clipped - unclipped (SSP3, rcp85) 2099")
+    title <- glue("{name} LRT in 1-99 (SSP3, rcp85) 2099")
     
   print(file)  
   df_plot= read_csv(file)
@@ -65,7 +65,7 @@ file <- glue('{folder}/{name}.csv')
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/mnt/CIL_labor/3_projection/impact_checks')
+folder = glue('/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim')
 
 output = 'diff_clipped_vs_unclipped'
 
@@ -76,7 +76,7 @@ output = 'diff_clipped_vs_unclipped'
 
 
 map_args = expand.grid(folder= folder,
-                       name=c("riskshare","impacts"),
+                       name=c("lrt_riskshare","lrt_impacts"),
                        output=output
                        )
 # testing code
