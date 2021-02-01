@@ -27,38 +27,16 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 # FUNCTION
 #################
 
-plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname){
+plot_impact_map = function(folder, name, output){
 
   # browser()
   
-  if (aggregation != "") {
-      file <- glue('{folder}/{name}-{varname}-{aggregation}-levels.csv')
-      colorbar_title = aggregation
-      title <- glue("{varname} {aggregation}-weighted impacts ({ssp}, {rcp}) 2099")
-  } else {
-      file <- glue('{folder}/{name}-{varname}.csv')
-      colorbar_title = "mins lost"
-      title <- glue("{name} {varname} raw impacts ({ssp}, {rcp}) 2099")
-  }
-  
-  if (varname == "clip") {
-    file <- glue('{folder}/{name}-{varname}.csv')
+file <- glue('{folder}/{name}.csv')
     colorbar_title = "risk share"
-    title <- glue("{name} risk share raw impacts ({ssp}, {rcp}) 2099")
+    title <- glue("{name} LRT in 1-99 (SSP3, rcp85) 2099")
     
-  }
   print(file)  
-  df= read_csv(file)
-  
-  df_plot = df %>% 
-              dplyr::filter(year == 2099) 
-
-  if (varname != "clip") {
-    df_plot = df_plot %>% 
-              dplyr::mutate(value = -as.numeric(value))
-  }
-              # we were converting minutes to minutes lost
-
+  df_plot= read_csv(file)
 
   # find the scales for nice plotting
   bound = ceiling(max(abs(df_plot$value), na.rm=TRUE))
@@ -80,18 +58,16 @@ plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname)
                      map.title = title)
 
   dir.create(file.path(glue("{DIR_FIG}"), output), recursive = TRUE)
-  ggsave(glue("{DIR_FIG}/{output}/map-{name}-{varname}-{aggregation}-{rcp}-{ssp}-2099.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/map-{name}-rcp85-SSP3-2099.pdf"), p)
 }
-
 
 ######################
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/main_model_flat_edges_single_copy/',
-        'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim')
 
-output = 'main_model_flat_edges_single'
+output = 'diff_clipped_vs_unclipped'
 
 ######################
 # RUN THE FUNCTION
@@ -100,12 +76,8 @@ output = 'main_model_flat_edges_single'
 
 
 map_args = expand.grid(folder= folder,
-                       name=c("labor-climtasmaxclip","labor-climtasmaxclip-incadapt","labor-climtasmaxclip-noadapt"),
-                       output=output,
-                       rcp="rcp85",
-                       ssp="SSP3",
-                       varname=c( "highriskimpacts","rebased_new", "lowriskimpacts","clip"),
-                       aggregation = c("", "gdp") 
+                       name=c("lrt_riskshare","lrt_impacts"),
+                       output=output
                        )
 # testing code
 # plot_impact_map(folder, "clip", output, "rcp85", "SSP3", "", "rebased_new")
@@ -116,10 +88,6 @@ mcmapply(plot_impact_map,
          folder= map_args$folder,
          name=map_args$name,
          output=output,
-         ssp=map_args$ssp,
-         rcp=map_args$rcp,
-         aggregation=map_args$aggregation,
-         varname=map_args$varname,
          mc.cores=20
         )
 
