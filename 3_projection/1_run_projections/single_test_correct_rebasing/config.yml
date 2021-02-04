@@ -53,33 +53,29 @@ models:
                 - 1 [scalar]
     calculation:
         - FractionSum:
-            - SpanInstabase:
-                - YearlyAverageDay:
-                    model: minlost_hi
-                - 2000
-                - 2010
+            - Reword:
+                - SpanInstabase:
+                    - YearlyAverageDay:
+                        model: minlost_hi
+                    - 2000
+                    - 2010
+                - highriskimpacts
             - Clip:
-                - YearlyAverageDay:  # YearlySumDaily triggers RecursionError starting at openest/generate/daily.py", line 308
+                - YearlyAverageDay:
                     model: riskshare_hi
                 - 0.046444122  # Historical clip min value
                 - 0.99408281   # Historical clip max value
-            - SpanInstabase:
-                - YearlyAverageDay:
-                    model: minlost_lo
-                - 2000
-                - 2010
-        - AuxillaryResult:
-            - YearlyAverageDay:
-                model: minlost_hi
-            - highriskimpacts
-        - AuxillaryResult:
-            - YearlyAverageDay:
-                model: minlost_lo
-            - lowriskimpacts
+            - Reword:
+                - SpanInstabase:
+                    - YearlyAverageDay:
+                        model: minlost_lo
+                    - 2000
+                    - 2010
+                - lowriskimpacts
         - Rebase
         - KeepOnly:
             - rebased
             - clip
             - highriskimpacts
             - lowriskimpacts
-    
+
