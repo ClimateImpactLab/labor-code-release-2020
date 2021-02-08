@@ -3,7 +3,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate risingverse-py27
 cd ~/repos/prospectus-tools/gcp/extract
 
-folder=/shares/gcp/outputs/labor/impacts-woodwork/main_model_flat_edges_single_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
+folder=/shares/gcp/outputs/labor/impacts-woodwork/test_lrt_k_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
 csv_folder=${folder}/csv
 mkdir -p ${csv_folder}
 
