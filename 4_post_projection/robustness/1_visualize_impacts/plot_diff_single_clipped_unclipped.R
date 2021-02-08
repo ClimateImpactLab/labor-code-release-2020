@@ -65,7 +65,7 @@ file <- glue('{folder}/{name}.csv')
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim')
+folder = glue('/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim') 
 
 output = 'diff_clipped_vs_unclipped'
 
@@ -76,7 +76,7 @@ output = 'diff_clipped_vs_unclipped'
 
 
 map_args = expand.grid(folder= folder,
-                       name=c("lrt_riskshare","lrt_impacts"),
+                       name=c("riskshare", "lrt_riskshare", "impacts", "lrt_impacts"), #change name argument here
                        output=output
                        )
 # testing code

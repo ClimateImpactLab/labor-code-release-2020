@@ -30,7 +30,7 @@ riskshare = c_riskshare %>%
 	left_join(uc_riskshare, by= "region") %>% 
 	mutate (value = clipped - unclipped) %>% 
 	data.frame() %>%
-  select(region, year.x, value) %>%
+	dplyr::select(region, year.x, value) %>%
   rename(year = year.x) %>%
   write_csv(glue("{out}/riskshare.csv"))
 
@@ -47,7 +47,7 @@ impacts = c_impacts %>%
 	left_join(uc_impacts, by= "region") %>% 
 	mutate (value = clipped - unclipped) %>%
 	data.frame()%>%
-  select(region, year.x, value) %>%
+  dplyr::select(region, year.x, value) %>%
   rename(year = year.x) %>%
   write_csv(glue("{out}/impacts.csv"))
 
@@ -55,17 +55,17 @@ impacts = c_impacts %>%
 # obataining the regions that lie within the 1/99 LRT and exporting the result to a csv to use for map
 LRT = read_csv(glue("{out}/1_99_LRT.csv")) %>%
 	data.frame() %>%
-	select(region, year, climtas)
+	dplyr::select(region, year, climtas)
 
 lrt_riskshare = LRT %>%
 	left_join(uc_riskshare, by = "region") %>%
-	select(region, year.y, unclipped) %>%
+	dplyr::select(region, year.y, unclipped) %>%
 	rename(value = unclipped, year = year.y) %>%
 	write_csv(glue("{out}/lrt_riskshare.csv"))
 
 lrt_impacts = LRT %>%
 	left_join(uc_impacts, by = "region") %>%
-	select(region, year.y, unclipped) %>%
+	dplyr::select(region, year.y, unclipped) %>%
 	rename(value = unclipped, year = year.y) %>%
 	write_csv(glue("{out}/lrt_impacts.csv"))
 
@@ -138,6 +138,18 @@ riskshare_z5 = riskshare %>% # 12425 obs
 zeroes5 = riskshare_z5 %>%
 	left_join(impacts_z5, by = "region")
 zeroes5 %>% count(is.na(value.y)) # 5179 don't match
+
+
+#  the highest absolute value difference between clipped and unclipped risk shares in regions inside 1/99 temperature 
+lrt_risk = LRT %>%
+	left_join(riskshare, by = "region") %>%
+	select(region, year.y, value) %>%
+	rename(year = year.y)
+
+lrt_risk %>%
+	filter(value == max(abs(value)))
+#           region year     value
+# 1 CHN.11.102.717 2099 0.4597552
 
 # extra code, to check summary of multiple dfs at once
 # L <- list(impacts_z, impacts_z1, impacts_z2, riskshare_z, riskshare_z1, riskshare_z2)

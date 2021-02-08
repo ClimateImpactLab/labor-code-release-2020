@@ -18,7 +18,9 @@ def compare_riskshare(region, name) :
 	        "test_rcc_main_model_single_config-allcalcs-uninteracted_main_model.csv",
 	        skiprows=26, usecols=['region', 'year', 'climtas', 'climtas-poly-2', 'climtas-poly-3', 'climtas-poly-4', 'loggdppc'])
 
-# change the allcalcs file path (allcalcs for clipped projection is in main_model_flat_edges_single), usecols and thus the ti variables to climtas^2, climtas^3, climtas^4, and skiprows to 22
+# change the allcalcs file path for flat edges model (in main_model_flat_edges_single), 
+# usecols and thus the ti variables to climtas^2, climtas^3, climtas^4, and skiprows to 22
+# for the lrt^k model, allcalcs file is in the test_lrt_k folder, ti are climtas^k, and skiprows is 25
 
 	# fulladapt
 
