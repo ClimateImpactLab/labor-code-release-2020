@@ -6,7 +6,7 @@ only-models: [ "CCSM4" ]
 only-iam: "high"
 only-ssp: "SSP3"
 only-rcp: "rcp85"
-singledir: combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
+singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay
 climcovar:
     class: mean
     length: 30
@@ -17,7 +17,7 @@ econcovar:
 timerate: day
 climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
 models:
-  - csvvs: social/parameters/labor/post_replication/hi_1factor_lo_unint_mixed_model_splines_empshare_noFE.csvv
+  - csvvs: /home/nsharma/repos/labor-code-release-2020/3_projection/1_run_projections/robustness/single/clipping_lrclim/labor-climtasmaxclip.csvv
     covariates: [ loggdppc, climtas, climtas^2, climtas^3, climtas^4 ]
     knots: [ 27, 37, 39 ]
     description: labor productivity
@@ -35,7 +35,7 @@ models:
             prefix: tasmax_rcspline
             variable: tasmax
         minlost_hi:
-            csvv-subset: [2, 6]
+            csvv-subset: [2, 4]
             csvv-reunit:
                 - variable: outcome
                   new-unit: minutes worked by individual
@@ -45,11 +45,8 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
-            clipping: baselinemaxima
-            clip-mintemp: 10
-            clip-maxtemp: 39
         riskshare_hi:
-            csvv-subset: [6, 12]
+            csvv-subset: [4, 10]
             csvv-reunit:
                 - variable: outcome
                   new-unit: unitless

@@ -7,6 +7,8 @@ allcalcs = pd.read_csv("/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy
 
 df =  allcalcs[(allcalcs['year']==2099)]
 df = df[['region', 'year', 'climtas']]
-df = df[df['climtas'].between(0.64,29.01)]
 
-df.to_csv('/mnt/CIL_labor/3_projection/impact_checks/1_99_LRT.csv', index = False)
+# df = df[df['climtas'].between(0.64, 29.01)]
+df = df[(df['climtas'] <= 0.64) | (df['climtas'] >= 29.01)]
+
+df.to_csv('/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim/outside_1_99_LRT.csv', index = False)
