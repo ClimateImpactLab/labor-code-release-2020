@@ -51,7 +51,7 @@ loc model_tag = ""
 
 *Load in GMTanom data file, save as a tempfile 
 insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
-drop if year < 2015 | year > 2099
+drop if year < 2010 | year > 2099
 tempfile GMST_anom
 save `GMST_anom', replace
 
@@ -61,7 +61,7 @@ save `GMST_anom', replace
 loc type = "wages"
 
 import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
-drop if year < 2015 | year > 2099
+drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
 
 merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
