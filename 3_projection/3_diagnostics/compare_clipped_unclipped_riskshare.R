@@ -18,6 +18,7 @@ out = glue("/mnt/CIL_labor/3_projection/impact_checks/clipping_lrclim")
 
 
 # calculating difference in the clipped vs unclipped riskshare and exporting the result to a csv to use for map
+# change folder name to test_lrt_k for lrt^k projection
 c_riskshare = read_csv(glue("{lab}/main_model_flat_edges_single_copy/{dir}/labor-climtasmaxclip-clip.csv")) %>% 
 	rename(clipped = value) %>%
 	filter(year == 2099)
@@ -35,6 +36,7 @@ riskshare = c_riskshare %>%
   write_csv(glue("{out}/riskshare.csv"))
 
 # calculating difference in the clipped vs unclipped impacts and exporting the result to a csv to use for map
+# change folder name to test_lrt_k for lrt^k projection
 c_impacts = read_csv(glue("{lab}/main_model_flat_edges_single_copy/{dir}/labor-climtasmaxclip-rebased_new.csv")) %>% 
 	rename(clipped = value)%>%
 	filter(year == 2099)
@@ -151,13 +153,40 @@ lrt_risk %>%
 #           region year     value
 # 1 CHN.11.102.717 2099 0.4597552
 
-# extra code, to check summary of multiple dfs at once
+
+# change code from here
+diff = read_csv(glue("{out}/diff_riskshare_outside_1_99.csv")) %>% data.frame()
+
+diff %>% filter(value == max(value))
+diff %>% filter(value == min(value))
+
+out = read_csv(glue("{out}/outside_1_99_LRT.csv")) %>% data.frame()
+
+out %>%
+	filter(climtas <= 0.64) %>%
+	summarise(max = max(climtas)) #0.6279102
+
+out %>% 
+	filter(climtas >= 0.62 & climtas <= 0.64)
+#   region year   climtas
+# 1  MNG.9 2099 0.6279102
+
+out %>%
+	filter(climtas >= 29.01) %>%
+	summarise(max = min(climtas))
+
+out %>% 
+	filter(climtas >= 29.01 & climtas <= 29.011)
+#            region year  climtas
+# 1 IND.33.519.2087 2099 29.01049
+
+
+# # extra code, to check summary of multiple dfs at once
 # L <- list(impacts_z, impacts_z1, impacts_z2, riskshare_z, riskshare_z1, riskshare_z2)
 # ll = map(L, summary)
 # ll
 
 # count(zeroes2$region == zeroes3$region) 
 # setdiff(zeroes2$region, zeroes3$region)
-
 
 
