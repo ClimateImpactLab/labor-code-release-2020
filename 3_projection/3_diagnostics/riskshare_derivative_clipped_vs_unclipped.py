@@ -6,7 +6,11 @@ import pandas as pd
 import xarray as xr
 
 region_dict ={
-	'CHN.11.102.717' : 'Mohe, CHN'
+	'CHN.11.102.717' : 'Mohe, CHN', # max absolute difference in riskshare
+	'KWT.3'	: 'Al Jahrah, KWT', # most negative diff in riskshare
+	'MNG.14.214' : 'Tsagaannuur, MNG', # most positive diff in riskshare
+	'MNG.9' : 'Dazavhan, MNG', # IR with temperature closest to 0.64 (LB)
+	'IND.33.519.2087' : 'Sikandarabad, IND' # IR with temperature closest to 29.01 (UB)
 }
 
 # function
