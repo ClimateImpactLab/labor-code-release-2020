@@ -78,7 +78,6 @@ program define gen_treatment_splines
 
 			}
 
-
 			*... and adding the n-order week lead ang lag
 
 			local weeks 
