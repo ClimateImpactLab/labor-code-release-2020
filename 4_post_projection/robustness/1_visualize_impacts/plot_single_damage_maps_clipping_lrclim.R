@@ -88,10 +88,12 @@ plot_impact_map = function(folder, name, output, rcp, ssp, aggregation, varname)
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/main_model_flat_edges_single_copy/',
+# change input folder path here
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_lrt_k_copy/',
         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-output = 'main_model_flat_edges_single'
+# change output folder name here
+output = 'test_lrt_k'
 
 ######################
 # RUN THE FUNCTION
