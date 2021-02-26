@@ -17,22 +17,19 @@ source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
 # load CE data
-ce_raw = read_csv("/mnt/CIL_labor/6_ce/risk_constant_all_ssps_damage_function.csv") %>% 
-        select(-X1) %>% distinct()
-
+ce_raw = read_csv("/mnt/CIL_labor/6_ce/risk_constant_all_ssps_damage_function.csv")
 # load gcm weights
 weights = read_csv(paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/', 
 	'/miscellaneous/gcm_weights.csv'))
 # computed weighted damage for each ssp iam rcp
-ce_dmg = left_join(ce_raw, weights, by = "gcm") %>% 
-		dplyr::select(ssp, model, year, rcp, gcm, collapsed_damages_constant, norm_weight_rcp45, norm_weight_rcp85) %>% 
-	mutate(dmg = ifelse(rcp=="rcp45",
-		collapsed_damages_constant * norm_weight_rcp45,
-		collapsed_damages_constant * norm_weight_rcp85)) %>%
-	group_by(year, rcp, ssp, model) %>% 
-	summarize(mean = sum(dmg) / 1000000000000) %>% 
-	dplyr::filter(ssp == "SSP3", model == "OECD Env-Growth") 
+ce_dmg = ce_raw %>% 
+  dplyr::filter(ssp == "SSP3", gcm == "CCSM4", model == "OECD Env-Growth") %>%
+  distinct()
 
+
+	dplyr::select(ssp, model, year, rcp, gcm, collapsed_damages_constant) %>% 
+  dplyr::filter(ssp == "SSP3", gcm == "CCSM4", model == "OECD Env-Growth") 
+	
 
 # convert to %GDP
 # load global GDP
@@ -93,7 +90,7 @@ p <- ggtimeseries(
     y.label = 'trillion dollars',
     ssp.value = "SSP3", 
     end.yr = 2100,
-    legend.values = c("lightblue", "pink", "blue", "red"),
+    legend.values = c("blue", "red", "blue", "red"),
     legend.breaks = c("CE rcp45","CE rcp85","MC rcp45","MC rcp85")) + 
   ggtitle("MC vs CE damages") 
 
@@ -111,7 +108,7 @@ p <- ggtimeseries(
     y.label = 'percent GDP', 
     ssp.value = "SSP3", 
     end.yr = 2100,
-    legend.values = c("lightblue", "pink", "blue", "red"),
+    legend.values = c("blue", "red", "blue", "red"),
     legend.breaks = c("CE rcp45","CE rcp85","MC rcp45","MC rcp85")) + 
   ggtitle("MC vs CE percent GDP") 
 ggsave(glue("{output_dir}/CE_vs_MC_pct_gdp.pdf"), p)
