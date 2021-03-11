@@ -85,7 +85,7 @@ merge 1:m year using `master', nogen assert(3)
 
 cap rename temp anomaly
 
-collapse(mean) minT maxT value anomaly , by(gcm rcp iam year)
+* collapse(mean) minT maxT value anomaly , by(gcm rcp iam year)
 
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
@@ -138,4 +138,4 @@ gen placeholder = "ss"
 ren var_type growth_rate
 order year placeholder growth_rate
 
-outsheet using "$DIR_REPO_LABOR/output/ce/smooth_anomalies_df_collapsed_output_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/ce/smooth_anomalies_df_mean_output_`ssp'`model_tag'.csv", comma replace 
