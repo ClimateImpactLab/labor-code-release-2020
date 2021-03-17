@@ -3,6 +3,10 @@
 * CALCULATION INCLUDING POST-2100 EXTRAPOLATION
 *****************************************
 /* 
+This script is same as main labour damage function script, but is being used for diagnostics of labour 
+non-CE vs CE damage functions and SCC. It uses the smoothed GMST anomalies to calculate the coeffs, and 
+tests how doing modifying the data and regression equation will change the outcome.
+
 This script does the following:
   * 1) Pulls in a .csv containing damages at global or impact region level. The .csv 
       should be SSP-specific, and contain damages in current year USD for every
@@ -14,6 +18,9 @@ This script does the following:
       conducted using the linear temporal interaction model and pre-2100 using the nonparametric model
   * 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
       simple climate model
+
+If no constant version of regressions is needed, remove the 'cons' terms from everywhere, uncomment 
+nocons at the end of the regression and uncomment gen cons = 0 in STEP 3.
 */
 **********************************************************************************
 * SET UP -- Change paths and input choices to fit desired output
@@ -99,7 +106,7 @@ foreach vv in value {
   * Nonparametric model for use pre-2100 
   foreach yr of numlist 2015/2099 {
     di "`vv' `yr'"
-    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 //, no cons
     
     * Need to save the min and max temperature for each year for plotting
     qui summ anomaly if year == `yr', det 
@@ -135,7 +142,8 @@ postclose damage_coeffs
 use "`coeffs'", clear
 
 gen placeholder = "ss"
+* gen cons = 0
 ren var_type growth_rate
-order year placeholder growth_rate
+order year placeholder growth_rate //cons
 
 outsheet using "$DIR_REPO_LABOR/output/ce/smooth_anomalies_df_mean_output_`ssp'`model_tag'.csv", comma replace 
