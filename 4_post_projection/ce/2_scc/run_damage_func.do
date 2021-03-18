@@ -20,7 +20,8 @@ This script does the following:
       simple climate model
 
 If no constant version of regressions is needed, remove the 'cons' terms from everywhere, uncomment 
-nocons at the end of the regression and uncomment gen cons = 0 in STEP 3.
+nocons at the end of the regression and uncomment gen cons = 0 in STEP 3. change output file location
+t0 '/home/nsharma/repos/labor-code-release-2020/output/ce/no_cons_plots_scc'
 */
 **********************************************************************************
 * SET UP -- Change paths and input choices to fit desired output
@@ -106,7 +107,7 @@ foreach vv in value {
   * Nonparametric model for use pre-2100 
   foreach yr of numlist 2015/2099 {
     di "`vv' `yr'"
-    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 //, no cons
+    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 //, nocons
     
     * Need to save the min and max temperature for each year for plotting
     qui summ anomaly if year == `yr', det 
@@ -118,7 +119,7 @@ foreach vv in value {
   }
   
   * Linear extrapolation for years post-2100 
-  qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
+  qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset' //, nocons
   
   * Generate predicted coeffs for each year post 2100 with linear extrapolation
   foreach yr of numlist 2100/2300 {
