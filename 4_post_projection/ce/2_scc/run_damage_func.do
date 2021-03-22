@@ -19,9 +19,6 @@ This script does the following:
   * 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
       simple climate model
 
-If no constant version of regressions is needed, remove the 'cons' terms from everywhere, uncomment 
-nocons at the end of the regression and uncomment gen cons = 0 in STEP 3. change output file location
-t0 '/home/nsharma/repos/labor-code-release-2020/output/ce/no_cons_plots_scc'
 */
 **********************************************************************************
 * SET UP -- Change paths and input choices to fit desired output
@@ -107,7 +104,7 @@ foreach vv in value {
   * Nonparametric model for use pre-2100 
   foreach yr of numlist 2015/2099 {
     di "`vv' `yr'"
-    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 //, nocons
+    reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2
     
     * Need to save the min and max temperature for each year for plotting
     qui summ anomaly if year == `yr', det 
@@ -119,7 +116,7 @@ foreach vv in value {
   }
   
   * Linear extrapolation for years post-2100 
-  qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset' //, nocons
+  qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
   
   * Generate predicted coeffs for each year post 2100 with linear extrapolation
   foreach yr of numlist 2100/2300 {
@@ -143,8 +140,7 @@ postclose damage_coeffs
 use "`coeffs'", clear
 
 gen placeholder = "ss"
-* gen cons = 0
 ren var_type growth_rate
-order year placeholder growth_rate //cons
+order year placeholder growth_rate
 
 outsheet using "$DIR_REPO_LABOR/output/ce/smooth_anomalies_df_mean_output_`ssp'`model_tag'.csv", comma replace 
