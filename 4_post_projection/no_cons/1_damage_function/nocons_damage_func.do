@@ -143,4 +143,4 @@ gen cons = 0
 ren var_type growth_rate
 order year placeholder growth_rate cons
 
-outsheet using "$DIR_REPO_LABOR/output/ce/no_cons_plots_scc/nocons_smooth_df_mean_output_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_smooth_df_mean_output_`ssp'`model_tag'.csv", comma replace 
