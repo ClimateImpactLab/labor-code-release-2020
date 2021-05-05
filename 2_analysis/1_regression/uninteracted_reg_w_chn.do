@@ -42,7 +42,6 @@ gen_treatment_splines rcspl 3 tmax this_week 1
 
 * differentiate treatment if reg is by risk
 loc reg_treatment (${vars_T_splines})##i.high_risk
-
 * both regressions have interacted controls
 local reg_control (${usual_controls})##i.high_risk
 
@@ -61,6 +60,14 @@ local spec_desc "rcspline, 3 knots (${spline}), tmax, differentiated treatment, 
 
 di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
 qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+
+* count regression N by risk
+gen included = e(sample)
+count if included == 1 & high_risk == 1
+estadd scalar high_N = `r(N)'
+count if included == 1 & high_risk == 0
+estadd scalar low_N = `r(N)'
+
 estimates notes: "`spec_desc'"
 estimates save "`ster_name'", replace
 

@@ -18,18 +18,27 @@ loc table_folder 	"${DIR_TABLE}"
 import delim "`rf_folder'/uninteracted_reg_w_chn_table_values.csv", clear
 
 * get the N and R squared for each model
-	est use "`reg_folder'/uninteracted_reg_w_chn.ster"
-	loc N 	= `e(N)'
+foreach reg in by_risk {
+
+	est use "`reg_folder'/uninteracted_reg_w_chn_test.ster"
+	ereturn list
+	loc N_`reg' 	= `e(N)'
+	di "`N_`reg''"
+	
 	cap loc N_high	= `e(high_N)'
+	di "`N_high'"
+	
 	cap loc N_low	= `e(low_N)'
+	di "`N_low'"
 
-	loc R2	= round(`e(r2_a)', 0.001)
+	loc R2_`reg'	= round(`e(r2_a)', 0.001)
+	di "`R2_`reg''"
 
+}
 
-convert_table, categories("low high")		///
-	r2(`R2_low' `R2_high')		///
+convert_table, categories("low high marg")		///
+	r2(`R2_by_risk' `R2_by_risk')		///
 	n(`N_low' `N_high')
-
 
 *****************
 *	ADD F TESTS
@@ -50,6 +59,7 @@ gl marg = subinstr(								///
 			"$int0 $int1", "+", "", .),			///
 			"_b[","",.),						///
 			"]","",.)
+di "$marg"
 
 gl main = subinstr(								///
 			subinstr(							///
@@ -57,9 +67,12 @@ gl main = subinstr(								///
 			"$unint0 $unint1", "+", "", .),		///
 			"_b[","",.),						///
 			"]","",.)
+di "$main"
+
+
 
 * get by-risk regression F test
-est use "`reg_folder'/uninteracted_reg_w_chn.ster"
+est use "`reg_folder'/uninteracted_reg_w_chn_test.ster"
 
 di "TESTING $main"
 test $main
@@ -94,8 +107,6 @@ replace marg = "`F'" in `=_N-1'
 * p-value
 loc p = round(`r(p)', 0.001)
 replace marg = "`p'" in `=_N'
-
-
 
 **********
 * EXPORT
