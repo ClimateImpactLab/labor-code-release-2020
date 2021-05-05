@@ -18,7 +18,7 @@ global ref_temp 27
 numlist "-20(0.1)47"
 gl full_response `r(numlist)'
 * 6 table values
-numlist "40 35 30 10 5 0"
+numlist "45 40 35 30 10 5 0"
 gl table_values `r(numlist)'
 gl spline 21 37 41
 
@@ -26,7 +26,7 @@ gl spline 21 37 41
 *	GENERATE RESPONSE FUNCTION CSV
 ***********************************
 
-foreach row_values in full_response {
+foreach row_values in table_values {
 
 	clear 
 
@@ -56,6 +56,10 @@ foreach row_values in full_response {
 		predictnl yhat_high =	(T_spline0 - ref_spline0) * (${unint0} + ${int0}) +	///
 								(T_spline1 - ref_spline1) * (${unint1} + ${int1}),	///
 								ci(lowerci_high upperci_high) se(se_high)
+
+		predictnl yhat_marg =	(T_spline0 - ref_spline0) * (${int0}) +	///
+								(T_spline1 - ref_spline1) * (${int1}),	///
+								ci(lowerci_marg upperci_marg) se(se_marg)
 
 	drop T* ref_* min*
 	export delim `rf_name', replace
