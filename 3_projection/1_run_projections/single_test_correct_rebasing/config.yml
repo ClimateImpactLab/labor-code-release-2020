@@ -2,7 +2,7 @@ mode: writecalcs
 outputdir: /shares/gcp/outputs/labor/impacts-woodwork/
 do_historical: true
 do_farmers: true
-singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay_correct_rebasing
+singledir: uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay_correct_rebasing_2001_2010
 climcovar:
     class: mean
     length: 30
@@ -58,7 +58,7 @@ models:
                     calculation:
                       YearlyAverageDay:
                         model: minlost_hi
-                    year1: 2000
+                    year1: 2001
                     year2: 2010
                     func: '-'
                     baseline_diagname: baseline-hi
@@ -73,7 +73,7 @@ models:
                     calculation:
                       YearlyAverageDay:
                         model: minlost_lo
-                    year1: 2000
+                    year1: 2001
                     year2: 2010
                     func: '-'
                     baseline_diagname: baseline-lo

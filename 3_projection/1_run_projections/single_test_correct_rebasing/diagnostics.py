@@ -11,3 +11,10 @@ dt_j = xr.open_dataset(james + "/uninteracted_main_model.nc4").to_dataframe().re
 dt_o = xr.open_dataset(ours + "/uninteracted_main_model.nc4").to_dataframe().reset_index()
 dt_o_new = xr.open_dataset(ours_new + "/uninteracted_main_model.nc4").to_dataframe().reset_index()
 
+dt_j = dt_j[dt_j.orderofoperations == "rebased"]
+dt_o = dt_o[dt_o.orderofoperations == "rebased"]
+dt_o_new = dt_o_new[dt_o_new.orderofoperations == "rebased"]
+
+dt_j.rebased.describe()
+dt_o.rebased_new.describe()
+dt_o_new.rebased
