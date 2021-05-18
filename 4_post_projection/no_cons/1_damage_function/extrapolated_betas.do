@@ -32,15 +32,16 @@ loc model_tag = ""
 * * STEP 1: Pull in global consumption csv and save as tempfile
 * **********************************************************************************
 
-import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/global_consumption.csv", encoding(Big5) clear
+import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/global_consumption_new.csv", encoding(Big5) clear
 
-keep model ssp year global_cons_ramsey 
-collapse (mean) global_cons_ramsey, by(year) 
+rename global_cons_constant_model_colla global_consumption
 
-sum global_cons_ramsey if year == 2099
+keep ssp year global_consumption 
+
+sum global_consumption if year == 2099
 loc gc_2099 = `r(mean)'
 
-gen ratio = global_cons_ramsey/`gc_2099' if year >= 2100
+gen ratio = global_consumption/`gc_2099' if year >= 2100
 
 tempfile consumption
 save `consumption', replace
