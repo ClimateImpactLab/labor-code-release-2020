@@ -1,0 +1,529 @@
+region,city,country,decile,name
+AFG.13.140,Kabul,Afghanistan,2,Kabul City
+AGO.11.96,Luanda,Angola,6,Maianga
+AGO.9.72,Huambo,Angola,5,Huambo
+ALB.R78655fa8b5193657,Tirana,Albania,7,Agglomeration
+ARE.1,Abu Dhabi,United Arab Emirates,10,Abu Dhabi
+ARE.3,Dubai,United Arab Emirates,10,Dubay
+ARE.7,Sharjah,United Arab Emirates,10,Sharjah
+ARG.21.450,Rosario,Argentina,9,Rosario
+ARG.5.184,Buenos Aires,Argentina,9,Distrito Federal
+ARG.6.186,Córdoba,Argentina,9,Capital
+ARM.4,Yerevan,Armenia,5,Erevan
+AUS.10.R56598671195eb31a,Melbourne,Australia,10,Agglomeration
+AUS.11.Rea19393e048c00bc,Perth,Australia,10,Agglomeration
+AUS.4.140,Sydney,Australia,10,Botany Bay
+AUS.4.257,Newcastle,Australia,10,Port Stephens
+AUS.6.R3ba02071c0bb1f99,Brisbane,Australia,10,Agglomeration
+AUS.7.886,Adelaide,Australia,10,Adelaide
+AUT.9.99,Vienna,Austria,10,Wien
+AZE.19,Baku,Azerbaijan,8,Baki
+BEL.2.2.4.R47143224496e2c2a,Brussels,Belgium,10,Agglomeration
+BEN.10.56,Cotonou,Benin,1,Agugus
+BFA.13,Ouagadougou,Burkina Faso,2,Kadiogo
+BGD.2.4.8.55,Chittagong,Bangladesh,2,Patiya
+BGD.3.9.18.132,Dhaka,Bangladesh,2,Tejgaon
+BGD.4.16.41.283,Khulna,Bangladesh,2,Rupsa
+BGR.5.40,Sofia,Bulgaria,8,Stolichna
+BHR.Rf0a1304585646a1c,Manama,Bahrain,9,Agglomeration
+BIH.2.7.Race71b0d962cff6f,Sarajevo,Bosnia And Herzegovina,7,Agglomeration
+BLR.5.86,Minsk,Belarus,9,Minsk
+BOL.4.48.165,La Paz,Bolivia,5,La Paz
+BOL.8.78.260,Santa Cruz,Bolivia,5,Ayacucho
+BRA.10.1311.2704,São Luís,Brazil,8,So Luis
+BRA.13.1610.Rbdae5fa597fccbba,Belo Horizonte,Brazil,8,Agglomeration
+BRA.14.2418.R74e10dd66f97d9ec,Belém,Brazil,8,Agglomeration
+BRA.16.2860.R193cbbf8202aaaef,Curitiba,Brazil,8,Agglomeration
+BRA.17.3294.Rddfb19cfe46ce1cf,Recife,Brazil,8,Agglomeration
+BRA.19.3634.Rf31287f7cff5d3a1,Rio de Janeiro,Brazil,8,Agglomeration
+BRA.19.R63c3a59417d1f2a1,Niterói,Brazil,8,Agglomeration
+BRA.2.68.Rf1dd30f0aa5567f9,Maceió,Brazil,8,Agglomeration
+BRA.20.3746,Natal,Brazil,8,Natal
+BRA.21.4131.7953,Porto Alegre,Brazil,8,Porto Alegre
+BRA.24.4447,Florianópolis,Brazil,8,Florianopolis
+BRA.25.4756.R4680b3af2c5befe7,Campinas,Brazil,8,Agglomeration
+BRA.25.5212.R3fd4ed07b36dfd9c,São Paulo,Brazil,8,Agglomeration
+BRA.25.Re40fc83ec83ed646,Santos,Brazil,8,Agglomeration
+BRA.3.125.Re60064100711ef12,Vila Velha,Brazil,7,Agglomeration
+BRA.4.179.223,Manaus,Brazil,7,Manaus
+BRA.5.539.R1c0b45048a7c4c03,Salvador,Brazil,8,Agglomeration
+BRA.6.678.R8ec4611fc33882a1,Fortaleza,Brazil,8,Agglomeration
+BRA.7.804.1862,Brasília,Brazil,8,Brazilia
+BRA.8.R6c3fb7e0782b50e9,Vitória,Brazil,8,Agglomeration
+BRA.8.R6c3fb7e0782b50e9,Vila Velha,Brazil,8,Agglomeration
+BRA.9.975.R6e53f867232dd0ad,Goiânia,Brazil,8,Agglomeration
+CAF.2.3,Bangui,Central African Republic,1,Bangui
+CAN.1.16.365,Calgary,Canada,10,Calgary
+CAN.1.3.Rd9086cb08201d582,Edmonton,Canada,10,Agglomeration
+CAN.11.195.Rd6851092cdcff9c8,Montréal,Canada,10,Agglomeration
+CAN.2.33.913,Vancouver,Canada,10,Vancouver
+CAN.9.154.2722,Ottawa,Canada,10,Ottawa
+CAN.9.169.2940,Toronto,Canada,10,Toronto
+CHE.26,Zürich,Switzerland,10,Zrich
+CHE.R893aaca90ea4248b,Geneva,Switzerland,10,Agglomeration
+CHL.11.42.248,Santiago,Chile,9,Santiago
+CHN.1.10.47,Huainan,China,7,Huainan
+CHN.1.12.57,Lu’an,China,6,Lu An
+CHN.1.13.61,Ma’anshan,China,8,Maanshan
+CHN.1.14.66,Suzhou,China,6,Yongqiao
+CHN.1.8.43,Hefei,China,8,Hefei
+CHN.10.100.708,Zhangjiakou,China,7,Zhangjiakou
+CHN.10.90.561,Baoding,China,8,Baoding
+CHN.10.93.615,Handan,China,7,Handan Xin
+CHN.10.96.648,Qinhuangdao,China,8,Qinhuangdao
+CHN.10.97.658,Shijiazhuang,China,8,Shijiazhuang
+CHN.10.98.675,Tangshan,China,8,Tangshan
+CHN.11.101.710,Daqing,China,7,Daqina
+CHN.11.103.724,Harbin,China,7,Harbin
+CHN.11.106.748,Jiamusi,China,7,Jiamusi
+CHN.11.108.758,Mudanjiang,China,7,Mudanjiang
+CHN.11.109.770,Qiqihar,China,6,Qiqihar
+CHN.12.120.824,Luoyang,China,8,Luoyang
+CHN.12.121.835,Nanyang,China,7,Nanyang Xin
+CHN.12.125.866,Shangqiu,China,8,Shangqiu Sh
+CHN.12.127.890,Xinyang,China,7,Xinyang Sh
+CHN.12.129.903,Zhengzhou,China,8,Zhengzhou
+CHN.13.142.970,Jingling,China,6,Tianmen
+CHN.13.143.974,Wuhan,China,8,Wuhan
+CHN.13.144.981,Xiangyang,China,6,Xiangyang
+CHN.13.146.990,Xiantao,China,6,Mianyang
+CHN.14.149.1009,Changde,China,6,Dingcheng
+CHN.14.150.1017,Changsha,China,8,Changsha Sh
+CHN.14.152.1037,Hengyang,China,7,Hengyang Sh
+CHN.14.156.1070,Xiangtan,China,7,Xiangtan Sh
+CHN.14.158.1084,Yiyang,China,6,Yiyang Sh
+CHN.14.162.1111,Zhuzhou,China,7,Zhuzhou Qu
+CHN.15.163.1116,Changzhou,China,8,Wujin
+CHN.15.164.1122,Huaiyin,China,7,Qingjiang
+CHN.15.166.1134,Nanjing,China,8,Nanjing
+CHN.15.168.1142,Shuyangzha,China,7,Shuyang
+CHN.15.169.1150,Suzhou,China,8,Suzhou
+CHN.15.171.1161,Wuxi,China,8,Wuxi
+CHN.15.172.1168,Tongshan,China,7,Tongshan
+CHN.16.177.1207,Ganzhou,China,7,Ganzhou
+CHN.16.181.1248,Nanchang,China,7,Nanchang Qu
+CHN.16.183.1260,Shangrao,China,6,Shangrao Xin
+CHN.17.189.1292,Changchun,China,7,Changchun
+CHN.17.190.1300,Jilin,China,7,Jilin
+CHN.18.196.1331,Anshan,China,7,Anshan
+CHN.18.197.1336,Benxi,China,7,Benxi
+CHN.18.199.1345,Dalian,China,8,Dalian
+CHN.18.201.1355,Fushun,China,7,Fushun
+CHN.18.203.1363,Lianshan,China,6,Jinxi
+CHN.18.207.1380,Shenyang,China,7,Shenyang Xin
+CHN.19.210.1394,Baotou,China,7,Baotou
+CHN.19.212.1408,Chifeng,China,6,Chifeng
+CHN.19.213.1414,Hohhot,China,7,Hohhot
+CHN.2.18.78,Beijing,China,8,Beijing
+CHN.22.234.1542,Xining,China,8,Xining
+CHN.23.235.1543,Ankang,China,6,Ankang
+CHN.23.241.1600,Xi’an,China,8,Xincheng
+CHN.23.242.1610,Xianyang,China,8,Xianyang
+CHN.24.248.1667,Heze,China,7,Heze
+CHN.24.249.1673,Jinan,China,7,Jinan
+CHN.24.250.1679,Jining,China,7,Jining
+CHN.24.253.1701,Linyi,China,7,Linyi
+CHN.24.254.1712,Qingdao,China,8,Laoshan
+CHN.24.256.1720,Tai’an,China,7,Tai An
+CHN.24.257.1729,Weifang,China,8,Weifang Sh
+CHN.24.257.1731,Mizhou,China,7,Zhucheng
+CHN.24.259.1745,Yantai,China,8,Yantai
+CHN.24.260.1748,Zaozhuang,China,7,Zhaozhuang
+CHN.24.261.1753,Zibo,China,7,Zibo
+CHN.25.262.1764,Shanghai,China,8,Shanghai
+CHN.26.264.1779,Xiping,China,7,Datong Sh
+CHN.26.270.1842,Taiyuan,China,7,Taiyuan
+CHN.27.275.1878,Chengdu,China,7,Chengdu Qu
+CHN.27.281.1941,Leshan,China,7,Shizhong
+CHN.27.283.1962,Luzhou,China,6,Lu
+CHN.27.285.1976,Mianyang,China,7,Mianyang
+CHN.27.286.1984,Gaoping,China,6,Nanchong Xin
+CHN.27.288.1991,Neijiang,China,6,Dongxing
+CHN.27.291.2013,Suining,China,6,Suining
+CHN.27.294.2034,Zigong,China,7,Zigong
+CHN.28.296.2048,Tianjin,China,8,Tianjin
+CHN.29.311.2137,Ürümqi,China,6,rmqi Xin
+CHN.3.19.112,Sanzhou,China,6,Wan
+CHN.3.19.93,Chongqing,China,7,Chongqing
+CHN.31.325.2264,Kunming,China,7,Kunming
+CHN.32.335.2338,Hangzhou,China,8,Hangzhou
+CHN.32.336.2347,Huzhou,China,7,Huzhou
+CHN.32.338.2356,Jinhua,China,7,Jinhua Sh
+CHN.32.340.2375,Ningbo,China,8,Longwan
+CHN.32.344.2406,Wenzhou,China,8,Wenzhou
+CHN.4.20.123,Fuzhou,China,7,Fuzhou
+CHN.4.25.164,Quanzhou,China,7,Sanyuan
+CHN.4.27.179,Xiamen,China,8,Xiamen
+CHN.4.28.187,Zhangzhou,China,7,Zhangzhou
+CHN.5.35.219,Lanzhou,China,7,Liangzhou
+CHN.5.40.257,Beidao,China,6,Tianshui
+CHN.6.44.273,Dongguan,China,8,Dongyuan
+CHN.6.46.280,Guangzhou,China,8,Guangzhou
+CHN.6.51.308,Gaozhou,China,6,Gaozhou
+CHN.6.54.330,Shantou,China,8,Shantou
+CHN.6.57.345,Shenzhen,China,8,Shenzhen
+CHN.6.60.360,Zhanjiang,China,7,Zhenjiang
+CHN.6.63.370,Zhuhai,China,8,Zhuhai
+CHN.7.68.394,Hechi,China,6,Gui
+CHN.7.73.432,Liuzhou,China,6,Liujiang
+CHN.7.74.442,Nanning,China,7,Nanning
+CHN.7.77.458,Yulin,China,6,Yufeng
+CHN.8.80.473,Guiyang,China,7,Guiyang
+CHN.8.81.481,Shuangshui,China,7,Zhongshan
+CHN.9.87.541,Haikou,China,8,Haikou
+CIV.9.20,Abidjan,Côte D’Ivoire,2,Abidjan
+CMR.2.12,Yaoundé,Cameroon,4,Mfoundi
+CMR.5.29,Douala,Cameroon,2,Wouri
+COD.5.20.71,Mbuji-Mayi,Congo (Kinshasa),1,Mbuji-Mayi
+COD.6.24.86,Lubumbashi,Congo (Kinshasa),1,Kipushi
+COD.7.29.103,Kinshasa,Congo (Kinshasa),1,Kinshasa Urban
+COG.9,Brazzaville,Congo (Brazzaville),4,Pool
+COL.14.568,Bogotá,Colombia,8,Santaf de Bogot
+COL.2.76,Medellín,Colombia,8,Medelln
+COL.27.863,Bucaramanga,Colombia,8,Bucaramanga
+COL.30.1043,Cali,Colombia,8,Santiago de Cali
+COL.4.141,Barranquilla,Colombia,7,Barranquilla
+CRI.7.R54cd68900ed62324,San José,Costa Rica,8,Agglomeration
+CUB.4.R1bf4d0b1e9df8510,Havana,Cuba,6,Agglomeration
+CZE.11,Prague,Czechia,10,Prague
+DEU.1.2.R8e3580ead9e07039,Mannheim,Germany,10,Agglomeration
+DEU.1.3.35,Stuttgart,Germany,10,Stuttgart Stdte
+DEU.10.26.272,Düsseldorf,Germany,10,Dsseldorf Stdte
+DEU.10.26.273,Essen,Germany,10,Essen Stdte
+DEU.10.26.R3a586eb11020ed9e,Duisburg,Germany,10,Agglomeration
+DEU.10.27.288,Cologne,Germany,10,Cologne Stdte
+DEU.2.7.84,Munich,Germany,10,Munich Stdte
+DEU.3.12.141,Berlin,Germany,10,Berlin
+DEU.6.15.161,Hamburg,Germany,10,Hamburg Stdte
+DEU.7.16.Re828af1bccfae314,Frankfurt,Germany,10,Agglomeration
+DJI.3.5,Djibouti,Djibouti,2,Djibouti
+DNK.3.32,Copenhagen,Denmark,10,Combined statistics
+DOM.5.32,Santo Domingo,Dominican Republic,8,Distrito Nacional
+DOM.R15f8ee3249eb8be0,Santiago,Dominican Republic,7,Agglomeration
+DZA.4.97,Algiers,Algeria,8,Bouzareah
+ECU.10.82.406,Guayaquil,Ecuador,6,Guayaquil
+ECU.18.173.857,Quito,Ecuador,8,Quito
+EGY.11,Cairo,Egypt,5,Al Qahirah
+EGY.6,Alexandria,Egypt,5,Al Iskandariyah
+EGY.8,Giza,Egypt,5,Al Jizah
+ERI.1.1,Asmara,Eritrea,1,Asmara City
+ESP.1.8,Sevilla,Spain,9,Sevilla
+ESP.6.27.201.5116,Barcelona,Spain,10,Barcelona
+ESP.8.33.235.5912,Madrid,Spain,10,Madrid
+ETH.1.6.26,Addis Ababa,Ethiopia,1,WEREDA 25
+FIN.4.R53dd9b05bb65f044,Helsinki,Finland,10,Agglomeration
+FRA.11.75,Paris,France,10,Paris
+FRA.82.69,Lyon,France,10,Rhne
+FRA.93.13,Marseille,France,9,Bouches-du-Rhne
+GAB.1,Libreville,Gabon,9,Estuaire
+GBR.1.106,Birmingham,United Kingdom,10,West Midlands
+GBR.1.108,Leeds,United Kingdom,10,West Yorkshire
+GBR.1.58,Manchester,United Kingdom,10,Manchester
+GBR.1.86,Sheffield,United Kingdom,10,South Yorkshire
+GBR.1.R7074136591e79d11,London,United Kingdom,10,Agglomeration
+GBR.3.154,Glasgow,United Kingdom,10,Glasgow
+GEO.12.69,Tbilisi,Georgia,5,Tbilisi
+GHA.1.16,Kumasi,Ghana,2,Kumasi
+GHA.5.70,Accra,Ghana,2,Accra
+GIN.2.6.39,Conakry,Guinea,1,Kaloum
+GRC.2.6,Athens,Greece,9,Attica
+GTM.7.Rff3263728f75f1fb,Guatemala City,Guatemala,5,Agglomeration
+HKG.4,Hong Kong,Hong Kong,10,Kowloon City
+HND.8,Tegucigalpa,Honduras,4,Francisco Morazn
+HRV.4.80,Zagreb,Croatia,9,Zagreb
+HTI.8.33.105,Port-au-Prince,Haiti,1,Port-au-Prince
+HUN.14,Budapest,Hungary,9,Pest
+IDN.10.94,Bandung,Indonesia,5,Kota Bandung
+IDN.10.95,Bekasi,Indonesia,5,Kota Bekasi
+IDN.11.113,Cilacap,Indonesia,5,Cilacap
+IDN.11.123,Semarang,Indonesia,5,Kota Semarang
+IDN.12.178,Surabaya,Indonesia,5,Surabaya
+IDN.26.337,Makassar,Indonesia,5,Makassar
+IDN.31.409,Palembang,Indonesia,5,Palembang
+IDN.32.421,Medan,Indonesia,5,Medan
+IDN.8.68,Jakarta,Indonesia,5,Jakarta Pusat
+IND.10.121.371,Delhi,India,5,Delhi
+IND.12.124.384,Ahmadabad,India,5,Ahmadabad
+IND.12.142.541,Rajkot,India,4,Rajkot
+IND.12.144.554,Surat,India,5,Chorasi
+IND.12.147.592,Vadodara,India,5,Vadodara
+IND.13.151.605,Faridabad,India,5,Faridabad
+IND.15.181.710,Srinagar,India,4,n.a. ( 8)
+IND.16.197.729,Dhanbad,India,4,Dhanbad
+IND.16.211.744,Jamshedpur,India,3,Jamshedpur
+IND.16.212.746,Ranchi,India,3,Ranchi
+IND.17.218.765,Bengaluru,India,5,Bangalore
+IND.18.244.938,Kochi,India,4,Parur
+IND.2.12.87,Bezwada,India,4,Vijayawada
+IND.2.20.170,Hyderabad,India,5,n.a. ( 1728)
+IND.2.22.189,Vishakhapatnam,India,5,Vishakhapatnam
+IND.2.24.199,Warangal,India,4,Hanmakonda
+IND.20.264.1013,Bhopal,India,4,Bhopal
+IND.20.278.1053,Indore,India,4,Indore
+IND.20.279.1056,Jabalpur,India,4,Jabalpur
+IND.21.309.1190,Aurangabad,India,4,Aurangabad
+IND.21.317.1249,Mumbai,India,5,Bombay
+IND.21.323.1304,Nagpur,India,4,Nagpur
+IND.21.326.1330,Nasik,India,4,Nashik
+IND.21.329.1353,Pune,India,4,n.a. ( 1612)
+IND.21.335.1424,Solapur,India,4,Solapur
+IND.21.336.1428,Kalyan,India,4,Kalyan
+IND.28.406.1582,Amritsar,India,4,Baba Bakala
+IND.28.415.1608,Ludhiana,India,4,Ludhiana
+IND.29.439.1743,Jaipur,India,5,Jaipur
+IND.31.460.1844,Chennai,India,5,Fort Tondiarpet
+IND.31.461.1849,Coimbatore,India,4,Coimbatore
+IND.31.469.1890,Madura,India,4,Madurai
+IND.33.493.2007,Agra,India,4,Agra
+IND.33.520.2089,Ghaziabad,India,4,Ghaziabad
+IND.33.533.2130,Cawnpore,India,4,Kanpur
+IND.33.534.2131,Allahabad,India,4,Allahabad
+IND.33.538.2141,Lucknow,India,4,Lucknow
+IND.33.544.2159,Meerut,India,4,Meerut
+IND.33.562.2214,Varanasi,India,4,Varanasi
+IND.35.577.2249,Asansol,India,4,Asansol
+IND.35.582.2264,Haora,India,4,Haora
+IND.35.592.2293,Kolkata,India,4,n.a. ( 1187)
+IND.5.88.287,Patna,India,4,n.a. ( 652)
+IND.7.106.323,Bhilai,India,4,Durg
+IRL.6,Dublin,Ireland,10,Dublin
+IRN.23.204,Mashhad,Iran,8,Mashhad
+IRN.27.231,Karaj,Iran,8,Karaj
+IRN.27.239,Tehran,Iran,8,Theran
+IRN.4.24,Tabriz,Iran,8,Heris
+IRN.5.47,Esfahan,Iran,8,Tiran and Karvan
+IRN.6.63,Shiraz,Iran,8,Shiraz
+IRQ.10.55,Baghdad,Iraq,5,Adhamiya
+IRQ.16.85,Mosul,Iraq,4,Mosul
+ISR.3,Haifa,Israel,9,Haifa
+ISR.6,Jerusalem,Israel,9,Jerusalem
+ISR.7,Tel Aviv-Yafo,Israel,9,Tel Aviv
+ITA.10.52,Milan,Italy,10,Milano
+ITA.13.69,Turin,Italy,9,Torino
+ITA.16.90,Florence,Italy,9,Florence
+ITA.5.21,Naples,Italy,10,Napoli
+ITA.8.39,Rome,Italy,9,Roma
+JAM.3,Kingston,Jamaica,7,Kingston
+JOR.2,Amman,Jordan,5,Amman
+JPN.1.39,Nagoya,Japan,10,Nagoya
+JPN.11.440,Hiroshima,Japan,9,Hiroshima
+JPN.12.576,Sapporo,Japan,9,Sapporo
+JPN.13.654,Kobe,Japan,10,Kobe
+JPN.19.848,Kawanakajima,Japan,10,Kawasaki
+JPN.19.R13854ccb66d0489f,Yokohama,Japan,10,Agglomeration
+JPN.22.962,Kyoto,Japan,9,Kyoto
+JPN.24.R92edee8d7344600c,Sendai,Japan,9,Agglomeration
+JPN.33.R7b7f7c3d0067ede8,Osaka,Japan,10,Agglomeration
+JPN.41.R5148cbf71a2651b4,Tokyo,Japan,10,Agglomeration
+JPN.7.238,Fukuoka,Japan,10,Fukuoka
+KAZ.1.3,Almaty,Kazakhstan,9,Almaty (Alma-Ata)
+KEN.4.22.R2947e0197ea9b378,Nairobi,Kenya,2,Agglomeration
+KGZ.3,Bishkek,Kyrgyzstan,2,Chuy
+KHM.16.108.R533663be196086f2,Phnom Penh,Cambodia,2,Agglomeration
+KOR.1.R9bba2a8ea1df493d,Busan,"Korea, South",9,Agglomeration
+KOR.10.144,Changwon,"Korea, South",9,Masan
+KOR.11.R5ca567607be6efbd,Incheon,"Korea, South",9,Agglomeration
+KOR.15.R4924b5775a890171,Seoul,"Korea, South",9,Agglomeration
+KOR.16.R6dcf4076f27a03d0,Ulsan,"Korea, South",9,Agglomeration
+KOR.4.44,Daegu,"Korea, South",9,Buk
+KOR.5.Rf596123caa0aa819,Daejeon,"Korea, South",9,Agglomeration
+KOR.7.75,Gwangju,"Korea, South",9,Buk
+KOR.8.101,Suwon,"Korea, South",9,Suwon
+KWT.4,Kuwait City,Kuwait,10,Al Kuwayt
+LAO.13,Vientiane,Laos,4,Vientiane [prefecture]
+LBN.2.5,Beirut,Lebanon,9,Beirut
+LBR.11.47.207,Monrovia,Liberia,1,Monrovia
+LBY.29,Tripoli,Libya,9,Tarabulus
+LBY.3,Benghazi,Libya,9,Al Hizam Al Akhdar
+LTU.10.48,Vilnius,Lithuania,9,Vilniaus
+LVA.3.14,Riga,Latvia,9,Riga
+MAR.11.35.R433f8d17c9514d7a,Rabat,Morocco,5,Agglomeration
+MAR.3.7.Ra476720293202cbb,Fès,Morocco,5,Agglomeration
+MAR.5.12.R4f398f03ea45306d,Casablanca,Morocco,5,Agglomeration
+MDA.12,Chisinau,Moldova,4,Chisinau
+MDG.1.1.7.102,Antananarivo,Madagascar,1,Antananarivo
+MEX.11.321,León de los Aldama,Mexico,8,Len
+MEX.14.550,Guadalajara,Mexico,9,Guadalajara
+MEX.15.637,Toluca,Mexico,8,Almoloya de Jurez
+MEX.19.958,Monterrey,Mexico,9,Monterrey
+MEX.21.1116,Puebla,Mexico,9,San Andrs Cholula
+MEX.3.17,Tijuana,Mexico,8,Tijuana
+MEX.6.170,Juárez,Mexico,8,Jurez
+MEX.7.235,Torreón,Mexico,8,Torren
+MEX.9.250,Mexico City,Mexico,9,Azcapotzalco
+MEX.9.263,Ciudad Nezahualcóyotl,Mexico,9,Venustiano Carranza
+MLI.1.1.1,Bamako,Mali,1,Kalban-Coro
+MMR.14.62.285,Rangoon,Burma,3,Yangon (Rangoon)
+MMR.8.25.126,Mandalay,Burma,2,Mandalay
+MMR.8.29.144,Nay Pyi Taw,Burma,2,Pyinmana
+MNG.21.308,Ulaanbaatar,Mongolia,5,Ulan Bator
+MOZ.5.51.178,Maputo,Mozambique,1,Maputo 1
+MRT.10.32,Nouakchott,Mauritania,3,Nouakchott
+MUS.Rb4955ae83edc3e08,Port Louis,Mauritius,8,Agglomeration
+MWI.10,Lilongwe,Malawi,1,Lilongwe
+MYS.12.153,Kuala Lumpur,Malaysia,9,Shah Alam
+MYS.9.65,George Town,Malaysia,9,Timur Laut
+NER.5.18.50,Niamey,Niger,1,Lamorde
+NGA.12.236,Benin City,Nigeria,2,Oredo Edo
+NGA.15.278,Abuja,Nigeria,2,Bwari
+NGA.19.355,Kaduna,Nigeria,2,Kaduna North
+NGA.20.400,Kano,Nigeria,3,Nassaraw
+NGA.25.510,Lagos,Nigeria,3,Apapa
+NGA.29.R16654512973eeec0,Ikare,Nigeria,2,Agglomeration
+NGA.31.637,Ibadan,Nigeria,2,IbadanNorth-East
+NGA.33.696,Port Harcourt,Nigeria,2,Obio/Akp
+NIC.12,Managua,Nicaragua,2,Managua
+NLD.14.402,The Hague,Netherlands,10,'s-Gravenhage
+NLD.14.R94ac5690f99564a9,Rotterdam,Netherlands,10,Agglomeration
+NLD.9.266,Amsterdam,Netherlands,10,Amsterdam
+NOR.12.288,Oslo,Norway,10,Oslo
+NPL.1.1.3,Kathmandu,Nepal,2,Kathmandu
+NZL.1,Auckland,New Zealand,9,Auckland
+OMN.8,Muscat,Oman,9,Muscat
+PAK.4.9.45,Islamabad,Pakistan,3,Islamabad
+PAK.5.13.52,Abbottabad,Pakistan,2,Abbottabad
+PAK.5.15.64,Saidu Sharif,Pakistan,2,Swat
+PAK.5.17.70,Peshawar,Pakistan,2,Peshawar
+PAK.7.21.84,Faisalabad,Pakistan,2,Faisalabad
+PAK.7.22.88,Gujranwala,Pakistan,2,Gujranwala 1
+PAK.7.23.96,Lahore,Pakistan,3,Lahore
+PAK.7.24.103,Multan,Pakistan,2,Multan
+PAK.7.25.110,Rawalpindi,Pakistan,2,Rawalpindi
+PAK.8.27.117,Hyderabad City,Pakistan,2,Hyderabad
+PAK.8.28.126,Karachi,Pakistan,2,Karachi west
+PER.15.135.1340,Lima,Peru,8,Lima
+PHL.28.517.R300ba938cf441533,Davao,Philippines,5,Agglomeration
+PHL.47.955.Rf7fb64512597c906,Manila,Philippines,5,Agglomeration
+PHL.47.963.Rbba9b4e449ab7180,Quezon City,Philippines,5,Agglomeration
+PHL.Rfb548f506b985526,Cagayan de Oro,Philippines,4,Agglomeration
+POL.13.R4d9a7ebd2cc96afc,Katowice,Poland,9,Agglomeration
+POL.9.222,Warsaw,Poland,9,Warsaw
+PRK.10.144,Namp’o,"Korea, North",6,Hanggu
+PRK.11.170,Pyongyang,"Korea, North",7,Pyongyang
+PRT.12,Lisbon,Portugal,9,Lisboa
+PRT.15,Porto,Portugal,9,Porto
+PRY.4.25,Asunción,Paraguay,5,Asuncin
+QAT.1,Doha,Qatar,10,Ad Dawhah
+ROU.10,Bucharest,Romania,9,Bucharest
+RUS.12.323.323,Chelyabinsk,Russia,9,NA
+RUS.16.430.430,Saint Petersburg,Russia,9,NA
+RUS.48.1150.Re704f9e837a08221,Moscow,Russia,9,Agglomeration
+RUS.52.1289.1406,Nizhniy Novgorod,Russia,9,NA
+RUS.55.1375.1492,Novosibirsk,Russia,9,NA
+RUS.56.1409.1526,Omsk,Russia,9,NA
+RUS.63.1632.1749,Rostov-na-Donu,Russia,9,NA
+RUS.67.1814.1931,Samara,Russia,9,NA
+RUS.7.211.211,Ufa,Russia,9,NA
+RUS.71.1944.2061,Yekaterinburg,Russia,9,NA
+RUS.73.2045.2162,Kazan’,Russia,9,NA
+RWA.9.121,Kigali,Rwanda,1,Nyarugenge
+SAU.11,Jeddah,Saudi Arabia,9,Makkah
+SAU.11,Mecca,Saudi Arabia,9,Makkah
+SAU.5,Medina,Saudi Arabia,9,Al Madinah
+SAU.7,Riyadh,Saudi Arabia,9,Ar Riyad
+SAU.8,Ad Dammam,Saudi Arabia,9,Ash Sharqiyah
+SDN.4.11.50.164,Khartoum,Sudan,4,Khartoum Shamel
+SDN.4.11.54.171,Omdurman,Sudan,2,Omdurman Gharb
+SEN.1.1.1,Dakar,Senegal,2,Dakar
+SGP,Singapore,Singapore,10,Singapore
+SLE.4.14.153,Freetown,Sierra Leone,1,Freetown1
+SLV.10,San Salvador,El Salvador,6,San Salvador
+SOM.3.10,Mogadishu,Somalia,1,Mogadisho
+SRB.3.R5b0c16b54b824b7c,Belgrade,Serbia,7,Agglomeration
+SWE.15,Stockholm,Sweden,10,Stockholm
+SYR.13.52,Damascus,Syria,5,Markaz Rif Dimashq
+SYR.2.10,Aleppo,Syria,5,Jabal Sam'an
+SYR.9.34,Homs,Syria,5,Hims
+TCD.17.50,N’Djamena,Chad,2,N'Djamena
+TGO.3.10,Lomé,Togo,1,Golfe (incl Lom)
+THA.3.R94493c79c32e39a5,Bangkok,Thailand,8,Agglomeration
+TJK.4.52.R083b2835db485bac,Dushanbe,Tajikistan,3,Agglomeration
+TKM.1,Ashgabat,Turkmenistan,7,Ahal
+TUN.23,Tunis,Tunisia,8,Tunis
+TUR.1.13,Adana,Turkey,8,Yregir
+TUR.21.223,Bursa,Turkey,9,Yildirim
+TUR.33.366,Gaziantep,Turkey,8,Sehitkamil
+TUR.40.440,Istanbul,Turkey,9,Besiktas
+TUR.41.485,Izmir,Turkey,9,Konak
+TUR.7.70,Ankara,Turkey,9,ankaya
+TWN.1.1,Kaohsiung,Taiwan,10,Kaohsiung City
+TWN.3.3,Taipei,Taiwan,10,Taipei City
+TWN.4.15,Taichung,Taiwan,10,Taichung City
+TWN.4.17,Tainan,Taiwan,10,Tainan City
+TWN.4.21,Zhongli,Taiwan,10,Taoyuan
+TZA.2.7,Dar es Salaam,Tanzania,2,Ilala
+UGA.16.47,Kampala,Uganda,2,Kampala
+UKR.11.R51883c8036e5a7d5,Kyiv,Ukraine,7,Agglomeration
+UKR.5.Rda01a072a80ca199,Dnipro,Ukraine,6,Agglomeration
+UKR.8.191,Kharkiv,Ukraine,7,Kharkivs'ka
+URY.10.107,Montevideo,Uruguay,9,n.a354
+USA.10.332,Jacksonville,United States,10,Duval
+USA.10.345,Tampa,United States,10,Hillsborough
+USA.10.360,Miami,United States,10,Miami-Dade
+USA.10.365,Orlando,United States,10,Orange
+USA.11.444,Atlanta,United States,10,Fulton
+USA.14.608,Chicago,United States,10,Cook
+USA.15.745,Indianapolis,United States,10,Marion
+USA.18.1048,Louisville,United States,10,Jefferson
+USA.19.1148,New Orleans,United States,10,Orleans
+USA.21.1195.R90cc82a36b95f891,Baltimore,United States,10,Baltimore
+USA.22.1228,Boston,United States,10,Suffolk
+USA.23.1315,Detroit,United States,10,Wayne
+USA.24.1343,Minneapolis,United States,10,Hennepin
+USA.26.1534,Kansas City,United States,10,Jackson
+USA.26.1581.Rd3313b8146f2e1b9,St. Louis,United States,10,Saint Louis
+USA.29.1752,Las Vegas,United States,10,Clark
+USA.3.101,Phoenix,United States,10,Maricopa
+USA.33.1833,Bronx,United States,10,Bronx
+USA.33.1854,New York,United States,10,Kings
+USA.33.1854,Brooklyn,United States,10,Kings
+USA.33.1862,Manhattan,United States,10,New York
+USA.33.1872,Queens,United States,10,Queens
+USA.34.1953,Charlotte,United States,10,Mecklenburg
+USA.34.1985,Raleigh,United States,10,Wake
+USA.36.2064,Cleveland,United States,10,Cuyahoga
+USA.36.2071,Columbus,United States,10,Franklin
+USA.36.2077,Cincinnati,United States,10,Hamilton
+USA.38.2238,Portland,United States,10,Multnomah
+USA.39.2250,Pittsburgh,United States,10,Allegheny
+USA.39.2299,Philadelphia,United States,10,Philadelphia
+USA.40.2319,Providence,United States,10,Providence
+USA.43.2451,Nashville,United States,10,Davidson
+USA.43.2511,Memphis,United States,10,Shelby
+USA.44.2542,San Antonio,United States,10,Bexar
+USA.44.2584,Dallas,United States,10,Dallas
+USA.44.2628,Houston,United States,10,Harris
+USA.44.2754,Austin,United States,10,Travis
+USA.45.2799,Salt Lake City,United States,10,Salt Lake
+USA.47.2928,Richmond,United States,10,Richmond
+USA.47.2945,Virginia Beach,United States,10,Virginia Beach
+USA.48.2971,Seattle,United States,10,King
+USA.5.202,Los Angeles,United States,10,Los Angeles
+USA.5.216,Riverside,United States,10,Riverside
+USA.5.217,Sacramento,United States,10,Sacramento
+USA.5.220,San Diego,United States,10,San Diego
+USA.5.221,San Francisco,United States,10,San Francisco
+USA.5.226,San Jose,United States,10,Santa Clara
+USA.50.3091,Milwaukee,United States,10,Milwaukee
+USA.6.258,Denver,United States,10,Denver
+USA.9.317,Washington,United States,10,District of Columbia
+UZB.13.145,Tashkent,Uzbekistan,5,Tashkent City
+VEN.10.84,Caracas,Venezuela,8,Libertador
+VEN.13.122,Barquisimeto,Venezuela,8,Iribarren
+VEN.24.311,Maracaibo,Venezuela,8,Maracaibo
+VEN.4.R5e1f85e54760b9ab,Maracay,Venezuela,8,Agglomeration
+VEN.7.286,Valencia,Venezuela,8,Valencia
+VNM.1.5,C?n Tho,Vietnam,3,C?n Tho
+VNM.2.16.Rf6e96f12fac0ff30,Haiphong,Vietnam,4,Agglomeration
+VNM.2.18.Ra5f28dabe4b12dfc,Hanoi,Vietnam,4,Agglomeration
+VNM.4.41.R04f39eb861a36ae8,Ho Chi Minh City,Vietnam,4,Agglomeration
+YEM.9.R392a529bfb0144c1,Sanaa,Yemen,2,Agglomeration
+ZAF.1.56,Port Elizabeth,South Africa,8,Port Elizabeth
+ZAF.10.323,Cape Town,South Africa,8,Goodwood
+ZAF.2.100,Vereeniging,South Africa,8,Vereeniging
+ZAF.2.102,Pretoria,South Africa,8,Wonderboom
+ZAF.2.80,Benoni,South Africa,8,Benoni
+ZAF.2.87,Johannesburg,South Africa,8,Johannesburg
+ZAF.3.110,Durban,South Africa,8,Durban
+ZMB.5.35,Lusaka,Zambia,2,Lusaka
+ZWE.2.2,Harare,Zimbabwe,1,Harare
