@@ -22,6 +22,7 @@ glob output "$DIR_FIG/mc/"
 insheet using "$DB_data/GMST_anomaly/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 drop if year < 2015 | year > 2099
 tempfile GMST_anom
+drop if temp == .
 save `GMST_anom', replace
 
 * **********************************************************************************
