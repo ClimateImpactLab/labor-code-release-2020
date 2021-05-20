@@ -61,7 +61,11 @@ loc ytitle = "Trillion USD"
 * Nonparametric model for use pre-2100 
 foreach yr of numlist 2015/2098 {
         qui reg wages c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
-        cap qui predict yhat_wages_`yr' if year>=`yr'-2 & year <= `yr'+2 
+	    cap qui predict yhat_wages_`yr' if year>=`yr'-2 & year <= `yr'+2 
+        qreg wages c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+		predict y05 if year>=`yr'-2 & year <= `yr'+2
+		qreg wages c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+		predict y95 if year>=`yr'-2 & year <= `yr'+2
 }
 
 di "Graphing time..."
@@ -74,9 +78,14 @@ graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly
 graph export "$output/damages_without_function.pdf", replace 
 
 loc gr `gr' line yhat_wages_2098 anomaly if year == 2098 , yaxis(1) color(black) lwidth(medthick) ||
-
+	
 graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2098 damage fn.") size(*0.5)) name("wages", replace) xscale(r(0(1)10)) xlabel(0(1)10) yscale(r(0(10)50)) ylabel(0(10)50) scheme(s1mono) title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  
 graph export "$output/damages_with_function.pdf", replace 
+
+loc gr `gr' rarea y95 y05 anomaly if year == 2099 , col(grey%5) lwidth(none) ||
+graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2098 damage fn.") size(*0.5)) name("wages", replace) xscale(r(0(1)10)) xlabel(0(1)10) yscale(r(0(10)50)) ylabel(0(10)50) scheme(s1mono) title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  
+graph export "$output/damages_with_function_and_CI.pdf", replace 
+
         
 capture drop vbl
 

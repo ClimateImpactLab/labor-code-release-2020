@@ -124,12 +124,13 @@ regions = c(
 
 # code to find the cities in deciles: 
 
-# all_IRs = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
-# cities_500 = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/unit_population_projections_geography_500kcities_years_all_SSP3.csv")) %>%
-#             mutate(region = Region_ID) %>%
-#             dplyr::select(city, country, region)
-# cities_w_deciles = merge(cities_500, all_IRs, by = "region")
-# cities_w_deciles %>% dplyr::filter(decile == 10)
+all_IRs = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
+cities_500 = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/unit_population_projections_geography_500kcities_years_all_SSP3.csv")) %>%
+            mutate(region = Region_ID) %>%
+            dplyr::select(city, country, region)
+cities_w_deciles = merge(cities_500, all_IRs, by = "region")
+write_csv(cities_w_deciles, paste0(DIR_REPO_LABOR, "/data/misc/IR_income_deciles_500kcities.csv"))
+cities_w_deciles %>% dplyr::filter(decile == 10)
 
 
 for (rg in regions) {
