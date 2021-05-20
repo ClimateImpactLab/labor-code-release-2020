@@ -25,8 +25,7 @@ set scheme s1color
 
 glob DB "/mnt"
 
-glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
-glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resampled_data"
+glob DB_data "$DB/Global_ACP/damage_function"
 
 do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 do "$DIR_REPO_LABOR/0_subroutines/paths.do"
@@ -49,9 +48,12 @@ loc model_tag = ""
 **********************************************************************************
 
 *Load in GMTanom data file, save as a tempfile 
-insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+insheet using "$DB_data/GMST_anomaly/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 drop if year < 2010 | year > 2099
+drop if temp == .
 tempfile GMST_anom
+
+
 save `GMST_anom', replace
 
 * **********************************************************************************
