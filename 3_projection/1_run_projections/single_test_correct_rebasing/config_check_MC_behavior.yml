@@ -1,4 +1,5 @@
-mode: writecalcs
+mode: montecarlo
+mc_n: 1
 outputdir: /shares/gcp/outputs/labor/impacts-woodwork/
 do_historical: true
 do_farmers: true
