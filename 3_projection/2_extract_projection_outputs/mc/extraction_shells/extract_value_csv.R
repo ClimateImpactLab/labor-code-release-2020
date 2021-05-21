@@ -33,19 +33,15 @@ for (do_ssp in 1:5) {
 	get_valuescsv(ssp_arg, "global","gdp", "-aggregated")
 }
 
-regions = c(
-  "COD.7.29.103", # (1)Kinshasa
-  "KEN.4.22.R2947e0197ea9b378", # (2) Nairobi West
-  "MMR.14.62.285", # (3)Rangoon, Burma (Yangon (Rangoon))
-  "VNM.2.18.Ra5f28dabe4b12dfc", # (4)Hanoi, Vietnam 
-  "IND.10.121.371", # (5) Delh
-  "CHN.1.14.66", # (6) Suzhou, China
-  "PRK.11.170", #(7)Pyongyang, Korea, North
-  "PER.15.135.1340",  # (8) Lima, Peru 
-  "JPN.22.962", # (9) Kyoto, Japan 
-  "AUS.11.Rea19393e048c00bc"
-  )
 
+regions = c(
+  "NGA.25.510", #  lagos
+  "IND.10.121.371", # delhi
+  "CHN.2.18.78", # beijing
+  "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
+  "USA.14.608", # chicago
+  "NOR.12.288" # oslo  
+  )
 
 args = expand.grid(ssp=c("SSP3"),
                    aggregation =c("gdp"),

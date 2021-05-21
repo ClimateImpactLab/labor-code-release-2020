@@ -109,16 +109,12 @@ ggkd <- function(df.kd = NULL,
 }
 
 regions = c(
-  "COD.7.29.103", # (1)Kinshasa Urban
-  "KEN.4.22.R2947e0197ea9b378", # (2) Nairobi West
-  "MMR.14.62.285", # (3)Rangoon, Burma (Yangon (Rangoon))
-  "VNM.2.18.Ra5f28dabe4b12dfc", # (4)Hanoi, Vietnam 
-  "IND.10.121.371", # (5) Delh
-  "CHN.1.14.66", # (6) Suzhou, China
-  "PRK.11.170", #(7)Pyongyang, Korea, North
-  "PER.15.135.1340",  # (8) Lima, Peru 
-  "JPN.22.962", # (9) Kyoto, Japan 
-  "AUS.11.Rea19393e048c00bc" 
+  "NGA.25.510", #  lagos
+  "IND.10.121.371", # delhi
+  "CHN.2.18.78", # beijing
+  "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
+  "USA.14.608", # chicago
+  "NOR.12.288" # oslo  
   )
 
 
@@ -129,8 +125,8 @@ cities_500 = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/unit_population_project
             mutate(region = Region_ID) %>%
             dplyr::select(city, country, region)
 cities_w_deciles = merge(cities_500, all_IRs, by = "region")
-write_csv(cities_w_deciles, paste0(DIR_REPO_LABOR, "/data/misc/IR_income_deciles_500kcities.csv"))
-cities_w_deciles %>% dplyr::filter(decile == 10)
+# write_csv(cities_w_deciles, paste0(DIR_REPO_LABOR, "/data/misc/IR_income_deciles_500kcities.csv"))
+# cities_w_deciles %>% dplyr::filter(decile == 10)
 
 
 for (rg in regions) {
@@ -144,22 +140,8 @@ for (rg in regions) {
     
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
       y.label = "density", x.label = "percentage GDP")
-  # +
-  #     scale_y_continuous(limits = c(0,1))
-  
-      #  , topcode.ub = 100, topcode.lb = -50) +
-      # scale_x_continuous(expand=c(0, 0), limits = c(-300,600)) 
-    
-  # browser()
+
   ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099.pdf"), plot=gg2, width = 7, height = 7)
       
 }
-
-
-
-
-
-
-
-
 
