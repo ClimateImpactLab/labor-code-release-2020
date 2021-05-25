@@ -43,8 +43,8 @@ preserve
   qui save `ref', replace
 restore
 
-* Load in damage function coefficients, and subset to just price014 (main model) 
-insheet using "$DIR_REPO_LABOR/output/damage_function_mc/df_mean_output_SSP3.csv", comma names clear 
+* Load in damage function coefficients
+insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_betas_SSP3.csv", comma names clear 
 
 * Create expanded dataset by valuation and by year
 * Just keep data every 5 years
@@ -58,7 +58,7 @@ sort year
 
 * Generate anomaly and prediction for every quarter degree
 bysort year: gen anomaly = _n/4
-gen y = cons + beta1*anomaly + beta2*anomaly^2
+gen y = beta1*anomaly + beta2*anomaly^2
 
 
 * convert to trillion
@@ -90,13 +90,13 @@ sort anomaly
 * Plot and save
 graph tw `gr', yline(0, lwidth(vthin)) ///
   ytitle("Trillion 2019 USD" ) xtitle("GMST Anomaly") ///
-  title("Total Labor Damage Function, Evolution Over Time", size(small)) ///
+  title("Total Labor Damage Function No Constant, Evolution Over Time", size(small)) ///
   xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
   ylabel(, labsize(small)) 
 
-graph export "$output/fig_3C_labor_damage_function_evolution_SSP3.pdf", replace 
+graph export "$output/fig_3C_labor_damage_function_nocons_evolution_SSP3.pdf", replace 
 graph drop _all
-graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2098 damage fn.") size(*0.5)) name("wages", replace) xscale(r(0(1)10)) xlabel(0(1)10) yscale(r(0(10)50)) ylabel(0(10)50) scheme(s1mono) title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  
-graph export "$output/damages_with_function_over_time.pdf", replace 
+graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2098 damage fn.") size(*0.5)) name("wages", replace) xscale(r(0(1)10)) xlabel(0(1)10) yscale(r(0(10)50)) ylabel(0(10)50) scheme(s1mono) title("`title' Damage Function No Constant, End of Century", tstyle(size(medsmall)))  
+graph export "$output/damages_with_function_nocons_over_time.pdf", replace 
         
 graph drop _all

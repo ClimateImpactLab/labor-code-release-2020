@@ -65,11 +65,11 @@ loc ymin = -10
 
    * Nonparametric model for use pre-2100 
 foreach yr of numlist 2099/2099 {
-      qui reg value c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+      qui reg value c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons
       cap qui predict yhat_`yr' if year>=`yr'-2 & year <= `yr'+2 
-      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(0.05)
       predict y05_`yr' if year>=`yr'-2 & year <= `yr'+2
-      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(0.95)
       predict y95_`yr' if year>=`yr'-2 & year <= `yr'+2
  
 }
@@ -102,7 +102,7 @@ loc Dy = r(max) - r(min)
 loc slope = `Dy'/`Dx'
 di "average slope is `slope'"
 
-graph export "$output/damage_function_2099_SSP3.pdf", replace 
+graph export "$output/damage_function_nocons_2099_SSP3.pdf", replace 
 
 **********************************************************************************
 * STEP 3: HISTOGRAMS OF GMSTs 
@@ -114,7 +114,7 @@ tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
    legend ( lab(1 "rcp45") lab(2 "rcp85")) scheme(s1mono) ///
    xtitle("Global mean temperature rise") 
 
-graph export "$output/anomaly_densities_GMST_end_of_century.pdf", replace 
+graph export "$output/smoothed_anomaly_densities_GMST_end_of_century.pdf", replace 
 graph drop _all
 
 

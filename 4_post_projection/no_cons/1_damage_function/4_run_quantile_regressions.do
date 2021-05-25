@@ -91,7 +91,7 @@ loc subset = 2085
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
 tempfile coeffs
-postfile damage_coeffs str20(var_type) year pctile cons beta1 beta2 anomalymin anomalymax using "`coeffs'", replace   
+postfile damage_coeffs str20(var_type) year pctile beta1 beta2 anomalymin anomalymax using "`coeffs'", replace   
 
 
 ** Regress, and output coeffs 
@@ -119,14 +119,14 @@ foreach vv in value {
       loc amin = `r(min)'
       loc amax =  `r(max)'
       
-      cap qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp')
+      cap qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp')
 
       if _rc!=0 {
         di "didn't converge first time, so we are upping the iterations and trying again"
-        cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp') wlsiter(20)
+        cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp') wlsiter(20)
         if _rc!=0 {
           di "didn't converge second time, so we are upping the iterations and trying again"
-          cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(`pp') wlsiter(40)
+          cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp') wlsiter(40)
           if _rc!=0 {
             di "didn't converge after trying some pretty high numbers for iterations - somethings probably wrong here!"
             break
@@ -135,20 +135,19 @@ foreach vv in value {
       }
     
       * Save coefficients for all years prior to 2100
-      post damage_coeffs ("`vv'") (`yr') (`pp') (_b[_cons]) (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
+      post damage_coeffs ("`vv'") (`yr') (`pp') (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
     }
     
     * Linear extrapolation for years post-2100 
-    qui qreg `vv' c.anomaly##c.anomaly##c.t if year >= `subset', quantile(`pp')
+    reg `vv' anomaly c.anomaly#c.t c.anomaly#c.anomaly c.anomaly#c.anomaly#c.t if year >= `subset' , nocons quantile(`pp')
 
     foreach yr of numlist 2100/2300 {
       di "`vv' `yr' `pp'"
-      loc cons = _b[_cons] + _b[t]*(`yr'-2010)
       loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
       loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
       
       * NOTE: we don't have future min and max, so assume they go through all GMST values   
-      post damage_coeffs ("`vv'") (`yr') (`pp') (`cons') (`beta1') (`beta2') (0) (11)   
+      post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)   
     }
   }
 }
@@ -163,4 +162,4 @@ di "Time to completion = `r(t1)'"
 **********************************************************************************
  
 use "`coeffs'", clear
-outsheet using "$DIR_REPO_LABOR/output/damage_function_mc/df_qreg_output_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_qreg_betas_`ssp'`model_tag'.csv", comma replace 
