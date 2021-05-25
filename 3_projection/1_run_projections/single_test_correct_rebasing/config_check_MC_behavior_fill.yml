@@ -3,7 +3,7 @@ mc_n: 1
 outputdir: /shares/gcp/outputs/labor/impacts-woodwork/
 only-batch-number: 0
 only-rcp: rcp45
-only-models: CSIRO-Mk3-6-0
+only-models: [CSIRO-Mk3-6-0]
 only-ssp: SSP3
 only-iam: high
 do_historical: true
