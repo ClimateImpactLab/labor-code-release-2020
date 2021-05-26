@@ -71,11 +71,11 @@ foreach yr of numlist 2099/2099 {
       * use weights to trick qreg into running noconstant
       gen anomaly2 = anomaly * anomaly
       gen qanomaly = anomaly / anomaly2
-      replace qvalue = value / anomaly2
-      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2, pweight(anomaly2) quantile(0.05)
-      gen y05_`yr' = _b[qanomaly] * anomaly + _b[cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
-      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2, pweight(anomaly2) quantile(0.95)
-      gen y95_`yr' = _b[qanomaly] * anomaly + _b[cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
+      gen qvalue = value / anomaly2
+      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(0.05)
+      gen y05_`yr' = _b[qanomaly] * anomaly + _b[_cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
+      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(0.95)
+      gen y95_`yr' = _b[qanomaly] * anomaly + _b[_cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
       
  
 }
