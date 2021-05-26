@@ -100,6 +100,15 @@ gen t = year-2010
 timer clear
 timer on 1
 
+
+
+* use weights to trick qreg into running noconstant
+gen anomaly2 = anomaly * anomaly
+gen qanomaly = anomaly / anomaly2
+gen qvalue = value / anomaly2
+
+
+
 forvalues pp = 5(5)95 {
   di "`pp'"
   loc p = `pp'/100
@@ -119,11 +128,6 @@ foreach vv in value {
       loc amin = `r(min)'
       loc amax =  `r(max)'
       
-
-      * use weights to trick qreg into running noconstant
-      gen anomaly2 = anomaly * anomaly
-      gen qanomaly = anomaly / anomaly2
-      gen qvalue = value / anomaly2
 
       cap qui qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')
       
