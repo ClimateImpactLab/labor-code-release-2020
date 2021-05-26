@@ -119,14 +119,21 @@ foreach vv in value {
       loc amin = `r(min)'
       loc amax =  `r(max)'
       
-      cap qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp')
+
+      * use weights to trick qreg into running noconstant
+      gen anomaly2 = anomaly * anomaly
+      gen qanomaly = anomaly / anomaly2
+      gen qvalue = value / anomaly2
+
+      cap qui qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')
+      
 
       if _rc!=0 {
         di "didn't converge first time, so we are upping the iterations and trying again"
-        cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp') wlsiter(20)
+        cap qui qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp') wlsiter(20)
         if _rc!=0 {
           di "didn't converge second time, so we are upping the iterations and trying again"
-          cap qui qreg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, nocons quantile(`pp') wlsiter(40)
+          cap qui qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')) wlsiter(40)
           if _rc!=0 {
             di "didn't converge after trying some pretty high numbers for iterations - somethings probably wrong here!"
             break
@@ -135,7 +142,7 @@ foreach vv in value {
       }
     
       * Save coefficients for all years prior to 2100
-      post damage_coeffs ("`vv'") (`yr') (`pp') (_b[anomaly]) (_b[c.anomaly#c.anomaly]) (`amin') (`amax')
+      post damage_coeffs ("`vv'") (`yr') (`pp') (_b[qanomaly]) (_b[_cons]) (`amin') (`amax')
     }
     
     * Linear extrapolation for years post-2100 
