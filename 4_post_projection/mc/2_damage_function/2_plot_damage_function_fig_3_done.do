@@ -67,10 +67,16 @@ loc ymin = -10
 foreach yr of numlist 2099/2099 {
       qui reg value c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
       cap qui predict yhat_`yr' if year>=`yr'-2 & year <= `yr'+2 
-      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
-      predict y05_`yr' if year>=`yr'-2 & year <= `yr'+2
-      qreg value  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
-      predict y95_`yr' if year>=`yr'-2 & year <= `yr'+2
+    
+      * use weights to trick qreg into running noconstant
+      gen anomaly2 = anomaly * anomaly
+      gen qanomaly = anomaly / anomaly2
+      replace qvalue = value / anomaly2
+      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2, pweight(anomaly2) quantile(0.05)
+      gen y05_`yr' = _b[qanomaly] * anomaly + _b[cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
+      qreg qvalue  c.qanomaly if year>=`yr'-2 & year <= `yr'+2, pweight(anomaly2) quantile(0.95)
+      gen y95_`yr' = _b[qanomaly] * anomaly + _b[cons] * anomaly2  if year>=`yr'-2 & year <= `yr'+2
+      
  
 }
 

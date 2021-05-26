@@ -115,6 +115,15 @@ tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
    xtitle("Global mean temperature rise") 
 
 graph export "$output/smoothed_anomaly_densities_GMST_end_of_century.pdf", replace 
+
+tw kdensity anomaly if rcp=="rcp45" & year==2100, color(edkblue) bw(`bw') || ///
+   kdensity anomaly if rcp=="rcp85" & year==2100, color(red*.5) bw(`bw') || , /// 
+   legend ( lab(1 "rcp45") lab(2 "rcp85")) scheme(s1mono) ///
+   xtitle("Global mean temperature rise") 
+
+graph export "$output/smoothed_anomaly_densities_GMST_2100.pdf", replace 
+
+
 graph drop _all
 
 

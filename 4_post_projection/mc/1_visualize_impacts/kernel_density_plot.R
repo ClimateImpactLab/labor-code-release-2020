@@ -103,18 +103,21 @@ ggkd <- function(df.kd = NULL,
           axis.text.x = element_text(size=7, hjust=.5, vjust=.5, face="plain")) +
     xlab(x.label) + ylab(y.label) +
     labs(title = paste0("Kernel Density Plot ",yr," ",ir.name), 
-         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6)))  
+         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6)))  +
+    scale_x_continuous(limits = c(-30, 10), n.breaks = 8) + 
+    scale_y_continuous(limits = c(0,1.5), n.breaks = 5) 
   
   return(p)
 }
 
 regions = c(
-  "NGA.25.510", #  lagos
-  "IND.10.121.371", # delhi
-  "CHN.2.18.78", # beijing
-  "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
-  "USA.14.608", # chicago
-  "NOR.12.288" # oslo  
+  # "NGA.25.510", #  lagos
+  # "IND.10.121.371", # delhi
+  # "CHN.2.18.78", # beijing
+  # "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
+  # "USA.14.608", # chicago
+  # "NOR.12.288", # oslo  
+  "BRA.19.3634.Rf31287f7cff5d3a1" # rio
   )
 
 

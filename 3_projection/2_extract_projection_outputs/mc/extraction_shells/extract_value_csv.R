@@ -26,21 +26,22 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 }
 
 
-for (do_ssp in 1:5) {
-	ssp_arg = paste0("SSP", do_ssp)
-	get_valuescsv(ssp_arg, "global","pop", "-aggregated")
-	get_valuescsv(ssp_arg, "global","wage", "-aggregated")
-	get_valuescsv(ssp_arg, "global","gdp", "-aggregated")
-}
+# for (do_ssp in 1:5) {
+# 	ssp_arg = paste0("SSP", do_ssp)
+# 	get_valuescsv(ssp_arg, "global","pop", "-aggregated")
+# 	get_valuescsv(ssp_arg, "global","wage", "-aggregated")
+# 	get_valuescsv(ssp_arg, "global","gdp", "-aggregated")
+# }
 
 
 regions = c(
-  "NGA.25.510", #  lagos
-  "IND.10.121.371", # delhi
-  "CHN.2.18.78", # beijing
-  "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
-  "USA.14.608", # chicago
-  "NOR.12.288" # oslo  
+  # "NGA.25.510", #  lagos
+  # "IND.10.121.371", # delhi
+  # "CHN.2.18.78", # beijing
+  # "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
+  # "USA.14.608", # chicago
+  # "NOR.12.288", # oslo  
+  "BRA.19.3634.Rf31287f7cff5d3a1" # rio
   )
 
 args = expand.grid(ssp=c("SSP3"),
