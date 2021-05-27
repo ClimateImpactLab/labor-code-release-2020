@@ -90,13 +90,13 @@ sort anomaly
 * Plot and save
 graph tw `gr', yline(0, lwidth(vthin)) ///
   ytitle("Trillion 2019 USD" ) xtitle("GMST Anomaly") ///
-  title("Total Labor Damage Function No Constant, Evolution Over Time", size(small)) ///
+  title("Total Labor Damage Function No Constant CE, Evolution Over Time", size(small)) ///
   xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
   ylabel(, labsize(small)) 
 
-graph export "$output/fig_3C_labor_damage_function_nocons_evolution_SSP3.pdf", replace 
+graph export "$output/fig_3C_labor_damage_function_nocons_evolution_SSP3_ce.pdf", replace 
 graph drop _all
 graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2098 damage fn.") size(*0.5)) name("wages", replace) xscale(r(0(1)10)) xlabel(0(1)10) yscale(r(0(10)50)) ylabel(0(10)50) scheme(s1mono) title("`title' Damage Function No Constant, End of Century", tstyle(size(medsmall)))  
-graph export "$output/damages_with_function_nocons_over_time.pdf", replace 
+graph export "$output/damages_with_function_nocons_over_time_ce.pdf", replace 
         
 graph drop _all
