@@ -37,7 +37,7 @@ import delimited "/mnt/CIL_labor/6_ce/risk_aversion_constant/risk_aversion_const
 drop if year < 2010 | year > 2099
 rename global_damages_constant value
 drop if ssp != "SSP3"
-replace value = -value / 1000000000000
+replace value = value / 1000000000000
 
 merge m:1 year gcm rcp using `GMST_anom', nogen keep(3)
 tempfile master
