@@ -39,7 +39,7 @@ rename global_damages_constant value
 drop if ssp != "SSP3"
 replace value = -value / 1000000000000
 
-merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
+merge m:1 year gcm rcp using `GMST_anom', nogen keep(3)
 tempfile master
 save `master', replace
 
