@@ -44,7 +44,7 @@ preserve
 restore
 
 * Load in damage function coefficients
-insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_betas_SSP3.csv", comma names clear 
+insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/ce_betas_SSP3.csv", comma names clear 
 
 * Create expanded dataset by valuation and by year
 * Just keep data every 5 years

@@ -95,7 +95,7 @@ graph twoway `gr', yline(0, lwidth(vthin)) ///
       ytitle(`ytitle') xtitle("GMST Anomaly") ///
         legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("wages", replace) ///
         xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) ///
-        title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  ///
+        title("`title' CE Damage Function, End of Century", tstyle(size(medsmall)))  ///
         yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
         
 capture drop vbl
