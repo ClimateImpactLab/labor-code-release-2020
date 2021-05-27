@@ -103,7 +103,7 @@ ggkd <- function(df.kd = NULL,
           axis.text.x = element_text(size=7, hjust=.5, vjust=.5, face="plain")) +
     xlab(x.label) + ylab(y.label) +
     labs(title = paste0("Kernel Density Plot ",yr," ",ir.name), 
-         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6)))  +
+         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6))) +
     scale_x_continuous(limits = c(-30, 10), n.breaks = 8) + 
     scale_y_continuous(limits = c(0,1.5), n.breaks = 5) 
   
@@ -112,13 +112,15 @@ ggkd <- function(df.kd = NULL,
 
 regions = c(
   # "NGA.25.510", #  lagos
-  # "IND.10.121.371", # delhi
+  "IND.10.121.371"
+  # , # delhi
   # "CHN.2.18.78", # beijing
   # "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
   # "USA.14.608", # chicago
   # "NOR.12.288", # oslo  
-  "BRA.19.3634.Rf31287f7cff5d3a1" # rio
+  # "BRA.19.3634.Rf31287f7cff5d3a1" # rio
   )
+
 
 
 # code to find the cities in deciles: 
@@ -137,14 +139,17 @@ for (rg in regions) {
 
   df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_gdp_",rg,".csv")) %>%
         # dplyr::mutate(value = value*100000) %>%
-        dplyr::filter(year %in% 2099) %>%
-        dplyr::mutate(value = value * 100) %>%
+        dplyr::filter(year %in% 2099, iam == "high", rcp == "rcp85") %>%
+        dplyr::mutate(value = -value * 100) %>% 
         data.frame() 
-    
+  browser()
+  
+  df = df %>% arrange(desc(value))  
+
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
       y.label = "density", x.label = "percentage GDP")
 
-  ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099.pdf"), plot=gg2, width = 7, height = 7)
+  # ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099.pdf"), plot=gg2, width = 7, height = 7)
       
 }
 

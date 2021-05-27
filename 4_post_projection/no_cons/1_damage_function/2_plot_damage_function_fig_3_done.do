@@ -32,8 +32,11 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
+*import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "/mnt/CIL_labor/6_ce/risk_aversion_constant/risk_aversion_constant_damage_function_points.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
+rename global_damages_constant value
+drop if ssp != "SSP3"
 replace value = -value / 1000000000000
 
 merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
@@ -108,29 +111,7 @@ loc Dy = r(max) - r(min)
 loc slope = `Dy'/`Dx'
 di "average slope is `slope'"
 
-graph export "$output/damage_function_nocons_2099_SSP3.pdf", replace 
-
-**********************************************************************************
-* STEP 3: HISTOGRAMS OF GMSTs 
-**********************************************************************************
-
-loc bw = 0.4
-tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
-   kdensity anomaly if rcp=="rcp85" & year>=2080, color(red*.5) bw(`bw') || , /// 
-   legend ( lab(1 "rcp45") lab(2 "rcp85")) scheme(s1mono) ///
-   xtitle("Global mean temperature rise") 
-
-graph export "$output/smoothed_anomaly_densities_GMST_end_of_century.pdf", replace 
-
-tw kdensity anomaly if rcp=="rcp45" & year==2100, color(edkblue) bw(`bw') || ///
-   kdensity anomaly if rcp=="rcp85" & year==2100, color(red*.5) bw(`bw') || , /// 
-   legend ( lab(1 "rcp45") lab(2 "rcp85")) scheme(s1mono) ///
-   xtitle("Global mean temperature rise") 
-
-graph export "$output/smoothed_anomaly_densities_GMST_2100.pdf", replace 
-
-
-graph drop _all
+graph export "$output/damage_function_nocons_2099_SSP3_ce.pdf", replace 
 
 
 
