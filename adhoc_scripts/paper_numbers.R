@@ -1,4 +1,4 @@
-* produce statistics for paper
+ # produce statistics for paper
 
 # Mins. time series (full, income, and no adapt)
 # %GDP time series (full, income, and no adapt)
@@ -42,4 +42,18 @@ df = load_impact(rcp="rcp85",ssp="SSP3",iam="high",
 
 df = load_impact(rcp="rcp85",ssp="SSP3",iam="high",
   adapt="noadapt",risk="allrisk",region="global",aggregation = "-gdp-aggregated")
+
+
+
+
+df = load_impact(rcp="rcp45",ssp="SSP3",iam="high",
+  adapt="fulladapt",risk="allrisk",region="global",aggregation = "-gdp-aggregated")
+
+print(df %>% filter(year == 2099))
+
+load_impact(rcp="rcp45",ssp="SSP3",iam="high",
+  adapt="incadapt",risk="allrisk",region="global",aggregation = "-gdp-aggregated") %>% filter(year == 2099)
+
+load_impact(rcp="rcp85",ssp="SSP3",iam="high",
+  adapt="noadapt",risk="allrisk",region="global",aggregation = "-gdp-aggregated")%>% filter(year == 2099)
 
