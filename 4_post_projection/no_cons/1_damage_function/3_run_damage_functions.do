@@ -11,11 +11,10 @@ This script does the following:
       should be SSP-specific, and contain damages in current year USD for every
       RCP-GCM-IAM-year combination. 
   * 2) Runs a regression in which the damage function is nonparametrically estimated for each year 't'
-      using data only from the 5 years around 't'
-  * 3) Runs a second regression in which GMST is interacted linearly with time. 
-  * 4) Predicts damage function coefficients for all years 2015-2300, with post-2100 extrapolation 
-      conducted using the linear temporal interaction model and pre-2100 using the nonparametric model
-  * 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
+      using data only from the 5 years around 't' from 2010 to 2099
+  * 3) uses a .csv containing global consumption, which is then used to extrapolate coefficients post 2100 as
+  coeff_year = coeff_2099 *(consumption_year/consumption_2099)     
+  * 4) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
       simple climate model
 
 */
@@ -148,7 +147,7 @@ outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/
 
 
 * **********************************************************************************
-* * STEP 1: Pull in global consumption csv and save as tempfile
+* * STEP 4: Pull in global consumption csv and save as tempfile
 * **********************************************************************************
 
 import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/global_consumption_new.csv", encoding(Big5) clear
@@ -186,7 +185,10 @@ sum beta1 beta2, d
 export delimited using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_betas_SSP3.csv", replace 
 
 *****************************************************************************************
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_ce_df_coeffs_SSP3.csv", clear 
 
 keep year cons beta1 beta2 
