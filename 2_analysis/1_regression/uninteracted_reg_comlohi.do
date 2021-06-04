@@ -16,7 +16,7 @@ loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections
 gl test_code "no"
-gl reg_list common
+gl reg_list by_risk
 loc fe fe_adm0_wk
 
 ********************
@@ -25,6 +25,8 @@ loc fe fe_adm0_wk
 
 * cycle through each of the two regressions
 foreach reg in $reg_list {
+
+	di "`reg_list'"
 
 	use $dataset, clear
 
@@ -47,9 +49,11 @@ foreach reg in $reg_list {
 	if "`reg'" == "by_risk" loc reg_treatment (${vars_T_splines})##i.high_risk
 	else if "`reg'" == "common" loc reg_treatment (${vars_T_splines})
 	else di in red "bad reg specification -> pick 'common' or 'by_risk'"
+	di "`reg_treatment'"
 
 	* both regressions have interacted controls
 	local reg_control (${usual_controls})##i.high_risk
+	di "`reg_control'"
 	
 	* interact each fixed effect with the risk binary
 	local reg_fe ""					
@@ -58,7 +62,7 @@ foreach reg in $reg_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/uninteracted_reg_`reg'.ster"
+	local ster_name "`reg_folder'/uninteracted_reg_`reg'_test.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
 
 	* set the regression weight (pop_adj for common, risk_adj for by-risk)
@@ -66,7 +70,7 @@ foreach reg in $reg_list {
 	else loc weight "risk_adj_sample_wgt"
 
 	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
-	qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+	reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
 
 	* count regression N by risk
 	gen included = e(sample)
