@@ -61,7 +61,6 @@ deciles = get_deciles(df_covariates)
 
 # Load in impacts data
 df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_2099_map.csv'))%>%
-  mutate(q25 = mean * 0.5, q75 = mean * 1.5) %>%  
   left_join(deciles, by = "region")
 
 # Join with 2099 population dataSSP3-high-IR_level-gdppc_pop-2099
@@ -69,16 +68,16 @@ df_gdp99= read_csv(paste0(DB_data, '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>
   dplyr::select(region, gdp99)
 
 df_pct_gdp_impacts = df_pct_gdp_impacts %>% 
-    left_join(df_gdp99, by = "region") %>% 
-    mutate(pct_x_gdp_mean = mean * gdp99,
-      pct_x_gdp_q1 = q1 * gdp99,
-      pct_x_gdp_q5 = q5 * gdp99,
-      pct_x_gdp_q10 = q10 * gdp99,
-      pct_x_gdp_q25 = q25 * gdp99,
-      pct_x_gdp_q75 = q75 * gdp99,
-      pct_x_gdp_q90 = q90 * gdp99,
-      pct_x_gdp_q95 = q95 * gdp99,
-      pct_x_gdp_q99 = q99 * gdp99
+    left_join(df_gdp99, by = "region")%>% 
+    mutate(pct_x_gdp_mean = -mean * gdp99,
+      pct_x_gdp_q1 = -q1 * gdp99,
+      pct_x_gdp_q5 = -q5 * gdp99,
+      pct_x_gdp_q10 = -q10 * gdp99,
+      pct_x_gdp_q25 = -q25 * gdp99,
+      pct_x_gdp_q75 = -q75 * gdp99,
+      pct_x_gdp_q90 = -q90 * gdp99,
+      pct_x_gdp_q95 = -q95 * gdp99,
+      pct_x_gdp_q99 = -q99 * gdp99
       ) %>%
     dplyr::select(pct_x_gdp_mean,
       pct_x_gdp_q1,
