@@ -157,25 +157,19 @@ if `spec' == 4 {
 					
 			loc inc_graphs
 
-				* forval k=1(1)4 {
-				* 	qui sum tavg_`k'_pop_ma_30yr
-				* 	loc temp_`k'=`r(mean)'
-				* 	qui sum temp_poly`k'
-				* 	loc temp`k'=`r(mean)'	
-				* 	}
-
 				forval k=1(1)4 {
-					qui sum tavg_1_pop_ma_30yr
-					loc temp`k'=`r(mean)'^`k'
-					di 
+					qui sum tavg_`k'_pop_ma_30yr
+					loc tavg`k'=`r(mean)'
+					qui sum temp_poly`k'
+					loc temp`k'=`r(mean)'
 					}
 
 					preserve
 						* create inc vector
 						drop if _n > 0
 						gen inc = .
-						loc min = 500
-						loc max = 50500
+						loc min = 650
+						loc max = 77050
 						local obs = (`max' + abs(`min')) / 100
 
 						* expand dataset by length of temperature vector
@@ -185,12 +179,12 @@ if `spec' == 4 {
 						gen inc_log = log(inc)
 						
 						if `spec' == 1 {
-							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`temp1' + _b[tavg_2_pop_ma_30yr]*`temp2' + _b[tavg_3_pop_ma_30yr]*`temp3' + _b[tavg_4_pop_ma_30yr]*`temp4'"
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`tavg1' + _b[tavg_2_pop_ma_30yr]*`tavg2' + _b[tavg_3_pop_ma_30yr]*`tavg3' + _b[tavg_4_pop_ma_30yr]*`tavg4'"
 							loc inc_var inc_log
 						}
 						
 						if `spec' == 2 {
-							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`temp1' + _b[tavg_2_pop_ma_30yr]*`temp2' + _b[tavg_3_pop_ma_30yr]*`temp3' + _b[tavg_4_pop_ma_30yr]*`temp4'"
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`tavg1' + _b[tavg_2_pop_ma_30yr]*`tavg2' + _b[tavg_3_pop_ma_30yr]*`tavg3' + _b[tavg_4_pop_ma_30yr]*`tavg4'"
 							loc inc_var inc_log
 						}
 						
