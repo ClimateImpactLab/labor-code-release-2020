@@ -16,8 +16,8 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 		"damage_function_valuescsv.yml  --only-ssp=", ssp, 
 		" --region=", region, " ",
 		"--suffix=valuescsv_", aggregation, "_", region, " ", 
-		"uninteracted_main_model-",aggregation, 
-		file_type, " -uninteracted_main_model-histclim-",
+		"uninteracted_main_model",aggregation, 
+		file_type, " -uninteracted_main_model-histclim",
 		aggregation, file_type
 		)
 
@@ -35,23 +35,34 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 
 
 regions = c(
-  # "NGA.25.510", #  lagos
-  # "IND.10.121.371", # delhi
-  # "CHN.2.18.78", # beijing
-  # "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
-  # "USA.14.608", # chicago
-  # "NOR.12.288", # oslo  
-  "BRA.19.3634.Rf31287f7cff5d3a1" # rio
+  "NGA.25.510", #  lagos
+  "IND.10.121.371", # delhi
+  "CHN.2.18.78", # beijing
+  "BRA.25.5212.R3fd4ed07b36dfd9c", # sao paulo
+  "USA.14.608", # chicago
+  "NOR.12.288" # oslo  
+  # "BRA.19.3634.Rf31287f7cff5d3a1" # rio
   )
 
+# args = expand.grid(ssp=c("SSP3"),
+#                    aggregation =c("-gdp"),
+#                    region =  regions,
+#                    file_type = "-levels"
+#                          )
+
+
+# mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, file_type = args$file_type, ssp = args$ssp, mc.cores = 10)
+
+
 args = expand.grid(ssp=c("SSP3"),
-                   aggregation =c("gdp"),
+                   aggregation =c(""),
                    region =  regions,
-                   file_type = "-levels"
+                   file_type = ""
                          )
 
 
-mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, file_type = args$file_type, ssp = args$ssp, mc.cores = 10)
+mcmapply(get_valuescsv, region = args$region, aggregation = args$aggregation, file_type = args$file_type, ssp = args$ssp, mc.cores = 6)
+
 
 # testing
 # test = read_csv(paste0("/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc/",
