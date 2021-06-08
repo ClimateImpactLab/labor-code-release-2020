@@ -111,9 +111,11 @@ ggkd <- function(df.kd = NULL,
           axis.text.x = element_text(size=7, hjust=.5, vjust=.5, face="plain")) +
     xlab(x.label) + ylab(y.label) +
     labs(title = paste0("Kernel Density Plot ",yr," ",ir.name), 
-         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6), " max = ", x_max, " min = ", x_min)) +
-    scale_x_continuous(limits = c(-10, 35, 5), n.breaks = 10) + 
-    scale_y_continuous(limits = c(0,1.5), n.breaks = 5) 
+         caption = paste0("GCM-weighted mean = ", round(ir_mean, 6), " max = ", x_max, " min = ", x_min))
+
+    #       +
+    # scale_x_continuous(limits = c(-10, 35, 5), n.breaks = 10) + 
+    # scale_y_continuous(limits = c(0,1.5), n.breaks = 5) 
 
   return(p)
 }
@@ -143,19 +145,19 @@ cities_w_deciles = merge(cities_500, all_IRs, by = "region")
 
 for (rg in regions) {
   input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc"
-
-  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_gdp_",rg,".csv")) %>%
-        # dplyr::mutate(value = value*100000) %>%
-        dplyr::filter(year %in% 2099, iam == "high", rcp == "rcp85") %>%
-        dplyr::mutate(value = -value * 100) %>% 
+  # browser()
+  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv__",rg,".csv")) %>%
+        dplyr::filter(year %in% 2099, iam == "high", rcp == "rcp85") %>% 
+        dplyr::mutate(value = as.numeric(value)) %>% 
         data.frame() 
+  
   # browser()
   
   df = df %>% arrange(desc(value))  
 
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
-      y.label = "density", x.label = "percentage GDP")
-  ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
+      y.label = "density", x.label = "impacts in minutes")
+  ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"impacts_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
       
 }
 
