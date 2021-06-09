@@ -30,7 +30,7 @@ import delimited "$DIR_OUTPUT/damage_function_no_cons/global_consumption_all_SSP
 
 rename global_cons_constant_model_colla global_consumption
 
-keep if ssp == `ssp'
+keep if ssp == "`ssp'"
 
 keep ssp year global_consumption 
 
