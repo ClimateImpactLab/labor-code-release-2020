@@ -61,11 +61,14 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/`ssp'-valuescsv_wage_global.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
 
-merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
+merge m:1 year gcm rcp using `GMST_anom', 
+keep if _m == 3 
+drop _m 
+
 tempfile master
 save `master', replace
 
