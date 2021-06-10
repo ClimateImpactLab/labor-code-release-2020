@@ -38,7 +38,7 @@ do "$DIR_REPO_LABOR/0_subroutines/paths.do"
 glob output "$DIR_FIG/mc/"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP3" 
+loc ssp = "SSP2" 
 
 * Model toggle  - options are "main", "lininter", or "lininter_double"
 loc model = "main"
@@ -143,4 +143,4 @@ gen cons = 0
 ren var_type growth_rate
 order year placeholder growth_rate cons
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/old_extrapolation/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/SCC_diagnostics/nocons_df_old_`ssp'`model_tag'.csv", comma replace 

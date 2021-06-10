@@ -63,7 +63,7 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/`ssp'-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
 
@@ -143,4 +143,4 @@ gen cons = 0
 ren var_type growth_rate
 order year placeholder growth_rate cons
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/old_extrapolation/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_smooth_df_mean_output_`ssp'`model_tag'.csv", comma replace 
