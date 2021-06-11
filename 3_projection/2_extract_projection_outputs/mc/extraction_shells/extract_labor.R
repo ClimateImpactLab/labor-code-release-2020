@@ -39,8 +39,6 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 		print("wrong specification of adaptation scenario!\n")
 	}
 
-
-
 	# a suffix that's used to choose the config file name
 	if (risk == "allrisk") {
 		calculation <- "rebased"
@@ -49,15 +47,6 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 	} else if ((risk == "highrisk") | (risk == "lowrisk")) {
 		calculation <- "unrebased"
 	} 
-
-	# quantiles_command = paste0("python -u quantiles.py ",
-	# 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-	# 	"2_extract_projection_outputs/mc/extraction_configs/",
-	# 	glue("mean_{risk}_{calculation}.yml "),
-	# 	glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
-	# 	glue("--years=[{year}] {basename_command}",
-	# 	glue(" >> /home/liruixue/logs/{ssp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.txt 2>&1 &"))
-	# 	)
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
@@ -115,14 +104,6 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 	}
 
 
-	# quantiles_command = paste0("python -u quantiles.py ",
-	# 	"/home/liruixue/repos/labor-code-release-2020/3_projection/",
-	# 	"2_extract_projection_outputs/mc/extraction_configs/",
-	# 	glue("mean_{risk}_{calculation}.yml "),
-	# 	glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
-	# 	glue("{basename_command}",
-	# 	glue(" >> /home/liruixue/logs/{ssp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.txt 2>&1 &"))
-	# 	)
 
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
@@ -138,10 +119,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 # tests
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-gdp")
-
 # extract_timeseries(ssp="SSP3",adapt="fulladapt",risk="allrisk",iam="high",aggregation="-pop")
-
-
 # extract_map(ssp="SSP3",adapt="fulladapt",year=2098,risk="allrisk",iam="high",aggregation="")
 # extract_map(ssp="SSP3",adapt="fulladapt",year=2099,risk="allrisk",iam="high",aggregation="")
 
@@ -196,13 +174,13 @@ mcmapply(extract_map,
 
 # gdp and dollar value aggregation
 args = expand.grid(
-	ssp=c("SSP3"),
+	ssp=c("SSP4"),
 				   # ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
                    # risk="riskshare",
                    risk=c("highrisk","lowrisk","allrisk"),
-                   aggregation=c("-pop","-gdp"),
+                   aggregation=c("-pop","-gdp","-wage"),
                    iam=c("high","low")
                  )
 
@@ -214,11 +192,11 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 20)
+  mc.cores = 60)
 
 
 args = expand.grid(
-	ssp=c("SSP3"),
+	ssp=c("SSP4"),
 	# ssp=c("SSP1","SSP2","SSP4","SSP5"),
                    adapt=c("fulladapt","incadapt","noadapt","histclim"),
                    # adapt=c("fulladapt","histclim"),
@@ -236,24 +214,6 @@ mcmapply(extract_timeseries,
   aggregation=args$aggregation,
   adapt=args$adapt,
   region="global",
-  mc.cores = 20)
+  mc.cores = 60)
 
-# debug
-args = expand.grid(
-				   ssp=c("SSP3"),
-	               adapt=c("fulladapt","incadapt","noadapt","histclim"),
-                   risk=c("allrisk"),
-                   aggregation=c("-gdp","-wage"),
-                   iam=c("high","low")
-                 )
-
-
-mcmapply(extract_timeseries, 
-  ssp=args$ssp, 
-  iam=args$iam,
-  risk=args$risk, 
-  aggregation=args$aggregation,
-  adapt=args$adapt,
-  region="global",
-  mc.cores = 20)
 
