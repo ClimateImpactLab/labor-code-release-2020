@@ -14,7 +14,7 @@ do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 do "$DIR_REPO_LABOR/0_subroutines/paths.do"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP2" 
+loc ssp = "SSP3" 
 
 * Model toggle  - options are "main", "lininter", or "lininter_double"
 loc model = "main"
@@ -28,7 +28,7 @@ loc model_tag = ""
 
 import delimited "$DIR_OUTPUT/damage_function_no_cons/global_consumption_all_SSPs.csv", encoding(Big5) clear
 
-rename global_cons_constant_model_colla global_consumption
+rename __xarray_dataarray_variable__ global_consumption
 
 keep if ssp == "`ssp'"
 

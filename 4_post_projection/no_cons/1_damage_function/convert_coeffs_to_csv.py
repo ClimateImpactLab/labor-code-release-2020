@@ -18,7 +18,7 @@ df.to_csv('/home/nsharma/repos/labor-code-release-2020/output/damage_function_no
 
 
 # convert global consumption values to csv for SSP3
-dt = xr.open_dataset("/mnt/CIL_labor/6_ce/global_consuption_all_ssps_pc_ext.nc4")
+dt = xr.open_dataset("/mnt/CIL_labor/6_ce/adding_up_constant_model_collapsed_global_consumption.nc4")
 
 df = dt.to_dataframe().reset_index()
 
