@@ -26,12 +26,12 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 }
 
 
-# for (do_ssp in 1:5) {
-# 	ssp_arg = paste0("SSP", do_ssp)
-# 	get_valuescsv(ssp_arg, "global","pop", "-aggregated")
-# 	get_valuescsv(ssp_arg, "global","wage", "-aggregated")
-# 	get_valuescsv(ssp_arg, "global","gdp", "-aggregated")
-# }
+for (do_ssp in 4:4) {
+	ssp_arg = paste0("SSP", do_ssp)
+	# get_valuescsv(ssp_arg, "global","-pop", "-aggregated")
+	get_valuescsv(ssp_arg, "global","-wage", "-aggregated")
+	# get_valuescsv(ssp_arg, "global","-gdp", "-aggregated")
+}
 
 
 regions = c(
