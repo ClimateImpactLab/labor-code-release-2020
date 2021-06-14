@@ -4,3 +4,4 @@ levels-weighting: population * income * 0.00487
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: sum-to-1
 infix: wage
+batch: batch2
