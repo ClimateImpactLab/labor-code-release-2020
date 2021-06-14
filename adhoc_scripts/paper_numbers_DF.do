@@ -125,8 +125,9 @@ foreach yr of numlist 2099/2099 {
 
 keep beta1 beta2 anomaly yhat_2099_trillion
 
-gen gdp_ssp3_highlow_avg_2099 = 344899876500631.5
-gen gdp_ssp3_global_consumption_2099 = 344716964716523
+conversion_value = 1.273526
+gen gdp_ssp3_highlow_avg_2099 = 344899876500631.5 / conversion_value
+gen gdp_ssp3_global_consumption_2099 = 344716964716523 / conversion_value
 
 export delimited "$DIR_REPO_LABOR/output/end_of_century_DF_responses_pct_gdp_CE", replace
 
