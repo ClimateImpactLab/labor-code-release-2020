@@ -30,11 +30,19 @@ CE_data = CE_data %>% mutate(ce_dmgpc = gdppc - cons_ce,
 
 IR_pop = read_csv('/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/covariates/SSP3_IR_level_population.csv')
 
+
+IR_pop_45 = IR_pop %>% mutate(rcp = "rcp45")
+IR_pop_85 = IR_pop %>% mutate(rcp = "rcp85")
+IR_pop = rbind(IR_pop_45,IR_pop_85)
+
+
 global_gdp = read_csv("/mnt/CIL_labor/3_projection/global_gdp_time_series.csv")
 
-merged = merge(CE_data, IR_pop, by = c("region","year"), all.x = TRUE)
 
-merged = merged %>% arrange(desc(rcp))
+merged = merge(CE_data, IR_pop, by = c("region","year","rcp"), all.x = TRUE, all.y = TRUE) %>% filter(year >= 2020)
+
+merged = merged %>% arrange(rcp, region, year)
+
 merged$pop = na_interpolation(merged$pop)
 
 results = merged %>% mutate(
@@ -67,8 +75,6 @@ plot_impact_timeseries = function(ssp, iam, adapt, risk, region, aggregation="",
   ce_85 = df_ce %>% filter(rcp == "rcp85") %>% rename(mean = pct_gdp_ce) %>% select(year, mean)
   df_dmg_45 = df_ce %>% filter(rcp == "rcp45") %>% rename(mean = pct_gdp) %>% select(year, mean)
   df_dmg_85 = df_ce %>% filter(rcp == "rcp85") %>% rename(mean = pct_gdp) %>% select(year, mean)
-  df_dmg_old_45 = df_ce %>% filter(rcp == "rcp45") %>% rename(mean = pct_gdp_old) %>% select(year, mean)
-  df_dmg_old_85 = df_ce %>% filter(rcp == "rcp85") %>% rename(mean = pct_gdp_old) %>% select(year, mean)
 
   if (aggregation == "-pop-aggregated") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
@@ -80,7 +86,7 @@ plot_impact_timeseries = function(ssp, iam, adapt, risk, region, aggregation="",
     print("wrong aggregation!")
     return()
   }
-  browser()
+  # browser()
   p <- ggtimeseries(
     df.list = list(
       df_45[,c('year', 'mean')] %>% as.data.frame(),
@@ -88,17 +94,15 @@ plot_impact_timeseries = function(ssp, iam, adapt, risk, region, aggregation="",
       ce_45[,c('year', 'mean')] %>% as.data.frame(),
       ce_85[,c('year', 'mean')] %>% as.data.frame(),
       df_dmg_45[,c('year', 'mean')] %>% as.data.frame(),
-      df_dmg_85[,c('year', 'mean')] %>% as.data.frame(),
-      df_dmg_old_45[,c('year', 'mean')] %>% as.data.frame(),
-      df_dmg_old_85[,c('year', 'mean')] %>% as.data.frame()
+      df_dmg_85[,c('year', 'mean')] %>% as.data.frame()
 
     ), # mean lines
     x.limits = c(2010, 2098),
-    legend.values = c("red", "green", "blue", "orange","black","pink","navy","purple"), 
+    legend.values = c("red", "green", "blue", "orange","black","pink"), 
     legend.breaks = c("RCP45 Full Adapt", "RCP85 Full Adapt",
                       "RCP45 CE",  "RCP85 CE",
-                      "RCP45 dmg",  "RCP85 dmg",
-                      "RCP45 dmg old",  "RCP85 dmg old"),
+                      "RCP45 dmg",  "RCP85 dmg"
+                      ),
     y.label = 'fraction of gdp',
     ssp.value = ssp, end.yr = 2100) + 
   ggtitle(plot_title) 
