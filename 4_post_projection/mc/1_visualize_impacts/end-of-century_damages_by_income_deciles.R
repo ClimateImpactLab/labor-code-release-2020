@@ -74,6 +74,7 @@ df_pct_gdp_impacts = df_pct_gdp_impacts %>%
       pct_x_gdp_q5 = -q5 * gdp99,
       pct_x_gdp_q10 = -q10 * gdp99,
       pct_x_gdp_q25 = -q25 * gdp99,
+      pct_x_gdp_q50 = -q50 * gdp99,
       pct_x_gdp_q75 = -q75 * gdp99,
       pct_x_gdp_q90 = -q90 * gdp99,
       pct_x_gdp_q95 = -q95 * gdp99,
@@ -84,6 +85,7 @@ df_pct_gdp_impacts = df_pct_gdp_impacts %>%
       pct_x_gdp_q5,
       pct_x_gdp_q10,
       pct_x_gdp_q25,
+      pct_x_gdp_q50,
       pct_x_gdp_q75,
       pct_x_gdp_q90,
       pct_x_gdp_q95,
@@ -103,6 +105,7 @@ df_plot = df_pct_gdp_impacts %>%
     total_pct_x_gdp_2099_q99 = sum(pct_x_gdp_q99, na.rm = TRUE), 
     total_pct_x_gdp_2099_q10 = sum(pct_x_gdp_q10, na.rm = TRUE), 
     total_pct_x_gdp_2099_q90 = sum(pct_x_gdp_q90, na.rm = TRUE), 
+    total_pct_x_gdp_2099_q50 = sum(pct_x_gdp_q50, na.rm = TRUE), 
             total_gdp_2099 = sum(gdp99, na.rm = TRUE))%>%
   mutate(pct_gdp_mean = total_pct_x_gdp_2099_mean / total_gdp_2099 * 100,
   pct_gdp_q25 = total_pct_x_gdp_2099_q25 / total_gdp_2099 * 100,
@@ -111,6 +114,7 @@ df_plot = df_pct_gdp_impacts %>%
   pct_gdp_q95 = total_pct_x_gdp_2099_q95 / total_gdp_2099 * 100,
   pct_gdp_q10 = total_pct_x_gdp_2099_q10 / total_gdp_2099 * 100,
   pct_gdp_q90 = total_pct_x_gdp_2099_q90 / total_gdp_2099 * 100,
+  pct_gdp_q50 = total_pct_x_gdp_2099_q50 / total_gdp_2099 * 100,
   pct_gdp_q1 = total_pct_x_gdp_2099_q1 / total_gdp_2099 * 100,
   pct_gdp_q99 = total_pct_x_gdp_2099_q99 / total_gdp_2099 * 100,
   )
@@ -147,7 +151,7 @@ p = ggplot() +
   geom_boxplot(
     data = df_plot, 
     aes(group=decile, x=decile, ymin = pct_gdp_q10, ymax = pct_gdp_q90, 
-      lower = pct_gdp_q25, upper = pct_gdp_q75, middle = pct_gdp_mean), 
+      lower = pct_gdp_q25, upper = pct_gdp_q75, middle = pct_gdp_q50), 
     fill="dodgerblue4", 
     color="white",
     size = 0.2, 
