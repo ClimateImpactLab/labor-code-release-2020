@@ -10,7 +10,7 @@
 # Wall clock limit:
 #SBATCH --time=70:00:00
 #SBATCH --requeue
-#SBATCH --array=1-500%50
+#SBATCH --array=1-500%20
 
 ## Command(s) to run:
 
