@@ -3,6 +3,7 @@ library(parallel)
 library(glue)
 library(skimr)
 library(yaml)
+library(dplyr)
 library(parallel)
 REPO <- "/home/repos/liruixue"
 source(paste0(REPO,"/post-projection-tools/nc_tools/misc_nc.R"))
@@ -221,13 +222,14 @@ GetSeedApplyOnPaths <- function(paths, drop=list(), keep_only=list(), na_rm=FALS
 }
 
 
-d = GetSeedApplyOnPaths(paths='/shares/gcp/outputs/labor/impacts-woodwork/MC_for_integration_seeds_checking',
+d = GetSeedApplyOnPaths(paths='/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration',
                      seed_name='uninteracted_main_model',
-                     processes=40,na_rm=TRUE)
-names(d$"/shares/gcp/outputs/labor/impacts-woodwork/MC_for_integration_seeds_checking"$"seeds"[1])
+                     processes=40,na_rm=FALSE)
+
+names(d$"/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration"$"seeds"[1])
 
 
-list = d$"/shares/gcp/outputs/labor/impacts-woodwork/MC_for_integration_seeds_checking"$"seeds"
+list = d$"/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration"$"seeds"
 df = as.data.frame(list)
 library(data.table)
 setDT(df, keep.rownames = TRUE)
@@ -238,11 +240,32 @@ df_dup = df %>% filter(dup) %>%
 			mutate(rn = str_replace(rn, "/pvals.yml","")) %>%
 			select(rn) %>% rename(paths = rn)
 
-for (i in df_dup$paths) {
+# for (i in df_dup$paths) {
+# 	print(i)
+# 	# unlink(i)
+# }
+
+
+# save missing seeds and remove those directories
+list = d$"/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration"$"seeds"
+df = as.data.frame(list)
+df = df %>% filter(is.na(list))
+setDT(df, keep.rownames = TRUE)
+library(stringr)
+df_NA = df %>% 
+			mutate(rn = str_replace(rn, "/pvals.yml","")) %>%
+			select(rn) %>% rename(paths = rn)
+library(tidyverse)
+# write_csv(df_NA, "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/NA_seeds_2nd_batch.csv")
+
+for (i in df_NA$paths) {
 	print(i)
-	# unlink(i)
+	# unlink(i, recursive = TRUE)
 }
 
+
+# df_NA_new = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/NA_seeds_2nd_batch.csv")
+# df_NA_old = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/NA_seeds.csv")
 
 
 
