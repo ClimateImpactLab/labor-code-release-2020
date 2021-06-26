@@ -4,15 +4,15 @@
 
 # set some paths and parameters
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_202009/"
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_aggregate_copy2/"
-output_dir="batch4" 
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
+output_dir="" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=40
+output_file_size_above=45
 
 # 130 for one SSP
-n_folders_total=520
+n_folders_total=7800
 
 cd "${output_root}/${output_dir}"
 
