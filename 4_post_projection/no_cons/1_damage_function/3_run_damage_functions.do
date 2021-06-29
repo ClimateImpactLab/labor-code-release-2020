@@ -187,7 +187,7 @@ sum beta1 beta2, d
 export delimited using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_betas_SSP3.csv", replace 
 
 *****************************************************************************************
-
+/* 
 import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_ce_df_coeffs_SSP3.csv", clear 
 
 keep year cons beta1 beta2 
@@ -206,4 +206,4 @@ sum beta1 beta2, d
 
 export delimited using "$DIR_REPO_LABOR/output/damage_function_no_cons/ce_betas_SSP3.csv", replace 
 
-
+ */
