@@ -177,3 +177,6 @@ di "Time to completion = `r(t1)'"
  
 use "`coeffs'", clear
 outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_qreg_betas_`ssp'`model_tag'.csv", comma replace 
+
+
+
