@@ -65,6 +65,8 @@ loc type = "wages"
 import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc/SSP3-valuescsv_wage_global.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
+conversion_value_2005_to_2020 = 113.625 / 87.421
+replace value = value * conversion_value_2005_to_2020
 
 merge m:1 year gcm rcp using `GMST_anom'
 keep if _m == 3
