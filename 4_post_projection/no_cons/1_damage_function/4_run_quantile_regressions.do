@@ -111,7 +111,7 @@ gen qanomaly = anomaly / anomaly2
 gen qvalue = value / anomaly2
 
 
-forvalues pp = 5(5)10 {
+forvalues pp = 5(5)95 {
   di "`pp'"
   loc p = `pp'/100
   loc quantiles_to_eval "`quantiles_to_eval' `p'"
