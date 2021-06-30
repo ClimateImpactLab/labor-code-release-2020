@@ -111,8 +111,7 @@ gen qanomaly = anomaly / anomaly2
 gen qvalue = value / anomaly2
 
 
-
-forvalues pp = 5(5)95 {
+forvalues pp = 5(5)10 {
   di "`pp'"
   loc p = `pp'/100
   loc quantiles_to_eval "`quantiles_to_eval' `p'"
@@ -148,22 +147,24 @@ foreach vv in value {
         }
       }
     
+
       * Save coefficients for all years prior to 2100
+      * (_b[qanomaly]) (_b[_cons]) = (_b[anomaly]) (_b[c.anomaly#c.anomaly]) 
       post damage_coeffs ("`vv'") (`yr') (`pp') (_b[qanomaly]) (_b[_cons]) (`amin') (`amax')
     }
     
-    * Linear extrapolation for years post-2100 
-    cap qui qreg qvalue c.qanomaly#c.t if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')) wlsiter(40)
+    * Linear extrapolation for years post-2100 (depreciated extrapolation)
+    * cap qui qreg qvalue c.qanomaly#c.t if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')) wlsiter(40)
     * reg `vv' anomaly c.anomaly#c.t c.anomaly#c.anomaly c.anomaly#c.anomaly#c.t if year >= `subset' , nocons quantile(`pp')
 
-    foreach yr of numlist 2100/2300 {
+    * foreach yr of numlist 2100/2300 {
     
-      di "`vv' `yr' `pp'"
-      loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
-      loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
+    *   di "`vv' `yr' `pp'"
+    *   loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
+    *   loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
       
       * NOTE: we don't have future min and max, so assume they go through all GMST values   
-      post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)   
+    *   post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)   
 *    }
   }
 }
@@ -180,45 +181,6 @@ di "Time to completion = `r(t1)'"
 use "`coeffs'", clear
 outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_qreg_betas_`ssp'`model_tag'.csv", comma replace 
 
-
-
-* **********************************************************************************
-* * STEP 4: Pull in global consumption csv and save as tempfile
-* **********************************************************************************
-
-import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/global_consumption_new.csv", encoding(Big5) clear
-
-rename global_cons_constant_model_colla global_consumption
-
-keep ssp year global_consumption 
-
-sum global_consumption if year == 2099
-loc gc_2099 = `r(mean)'
-
-gen ratio = global_consumption/`gc_2099' if year >= 2100
-  
-tempfile consumption
-save `consumption', replace
-
-*****************************************************************************************
-
-import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_qreg_betas_`ssp'`model_tag'.csv", clear 
-
-keep year pctile cons beta1 beta2  
-
-merge 1:m year using `consumption'
-keep if _m == 3
-drop _m
-
-foreach var in "beta1" "beta2"{
-  sum `var' if year == 2099
-  loc b_`var' = `r(mean)'
-  replace `var' = `b_`var''*ratio if year > 2099
-}
-
-sum beta1 beta2, d
-
-export delimited using "$DIR_REPO_LABOR/output/damage_function_no_cons/nocons_betas_SSP3.csv", replace 
 
 
 
