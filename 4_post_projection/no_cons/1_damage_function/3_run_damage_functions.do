@@ -116,17 +116,17 @@ foreach vv in value {
   }
   
   * Linear extrapolation for years post-2100 
-  reg `vv' anomaly c.anomaly#c.t c.anomaly#c.anomaly c.anomaly#c.anomaly#c.t if year >= `subset' , nocons
+  * reg `vv' anomaly c.anomaly#c.t c.anomaly#c.anomaly c.anomaly#c.anomaly#c.t if year >= `subset' , nocons
   
   
   * Generate predicted coeffs for each year post 2100 with linear extrapolation
-  foreach yr of numlist 2100/2300 {
-    di "`vv' `yr'"
-    loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
-    loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
+  * foreach yr of numlist 2100/2300 {
+  *   di "`vv' `yr'"
+  *   loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
+  *   loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
     
     * NOTE: we don't have future min and max, so assume they go through all GMST values   
-    post damage_coeffs ("`vv'") (`yr') (`beta1') (`beta2') (0) (11)            
+  *   post damage_coeffs ("`vv'") (`yr') (`beta1') (`beta2') (0) (11)            
   }   
 }
 
