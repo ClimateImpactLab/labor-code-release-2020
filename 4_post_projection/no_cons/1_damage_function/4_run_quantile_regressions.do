@@ -47,7 +47,7 @@ loc model = "main"
 loc subset = 2085
 
 
-loc model_tag = ""
+loc model_tag = "_qreg"
 
 **********************************************************************************
 * STEP 1: Pull in global consumption csv and GMT anomaly data. Save as tempfile
@@ -177,63 +177,60 @@ foreach vv in value {
     }
     
     * Generate blanks coeffs for each year post 2100 for extrapolation in the next step
-  foreach yr of numlist 2100/2300 {
-    di "`vv' `yr' `pp'"
-    loc beta1 = .
-    loc beta2 = .
-    
-    * NOTE: we don't have future min and max, so assume they go through all GMST values   
-    post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)            
-  }
-  
-    * Linear extrapolation for years post-2100 (depreciated extrapolation)
-    * cap qui qreg qvalue c.qanomaly#c.t if year>=`yr'-2 & year <= `yr'+2 [pweight = anomaly2], quantile(`pp')) wlsiter(40)
-    * reg `vv' anomaly c.anomaly#c.t c.anomaly#c.anomaly c.anomaly#c.anomaly#c.t if year >= `subset' , nocons quantile(`pp')
-
-    * foreach yr of numlist 2100/2300 {
-    
-    *   di "`vv' `yr' `pp'"
-    *   loc beta1 = _b[anomaly] + _b[c.anomaly#c.t]*(`yr'-2010)
-    *   loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
+    foreach yr of numlist 2100/2300 {
+      di "`vv' `yr' `pp'"
+      loc beta1 = .
+      loc beta2 = .
       
       * NOTE: we don't have future min and max, so assume they go through all GMST values   
-    *   post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)   
-*    }
+      post damage_coeffs ("`vv'") (`yr') (`pp') (`beta1') (`beta2') (0) (11)            
+    }
   }
 }
+
 
 postclose damage_coeffs
 timer off 1
 timer list
 di "Time to completion = `r(t1)'"
+use "`coeffs'", clear
 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", comma replace 
+
+insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", clear
+di "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv" 
 **********************************************************************************
 * STEP 4: Write and save output
 **********************************************************************************
 
 * Generate predicted coeffs for each year post 2100 with linear extrapolation
-use "`coeffs'", clear
 
 sort year pctile
+duplicates drop
+
 merge m:1 year using `consumption'
 keep if _m == 3
 drop _m
 
+loc quantiles_to_eval
+
 forvalues pp = 5(5)95 {
   di "`pp'"
-  loc p = `pp'/100
-  loc quantiles_to_eval "`quantiles_to_eval' `p'"
+  loc quantiles_to_eval "`quantiles_to_eval' 0.`pp'"
 }
 
-foreach var in "beta1" "beta2"{
-  foreach pp of numlist `quantiles_to_eval' {
-    sum `var' if year == 2099 & pctile == `pp'
-    loc b_`var' = `r(mean)'
-    replace `var' = `b_`var''*ratio if year > 2099 & pctile == `pp'
+tostring pctile, replace force format(%11.2f)
+
+foreach var in "beta1" "beta2" {
+  foreach pp in `quantiles_to_eval' {
+    di "`pp'"
+    sum `var' if year == 2099 & pctile == "`pp'"
+    loc b_`var' = r(mean)
+    di "`b_`var''"
+    replace `var' = `b_`var'' * ratio if year > 2099 & pctile == "`pp'"
   }
 }
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_qreg_betas_`ssp'`model_tag'.csv", comma replace 
-
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
 
