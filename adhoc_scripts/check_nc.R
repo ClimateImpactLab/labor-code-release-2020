@@ -106,17 +106,19 @@ ApplyReadAndCheck <- function(impacts.folder, base, impacts.var, years_search=se
 }
 
 
-ApplyReadAndCheck(impacts.folder = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/", 
+ApplyReadAndCheck(impacts.folder = "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/", 
 	base = "uninteracted_main_model", 
-	impacts.var = "rebased_new", 
+	impacts.var = "rebased", 
 	years_search=seq(1981,2099), 
-	threads=60, 
-	output_dir = "/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased/", 
-	output_title = "check_inf", 
+	threads=70, 
+	output_dir = "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/", 
+	output_title = "mc", 
 	start_at=FALSE, 
 	end_at=FALSE)
 
-
+library(tidyverse)
+d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_check_mc.csv")
+d = d %>% filter(obs > 0)
 
 
 #' reads a specific target directory and performs checks on the pvals.yml file csvv seed.

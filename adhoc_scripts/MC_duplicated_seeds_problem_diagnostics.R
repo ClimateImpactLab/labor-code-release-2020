@@ -256,7 +256,7 @@ df_NA = df %>%
 			mutate(rn = str_replace(rn, "/pvals.yml","")) %>%
 			select(rn) %>% rename(paths = rn)
 library(tidyverse)
-write_csv(df_NA, "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/NA_seeds_3nd_batch.csv")
+write_csv(df_NA, "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/NA_seeds_4th_batch.csv")
 
 for (i in df_NA$paths) {
 	print(i)
@@ -264,7 +264,7 @@ for (i in df_NA$paths) {
 	# 	"mc_correct_rebasing_for_integration_NA_3rd_batch")
 	# dir.create(i_NA, recursive = TRUE)
 	# file.copy(i, i_NA, recursive=TRUE)
-	unlink(i, recursive = TRUE)
+	# unlink(i, recursive = TRUE)
 }
 
 
