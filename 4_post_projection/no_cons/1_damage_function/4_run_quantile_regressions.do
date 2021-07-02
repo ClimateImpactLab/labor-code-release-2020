@@ -233,4 +233,10 @@ foreach var in "beta1" "beta2" {
 
 outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
+* insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear 
+* keep pctile year beta1 beta2 
+* outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_kelly.csv", comma replace 
+
+
+
 
