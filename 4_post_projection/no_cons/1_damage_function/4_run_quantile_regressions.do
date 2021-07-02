@@ -212,9 +212,9 @@ merge m:1 year using `consumption'
 keep if _m == 3
 drop _m
 
-loc quantiles_to_eval
+loc quantiles_to_eval "0.05"
 
-forvalues pp = 5(5)95 {
+forvalues pp = 10(5)95 {
   di "`pp'"
   loc quantiles_to_eval "`quantiles_to_eval' 0.`pp'"
 }
