@@ -117,8 +117,12 @@ ApplyReadAndCheck(impacts.folder = "/shares/gcp/outputs/labor/impacts-woodwork/m
 	end_at=FALSE)
 
 library(tidyverse)
+d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_mc.csv")
+d = d %>% filter(obs > 0)
+
 d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_check_mc.csv")
 d = d %>% filter(obs > 0)
+d1 = d %>% filter(obs > 24378)
 
 
 #' reads a specific target directory and performs checks on the pvals.yml file csvv seed.

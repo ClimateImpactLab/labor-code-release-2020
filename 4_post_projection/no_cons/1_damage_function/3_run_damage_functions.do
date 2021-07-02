@@ -171,6 +171,10 @@ order year placeholder growth_rate cons
 
 outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
+* insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear
+* keep year beta1 beta2
+* outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_kelly.csv", comma replace
+
 **********************************************************************************
 * STEP 5:Write and save CE output
 **********************************************************************************
