@@ -3,16 +3,16 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
 # output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
 output_dir="/" 
 
-aggregation_scenario="-gdp"
+aggregation_scenario="-wage"
 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=50
+levels_file_size_above=40
 aggregated_file_size_above=10
 # 130 for one SSP3
 n_folders_total=7800
@@ -67,9 +67,9 @@ done
 
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep error)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep error)
+echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-histclim-wage-aggregated.nc4" ';' -print
