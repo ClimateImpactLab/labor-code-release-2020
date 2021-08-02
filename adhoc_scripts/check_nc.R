@@ -77,8 +77,8 @@ ApplyReadAndCheck <- function(impacts.folder, base, impacts.var, years_search=se
 
 	files <- list.files(path=impacts.folder, pattern='.nc4', all.files = TRUE, recursive = TRUE)
 	files <- grep(pattern=base, x=files, value=TRUE)
-	files <- files[!grepl(pattern='aggregated', x=files)]	
-	files <- files[!grepl(pattern='levels', x=files)]	
+	# files <- files[grepl(pattern='aggregated', x=files)]	
+	files <- files[grepl(pattern='levels', x=files)]	
 	files <- files[ifelse(isFALSE(start_at), 1, start_at):ifelse(isFALSE(end_at), length(files), end_at)]
 
 	# browser()
@@ -112,7 +112,7 @@ ApplyReadAndCheck(impacts.folder = "/shares/gcp/outputs/labor/impacts-woodwork/m
 	years_search=seq(1981,2099), 
 	threads=70, 
 	output_dir = "/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/", 
-	output_title = "mc", 
+	output_title = "mc_aggregated", 
 	start_at=FALSE, 
 	end_at=FALSE)
 
@@ -120,150 +120,29 @@ library(tidyverse)
 d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_mc.csv")
 d = d %>% filter(obs > 0)
 
-d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_check_mc.csv")
+d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_mc_aggregated.csv")
 d = d %>% filter(obs > 0)
-d1 = d %>% filter(obs > 24378)
+
+d = read_csv("/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/checks_mc_levels.csv")
+d = d %>% filter(obs > 0)
 
 
-#' reads a specific target directory and performs checks on the pvals.yml file csvv seed.
-#' @param spec a list of named single characters : impacts.folder, batch, rcp, climate_model, iam, ssp, impacts.file.base.
-#' 
-#' @return a data table with spec information and check result (character). 
-PvalReadAndCheck <- function(spec){
-
-	list2env(spec, environment())
-
-	yml <- file.path(impacts.folder, batch, rcp, climate_model, iam, ssp, 'pvals.yml')
-	
-	impacts.file.base <- gsub(x=list.files(file.path(impacts.folder, batch, rcp, climate_model, iam, ssp), '*-incadapt.nc4'), pattern='*-incadapt.nc4', replacement='')
-
-	if (!file.exists(yml)) {
-		type <- 'file missing'
-	} else {
-		yml_list <- read_yaml(yml)
-
-		if ('seed-csvv' %in% names(yml_list[[impacts.file.base]])) {
-
-			if (is.integer(yml_list[[impacts.file.base]][['seed-csvv']])){
-				type <- 'OK'
-			} else {
-				type <- 'invalid seed'
-			}
-
-		} else {
-
-			type <- 'seed missing'
-
-		}
-	}
-
-	DT <- data.table(batch=batch, rcp=rcp, gcm=climate_model, iam=iam, ssp=ssp, result=type)
-
-	return(DT)
-}
-
-
-#' reads a full set of projection target directories produced by a projection run, and checks the pval.yml csvv seeds. 
-#' 
-#' @param impacts.folder a character. The full path of the folder containing the target directory. Example : '/shares/gcp/outputs/agriculture/impacts-mealy/cassava-median-010120'. 
-#' @param threads an integer. Number of cores to parallelize over. Each netcdf file will be assigned to a unique core. 
-#' @param output_dir a character. The directory where to save the csv containing the checks.
-#' @param output_title a character. It will be appended to the csv name and should be ideally the last folder of the projection directory, for example 'csvv-median-010120'.
-#' 
-#' @return a data table with all reports and directories info, and saves it beforehand. 
-ApplyPvalReadAndCheck <- function(impacts.folder, threads=30, output_dir, output_title, keep_only_not_OK=FALSE){
-
-
-	files <- list.files(impacts.folder, '*-incadapt.nc4', all.files = TRUE, recursive = TRUE)
-	specs <- mcmapply(FUN=DecomposeTargetDir, target_dir=files, MoreArgs = list(impacts.folder=impacts.folder), SIMPLIFY = FALSE, mc.cores=threads)
-	
-	if (threads>1){
-
-		checks <- mcmapply(FUN=PvalReadAndCheck, spec=specs, SIMPLIFY = FALSE, mc.cores=threads)
-
-	} else if (threads==1){
-
-		checks <- mapply(FUN=PvalReadAndCheck, spec=specs, SIMPLIFY = FALSE)
-
-	} else {
-
-		stop('invalid number of threads')
-
-	}
-
-	out <- rbindlist(checks)
-
-	out <- out[batch!='not_used_ACCESS1-0']
-	
-	setnames(out, c('batch-list', 'rcp-list', 'model-list', 'iam-list', 'ssp-list', 'result'))
-
-	if (keep_only_not_OK) out <- out[result!='OK']
-
-	fwrite(out, file.path(output_dir, glue('checks_pval_{output_title}.csv')))
-
-	return(out)
-
-}
-
-
-#' This function calls nc_to_DT and checks that the returned value is a data table
-#' @param ... parameters passed to nc_to_DT
-#' 
-#' @return logical
-DoNcToDT <- function(...){
-
-	DT <- do.call(nc_to_DT, list(...))
-
-	out <- is.data.table(DT)
-
-	rm(DT)
-	
-	return(out)
-
-}
-
-#' reads and converts to data table a full set of projection target directories 
-#' 
-#' @param impacts.folder a character. The full path of the folder containing the target directory. Example : '/shares/gcp/outputs/agriculture/impacts-mealy/cassava-median-010120'. 
-#' @param threads an integer. Number of cores to parallelize over. Each netcdf file will be assigned to a unique core. 
-#' @param base a character. The base name of an impact netcdf. 
-#' 
-#' @return a list of data tables.   
-ApplyDoNcToDT <- function(impacts.folder, threads=40, base){
-
-
-	files <- list.files(path=impacts.folder, pattern='.nc4', all.files = TRUE, recursive = TRUE, full.names = TRUE)
-	files <- grep(pattern=base, x=files, value=TRUE)
-
-	DT <- mcmapply(FUN=DoNcToDT, nc_file=files, SIMPLIFY = FALSE, mc.cores=threads)
-
-	return(DT)
-
-}
+import xarray as xr
+import pandas as pd
+d = xr.open_dataset("uninteracted_main_model-noadapt-wage-aggregated.nc4").to_dataframe().reset_index()
+d[d.rebased == 0]
+d[pd.isnull(d.rebased)]
+d[pd.isna(d.rebased)]
 
 
 
-#' Summarizes the output of ApplyReadAndCheck, showing which scenarios have missing or nan values. 
-#' @param file character. ApplyReadAndCheck output path, a csv.
-#' @param types character vector. Which value types to include in the sum of observations?
-#' @param do_montecarlo logical. Is that output from a montecarlo ?
-#' 
-#' @return a data table, with only scenarios that have a number of observation strictly positive. 
-SummarizeChecks <- function(file, types=c('nan', 'missing'), do_montecarlo=TRUE){
 
-	DT <- fread(file)[type %in% types]
-	if (do_montecarlo) {
-		DT <- DT[,.(obs=sum(obs)), by=.(batch, rcp, gcm, iam, ssp)]
-	} else {
-		DT <- DT[,.(obs=sum(obs)), by=.(rcp, gcm, iam, ssp)]
-	}
-	
-	DT <- DT[obs!=0]
-	  
 
-	return(DT) 
 
-}
+
+
+
+
 
 
 
