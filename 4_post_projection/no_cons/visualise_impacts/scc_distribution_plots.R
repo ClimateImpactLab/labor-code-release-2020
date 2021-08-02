@@ -3,51 +3,88 @@ rm(list=ls())
 source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
+library(dplyr)
+library(reshape2)
 library(glue)
-library(lfe)
-library(grid)
-library(gridExtra)
-library(DescTools)
 
-scc_dist = read_csv("/mnt/CIL_labor/6_ce/risk_aversion_constant_model_collapsed_uncollapsed_sccs.csv") 
+full = read_csv("/mnt/CIL_labor/6_ce/scc_distribution_with_uncertainty/fulluncertainty.csv") 
+clim = read_csv("/mnt/CIL_labor/6_ce/scc_distribution_with_uncertainty/climateuncertainty.csv")
+stat = read_csv("/mnt/CIL_labor/6_ce/scc_distribution_with_uncertainty/statisticaluncertainty_quantiles.csv")
 
-scc_dist <- scc_dist[,c(2:10)]
+full <- full[,c(2:7)]
+clim <- clim[,c(2:6)]
 
-scc_wins = scc_dist %>% 
-		group_by(discrate, rcp) %>% 
-		mutate(
-			scc_wins = Winsorize(scc, probs = c(0.01, 0.99), minval = NULL, maxval = NULL)
-			)
+# adding this column to ease rbind in the next steps
+clim <- clim %>% add_column(pctile = NA, .before = 2)
 
-scc_dist %>% 
-	group_by(discrate, rcp) %>% 
-	summarise(mean = mean(scc), min = min(scc), max = max(scc), median = median(scc), 
-		q1 = quantile(scc, 0.01), q5 = quantile(scc, 0.05), q25 = quantile(scc, 0.25), 
-		q75 = quantile(scc, 0.75), q95 = quantile(scc, 0.95), q99 =  quantile(scc, 0.99), 
-		n= n())
+full$uncertainty <- "Full uncertainty"
+clim$uncertainty <- "Climate uncertainty"
 
-scc_wins %>% 
-	group_by(discrate, rcp) %>% 
-	summarise(mean = mean(scc_wins), min = min(scc_wins), max = max(scc_wins), 
-		median = median(scc_wins), n= n())
+# combined to calculate quantiles for boxplot
+df <- rbind(full, clim)
 
-p2 <- ggplot() + 
-    geom_boxplot(data = scc_wins, aes(x=rcp, y= scc_wins, fill=rcp)) +
-    facet_wrap(~discrate, scale="free")
+full %>% 
+  group_by(rcp) %>% 
+  summarise(mean = mean(scc), min = min(scc), max = max(scc), median = median(scc), 
+            q1 = quantile(scc, 0.01), q5 = quantile(scc, 0.05), q25 = quantile(scc, 0.25), 
+            q75 = quantile(scc, 0.75), q95 = quantile(scc, 0.95), q99 =  quantile(scc, 0.99), 
+            n= n())
+clim %>% 
+  group_by(rcp) %>% 
+  summarise(mean = mean(scc), min = min(scc), max = max(scc), median = median(scc), 
+            q1 = quantile(scc, 0.01), q5 = quantile(scc, 0.05), q25 = quantile(scc, 0.25), 
+            q75 = quantile(scc, 0.75), q95 = quantile(scc, 0.95), q99 =  quantile(scc, 0.99), 
+            n= n())
 
-ggsave(glue("{DIR_FIG}/scc_distribution_plots/rcp_box_2_try.pdf"), plot = p2, 
-	width = 10, height = 10)
+#checking to if summary stats are same as above or not
+df %>% 
+  group_by(rcp, uncertainty) %>% 
+  summarise(mean = mean(scc), min = min(scc), max = max(scc), median = median(scc), 
+            q1 = quantile(scc, 0.01), q5 = quantile(scc, 0.05), q25 = quantile(scc, 0.25), 
+            q75 = quantile(scc, 0.75), q95 = quantile(scc, 0.95), q99 =  quantile(scc, 0.99), 
+            n= n())
 
+# first four rows of the 5,95 data frame
+y <- df %>% 
+  group_by(rcp, uncertainty) %>%
+  summarise(
+    mean = mean(scc),
+    y1 = quantile(scc, 0.01), 
+    y5 = quantile(scc, 0.05), 
+    y25 = quantile(scc, 0.25), 
+    y50 = quantile(scc, 0.5), 
+    y75 = quantile(scc, 0.75), 
+    y95 = quantile(scc, 0.95),
+    y99 = quantile(scc, 0.99))
 
-## code below for reference
-# dist <- ggplot() + 
-#   geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share, 
-#                                 colour = log_gdppc_adm1_pwt_ds_15ma)) + 
-#   geom_ribbon(data=yhat_temp,aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
-#               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
-#   geom_line(data = yhat_temp, aes(x = temp, y = yhat)) + labs(colour = "Log GDP PC") + 
-#   xlab("LRT - in sample") + ylab("predicted riskshare values- LR(T^K)")
+# statistical uncertainty quantiles for boxplot
+stat <- stat[stat$discrate==0.02, c("rcp","0.01", "0.05", "0.25", "0.5", "0.75", "0.95", "0.99")] 
 
-# temp_pred
+# mean for stat uncertainty obtained from the labour SCC spreadsheet in the labour repo
+stat <- stat  %>% 
+  add_column(uncertainty = "Statistical uncertainty", .before = 2) %>%
+  add_column(mean = c(10.788731969266022, 17.028311491665164), .before = 3) %>%
+  rename(y1 = "0.01", y5 = "0.05", y25 = "0.25", y50 = "0.5", y75 = "0.75", y95 = "0.95", y99 = "0.99")
 
-# ggsave(glue("{DIR_FIG}/scc_distribution_plots/box_scatter.pdf"), plot = temp_pred, width = 10, height = 7)
+# combining everything in data frame for boxplots
+y <- rbind(y, stat)
+
+# boxplot!! 
+# change ymin and ymax to y1 and y99 respectively for 1,99 whiskers in geom_box aes()
+p <- ggplot(y, aes(x = rcp, fill = uncertainty, 
+                   group = interaction(rcp, uncertainty))) + theme_bw() +
+  geom_boxplot(
+    aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95), 
+    stat = "identity") + 
+  geom_point(aes(y=mean, colour = "Mean SCC"), 
+             shape = 21, size = 2, stroke = 1,
+             fill = "white", position = position_dodge(width=0.9)) +
+  scale_colour_manual(name = "", values = c("Mean SCC" = "black" )) +
+  guides(colour = guide_legend(override.aes = list(linetype = c("blank"), 
+                                                   shape = c(21)))) +
+  labs(y = "SCC in trillion dollars", x = "", fill = "") +
+  theme(axis.title=element_text(size=16), axis.text=element_text(size=14),
+        legend.text=element_text(size=14), legend.key.size = unit(2,"line")) +
+  scale_x_discrete(labels = c("RCP 4.5", "RCP 8.5"))
+
+ggsave(glue("{DIR_FIG}/scc_distribution_plots/rcp_box_kelly_dist_5_95.pdf"), plot = p, width = 9, height = 7)
