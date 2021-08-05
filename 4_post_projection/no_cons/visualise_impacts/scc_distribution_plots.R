@@ -44,7 +44,7 @@ df %>%
             q75 = quantile(scc, 0.75), q95 = quantile(scc, 0.95), q99 =  quantile(scc, 0.99), 
             n= n())
 
-# first four rows of the 5,95 data frame
+# first four rows of the 5,95 data frame. full and climate uncertainty quantiles for boxplots
 y <- df %>% 
   group_by(rcp, uncertainty) %>%
   summarise(
@@ -57,7 +57,13 @@ y <- df %>%
     y95 = quantile(scc, 0.95),
     y99 = quantile(scc, 0.99))
 
-# statistical uncertainty quantiles for boxplot
+# replacing mean in full uncertainty to adding_up_mean scc values from integration code.
+# comment the following three lines to retain mean(scc) in full uncertainty.
+y <- y %>% 
+  mutate(mean=ifelse(uncertainty == "Full uncertainty" & rcp == "rcp45" , 17.08698915, mean),
+         mean=ifelse(uncertainty == "Full uncertainty" & rcp == "rcp85" , 20.95549221, mean))
+
+# last two rows of the 5,95 data frame. statistical uncertainty quantiles for boxplot
 stat <- stat[stat$discrate==0.02, c("rcp","0.01", "0.05", "0.25", "0.5", "0.75", "0.95", "0.99")] 
 
 # mean for stat uncertainty obtained from the labour SCC spreadsheet in the labour repo
