@@ -321,6 +321,72 @@ prog def collect_spline_terms
 
 end
 
+cap prog drop collect_gdp_spline_terms
+prog def collect_gdp_spline_terms
+	syntax , splines(numlist) unint_gdp(string) int_gdp(string)
+
+	foreach i in `splines' {
+
+		#d ;
+
+		gl `unint_gdp'`i' = "
+			_b[tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] + 
+			_b[tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] + 
+			_b[tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] + 
+			_b[tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] + 
+			_b[tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] + 
+			_b[tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+			_b[tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1] "
+		;
+		
+		gl `int_gdp'`i' = "
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1] "
+		;
+
+		#d cr
+	}
+
+end
+
+cap prog drop collect_lrt_spline_terms
+prog def collect_lrt_spline_terms
+	syntax , splines(numlist) unint_lrt(string) int_lrt(string)
+
+	foreach i in `splines' {
+
+		#d ;
+
+		gl `unint_lrt'`i' = "
+			_b[tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] + 
+			_b[tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] + 
+			_b[tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] + 
+			_b[tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] + 
+			_b[tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] + 
+			_b[tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+			_b[tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1] "
+		;
+		
+		gl `int_lrt'`i' = "
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] + 
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1] "
+		;
+
+		#d cr
+	}
+
+end
+
 ***************************************
 *	COLLECT_POLYNOMIAL_TERMS
 
