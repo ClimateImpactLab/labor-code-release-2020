@@ -1,4 +1,4 @@
-outputdir: /global/scratch/liruixue/outputs/labor/impacts-woodwork/
+outputdir: /global/scratch/users/liruixue/outputs/labor/impacts-woodwork/
 # Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
 weighting: population 
 infix: pop
