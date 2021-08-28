@@ -4,11 +4,10 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
-# output_root="/global/scratch/liruixue/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
+# output_root="/global/scratch/users/liruixue/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
 output_dir="/" 
 
-aggregation_scenario="-wage"
-
+aggregation_scenario="-gdp"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size

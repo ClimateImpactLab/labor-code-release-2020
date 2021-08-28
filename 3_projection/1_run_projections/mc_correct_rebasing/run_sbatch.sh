@@ -1,4 +1,4 @@
-cd /global/scratch/liruixue/repos
+cd /global/scratch/users/liruixue/repos
 
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc_correct_rebasing/brc_sbatch_savio1_low.sh
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc_correct_rebasing/brc_sbatch_savio1big_low.sh

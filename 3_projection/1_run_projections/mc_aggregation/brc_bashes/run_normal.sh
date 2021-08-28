@@ -1,6 +1,6 @@
 #run_lowprio
 
-cd /global/scratch/liruixue/repos
+cd /global/scratch/users/liruixue/repos
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc_aggregation/brc_bashes/uninteracted_main_model_brc_mc_savio2bigmem_normal.sh
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc_aggregation/brc_bashes/uninteracted_main_model_brc_mc_savio2bigmem_normal.sh
 sbatch labor-code-release-2020/3_projection/1_run_projections/mc_aggregation/brc_bashes/uninteracted_main_model_brc_mc_savio2bigmem_normal.sh

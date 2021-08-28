@@ -3,26 +3,26 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration"
 output_dir="/" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=50
+levels_file_size_above=40
 aggregated_file_size_above=10
 
 # 130 for one SSP
-n_folders_total=520
+n_folders_total=8700
 
-aggregation_scenario="wage"
+aggregation_scenario="gdp"
 filename_stem="uninteracted_main_model"
 
 cd "${output_root}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-action=delete
-# action=print
+# action=delete
+action=print
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
