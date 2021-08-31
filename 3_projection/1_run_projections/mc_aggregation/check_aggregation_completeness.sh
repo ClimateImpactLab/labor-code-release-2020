@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
-# output_root="/global/scratch/users/liruixue/outputs/labor/impacts-woodwork/labor_mc_re-rebased"
+# output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
+output_root="/global/scratch/users/liruixue/outputs/labor/impacts-woodwork/"
 output_dir="/" 
 
 aggregation_scenario="-gdp"
