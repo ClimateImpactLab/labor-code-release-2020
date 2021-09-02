@@ -1,7 +1,7 @@
 # an R script for running labor extractions
 # run the following three lines in shell
 conda activate risingverse-py27
-cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
+cd "/home/nsharma/repos/prospectus-tools/gcp/extract"
 R
 
 
@@ -49,7 +49,7 @@ extract_map = function(ssp, iam, adapt, year, risk, aggregation="",suffix=""){
 	} 
 
 	quantiles_command = paste0("python -u quantiles.py ",
-		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+		"/home/nsharma/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc_correct_rebasing/extraction_configs/",
 		glue("mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map "),
@@ -106,7 +106,7 @@ extract_timeseries = function(ssp, iam, adapt, risk, aggregation="",region="glob
 
 
 	quantiles_command = paste0("python -u quantiles.py ",
-		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+		"/home/nsharma/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc_correct_rebasing/extraction_configs/",
 		glue("mean_{risk}_{calculation}.yml "),
 		glue("--only-iam={iam} --only-ssp={ssp} --region={region} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries "),
