@@ -15,7 +15,7 @@ pacman::p_load(ggplot2,
 library(glue)
 library(parallel)
 
-source(paste0(DIR_REPO_LABOR, "/4_post_projection/0_utils/mapping.R"))
+source("~/repos/post-projection-tools/mapping/mapping.R")
 
 #############################################
 # 1. Load in a world shapefile, containing Impact Region boundaries, and convert to a 
@@ -163,13 +163,9 @@ for (ssp in c("SSP2","SSP3","SSP4")) {
   plot_impact_map(rcp="rcp85",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="", output_folder = output_folder_mc)
   plot_impact_map(rcp="rcp45",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="", output_folder = output_folder_mc)
   plot_impact_map(rcp="rcp45",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="", output_folder = output_folder_mc)
-  # plot_impact_map(rcp="rcp85",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
-  # plot_impact_map(rcp="rcp85",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
-  # plot_impact_map(rcp="rcp45",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
-  # plot_impact_map(rcp="rcp45",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
-  plot_impact_map(rcp="rcp85",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-wage-levels", output_folder = output_folder_mc)
-  plot_impact_map(rcp="rcp85",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-wage-levels", output_folder = output_folder_mc)
-  plot_impact_map(rcp="rcp45",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-wage-levels", output_folder = output_folder_mc)
-  plot_impact_map(rcp="rcp45",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-wage-levels", output_folder = output_folder_mc)
+  plot_impact_map(rcp="rcp85",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
+  plot_impact_map(rcp="rcp85",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
+  plot_impact_map(rcp="rcp45",ssp=ssp,iam="high", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
+  plot_impact_map(rcp="rcp45",ssp=ssp,iam="low", adapt="fulladapt",year=2099,risk="allrisk",aggregation="-gdp-levels", output_folder = output_folder_mc)
   # plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=yr,risk="riskshare",aggregation="", output_folder = output_folder_mc)
 }
