@@ -12,7 +12,7 @@ log using "/home/nsharma/repos/logs/interacted_splines.smcl", replace
 
 * select dataset and output folder
 gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
-loc reg_folder 	"${DIR_STER}/interacted_splines"
+loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster"
 
 * other selections
 gl test_code "no"

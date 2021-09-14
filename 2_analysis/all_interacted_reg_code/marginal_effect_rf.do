@@ -9,8 +9,8 @@ run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * select dataset and output folder
-loc reg_folder 	"${DIR_STER}/interacted_splines"
-loc rf_folder 	"${DIR_RF}/interacted_splines"
+loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster"
+loc rf_folder 	"${DIR_OUTPUT}/interacted_reg_output/response_function"
 cap mkdir `rf_folder'
 
 * other selections are 2_factor. change here to run 2_factor model
