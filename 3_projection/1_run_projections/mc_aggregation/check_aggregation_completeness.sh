@@ -3,11 +3,11 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
-output_root="/global/scratch/users/liruixue/outputs/labor/impacts-woodwork/"
+output_root="/shares/gcp/outputs/labor/impacts-woodwork/mc_correct_rebasing_for_integration/"
+# output_root="/global/scratch/users/liruixue/outputs/labor/impacts-woodwork/"
 output_dir="/" 
 
-aggregation_scenario="-gdp"
+aggregation_scenario="-pop"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -26,7 +26,7 @@ echo "Number of status-aggregate.txt files: ${n}"
 
 
 # check the files for each adaptation scenario
-# if the file size is large enough, consider it complete
+# if the file size is large enough, consider it comple∏te
 # otherwise consider it incomplete
 for file_type in aggregated levels; 
 do 
@@ -72,4 +72,6 @@ echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 4  -type d  '!' -exec test -e "{}/${filename_stem}-histclim-wage-aggregated.nc4" ';' -print
+
+
 
