@@ -10,42 +10,69 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 source(glue("{REPO}/labor-code-release-2020/4_post_projection/UN_press_release_stuff/labor_outreach_data.R"))
 
 
-# testing function
-out = ProcessImpacts(
-  time_step="all",
-  impact_type="impacts_mins_worked",
-  resolution="all_IRs", 
-  rcp="rcp85",
-  stats="q17",
-  risk_type = "highrisk",
-  export = TRUE)
+# # testing function
+# out = ProcessImpacts(
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution="global", 
+#   rcp="rcp85",
+#   stats="q17",
+#   risk_type = "allrisk",
+#   export = TRUE)
 
 
 ##########################################################
-# generate all aggregated file stats
+# aggregated
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type=c("impacts_pct_gdp"),
-  resolution=c("states","global","iso", "all_IRs"), 
+  resolution=c("states","global","iso"), 
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   risk_type = c("allrisk"),
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=10,
+  mc.cores=30,
   mc.silent=FALSE
 )
 
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type=c("impacts_mins_worked"),
-  resolution=c("states","global","iso", "all_IRs"), 
+  resolution=c("states","global","iso"), 
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   risk_type = c("highrisk", "lowrisk"),
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=10,
+  mc.cores=30,
+  mc.silent=FALSE
+)
+
+# IR level
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type=c("impacts_pct_gdp"),
+  resolution=c( "all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  risk_type = c("allrisk"),
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=40,
+  mc.silent=FALSE
+)
+
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type=c("impacts_mins_worked"),
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  risk_type = c("highrisk", "lowrisk"),
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=40,
   mc.silent=FALSE
 )
 
@@ -87,7 +114,7 @@ filter_500k_cities <- function(path, overwrite, cities_500k_arg = cities_500k, c
 }
 
 # testing function
-# dt = filter_500k_cities(all_IRs_files[3], cities_500k, cities_500k_regions)
+dt = filter_500k_cities(all_IRs_files[3], cities_500k, cities_500k_regions)
 
 # run over all files
 out = wrap_mapply(  
