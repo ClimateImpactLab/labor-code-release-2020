@@ -57,6 +57,8 @@ ProcessImpacts = function(
     stats = stats,
   ) 
   
+  # browser()
+
   df = reshape_and_save(
     df = df, 
     stats = stats, 
@@ -83,9 +85,16 @@ ProcessImpacts = function(
 select_and_transform = function(df, impact_type, resolution, stats, ...) {
   # nishka: the following line may be the only one you need, plus the dollar 2019 conversion
   df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
-  if ((impact_type == "impacts_mins_worked") | (impact_type == "impacts_pct_gdp")) {
+  if (impact_type == "impacts_mins_worked") {
+    return(df_stats)
+  } else if (impact_type == "impacts_pct_gdp") {
+    # convert from fraction to %
+    df_stats = df_stats %>% rename(stats = !!stats) %>%
+      dplyr::mutate(stats = - stats * 100) 
+    df_stats = rename(df_stats, !!stats:= stats)
     return(df_stats)
   } else if (impact_type == "impacts_dollar") {
+    # convert to 2019 dollars
     df_stats = df_stats %>% rename(stats = !!stats) %>%
       dplyr::mutate(stats = stats * 1.273526) 
     df_stats = rename(df_stats, !!stats:= stats)
@@ -165,7 +174,7 @@ get_labor_impacts = function(impact_type, risk_type, rcp, resolution,...) {
   # set parameters for the load.median function call based on impact_type parameter
   geo_level = get_geo_level(resolution) 
   if (impact_type == "impacts_mins_worked") {
-    if (geo_level == "aggregated") {
+    if (geo_level == "-aggregated") {
       infix = "-pop"
     } else  {
       infix = ""
@@ -179,15 +188,16 @@ get_labor_impacts = function(impact_type, risk_type, rcp, resolution,...) {
     print("wrong risk_type type")
   }
   
-  df = read_csv(glue("{INPUT_DIR}/SSP3-rcp85_low_{risk_type}_fulladapt{infix}{geo_level}.csv"))
+  df = fread(glue("{INPUT_DIR}/SSP3-{rcp}_low_{risk_type}_fulladapt{infix}{geo_level}.csv"))
 
-  if (geo_level == "aggregated") {  
+  if (geo_level == "-aggregated") {  
     # get a list of region codes to filter the data with
-    regions = return_region_list(resolution)
-    df = df %>% dplyr::mutate(region = if_else(is.na(region), "global", region))
-    df = df %>% dplyr::filter(region %in% regions, year %in% seq(2020, 2099)) 
+    # browser()
+    regions = return_region_list(resolution) #is.na(region)
+    df = df %>% dplyr::mutate(region = if_else(region == "", "global", region))
+    df = df %>% dplyr::filter(region %in% regions) 
   }
-  # browser()
+  df = df %>% dplyr::filter(year %in% seq(2020, 2099)) 
   return(df)
   
 }
