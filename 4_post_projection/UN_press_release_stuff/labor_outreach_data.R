@@ -7,58 +7,47 @@ library(parallel)
 library(miceadds)
 library(haven)
 library(ncdf4)
+library(data.table)
 library(tidyr)
 
-# cilpath.r:::cilpath()
-db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/'
+REPO <- "/home/liruixue/repos/"
 
-REPO <- "/home/nsharma/repos"
-
-dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
-             'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
+INPUT_DIR = paste0('/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/outreach/')
 
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd(paste0(REPO))
-
-# Source codes that help us load projection system outputs
-miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 #' Wrapper that calls get_energy_impacts, transform, reshape and save results
 #' @param time_step what years to output ("averaged","all")
-#' @param impact_type unit of output ("impacts_gj", "impacts_kwh", "impacts_pct_gdp")
+#' @param impact_type unit of output ("impacts_mins_worked", "impacts_dollar", "impacts_pct_gdp")
 #' @param resolution spatial resolution of output, ("all_IRs", "states", "iso", "global")
 #' @param rcp ("rcp45", "rcp85")
+#' @param risk_type ("highrisk", "lowrisk", "allrisk")
 #' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
-#' @param fuel ("electricity", "other_energy")
 #' @param export set to TRUE if want to write output to file
-#' @param regenerate set to TRUE if want to re-run load.median function (use when the extraction is not done correctly) 
-
 #' @return Data table of processed impacts.
 # nishka: this one shouldn't require any change
-# nishka: anything that has to do with "fuel" should be similar to high/low in labor
+# nishka: anything that has to do with "risk_type" should be similar to high/low in labor
 ProcessImpacts = function(
   time_step,
   impact_type, 
   resolution, 
   rcp=NULL, 
   stats=NULL,
-  fuel = NULL,
+  risk_type = "all",
   export = TRUE,
-  regenerate = FALSE,
   ...){
   
+  print(glue("{impact_type} {resolution} {rcp} {risk_type} {stats}"))
   # get a df with all impacts and all stats at that resolution
   df = wrap_mapply(
     impact_type = impact_type,
     resolution = resolution,
-    fuel = fuel, 
     rcp = rcp, 
-    regenerate = regenerate,
+    risk_type = risk_type,
     mc.cores=1,
     mc.silent=FALSE,
-    FUN=get_energy_impacts
+    FUN=get_labor_impacts
   ) 
   
   df = select_and_transform(
@@ -68,13 +57,15 @@ ProcessImpacts = function(
     stats = stats,
   ) 
   
+  # browser()
+
   df = reshape_and_save(
     df = df, 
     stats = stats, 
     resolution = resolution, 
+    risk_type = risk_type,
     impact_type = impact_type, 
     time_step = time_step,
-    fuel = fuel, 
     rcp = rcp,
     export = export)
   
@@ -90,30 +81,22 @@ ProcessImpacts = function(
 #' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
 #' @return Data table of processed impacts.
 
-# nishka: change the units of impacts, and remove calculations
-# remember to convert to 2019 dollars
-# multiply by: 1.27.....
-# loc conversion_value_2005_to_2019 = 1.273526
-# replace value = value * conversion_value_2005_to_2019
 
 select_and_transform = function(df, impact_type, resolution, stats, ...) {
   # nishka: the following line may be the only one you need, plus the dollar 2019 conversion
   df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
-  if (impact_type == "impacts_gj") {
+  if (impact_type == "impacts_mins_worked") {
     return(df_stats)
-  } else if (impact_type == "impacts_kwh") {
-    gj_to_kwh <- function(x) (x * 277.78) 
-    df_stats = df_stats %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
-    return(df_stats)        
-    # nishka: energy does the computation of pct gdp inside this script
-    # but laber doesnt need to. we can directly extract from aggregated pct gdp nc4 files
-    # so remember to remove %gdp calculation
   } else if (impact_type == "impacts_pct_gdp") {
-    gdp = return_region_gdp(resolution)    
-    df_stats = left_join(df_stats, gdp, by = c("region", "year")) 
+    # convert from fraction to %
     df_stats = df_stats %>% rename(stats = !!stats) %>%
-      dplyr::mutate(stats = stats * 1000000000 * 100 / gdp / 0.0036) %>%
-      dplyr::select(-gdp)
+      dplyr::mutate(stats = - stats * 100) 
+    df_stats = rename(df_stats, !!stats:= stats)
+    return(df_stats)
+  } else if (impact_type == "impacts_dollar") {
+    # convert to 2019 dollars
+    df_stats = df_stats %>% rename(stats = !!stats) %>%
+      dplyr::mutate(stats = stats * 1.273526) 
     df_stats = rename(df_stats, !!stats:= stats)
     return(df_stats)
   }
@@ -121,9 +104,7 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
 
 
 # reshape output and save to file
-# Nishka: no need to touch this one
-# except for "fuel"
-reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
+reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, risk_type, export,...) {
   
   rownames(df) <- c()
   if(resolution=="states") 
@@ -162,7 +143,7 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
                           resolution = resolution,
                           rcp = rcp, 
                           stats = stats, 
-                          fuel = fuel, 
+                          risk_type = risk_type, 
                           time_step=time_step)))
   }
   
@@ -175,10 +156,10 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
 get_geo_level = function(resolution) {
   
   geo_level_lookup = list(
-    iso="aggregated", 
-    states="aggregated", 
-    all_IRs="levels", 
-    global="aggregated")
+    iso="-aggregated", 
+    states="-aggregated", 
+    all_IRs="-levels", 
+    global="-aggregated")
   
   return(geo_level_lookup[[resolution]])
 }
@@ -188,85 +169,39 @@ get_geo_level = function(resolution) {
 # note that to percentage gdp impacts are only applicable for total energy (electricity + other energy)
 # nishka: this is where most of the change happens
 # replace this function with some calls to load the output of quantiles.py
-get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
+get_labor_impacts = function(impact_type, risk_type, rcp, resolution,...) {
   
   # set parameters for the load.median function call based on impact_type parameter
-  if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
-    price_scen = NULL
-    unit = "impactpc"
-    spec = paste0("OTHERIND_", fuel)
-    dollar_convert = NULL
-  } else if (impact_type == "impacts_pct_gdp") {
-    if (fuel != "total_energy") {
-      print("to get percentage gdp, fuel must be total energy!")
-      return()
+  geo_level = get_geo_level(resolution) 
+  if (impact_type == "impacts_mins_worked") {
+    if (geo_level == "-aggregated") {
+      infix = "-pop"
+    } else  {
+      infix = ""
+      geo_level = ""
     }
-    price_scen = "price014"
-    unit = "damage"
-    spec = "OTHERIND_total_energy"       
-    dollar_convert = "yes"
+  } else if (impact_type == "impacts_pct_gdp") {
+    infix = "-gdp"
+  } else if (impact_type == "impacts_dollar") {
+    infix = "-wage"
   } else {
-    print("wrong fuel type")
+    print("wrong risk_type type")
   }
   
-  geo_level = get_geo_level(resolution)
-  if (geo_level == "aggregated") {
-    
+  df = fread(glue("{INPUT_DIR}/SSP3-{rcp}_low_{risk_type}_fulladapt{infix}{geo_level}.csv"))
+
+  if (geo_level == "-aggregated") {  
     # get a list of region codes to filter the data with
-    regions = return_region_list(resolution)
-    
-    # nishka: this thing calls quantiles.py
-    # so what you should do is to pre-run quantiles.py to get all extracted csv files you need
-    # and here load the csv that corresponds to what you need to produce
-    # this function only loads the correct csv. the filtering is done other locations
-    # you don't need this part (it's energy specific) if you run quantiles.py
-    # just use a few if statements to choose the correct csv to load
-    df = load.median(conda_env = "risingverse-py27",
-                     proj_mode = '', # '' and _dm are the two options
-                     # region = region, # needs to be specified for 
-                     regions = regions,
-                     regions_suffix = resolution,
-                     rcp = rcp, 
-                     ssp = "SSP3", 
-                     price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
-                     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-                     uncertainty = "full", # full, climate, values
-                     geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
-                     iam = "low", 
-                     model = "TINV_clim", 
-                     adapt_scen = "fulladapt", 
-                     clim_data = "GMFD", 
-                     yearlist = seq(2020, 2099),  
-                     spec = spec,
-                     dollar_convert = dollar_convert,
-                     grouping_test = "semi-parametric",
-                     regenerate = regenerate)
-  } else {
-    df = load.median(conda_env = "risingverse-py27",
-                     proj_mode = '', # '' and _dm are the two options
-                     rcp = rcp, 
-                     ssp = "SSP3", 
-                     price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
-                     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-                     uncertainty = "full", # full, climate, values
-                     geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-                     iam = "low", 
-                     model = "TINV_clim", 
-                     adapt_scen = "fulladapt", 
-                     clim_data = "GMFD", 
-                     yearlist = seq(2020, 2099),  
-                     spec = spec,
-                     dollar_convert = dollar_convert,
-                     grouping_test = "semi-parametric",
-                     regenerate = regenerate)
-    
+    # browser()
+    regions = return_region_list(resolution) #is.na(region)
+    df = df %>% dplyr::mutate(region = if_else(region == "", "global", region))
+    df = df %>% dplyr::filter(region %in% regions) 
   }
-  
+  df = df %>% dplyr::filter(year %in% seq(2020, 2099)) 
   return(df)
   
 }
 
-# nishka: no need to change
 #reshapes the data to get region in rows and years in columns
 YearsReshape = function(df){
   
@@ -280,7 +215,6 @@ YearsReshape = function(df){
   return(df)
 }
 
-# nishka: no need to change
 #get two-decades means
 YearChunks = function(df,intervals,...){
   
@@ -293,16 +227,15 @@ YearChunks = function(df,intervals,...){
   return(df)
 }
 
-# nishka: this one needs changing
 #directories and files names
-Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
+Path = function(impact_type, resolution, rcp, stats, risk_type, time_step, suffix='', ...){
   
   # define a named vector to rename folders and files
   geography = c("global","US_states","country_level","impact_regions")
   names(geography) = c("global", "states", "iso", "all_IRs")
   
-  dir = glue("/mnt/CIL_energy/impacts_outreach/{geography[resolution]}/{rcp}/SSP3/")
-  file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
+  dir = glue("/mnt/CIL_labor/outreach/UN/{geography[resolution]}/{rcp}/SSP3/")
+  file = glue("unit_{risk_type}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
   
   print(glue('{dir}/{file}'))
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -312,7 +245,6 @@ Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='',
 
 memo.csv = addMemoization(read.csv)
 
-# nishka: no need to change
 #add US states name to states ID
 StatesNames = function(df){
   df=setkey(as.data.table(df),region)
@@ -334,7 +266,6 @@ StatesNames = function(df){
 #' - iso: country-level output; 
 #' - global: global outputs; 
 #' @return List of IRs or region codes.
-# nishka: no need to change
 return_region_list = function(regions) {
   
   if (length(regions) > 1) {
@@ -364,39 +295,8 @@ return_region_list = function(regions) {
     return(regions)
 }
 
-# nishka: no need to change
-# get regional GDP time series at the spatial resolution specified
-return_region_gdp = function(resolution) {
-  
-  DB_data = "/mnt/CIL_energy/code_release_data_pixel_interaction"
-  gdp = read_csv(
-    paste0(DB_data, '/projection_system_outputs/covariates/', 
-           'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv')) 
-  if (resolution == 'all_IRs') {
-    return(gdp[c("region","year","gdp")])
-  } else if (resolution == 'iso' | resolution == "states") {
-    regions_list = return_region_list(resolution)
-    IR_list = get_children(regions_list)
-    IR_df = data.frame(agg_region = rep(names(IR_list),sapply(IR_list, length))
-                       , region = unlist(IR_list)) 
-    rownames(IR_df) = c()
-    regions_gdp = inner_join(IR_df, gdp, by = "region")
-    regions_gdp = regions_gdp %>% group_by(agg_region, year) %>%
-      summarise(gdp = sum(gdp))%>% 
-      select(agg_region, year, gdp) %>%
-      rename(region = agg_region)
-    return(regions_gdp)
-  } else if (resolution == 'global') {
-    global_gdp = gdp %>% group_by(year) %>%
-      summarise(gdp = sum(gdp))
-    global_gdp$region = NA
-    return(global_gdp)
-  }
-}
 
-# nishka: no need to change
 #' Identifies IRs within a more aggregated region code.
-#'
 #' @param region_list Vect. of aggregated regions.
 #' @return List of IRs associated with each aggregated region.
 get_children = function(region_list) {
