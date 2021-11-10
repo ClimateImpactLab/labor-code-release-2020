@@ -8,7 +8,7 @@ R
 library(glue)
 library(parallel)
 
-
+# extract all IRs all years
 extract_levels = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 
 	basename <- "uninteracted_main_model"
@@ -46,18 +46,9 @@ extract_levels = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 		calculation <- "clipped"
 	}
 
-	quantiles_command1 = paste0("python -u quantiles.py ",
-		"/home/nsharma/repos/labor-code-release-2020/4_post_projection/",
-		"UN_press_release_stuff/extraction_configs/",
-		glue("mean_{risk}_{calculation}.yml "),
-		glue("--only-iam={iam} --only-ssp={ssp} --suffix=_{iam}_{risk}_{adapt}{aggregation}{suffix}-yearsets "),
-		glue("--yearsets=yes {basename_command}")
-		)
-
-	print(quantiles_command1)
-	system(quantiles_command1)
-	
-	quantiles_command2 = paste0("python -u quantiles.py ",
+	# adding --yearsets=yes in the quantiles command gives the impacts for four 20 year periods
+	# read quantiles.py readme for more info
+	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/nsharma/repos/labor-code-release-2020/4_post_projection/",
 		"UN_press_release_stuff/extraction_configs/",
 		glue("mean_{risk}_{calculation}.yml "),
@@ -65,19 +56,19 @@ extract_levels = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 		glue("{basename_command}")
 		)
 
-	print(quantiles_command2)
-	system(quantiles_command2)
+	print(quantiles_command)
+	system(quantiles_command)
 }
 
 
-# gdp aggregation and pop weights
-
+# choose aggregation = gdp for allrisk and aggregation = "" for high and low risk 
 args = expand.grid(
 	ssp=c("SSP3"),
-	adapt=c("fulladapt","incadapt","noadapt","histclim"),
+	adapt=c("fulladapt"),
 	risk=c("highrisk","lowrisk"),
 	# risk="allrisk",
-	aggregation=c("-gdp"),
+	aggregation=c(""),
+	# aggregation=c("-gdp"),
 	iam=c("low")
 	 )
 
@@ -89,16 +80,8 @@ mcmapply(extract_levels,
   aggregation=args$aggregation,
   mc.cores = 40)
 
-# mcmapply(extract_levels, 
-#   ssp=args$ssp, 
-#   iam=args$iam,
-#   yearlist=args$yearlist, 
-#   risk=args$risk, 
-#   adapt=args$adapt,
-#   aggregation=args$aggregation,
-#   mc.cores = 40)
 
-
+# extract aggregated IRs all years - gloabl, continent, country, state
 extract_agg = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 
 
@@ -139,8 +122,6 @@ extract_agg = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 		calculation <- "clipped"
 	}
 
-
-
 	quantiles_command = paste0("python -u quantiles.py ",
 		"/home/nsharma/repos/labor-code-release-2020/4_post_projection/",
 		"UN_press_release_stuff/extraction_configs/",
@@ -153,14 +134,14 @@ extract_agg = function(ssp, iam, adapt, risk, aggregation="", suffix=""){
 	system(quantiles_command)
 }
 
-# time series
-
+# choose aggregation = gdp for allrisk and aggregation = pop  for high and low risk 
 args = expand.grid(
 	ssp=c("SSP3"),
-	adapt=c("fulladapt","incadapt","noadapt","histclim"),
+	adapt=c("fulladapt"),
 	risk=c("highrisk","lowrisk"),
 	# risk="allrisk",
-	aggregation=c("-gdp"),
+	aggregation=c("-pop"),
+	# aggregation=c("-gdp"),
 	iam=c("low")
 	 )
 
