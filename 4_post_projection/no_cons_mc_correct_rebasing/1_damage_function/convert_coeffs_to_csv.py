@@ -14,7 +14,7 @@ for col in ['cons', 'beta1', 'beta2']:
 
 df = df[['year', 'cons', 'beta1', 'beta2']].loc[(df['ssp'] == "SSP3")]
 
-df.to_csv('/home/nsharma/repos/labor-code-release-2020/output/damage_function_no_cons_new_mc/SSP3/ce_betas_SSP3.csv')
+df.to_csv('/home/nsharma/repos/labor-code-release-2020/output/damage_function_no_cons_new_mc/SSP3/ce_betas_SSP3.csv', index = False)
 
 
 # convert global consumption values to csv for SSPs 2, 3, 4
