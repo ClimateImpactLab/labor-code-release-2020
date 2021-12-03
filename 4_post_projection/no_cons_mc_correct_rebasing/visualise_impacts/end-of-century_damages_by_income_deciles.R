@@ -133,7 +133,7 @@ p = ggplot(data = df_plot) +
 
 
 ggsave(p, file = paste0(DIR_FIG, 
-    "/mc/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
+    "/mc_correct_rebasing_for_integration/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
     width = 8, height = 6)
 
 
@@ -185,7 +185,7 @@ p = ggplot() +
 
 
 ggsave(p, file = paste0(DIR_FIG, 
-    "/mc/SSP3-high_rcp85-pct-gdp_by_inc_decile_w_CI.pdf"), 
+    "/mc_correct_rebasing_for_integration/SSP3-high_rcp85-pct-gdp_by_inc_decile_w_CI.pdf"), 
     width = 8, height = 6)
 
 

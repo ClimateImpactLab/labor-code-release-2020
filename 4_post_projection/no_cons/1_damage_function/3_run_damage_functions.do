@@ -178,9 +178,9 @@ outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_beta
 **********************************************************************************
 * STEP 5:Write and save CE output
 **********************************************************************************
-
+* Following is for SSP3 only
 * Generate predicted CE coeffs for each year post 2100 with linear extrapolation
-import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_ce_df_coeffs_`ssp'.csv", clear 
+import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/SSP3/unmodified_betas/nocons_ce_df_coeffs_`ssp'.csv", clear 
 
 keep if ssp == `ssp'
 

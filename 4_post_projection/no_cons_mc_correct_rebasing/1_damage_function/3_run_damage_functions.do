@@ -16,7 +16,10 @@ This script does the following:
       coefficients post 2100 as coeff_year = coeff_2099 *(consumption_year/consumption_2099)
   * 4) Predicts damage function coefficients for all years 2015-2300, with post-2100 
       extrapolation conducted using the the global consumption model and pre-2100 using 
-      the nonparametric model      
+      the nonparametric model 
+      
+  * STEP 5 redundant now- no need to separately output ce betas anymore as the input file
+  * from integration menu gives the complete correctly extrapolated betas      
   * 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived 
       from the FAIR simple climate model
 */
@@ -50,7 +53,7 @@ loc model_tag = ""
 **********************************************************************************
 
 * consumption data
-import delimited "$DIR_OUTPUT/damage_function_no_cons/global_consumption_all_SSPs.csv", encoding(Big5) clear
+import delimited "$DIR_OUTPUT/damage_function_no_cons_new_mc/global_consumption_all_SSPs.csv", encoding(Big5) clear
 
 rename __xarray_dataarray_variable__ global_consumption
 
@@ -79,11 +82,11 @@ save `GMST_anom', replace
 **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/`ssp'-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/`ssp'-valuescsv_-wage_global.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
-loc conversion_value_2005_to_2020 = 1.273526
-replace value = value * `conversion_value_2005_to_2020'
+loc conversion_value_2005_to_2019 = 1.273526
+replace value = value * `conversion_value_2005_to_2019'
 
 merge m:1 year gcm rcp using `GMST_anom'
 keep if _m == 3
@@ -107,8 +110,6 @@ merge 1:m year using `master', nogen assert(3)
 **********************************************************************************
 
 cap rename temp anomaly
-
-* collapse(mean) minT maxT value anomaly , by(gcm rcp iam year)
 
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
@@ -169,34 +170,9 @@ gen cons = 0
 ren var_type growth_rate
 order year placeholder growth_rate cons
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
-* insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear
+* insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear
 * keep year beta1 beta2
-* outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_kelly.csv", comma replace
-
-**********************************************************************************
-* STEP 5:Write and save CE output
-**********************************************************************************
-
-* Generate predicted CE coeffs for each year post 2100 with linear extrapolation
-import delimited "$DIR_REPO_LABOR/output/damage_function_no_cons/unmodified_betas/nocons_ce_df_coeffs_`ssp'.csv", clear 
-
-keep if ssp == `ssp'
-
-keep year cons beta1 beta2 
-
-merge 1:1 year using `consumption'
-keep if _m == 3
-drop _m
-
-foreach var in "beta1" "beta2"{
-  sum `var' if year == 2099
-  loc b_`var' = `r(mean)'
-  replace `var' = `b_`var''*ratio if year > 2099
-}
-
-sum beta1 beta2, d
-
-export delimited using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/ce_betas_`ssp'.csv", replace 
+* outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'_kelly.csv", comma replace
 

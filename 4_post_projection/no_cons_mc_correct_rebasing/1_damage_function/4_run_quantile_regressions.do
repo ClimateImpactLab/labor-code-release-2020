@@ -54,7 +54,7 @@ loc model_tag = "_qreg"
 **********************************************************************************
 
 * consumption data
-import delimited "$DIR_OUTPUT/damage_function_no_cons/global_consumption_all_SSPs.csv", encoding(Big5) clear
+import delimited "$DIR_OUTPUT/damage_function_no_cons_new_mc/global_consumption_all_SSPs.csv", encoding(Big5) clear
 
 rename __xarray_dataarray_variable__ global_consumption
 
@@ -195,7 +195,7 @@ timer list
 di "Time to completion = `r(t1)'"
 use "`coeffs'", clear
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'//nocons_betas_`ssp'`model_tag'_temp.csv", comma replace 
 
 insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", clear
 di "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv" 
@@ -231,7 +231,7 @@ foreach var in "beta1" "beta2" {
   }
 }
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'//nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
 * insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear 
 * keep pctile year beta1 beta2 

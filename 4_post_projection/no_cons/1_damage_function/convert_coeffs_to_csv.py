@@ -14,7 +14,7 @@ for col in ['cons', 'beta1', 'beta2']:
 
 df = df[['year', 'cons', 'beta1', 'beta2']]
 
-df.to_csv('/home/nsharma/repos/labor-code-release-2020/output/damage_function_no_cons/nocons_ce_df_coeffs_SSP3.csv')
+df.to_csv('/home/nsharma/repos/labor-code-release-2020/output/damage_function_no_cons/SSP3/unmodified_betas/nocons_ce_df_coeffs_SSP3.csv')
 
 
 # convert global consumption values to csv for SSP3

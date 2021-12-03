@@ -20,8 +20,7 @@ glob DB_data "$DB/Global_ACP/damage_function"
 do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 glob root "$DIR_REPO_LABOR"
-glob output "$DIR_FIG/mc/"
-
+glob output "$DIR_FIG/mc_correct_rebasing_for_integration/"
 
 * **********************************************************************************
 * 2 Feather plot for pre- and post-2100 damage functions

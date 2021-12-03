@@ -155,7 +155,7 @@ for (rg in regions) {
 
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
       y.label = "density", x.label = "percentage GDP")
-  ggsave(paste0(DIR_FIG,'/mc/kernel_density_',rg ,"_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
+  ggsave(paste0(DIR_FIG,'/mc_correct_rebasing_for_integration/kernel_density_',rg ,"_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
       
 }
 

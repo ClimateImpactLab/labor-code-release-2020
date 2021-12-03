@@ -62,7 +62,7 @@ results %>% select(pct_gdp, pct_gdp_old, rcp)
 write_csv(results, "/mnt/CIL_energy/code_release_data_pixel_interaction/intermediate_data/ce_damage_timeseries.csv")
 
 # time series of popweighted impacts
-plot_impact_timeseries = function(ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = glue("{DIR_FIG}/mc/")){
+plot_impact_timeseries = function(ssp, iam, adapt, risk, region, aggregation="", suffix="", output_folder = glue("{DIR_FIG}/mc_correct_rebasing_for_integration/")){
   
 
   df_45= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/{ssp}-rcp45_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv')) %>%
