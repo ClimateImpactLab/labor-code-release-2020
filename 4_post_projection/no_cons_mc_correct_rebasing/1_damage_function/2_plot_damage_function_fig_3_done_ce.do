@@ -17,7 +17,7 @@ glob DB_data "$DB/Global_ACP/damage_function"
 
 do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
-glob output "$DIR_FIG/mc/"
+glob output "$DIR_FIG/mc_correct_rebasing_for_integration/"
 
 
 *Load in GMTanom data file, save as a tempfile 
@@ -32,8 +32,7 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-*import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/SSP3-valuescsv_wage_global.csv", varnames(1) clear
-import delimited "/mnt/CIL_labor/6_ce/risk_aversion_constant/risk_aversion_constant_damage_function_points.csv", varnames(1) clear
+import delimited "/mnt/CIL_labor/6_ce/new_mc_nocons/risk_aversion_constant_model_collapsed_eta2_rho0_damage_function_points.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 rename global_damages_constant value
 drop if ssp != "SSP3"

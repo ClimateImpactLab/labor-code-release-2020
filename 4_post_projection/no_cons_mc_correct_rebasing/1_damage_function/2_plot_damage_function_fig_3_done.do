@@ -17,7 +17,7 @@ glob DB_data "$DB/Global_ACP/damage_function"
 
 do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
-glob output "$DIR_FIG/mc/"
+glob output "$DIR_FIG/mc_correct_rebasing_for_integration/"
 
 
 *Load in GMTanom data file, save as a tempfile 
