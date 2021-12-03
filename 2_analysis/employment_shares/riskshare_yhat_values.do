@@ -58,12 +58,14 @@ gen log_popop = log(popop)
 
 * create terciles of vars
 xtile inc_tercile = gdppc_adm1_pwt_downscaled_13br, nquantiles(3)	
-xtile log_inc_tercile = log_inc, nquantiles(3) // I know this is redundant, but makes things easier further down
+* I know this is redundant, but makes things easier further down
+xtile log_inc_tercile = log_inc, nquantiles(3) 
 forval i=1(1)4 {
 		xtile temp`i'_tercile = tavg_`i'_pop_ma_30yr, nquantiles(3)
 }
 xtile popop_tercile = popop, nquantiles(3)
-xtile log_popop_tercile = log_popop, nquantiles(3) // again, redundant, but makes life easier
+* again, redundant, but makes life easier
+xtile log_popop_tercile = log_popop, nquantiles(3) 
 
 keep if year == max_year 
 
