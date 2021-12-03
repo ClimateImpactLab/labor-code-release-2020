@@ -1,5 +1,5 @@
 conda activate risingverse-py27
-cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
+cd "/home/nsharma/repos/prospectus-tools/gcp/extract"
 R
 
 library(glue)
@@ -11,7 +11,7 @@ library(dplyr)
 get_valuescsv <- function(ssp, region, aggregation, file_type){
 
 	quantiles_command = paste0("python -u quantiles.py ",
-		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
+		"/home/nsharma/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc_correct_rebasing/extraction_configs/",
 		"damage_function_valuescsv.yml  --only-ssp=", ssp, 
 		" --region=", region, " ",
@@ -26,11 +26,11 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 }
 
 
-for (do_ssp in 4:4) {
+for (do_ssp in 1:5) {
 	ssp_arg = paste0("SSP", do_ssp)
-	# get_valuescsv(ssp_arg, "global","-pop", "-aggregated")
+	get_valuescsv(ssp_arg, "global","-pop", "-aggregated")
 	get_valuescsv(ssp_arg, "global","-wage", "-aggregated")
-	# get_valuescsv(ssp_arg, "global","-gdp", "-aggregated")
+	get_valuescsv(ssp_arg, "global","-gdp", "-aggregated")
 }
 
 
