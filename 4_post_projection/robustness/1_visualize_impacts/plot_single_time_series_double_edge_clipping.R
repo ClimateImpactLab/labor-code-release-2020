@@ -50,7 +50,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ag
 }
 
 ######################
-# MAIN MODEL - CLIPPING LR TEMP
+# DOUBLE EDGE CLIPPING
 ######################
 
 # change input folder path here
@@ -60,7 +60,7 @@ folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/double_edg
 output = 'double_edge_restriction_single'
 
 ###########
-# RUN IT
+# RUN FUNCTION
 ###########
 
 
