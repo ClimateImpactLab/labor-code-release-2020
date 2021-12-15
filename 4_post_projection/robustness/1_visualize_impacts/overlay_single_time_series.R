@@ -1,5 +1,4 @@
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(glue)
 library(parallel)
 
@@ -15,77 +14,74 @@ pacman::p_load(ggplot2,
                DescTools,
                RColorBrewer)
 
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
 source(glue("{DIR_REPO_LABOR}/4_post_projection/0_utils/time_series.R"))
 
 # time series of weighted impacts
-overlay_impact_timeseries = function(
-  IR='globe',
-  folder1, name1, legend1,
-  folder2, name2, legend2,
-  output, ssp, adapt, weight, risk){
+overlay_impact_timeseries = function(IR='globe', folder1, name1, legend1, folder2, name2, legend2, output, ssp, adapt, weight, risk1, risk2){
 
   if(weight == "raw"){
     # please note: you cannot use 'raw' weighting unless you are choosing a specific IR
-    file1_85 = glue('{folder1}/rcp85/CCSM4/high/SSP3/csv/{name1}-{risk}-combined.csv')
-    file1_45 = glue('{folder1}/rcp45/CCSM4/high/SSP3/csv/{name1}-{risk}-combined.csv')
+    file1_85 = glue('{folder1}/rcp85/CCSM4/high/SSP3/csv/{name1}-{risk1}.csv')
+    # file1_45 = glue('{folder1}/rcp45/CCSM4/high/SSP3/csv/{name1}-{risk}.csv')
 
-    file2_85 = glue('{folder2}/rcp85/CCSM4/high/SSP3/csv/{name2}-{risk}-combined.csv')
-    file2_45 = glue('{folder2}/rcp45/CCSM4/high/SSP3/csv/{name2}-{risk}-combined.csv')
+    file2_85 = glue('{folder2}/rcp85/CCSM4/high/SSP3/csv/{name2}-{risk2}.csv')
+    # file2_45 = glue('{folder2}/rcp45/CCSM4/high/SSP3/csv/{name2}-{risk}.csv')
 
   } else {
 
-    file1_85 = glue('{folder1}/rcp85/CCSM4/high/SSP3/csv/{name1}-{risk}-{weight}-aggregated-combined.csv')
-    file1_45 = glue('{folder1}/rcp45/CCSM4/high/SSP3/csv/{name1}-{risk}-{weight}-aggregated-combined.csv')
+    file1_85 = glue('{folder1}/rcp85/CCSM4/high/SSP3/csv/{name1}-{risk1}-{weight}-aggregated.csv')
+    # file1_45 = glue('{folder1}/rcp45/CCSM4/high/SSP3/csv/{name1}-{risk}-{weight}-aggregated.csv')
 
-    file2_85 = glue('{folder2}/rcp85/CCSM4/high/SSP3/csv/{name2}-{risk}-{weight}-aggregated-combined.csv')
-    file2_45 = glue('{folder2}/rcp45/CCSM4/high/SSP3/csv/{name2}-{risk}-{weight}-aggregated-combined.csv')
+    file2_85 = glue('{folder2}/rcp85/CCSM4/high/SSP3/csv/{name2}-{risk2}-{weight}-aggregated.csv')
+    # file2_45 = glue('{folder2}/rcp45/CCSM4/high/SSP3/csv/{name2}-{risk}-{weight}-aggregated.csv')
 
   }
 
-  title = glue("{risk}, {weight}-aggregated \n ({ssp}, {adapt}, IR = {IR})")
+  title = glue("{risk2}, {weight}-aggregated \n ({ssp}, {adapt}, IR = {IR})")
 
   df1_85 = read_csv(file1_85)
-  df1_45 = read_csv(file1_45)
+  # df1_45 = read_csv(file1_45)
 
   df2_85 = read_csv(file2_85)
-  df2_45 = read_csv(file2_45)
+  # df2_45 = read_csv(file2_45)
 
   if(IR == "globe"){
 
     df_plot1_85 = df1_85 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
-    df_plot1_45 = df1_45 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
+    # df_plot1_45 = df1_45 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
 
     df_plot2_85 = df2_85 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100)
-    df_plot2_45 = df2_45 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100)
+    # df_plot2_45 = df2_45 %>% dplyr::filter(is.na(region)) %>% dplyr::filter(year != 2100)
 
   } else {
     
     df_plot1_85 = df1_85 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
-    df_plot1_45 = df1_45 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
+    # df_plot1_45 = df1_45 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100) # drop 2100 because it's missing or wonk sometimes
 
     df_plot2_85 = df2_85 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100)
-    df_plot2_45 = df2_45 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100)
+    # df_plot2_45 = df2_45 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100)
   }
 
 
   p <- ggplot() + 
       geom_line(data = df_plot1_85, aes(x = year, y = value, colour = 'darkblue')) +
-      geom_line(data = df_plot1_45, aes(x = year, y = value, colour = 'green')) +
+      # geom_line(data = df_plot1_45, aes(x = year, y = value, colour = 'green')) +
       geom_line(data = df_plot2_85, aes(x = year, y = value, colour = 'red')) +
-      geom_line(data = df_plot2_45, aes(x = year, y = value, colour = 'orange')) +
+      # geom_line(data = df_plot2_45, aes(x = year, y = value, colour = 'orange')) +
       xlim(2010, 2099) + 
       xlab('year') +
       ylab('') +
       ggtitle(title) +
       scale_color_discrete(name = "Models", 
-        labels = c(glue("{legend1}-RCP85"), 
-                   glue("{legend1}-RCP45"), 
-                   glue("{legend2}-RCP85"), 
-                   glue("{legend2}-RCP45"))) +
+        labels = c(# glue("{legend1}-RCP45"), 
+                   glue("{legend1}-RCP85"), 
+                   # glue("{legend2}-RCP45"),
+                   glue("{legend2}-RCP85"))) +
       theme(legend.position="bottom")
 
   dir.create(glue("{DIR_FIG}/{output}"), recursive=TRUE)
-  ggsave(glue("{DIR_FIG}/{output}/timeseries-{weight}-{risk}-{adapt}-{ssp}.pdf"), p)
+  ggsave(glue("{DIR_FIG}/{output}/timeseries-{weight}-{risk2}-{adapt}-{ssp}.pdf"), p)
 }
 
 ##################################################################
@@ -136,39 +132,60 @@ overlay_impact_timeseries = function(
 # MAIN MODEL VS EDGE RESTRICTED MODEL 
 #######################################
 
+# # main model data
+# folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/',
+#       'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/')
+# name1 = 'uninteracted_main_model'
+
+# legend1 = "uninteracted (main)"
+
+# # edge restricted model data
+# folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/',
+#   'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/')
+# name2 = 'uninteracted_main_model'
+
+# legend2 = "edge-restricted uninteracted"
+
+# output = 'single_edge_restriction_model/compare_main'
+
+#######################################
+# MAIN MODEL VS DOUBLE EDGE CLIPPING MODEL 
+#######################################
+
 # main model data
 folder1 = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy1/',
       'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/')
-name1 = 'uninteracted_main_model'
 
-legend1 = "uninteracted (main)"
+legend1 = "main model"
 
-# edge restricted model data
-folder2 = glue('/shares/gcp/outputs/labor/impacts-woodwork/edge_clipping_copy/',
-  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/')
-name2 = 'uninteracted_main_model'
+# double edge restricted model data
+folder2 = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/double_edge_restriction_single/',
+  'median')
 
-legend2 = "edge-restricted uninteracted"
+legend2 = "double edge restricted model"
 
-output = 'single_edge_restriction_model/compare_main'
+output = 'double_edge_restriction_single/compare_main'
 
 
 #############
-# RUN MODEL 
+# RUN FUNCTION 
 #############
 
 map_args = expand.grid(IR = 'globe',
                        folder1= folder1,
-                       name1=name1,
+                       # name1=c("uninteracted_main_model","uninteracted_main_model-incadapt","uninteracted_main_model-noadapt"),
+                       name1=c("uninteracted_main_model"),
                        legend1=legend1,
                        folder2=folder2,
-                       name2=name2,
+                       # name2=c("clip_lrt_edge_restriction","clip_lrt_edge_restriction-incadapt","clip_lrt_edge_restriction-noadapt"),
+                       name2=c("clip_lrt_edge_restriction"),
                        legend2=legend2,
                        output=output,
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
-                       weight=c("gdp","wage","pop")
+                       risk1=c( "highriskimpacts", "rebased_new", "lowriskimpacts"),
+                       risk2=c( "highriskimpacts", "rebased", "lowriskimpacts"),
+                       weight=c("gdp")
                        )
 
 print(map_args)
@@ -184,9 +201,8 @@ mcmapply(overlay_impact_timeseries,
         output=map_args$output,
         ssp=map_args$ssp,
         adapt=map_args$adapt,
-        risk=map_args$risk,
+        risk1=map_args$risk1,
+        risk2=map_args$risk2,
         weight=map_args$weight,
         mc.cores=5
         )
-
-
