@@ -56,7 +56,7 @@ loc model_tag = "_qreg"
 * consumption data
 import delimited "$DIR_OUTPUT/damage_function_no_cons_new_mc/global_consumption_all_SSPs.csv", encoding(Big5) clear
 
-rename __xarray_dataarray_variable__ global_consumption
+* rename __xarray_dataarray_variable__ global_consumption
 
 keep if ssp == "`ssp'"
 
@@ -84,7 +84,7 @@ save `GMST_anom', replace
 * **********************************************************************************
 loc type = "wages"
 
-import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/`ssp'-valuescsv_wage_global.csv", varnames(1) clear
+import delimited "$ROOT_INT_DATA/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/`ssp'-valuescsv_-wage_global.csv", varnames(1) clear
 drop if year < 2010 | year > 2099
 replace value = -value / 1000000000000
 loc conversion_value_2005_to_2020 = 1.273526
@@ -195,10 +195,10 @@ timer list
 di "Time to completion = `r(t1)'"
 use "`coeffs'", clear
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'//nocons_betas_`ssp'`model_tag'_temp.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", comma replace 
 
-insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", clear
-di "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv" 
+insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv", clear
+di "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'_temp.csv" 
 **********************************************************************************
 * STEP 4: Write and save output
 **********************************************************************************
@@ -231,7 +231,7 @@ foreach var in "beta1" "beta2" {
   }
 }
 
-outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'//nocons_betas_`ssp'`model_tag'.csv", comma replace 
+outsheet using "$DIR_REPO_LABOR/output/damage_function_no_cons_new_mc/`ssp'/nocons_betas_`ssp'`model_tag'.csv", comma replace 
 
 * insheet using "$DIR_REPO_LABOR/output/damage_function_no_cons/`ssp'/nocons_betas_`ssp'`model_tag'.csv", clear 
 * keep pctile year beta1 beta2 
