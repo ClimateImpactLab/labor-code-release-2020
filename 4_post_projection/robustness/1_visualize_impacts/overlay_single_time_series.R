@@ -43,10 +43,10 @@ overlay_impact_timeseries = function(IR='globe', folder1, name1, legend1, folder
     df_plot2 = df2 %>% dplyr::filter(region == IR) %>% dplyr::filter(year != 2100)
   }
 
-
+  # plotting -value to make upward sloping graphs. to make downward sloping graphs, plot value instead of -value.
   p <- ggplot() + 
-      geom_line(data = df_plot1, aes(x = year, y = value, colour = 'darkblue')) +
-      geom_line(data = df_plot2, aes(x = year, y = value, colour = 'red')) +
+      geom_line(data = df_plot1, aes(x = year, y = -value, colour = 'darkblue')) +
+      geom_line(data = df_plot2, aes(x = year, y = -value, colour = 'red')) +
       xlim(2011, 2099) + 
       xlab('year') +
       ylab('') +
@@ -189,3 +189,5 @@ overlay_impact_timeseries("globe", folder1, "uninteracted_main_model", legend1, 
 #         weight=map_args$weight,
 #         mc.cores=5
 #         )
+
+
