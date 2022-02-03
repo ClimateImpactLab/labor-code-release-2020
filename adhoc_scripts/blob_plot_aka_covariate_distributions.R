@@ -1,4 +1,38 @@
 
+###########################################
+# code for generating the blob plot data  #
+###########################################
+
+# Covariates are from a single run allcalcs file
+cov_electricity_single= read_csv(paste0(OUTPUT,
+  "/projection_system_outputs/raw_projection_output/impacts-blueghost/",
+  "/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/",
+  "/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv"),
+  skip = 114) %>% 
+  write_csv(paste0(DATA, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
+
+
+##########################
+# Covariate data for blob plots: 
+#############done#############
+      
+# Note - this is the output from a single run, since that produces an allcalcs file
+
+# set path variables
+covariates <- paste0(OUTPUT, 
+  '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv')
+
+# load and clean data
+covars = as.data.frame(readr::read_csv(covariates)) %>% 
+  rename( 'HDD20' = 'climtas-hdd-20', 'CDD20' = 'climtas-cdd-20') %>% 
+  select(year, region, HDD20, CDD20, loggdppc, population) %>%
+  subset(year %in% c(2090,2010))
+
+write_csv(covars, 
+  paste0(OUTPUT,'/projection_system_outputs/covariates/', 
+   'covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv'))
+
+
 ###########################################################
 ##                 Generating Blob Plots                 ##
 ###########################################################
