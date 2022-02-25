@@ -127,3 +127,45 @@ out = wrap_mapply(
 
 
 
+
+# convert to hours/year 
+# change in hours worked/worker/year = (change in minutes worked/worker/day)*365/60
+
+path = "/mnt/CIL_labor/outreach/UN/"
+setwd(path)
+
+all_mins_files = list.files(path = path, 
+                           pattern = "*impacts_mins*",
+                           recursive = TRUE,
+                           include.dirs = TRUE)
+
+
+convert_to_hours_per_year <- function(path, overwrite = TRUE) {
+  save_path = gsub("impacts_mins", "impacts_hours", path)
+  print(save_path)  
+  # browser()
+  if ((!file.exists(save_path)) || overwrite ) {
+    dir.create(dirname(save_path), recursive = TRUE, showWarnings = FALSE)
+    print("generating")
+    dt = vroom(path)
+    dt = dt %>% mutate_if(is.numeric, ~ .*365/60)
+    write_csv(dt, save_path)
+    return(dt)
+  }
+  else return(glue("{save_path} exists"))
+}
+
+# testing function
+dt = convert_to_hours_per_year(all_mins_files[3])
+
+# run over all files
+out = wrap_mapply(  
+  path = all_mins_files,
+  overwrite = TRUE,
+  FUN=convert_to_hours_per_year,
+  mc.cores=40,
+  mc.silent=FALSE
+)
+
+
+
