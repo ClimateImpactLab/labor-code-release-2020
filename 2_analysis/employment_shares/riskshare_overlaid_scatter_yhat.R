@@ -17,6 +17,7 @@ library(gridExtra)
 library(numbers)
 
 cilpath.r:::cilpath()
+source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 lab = glue("/mnt/CIL_labor")
 out = glue("/home/nsharma/repos/labor-code-release-2020/output/employment_shares") # change username here
@@ -56,26 +57,30 @@ dat_ss <- dat_ss[complete.cases(dat_ss),]
 yhat_inc = read_csv(glue("{out}/yhat_values/log_inc_poly4_IncPred.csv"))
 yhat_temp = read_csv(glue("{out}/yhat_values/log_inc_poly4_TempPred.csv")) 
 yhat_temp_poly4 = read_csv(glue("{out}/yhat_values/log_inc_poly4_TempPredMinMax.csv")) #change input filename here for 50C max temperature
+yhat_inc_continent_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_fes_IncPred.csv"))
+yhat_temp_continent_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_fes_TempPred.csv"))
 
 # graphs
 
 # temperature prediction with in-sample data limits
 temp_pred <- ggplot() + 
-  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share, 
-                                colour = log_gdppc_adm1_pwt_ds_15ma)) + 
+  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share)) + 
   geom_ribbon(data=yhat_temp,aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
-  geom_line(data = yhat_temp, aes(x = temp, y = yhat)) + labs(colour = "Log GDP PC") + 
+  geom_line(data = yhat_temp, aes(x = temp, y = yhat, linetype= "no Continent FE")) + labs(colour = "Log GDP PC") + 
+  geom_ribbon(data=yhat_temp_continent_fe,aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
+              inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
+  geom_line(data = yhat_temp_continent_fe, aes(x = temp, y = yhat, linetype= "Continent FE")) + 
+  scale_linetype_manual("Model", values = c("no Continent FE" = 1, "Continent FE" = 2)) + labs(colour = "LRT") + 
   xlab("LRT - in sample") + ylab("predicted riskshare values- LR(T^K)")
 
 temp_pred
 
-ggsave(glue("{out}/plot/predictions/temp_pred_scatter.pdf"), plot = temp_pred, width = 10, height = 7)
+ggsave(glue("{out}/plot/predictions/temp_pred_continent_fe_scatter.pdf"), plot = temp_pred, width = 10, height = 7)
 
 # temperature prediction with global max of 50˚C
 temp_pred_min_max <- ggplot() + 
-  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share, 
-                                colour = log_gdppc_adm1_pwt_ds_15ma)) + 
+  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share)) + 
   geom_ribbon(data=yhat_temp_poly4,aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
   geom_line(data = yhat_temp_poly4, aes(x = temp, y = yhat)) + labs(colour = "Log GDP PC") + 
@@ -87,16 +92,19 @@ ggsave(glue("{out}/plot/predictions/temp_pred_scatter_min_max.pdf"), plot = temp
 
 # income predictions with in-sample min and max
 inc_pred <- ggplot()  + 
-  geom_point(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y= ind_highrisk_share, 
-                                               colour = tavg_1_pop_MA_30yr)) + 
+  geom_point(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y= ind_highrisk_share)) + 
   geom_ribbon(data=yhat_inc,aes(x = inc_log, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
-  geom_line(data = yhat_inc, aes(x= inc_log, y= yhat)) + labs(colour = "LRT") + 
+  geom_line(data = yhat_inc, aes(x= inc_log, y= yhat, linetype= "no Continent FE")) + labs(colour = "LRT") + 
+  geom_ribbon(data=yhat_inc_continent_fe,aes(x = inc_log, ymin = lowerci_hi, ymax = upperci_hi), 
+              inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
+  geom_line(data = yhat_inc_continent_fe, aes(x= inc_log, y= yhat, linetype= "Continent FE")) + 
+  scale_linetype_manual("Model", values = c("no Continent FE" = 1, "Continent FE" = 2)) + labs(colour = "LRT") + 
   xlab("Log GDP PC") + ylab("predicted riskshare values")
 
 inc_pred
 
-ggsave(glue("{out}/plot/predictions/inc_pred_scatter.pdf"), plot = inc_pred, width = 10, height = 7)
+ggsave(glue("{out}/plot/predictions/inc_pred_continent_fe_scatter.pdf"), plot = inc_pred, width = 10, height = 7)
 
 # regressions for table
 

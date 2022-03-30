@@ -73,7 +73,7 @@ gen temp_poly1 = tavg_1_pop_ma_30yr
 gen temp_poly2 = tavg_1_pop_ma_30yr^2
 gen temp_poly3 = tavg_1_pop_ma_30yr^3
 gen temp_poly4 = tavg_1_pop_ma_30yr^4
-
+			
 save "`out'/riskshare_reg_data.dta", replace
 
 foreach spec in 1 2 3 4{
@@ -83,9 +83,9 @@ if `spec' == 1 {
 			loc saveas "log_inc_poly4"
 		}
 
-* continent dummies, uninteracted
+* continent dummies, uninteracted. base level of continent FE changed to asia
 if `spec' == 2 {
-			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr i.continent_code, noabsorb residuals(resid`spec')
+			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr ib3.continent_code, noabsorb residuals(resid`spec')
 			loc saveas "log_inc_poly4_continent_fes"
 		}
 
@@ -94,9 +94,9 @@ if `spec' == 3 {
 			loc saveas "log_inc_lrtk"
 		}
 
-* continent dummies, uninteracted
+* continent dummies, uninteracted. base level of continent FE changed to asia
 if `spec' == 4 { 
-			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 i.continent_code, noabsorb residuals(resid_`spec')
+			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 ib3.continent_code, noabsorb residuals(resid_`spec')
 			loc saveas "log_inc_lrtk_continent_fes"
 		}
 
