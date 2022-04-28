@@ -201,7 +201,7 @@ foreach spec in 6 12 {
 						}
 
 						tw rarea upperci_hi lowerci_hi temp, col(ltblue%30) || line yhat temp, lc (purple) ///
-							graphregion(color(white)) plotregion(color(white)) ///
+							graphregion(color(white)) plotregion(color(white)) yscale(r(0, 1)) ///
 							legend(off) title("Income Tercile `i'") xtitle("Long-run avg. temperature") ///
 							name(temp_response_`i', replace)
 
@@ -266,7 +266,7 @@ foreach spec in 6 12 {
 							rarea upperci_hi_2 lowerci_hi_2 temp, col(ltblue%30) || line yhat_2 temp, lc("105 137 0") || ///
 							rarea upperci_hi_3 lowerci_hi_3 temp, col(ltblue%30) || line yhat_3 temp, lc("174 211 0") ///
 							legend(order(2 "First" 4 "Second" 6 "Third") title("Income tercile") rows(1)) ///
-							graphregion(color(white)) plotregion(color(white)) /// 
+							graphregion(color(white)) plotregion(color(white)) yscale(r(0, 1)) /// 
 							title("High-risk share prediction by income tercile") xtitle("Long-run avg. temperature (C)") ///
 							note("`note'" "`extranote'")
 							
