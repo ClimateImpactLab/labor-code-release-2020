@@ -39,7 +39,7 @@ plot_impact_map = function(ssp, iam, adapt, year, risk, aggregation="", suffix="
   rcp45= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc_correct_rebasing_for_integration/{ssp}-rcp45_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
 
   df <- left_join(rcp85, rcp45, by = c("region" = "region")) %>% 
-                  mutate( mean = mean.x - mean.y) %>% 
+                  mutate( mean = mean.y - mean.x) %>% 
                   dplyr::select(region, year.x, mean) %>%
                   rename(year = year.x)
 
