@@ -65,7 +65,7 @@ def rebase_combine(file):
     base = (dt.sel(
             {"year": slice(2001,2010)}
             )
-            [['regions','highriskimpacts', 'lowriskimpacts']]
+            [['highriskimpacts', 'lowriskimpacts']]
            )
 
     # subtract off mean of base years -> rebasing!
@@ -94,8 +94,8 @@ def rebase_combine(file):
 
 
 
-proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google'
-output_root = '/shares/gcp/outputs/labor/impacts-woodwork/point_estimate_google_rebased'
+proj_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_test'
+output_root = '/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_test_rebased'
 
 paths = list(pathlib.Path(proj_root).rglob('*.nc4'))
 

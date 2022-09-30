@@ -94,21 +94,21 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
-        'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'clip'
-output = 'main_model_clipping_lrtemp'
+# name = 'clip'
+# output = 'main_model_clipping_lrtemp'
 
 ######################
 # MIXED MODEL
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy',
-#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-# output = 'single_mixed_model/'
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'single_mixed_model/'
 
 ######################
 # MIXED MODEL - 20 -35
@@ -158,9 +158,9 @@ map_args = expand.grid(folder= folder,
                        ssp="SSP3",
                        adapt="fulladapt",
                        risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
-                       weight=c("wage","gdp", "pop") 
-                       #risk=c("rebased_new", "rebased"),
-                       #weight=c("")
+                       # weight=c("wage","gdp", "pop") 
+                       # risk=c("rebased_new", "rebased"),
+                       weight=c("")
                        )
 
 # map_args = map_args %>% rbind(
