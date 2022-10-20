@@ -449,20 +449,20 @@ program define generate_grids
 		forvalues inc=1(1)3 {
 			* general counts (consistent across risk subsets)
 				sum count_rep_unit if inc == `inc'
-				if (`r(N)' != 0) gl ru_plot`i' = `r(mean)' 
+				if (`r(N)' != 0) gl ru_plot`i' = `r(sum)' 
 				else gl ru_plot`i' = 0
 
 				sum count_rep_year if inc == `inc'
-				if (`r(N)' != 0) gl ry_plot`i' = `r(mean)' 
+				if (`r(N)' != 0) gl ry_plot`i' = `r(sum)' 
 				else gl ry_plot`i' = 0
 
 				* risk-specific counts (N, varies by low vs high)
 				sum count_lr if inc == `inc'
-				if (`r(N)' != 0) gl risk_lr_plot`i' = `r(mean)' 
+				if (`r(N)' != 0) gl risk_lr_plot`i' = `r(sum)' 
 				else gl risk_lr_plot`i' = 0
 
 				sum count_hr if inc == `inc'
-				if (`r(N)' != 0) gl risk_hl_plot`i' = `r(mean)' 
+				if (`r(N)' != 0) gl risk_hl_plot`i' = `r(sum)' 
 				else gl risk_hl_plot`i' = 0
 				
 				* total N, sum of HR and LR --> don't worry, I know the shorthand
@@ -511,10 +511,10 @@ program define gen_plot
 	preserve 
 	if "`plot_style'" == "all_data_with_ci"{
 		* all data ci
-		tw rarea upper_ci lower_ci temp, col(ltbluishgray) || line yhat temp, lc (dknavy) yline(0) `cutoffs' title("`plot_title'") legend(off) ylab(#8,labs(vsmall) ang(vertical)) ytitle("mins worked", size(small)) xlab("",labs(small)) fysize(20) xtitle("") name(`plot_name', replace) graphregion(margin(zero) color(white)) subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ysc(r(`range`risk'')) xsc(off)
+		tw rarea upper_ci lower_ci temp, col(ltbluishgray) || line yhat temp, lc (dknavy) yline(0) `cutoffs' title("`plot_title'") legend(off) ylab(#8,labs(vsmall) ang(vertical)) ytitle("mins worked", size(small)) xlab("",labs(small)) fysize(65) xtitle("") name(`plot_name', replace) graphregion(margin(zero) color(white)) subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ysc(r(`range`risk'')) xsc(off)
 	}
 	if "`plot_style'" == "all_data_no_ci"{
-		tw  line yhat temp, lc (dknavy) yline(0) `cutoffs' title("`plot_title'") legend(off) ylab(#8,labs(vsmall) ang(vertical)) ytitle("mins worked", size(small)) xlab("",labs(small)) fysize(20) xtitle("") name(`plot_name', replace) graphregion(margin(zero) color(white)) subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ysc(r(`range`risk'')) xsc(off)
+		tw  line yhat temp, lc (dknavy) yline(0) `cutoffs' title("`plot_title'") legend(off) ylab(#8,labs(vsmall) ang(vertical)) ytitle("mins worked", size(small)) xlab("",labs(small)) fysize(65) xtitle("") name(`plot_name', replace) graphregion(margin(zero) color(white)) subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ysc(r(`range`risk'')) xsc(off)
 	}
 
 	if "`plot_style'" == "above0_with_ci"{
