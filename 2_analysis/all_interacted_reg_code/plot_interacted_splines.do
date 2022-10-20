@@ -44,7 +44,7 @@ global hist_weight_list rep_unit_year_sample_wgt
 
 global hist_style_list abs pct
 
-global max_g 9
+global max_g 3
 
 foreach weight in $hist_weight_list {
 	plot_histograms rep_unit `weight' $interaction
