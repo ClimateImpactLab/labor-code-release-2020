@@ -45,6 +45,7 @@ global hist_weight_list rep_unit_year_sample_wgt
 global hist_style_list abs pct
 
 global max_g 3
+* takes 3 and 9
 
 foreach weight in $hist_weight_list {
 	plot_histograms rep_unit `weight' $interaction
@@ -64,7 +65,7 @@ foreach reg in $reg_list{
 						foreach hist_style in ${hist_style_list} {
 							di "`reg_list'"
 							loc ster_name "interacted_reg_`reg'"
-							plot_interacted_spline $interaction `f' `p' `data_subset' all_data_with_ci `ster_name' `hist_weight' `hist_style'
+							plot_interacted_spline $interaction `f' `p' `data_subset' all_data_no_ci `ster_name' `hist_weight' `hist_style'
 						}
 					}
 				}
