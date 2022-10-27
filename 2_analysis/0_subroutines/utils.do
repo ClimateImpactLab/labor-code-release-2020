@@ -1198,7 +1198,7 @@ program define plot_interacted_spline
 
 	* lr: low risk, hr: high risk (risk interaction terms only), hl: lr + hr = response of high risk 
  	foreach risk in _lr _hr _hl {
- 		* generate the 9 plots
+ 		* generate the 3 or 9 plots
  		forval g = 1/$max_g {
  			gen_response_surface_spline `N_knots' `risk' `g'
  			gen_plot "${tag`g'}" `g' `plot_style' `risk' `hist_weight' `size' 
