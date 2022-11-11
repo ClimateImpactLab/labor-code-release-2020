@@ -365,9 +365,10 @@ program define generate_grids
 	local inc_midl =`r(p50)'
 	local inc_rich =`r(max)'
 
-	*local inc_poor =7.302803
-	*local inc_midl =9.466311
-	*local inc_rich =11.2296
+	* local inc_poor =11.12203
+	* local inc_midl =10.15544
+	* local inc_midl =11.43737
+	* local inc_rich =11.83139
 
 	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
 

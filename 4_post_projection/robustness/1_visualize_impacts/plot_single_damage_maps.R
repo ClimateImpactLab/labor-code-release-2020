@@ -1,5 +1,4 @@
-# Produces maps displayed in the energy paper. Uses Functions in mapping.R
-# done 26 aug 2020
+# Produces maps displayed in the labour paper. Uses functions in mapping.R
 
 rm(list = ls())
 
@@ -33,7 +32,7 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
       file = glue('{folder}/{name}-{risk}-{weight}-levels-combined.csv')
       title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt}) 2099")
   } else {
-      file = glue('{folder}/{name}-{risk}-combined.csv')
+      file = glue('{folder}/{name}-{risk}.csv')
       title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt}) 2099")
   }
   
@@ -104,11 +103,11 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # MIXED MODEL
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'single_mixed_model/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'single_mixed_model/'
 
 ######################
 # MIXED MODEL - 20 -35
@@ -119,6 +118,16 @@ output = 'single_mixed_model/'
 
 # name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
 # output = 'hi_1factor_lo_unint_mixed_model_20_35/'
+
+######################
+# PLANK POSE
+######################
+
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
+
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'plankpose/'
 
 ######################
 # WITH CHINA
@@ -156,8 +165,9 @@ map_args = expand.grid(folder= folder,
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
-                       adapt="fulladapt",
-                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       adapt="",
+                       # adapt="fulladapt",
+                       risk=c( "highriskimpacts", "lowriskimpacts"),
                        # weight=c("wage","gdp", "pop") 
                        # risk=c("rebased_new", "rebased"),
                        weight=c("")
