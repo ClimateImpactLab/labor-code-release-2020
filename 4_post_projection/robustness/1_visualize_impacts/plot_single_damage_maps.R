@@ -2,18 +2,17 @@
 
 rm(list = ls())
 
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-# source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
-
-# Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
-               readr)
-library(glue)
-library(parallel)
+               readr,
+               glue,
+               parallel,
+               data.table)
 
-source(paste0(DIR_REPO_LABOR, "/4_post_projection/0_utils/mapping.R"))
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("~/repos/post-projection-tools/mapping/mapping.R")
 
 #############################################
 # 1. Load in a world shapefile, containing Impact Region boundaries, 
@@ -29,20 +28,32 @@ mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nyt
 plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
   if (weight != "") {
-      file = glue('{folder}/{name}-{risk}-{weight}-levels-combined.csv')
-      title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt}) 2099")
+    file = glue('{folder}/{name}-{risk}-{weight}-levels.csv')
+    title = glue("{risk} {weight}-weighted impacts ({ssp}, {rcp}, {adapt}) 2099")
+    # gdp weighted impacts - Damages aspercentage of GDP
+    # wage weighted impacts - Damages in million dollars
+    # pop weighted impacts - Damagers in mins per worker
   } else {
       file = glue('{folder}/{name}-{risk}.csv')
       title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt}) 2099")
+  }
+  
+  if (varname == "clip") {
+    file <- glue('{folder}/{name}-{varname}.csv')
+    colorbar_title = "risk share"
+    title <- glue("{name} risk share raw impacts ({ssp}, {rcp}) 2099")
   }
   
   print(file)  
   df= read_csv(file)
   
   df_plot = df %>% 
-              dplyr::filter(year == 2099) %>% 
-              dplyr::mutate(value = -as.numeric(value))
-              # we were converting minutes to minutes lost
+              dplyr::filter(year == 2099)
+
+  if (varname != "clip") {
+    df_plot = df_plot %>% 
+              dplyr::mutate(value = -as.numeric(value)) # we were converting minutes to minutes lost
+  }
 
   # find the scales for nice plotting
   bound = ceiling(max(abs(df_plot$value), na.rm=TRUE))
@@ -69,14 +80,14 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
 
 ######################
-# EDGE RESTRICTION MODEL
+# PLANK POSE
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
-#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-# output = 'hi_1factor_lo_unint_mixed_model/'
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'plankpose/'
 
 ######################
 # MAIN MODEL - CHECK
@@ -90,18 +101,28 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # output = 'main_model_check'
 
 ######################
-# MAIN MODEL - CLIPPING LR TEMP
+# WITH CHINA
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
-#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
+#   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'clip'
-# output = 'main_model_clipping_lrtemp'
+# name = 'uninteracted_main_model_w_chn'
+# output = 'uninteracted_main_model_w_chn/'
 
 ######################
 # MIXED MODEL
 ######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'hi_1factor_lo_unint_mixed_model/'
+
+#######################
+# MIXED MODEL - DOWNDOG
+#######################
 
 # folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_downdog_copy/',
 #   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
@@ -120,24 +141,35 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 # output = 'hi_1factor_lo_unint_mixed_model_20_35/'
 
 ######################
-# PLANK POSE
+# MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'plankpose/'
+# name = 'clip'
+# output = 'main_model_clipping_lrtemp'
 
 ######################
-# WITH CHINA
+# LRT^K MODEL
 ######################
 
-# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/uninteracted_main_model_w_chn_copy/',
-#   'uninteracted_splines_w_chn_21_37_41_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_lrt_k_copy/',
+#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-# name = 'uninteracted_main_model_w_chn'
-# output = 'uninteracted_main_model_w_chn/'
+# name = 'labor-climtasmaxclip'
+
+# output = 'test_lrt_k'
+
+######################
+# DOUBLE EDGE CLIPPING
+######################
+
+# folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/double_edge_restriction_single/median/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'clip_lrt_edge_restriction'
+
+# output = 'double_edge_restriction_single'
 
 #################################
 # FULLADAPT-INCADAPT DIAGNOSTICS
@@ -162,15 +194,16 @@ output = 'plankpose/'
 
 map_args = expand.grid(folder= folder,
                        name=name,
+                       # name=c("labor-climtasmaxclip","labor-climtasmaxclip-incadapt","labor-climtasmaxclip-noadapt"),
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
                        adapt="",
                        # adapt="fulladapt",
-                       risk=c( "highriskimpacts", "lowriskimpacts"),
-                       # weight=c("wage","gdp", "pop") 
-                       # risk=c("rebased_new", "rebased"),
+                       risk=c("highriskimpacts", "lowriskimpacts", "rebased"),
+                       # risk=c("highriskimpacts", "rebased_new", "lowriskimpacts", "clip"),
                        weight=c("")
+                       # weight=c("wage", "gdp", "pop") 
                        )
 
 # map_args = map_args %>% rbind(
