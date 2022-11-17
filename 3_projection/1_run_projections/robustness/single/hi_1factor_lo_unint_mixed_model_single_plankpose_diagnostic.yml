@@ -1,5 +1,5 @@
 mode: writecalcs
-outputdir: /shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose_diagnostics
+outputdir: /shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose_diagnostics_2
 do_historical: true
 do_farmers: true
 only-models: [ "CCSM4" ]
