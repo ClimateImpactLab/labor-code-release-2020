@@ -22,9 +22,9 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 
   if(weight == "raw"){
     # please note: you cannot use 'raw' weighting unless you are choosing a specific IR
-    file = glue('{folder}/{name}-{risk}-combined.csv')
+    file = glue('{folder}/{name}-{risk}.csv')
   } else {
-    file = glue('{folder}/{name}-{risk}-{weight}-aggregated-combined.csv')
+    file = glue('{folder}/{name}-{risk}-{weight}-aggregated.csv')
   }
 
   title = glue("{risk}, {weight}-aggregated \n ({ssp}, {rcp}, {adapt}, IR = {IR})")
@@ -49,6 +49,15 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 
 }
 
+######################
+# PLANK POSE
+######################
+
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
+  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+output = 'plankpose/'
 
 ######################
 # MAIN MODEL - CHECK
@@ -73,7 +82,7 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # output = 'single_edge_restriction_model/'
 
 ######################
-# CLIPPING MODEL
+# MIXED MODEL
 ######################
 
 # folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_copy/',
@@ -116,11 +125,33 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 # MAIN MODEL - CLIPPING LR TEMP
 ######################
 
-folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
-        'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/clipping_lrclim_copy/',
+#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'clip'
-output = 'main_model_clipping_lrtemp'
+# name = 'clip'
+# output = 'main_model_clipping_lrtemp'
+
+######################
+# LRT^K MODEL
+######################
+
+# folder = glue('/shares/gcp/outputs/labor/impacts-woodwork/test_lrt_k_copy/',
+#         'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'labor-climtasmaxclip'
+
+# output = 'test_lrt_k'
+
+######################
+# DOUBLE EDGE CLIPPING
+######################
+
+# folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/double_edge_restriction_single/median/rcp85/CCSM4/high/SSP3/csv')
+
+# name = 'clip_lrt_edge_restriction'
+
+# output = 'double_edge_restriction_single'
+
 
 ###########
 # RUN IT
@@ -129,11 +160,13 @@ output = 'main_model_clipping_lrtemp'
 map_args = expand.grid(IR = "globe",
                        folder= folder,
                        name=name,
+                       # name=c("labor-climtasmaxclip","labor-climtasmaxclip-incadapt","labor-climtasmaxclip-noadapt"),
                        output=output,
                        rcp="rcp85",
                        ssp="SSP3",
                        adapt="fulladapt",
-                       risk=c( "highriskimpacts","rebased_new", "lowriskimpacts"),
+                       risk=c( "highriskimpacts", "rebased", "lowriskimpacts"),
+                       # risk=c( "highriskimpacts", "rebased_new", "lowriskimpacts"),
                        weight=c("wage","gdp", "pop") 
                        )
 
