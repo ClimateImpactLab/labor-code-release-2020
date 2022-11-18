@@ -38,8 +38,8 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
       title = glue("minutes per worker per day ({ssp}, {rcp}, {adapt}) 2099")
   }
   
-  if (varname == "clip") {
-    file <- glue('{folder}/{name}-{varname}.csv')
+  if (risk == "clip") {
+    file <- glue('{folder}/{name}-{risk}.csv')
     colorbar_title = "risk share"
     title <- glue("{name} risk share raw impacts ({ssp}, {rcp}) 2099")
   }
@@ -50,7 +50,7 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
   df_plot = df %>% 
               dplyr::filter(year == 2099)
 
-  if (varname != "clip") {
+  if (risk != "clip") {
     df_plot = df_plot %>% 
               dplyr::mutate(value = -as.numeric(value)) # we were converting minutes to minutes lost
   }
@@ -80,14 +80,24 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
 
 ######################
+# MAIN MODEL CORRECT REBASING
+######################
+
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_sac/',
+  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'uninteracted_main_model'
+output = 'main_model_correct_rebasing_single_sac/'
+
+######################
 # PLANK POSE
 ######################
 
-folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'plankpose/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'plankpose/'
 
 ######################
 # MAIN MODEL - CHECK

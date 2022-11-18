@@ -50,14 +50,24 @@ plot_impact_timeseries = function(IR='globe', folder, name, output, rcp, ssp, ad
 }
 
 ######################
+# MAIN MODEL CORRECT REBASING
+######################
+
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_sac/',
+  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'uninteracted_main_model'
+output = 'main_model_correct_rebasing_single_sac/'
+
+######################
 # PLANK POSE
 ######################
 
-folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
-  'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/',
+#   'combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
-output = 'plankpose/'
+# name = 'hi_1factor_lo_unint_mixed_model_splines_empshare_noFE'
+# output = 'plankpose/'
 
 ######################
 # MAIN MODEL - CHECK
