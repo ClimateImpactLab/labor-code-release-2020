@@ -3,45 +3,55 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate risingverse-py27
 cd ~/repos/prospectus-tools/gcp/extract
 
-basename=uninteracted_main_model
-folder=/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_single_test/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
+folder=/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_sac/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3
 csv_folder=${folder}/csv
 mkdir -p ${csv_folder}
 
-# diagnostics for high risk
-# python single.py  --column=highriskimpacts ${folder}/${basename}.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-fulladapt.csv
-# python single.py  --column=highriskimpacts ${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-histclim.csv
+# extract fulladapt and incadapt - need to subtract histclim
+for basename in uninteracted_main_model uninteracted_main_model-incadapt 
+do 
+    for var in rebased lowriskimpacts highriskimpacts
+    do 
+        # pure outputs (mins per worker per day) (for mapping)
+        nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 -${folder}/uninteracted_main_model-histclim.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
 
-# pure outputs (mins per worker per day) (for mapping)
-python single.py  --column=rebased ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-rebased.csv
-python single.py  --column=lowriskimpacts ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts.csv
-python single.py  --column=highriskimpacts ${folder}/${basename}.nc4 -${folder}/${basename}-histclim.nc4 | tee ${csv_folder}/${basename}-highriskimpacts.csv
+        for agg in pop gdp wage 
+        do 
+            # levels output (for mapping)
+            nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4 -${folder}/uninteracted_main_model-histclim-${agg}-levels.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
+            # aggregate output (for timeseries)
+            nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4 -${folder}/uninteracted_main_model-histclim-${agg}-aggregated.nc4 | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+        done
+    done
+done
 
-# levels output (for mapping)
+# extract noadapt - don't subtract histclim
+for basename in uninteracted_main_model-noadapt 
+do 
+    for var in rebased lowriskimpacts highriskimpacts 
+    do 
+        # pure outputs (mins per worker per day) (for mapping)
+        nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
 
-python single.py  --column=rebased ${folder}/${basename}-pop-levels.nc4 -${folder}/${basename}-histclim-pop-levels.nc4 | tee ${csv_folder}/${basename}-rebased-pop-levels.csv
-python single.py  --column=rebased ${folder}/${basename}-gdp-levels.nc4 -${folder}/${basename}-histclim-gdp-levels.nc4 | tee ${csv_folder}/${basename}-rebased-gdp-levels.csv
-python single.py  --column=rebased ${folder}/${basename}-wage-levels.nc4 -${folder}/${basename}-histclim-wage-levels.nc4 | tee ${csv_folder}/${basename}-rebased-wage-levels.csv
+        for agg in pop gdp wage 
+        do 
+            # levels output (for mapping)
+            nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-levels.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-levels.csv
+            # aggregate output (for timeseries)
+            nohup python -W ignore single.py  --column=${var} ${folder}/${basename}-${agg}-aggregated.nc4  | cat > ${csv_folder}/${basename}-${var}-${agg}-aggregated.csv
+        done
+    done
+done
 
-python single.py  --column=lowriskimpacts ${folder}/${basename}-pop-levels.nc4 -${folder}/${basename}-histclim-pop-levels.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-pop-levels.csv
-python single.py  --column=lowriskimpacts ${folder}/${basename}-gdp-levels.nc4 -${folder}/${basename}-histclim-gdp-levels.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-gdp-levels.csv
-python single.py  --column=lowriskimpacts ${folder}/${basename}-wage-levels.nc4 -${folder}/${basename}-histclim-wage-levels.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-wage-levels.csv
-    
-python single.py  --column=highriskimpacts ${folder}/${basename}-pop-levels.nc4 -${folder}/${basename}-histclim-pop-levels.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-pop-levels.csv
-python single.py  --column=highriskimpacts ${folder}/${basename}-gdp-levels.nc4 -${folder}/${basename}-histclim-gdp-levels.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-gdp-levels.csv
-python single.py  --column=highriskimpacts ${folder}/${basename}-wage-levels.nc4 -${folder}/${basename}-histclim-wage-levels.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-wage-levels.csv
 
- # aggregate output (for timeseries)
 
-python single.py  --column=rebased ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-pop-aggregated.csv
-python single.py  --column=rebased ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-gdp-aggregated.csv
-python single.py  --column=rebased ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-rebased-wage-aggregated.csv
+# extract riskshare - need to subtract histclim
+for basename in uninteracted_main_model uninteracted_main_model-incadapt uninteracted_main_model-noadapt uninteracted_main_model-histclim 
+do 
+    for var in clip
+    do 
+        nohup python -W ignore single.py  --column=${var} ${folder}/${basename}.nc4 | cat > ${csv_folder}/${basename}-${var}.csv
+    done
+done
 
-python single.py  --column=lowriskimpacts ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-pop-aggregated.csv
-python single.py  --column=lowriskimpacts ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-gdp-aggregated.csv
-python single.py  --column=lowriskimpacts ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-lowriskimpacts-wage-aggregated.csv
-    
-python single.py  --column=highriskimpacts ${folder}/${basename}-pop-aggregated.nc4 -${folder}/${basename}-histclim-pop-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-pop-aggregated.csv
-python single.py  --column=highriskimpacts ${folder}/${basename}-gdp-aggregated.nc4 -${folder}/${basename}-histclim-gdp-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-gdp-aggregated.csv
-python single.py  --column=highriskimpacts ${folder}/${basename}-wage-aggregated.nc4 -${folder}/${basename}-histclim-wage-aggregated.nc4 | tee ${csv_folder}/${basename}-highriskimpacts-wage-aggregated.csv
-   
+
