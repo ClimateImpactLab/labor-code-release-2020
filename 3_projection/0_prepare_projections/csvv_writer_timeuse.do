@@ -1,5 +1,6 @@
 * king of all csvv writers
 
+
 clear all
 macro drop _all
 set more off
@@ -7,28 +8,21 @@ cap log close
 set matsize 10000
 cilpath
 
-if "`c(hostname)'" == "battuta" {
-	global SHARES = "/mnt/sacagawea_shares"
-}
-else {
-	global SHARES = "/shares"
-}
 
-global REPO = "/home/`c(username)'/repos"
-global ster_dir = "${REPO}/labor-code-release-2020/output/ster"
-global csvv_dir = "${REPO}/labor-code-release-2020/3_projection/1_run_projections/robustness/single"
+global ster_dir = "/home/`c(username)'/repos/labor-code-release-2020/output/ster"
+global csvv_dir = "/home/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
 *global fun_form = "polynomials"
 global fun_form = "splines"
 * N is polynomial order or number of knots
 global N = 3
 
+*global interaction = "interacted"
 global interaction = "uninteracted"
 
-global ster_folder = "uninteracted_reg_w_chn"
-global risk_list lr hl // this can be lr or hl or both -> PUT IN ORDER OF 'LR HL' IF USING BOTH!
+global ster_folder = "uninteracted_reg_comlohi"
 
 * may need to change interacted weight
-if ("${interaction}" == "interacted") | ("${interaction}" == "income_1factor") global weight = "rep_unit_year_sample_wgt"
+if "${interaction}" == "interacted" global weight = "adm1_adj_sample_wgt"
 else if "${interaction}" == "uninteracted" global weight = "risk_adj_sample_wgt"
 else di "wrong specification of interaction"
 
@@ -37,8 +31,9 @@ global FE = "fe_week_adm0"
 if "${fun_form}" == "splines" {
 
 	global knots_loc  "21_37_41"
+	global dataset = "uninteracted_reg_comlohi"
 	global spline_varname = "rcspl"
-	global ster_filename = "uninteracted_reg_w_chn.ster"
+	global ster_filename = "uninteracted_reg_by_risk.ster"
 
 } 
 else if "${fun_form}" == "polynomials" {
@@ -51,7 +46,9 @@ else if "${fun_form}" == "polynomials" {
 else di "wrong specification of functional form"
 
 * change this to your repo on ther server, pull from master first
-do "${REPO}/gcp-labor/2_regression/time_use/common_functions.do"
+global repo = "/home/`c(username)'/repos/labor-code-release-2020"
+do "$repo/2_analysis/0_subroutines/utils.do"
+do "$repo/2_analysis/0_subroutines/functions.do"
 
 
 * generate varlists for the gammas
@@ -64,7 +61,7 @@ program define generate_gammas_splines
 
 	local N_new_terms = `N' - 2
 	local gcount = 0
-	foreach risk in $risk_list {
+	foreach risk in lr hl {
 		forval i = 0/`N_new_terms' {
 		 	local gcount = `gcount' + 1
 		 	global gamma`gcount' ${b_T_spline_`i'_`risk'}
@@ -75,8 +72,6 @@ program define generate_gammas_splines
 				local gcount = `gcount' + 1
 				global gamma`gcount' ${b_T_x_lrtmax_spline_`i'_`risk'}
  			}
- 		}
- 		if "`interaction'" == "income_1factor" |  "`interaction'" == "interacted" {
  			forval i = 0/`N_new_terms' {
 				local gcount = `gcount' + 1
 	 			global gamma`gcount' ${b_T_x_gdp_spline_`i'_`risk'}
@@ -106,7 +101,7 @@ program define generate_gammas_polynomials
 	generate_coef_polynomials 
 
 	local gcount 0
-	foreach risk in $risk_list {
+	foreach risk in lr hl {
 		forval i = 1/`N' {
 		 	local gcount = `gcount' + 1
 		 	global gamma`gcount' ${b_temp_`i'_`risk'}
@@ -145,21 +140,12 @@ program define write_csvv_header_splines
 		local N_clim_terms  = `N_clim_terms' * 3
 		local interaction_string "(lrtmax and income interaction)"
 	}
-	if "`interaction'" == "income_1factor" {
-		local N_clim_terms  = `N_clim_terms' * 2
-		local interaction_string "(income interaction)"
-	}
 
 	file write csvv "---" _n
-	file write csvv "oneline: Labor `interaction' regression with a restricted cubic spline term (3 knots), located at `knots_loc'" _n
+	file write csvv "oneline: Labor `interaction' regression `interaction_string' with a restricted cubic spline term (3 knots), located at `knots_loc'" _n
 	file write csvv "version: LABOR-RCSPLINE-`N'KNOTS-`interaction'-Knots-`knots_loc'" _n
 	file write csvv "dependencies: `ster_path'" _n
-	file write csvv "description: Generated with csvv_writer_timeuse.do, from `interaction' regression with restricted cubic spline, `N' knots."
-	foreach risk in $risk_list {
-		if "`risk'" == "lr" loc risk_name "low-risk"
-		else loc risk_name "high_risk"
-		file write csvv " `N_clim_terms' gammas are for the `risk_name' sector." _n
-	}
+	file write csvv "description: Generated with csvv_writer_timeuse.do, from labor `interaction' regression with restricted cubic spline, `N' knots. The first `N_clim_terms' gammas are for the low-risk sector. The next `N_clim_terms' for the high-risk sector." _n
 	file write csvv "csvv-version: girdin-2017-01-10" _n
 
 	file write csvv "variables:" _n
@@ -168,9 +154,6 @@ program define write_csvv_header_splines
 	
 	if "`interaction'" == "interacted" {
 		file write csvv "  climtasmax: long run average daily maximum temperature [C]" _n
-		file write csvv "  loggdppc: log of gdp per capita [log USD2000]" _n		
-	}
-	if "`interaction'" == "income_1factor" {
 		file write csvv "  loggdppc: log of gdp per capita [log USD2000]" _n		
 	}
 	file write csvv "  outcome: labor productivity [minutes worked by individual]" _n
@@ -224,7 +207,7 @@ program define write_csvv_prednames_covarnames
 	args FUN N interaction
 
 	* tasmax is always the first predname
-	local prednames_base tasmax
+	local prednames_base tasmax 
 
 	* construct the list of prednames that are repeated 2 times for uninteracted regressions (low, high)
 	* and 6 times for interacted regressions (low/high x uninteracted/gdp interaction/climate interaction)
@@ -244,10 +227,8 @@ program define write_csvv_prednames_covarnames
 	else di "unknown functional form"
 
 	file write csvv "prednames" _n
-	foreach risk in $risk_list {
-		file write csvv "`prednames_base',"
-	}
-
+	file write csvv "`prednames_base', `prednames_base'"
+	
 	* construct a list of covarnames_base, which is "1" for uninteracted, 
 	* and "1 climtasmax loggdppc" for interacted
 	local covarnames_base 1
@@ -258,18 +239,12 @@ program define write_csvv_prednames_covarnames
 		}
 		local covarnames_base 1 climtasmax loggdppc
 	}
-	if "`interaction'" ==  "income_1factor" {
-		foreach risk in $risk_list {
-			file write csvv ", `prednames_base'" 
-		}
-		local covarnames_base 1 loggdppc
-	}
 	file write csvv _n
 	file write csvv "covarnames" _n
 	
 	* construct the string of the covarnames, which is a repetition of covarnames_base
 	
-	foreach risk in $risk_list {
+	foreach risk in lowrisk highrisk {
 		foreach covar in `covarnames_base' {
 			forval i = 1/`N_clim_terms' {
 				local covarnames_supplement "`covarnames_supplement' `covar'," 
@@ -368,7 +343,7 @@ program define write_csvv
 
 	calculate_nobs_residvcv
 
-	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}.csvv"
+	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_old.csvv"
 	local csvv `csvv_path'
 
 	* cd "$csvv_dir" 
@@ -404,4 +379,3 @@ end
 write_csvv
 
 
-   

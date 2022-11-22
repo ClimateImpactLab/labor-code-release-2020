@@ -1,0 +1,31 @@
+---
+oneline: Employment share regression for labor sector, without continent fixed effects
+version: empshare_2019_10
+dependencies: LogIncPoly4.ster
+description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. 
+csvv-version: girdin-2017-01-10
+variables:
+  loggdppc: 15-year moving average of log GDP per capita [log USD2000]
+  climmeantas: poly 1 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C]
+  climmeantas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^2]
+  climmeantas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^3]
+  climmeantas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^4]
+  outcome: share of high-risk labor [NA]
+...
+observations
+1073
+prednames
+1, 1, 1, 1, 1, 1
+covarnames
+1, loggdppc,climmeantas,climmeantas-poly-2,climmeantas-poly-3,climmeantas-poly-4
+gamma
+2.372237440920211,-.1787029977119241,-.008177971713906,-.0015973225364699,.0000586088469882,-1.79807487130e-07
+gammavcv
+.0029405685923992,-.000220380170075,-.0000717025238379,-4.11105663394e-06,3.85485812392e-07,-7.04491120456e-09
+-.000220380170075,.0000213832163782,-1.19511958789e-07,1.56103163481e-07,-3.30521568977e-09,-1.81857128853e-12
+-.0000717025238379,-1.19511958789e-07,.0000161383516685,-2.86789136881e-07,-3.95537419734e-08,1.15697975977e-09
+-4.11105663394e-06,1.56103163481e-07,-2.86789136881e-07,6.79124966197e-08,-2.88749812505e-09,3.36323541298e-11
+3.85485812392e-07,-3.30521568977e-09,-3.95537419734e-08,-2.88749812505e-09,3.36026541223e-10,-7.07157122673e-12
+-7.04491120456e-09,-1.81857128853e-12,1.15697975977e-09,3.36323541298e-11,-7.07157122673e-12,1.68388715229e-13
+residvcv
+.0145658464782871
