@@ -36,7 +36,7 @@ setup <- function(){
 
 
   source(glue("{REPO}/post-projection-tools/response_function/yellow_purple_package.R"))
-  source(glue("{REPO}/gcp-labor/3_projection/deltabetas/get_curve_labor.R"))
+  source(glue("{REPO}/labor-code-release-2020/3_projection/3_diagnostics/deltabetas/get_curve_labor.R"))
 
 }
 
@@ -56,11 +56,11 @@ paths <- function(interacted=FALSE){
 paths_spline_function  =  function(interacted=TRUE){
 
     # uninteracted main model
-    csvv.dir = "/shares/gcp/social/parameters/labor/post_replication/"
-    csvv.name <- "uninteracted_main_model.csvv"
-    cov.dir = "/mnt/battuta_shares/gcp/outputs/labor/impacts-replicated-march-2020/single/rcp85/CCSM4/high/SSP3/combined-spline-allcalcs-labor_spline_interacted-highrisk.csv"
-    output.dir <- "/mnt/CIL_labor/3_projection/deltabetas/spline_27_37_39/uninteracted_main_model/"
-    knots <- c(27,37,39)
+    # csvv.dir = glue("{REPO}/labor-code-release-2020/3_projection/1_run_projections/mc/")
+    # csvv.name <- "uninteracted_main_model.csvv"
+    # cov.dir = "/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/test_rcc_copy/uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/test_rcc_main_model_single_config-allcalcs-uninteracted_main_model.csv"
+    # output.dir <- "/mnt/CIL_labor/3_projection/deltabetas/spline_27_37_39/uninteracted_main_model/"
+    # knots <- c(27,37,39)
 
     # mixed model
     # csvv.dir = "/shares/gcp/social/parameters/labor/post_replication/"
@@ -68,6 +68,13 @@ paths_spline_function  =  function(interacted=TRUE){
     # cov.dir = "/mnt/battuta_shares/gcp/outputs/labor/impacts-replicated-march-2020/single/rcp85/CCSM4/high/SSP3/combined-spline-allcalcs-labor_spline_interacted-highrisk.csv"
     # output.dir <- "/home/kschwarz/repos/labor-code-release-2020/output/diagnostics/deltabetas/hi_1factor_lo_unint_mixed_model/"
     # knots = c(27, 37, 39)
+
+    # plankpose
+    csvv.dir = "/shares/gcp/social/parameters/labor/post_replication/"
+    csvv.name <- "hi_1factor_lo_unint_mixed_model_splines_empshare_noFE.csvv"
+    cov.dir = "/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/hi_1factor_lo_unint_mixed_model_plankpose/combined_mixed_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/hi_1factor_lo_unint_mixed_model_single_plankpose_config-allcalcs-hi_1factor_lo_unint_mixed_model_splines_empshare_noFE.csv"
+    output.dir <- "{REPO}/labor-code-release-2020/output/diagnostics/deltabetas/plankpose/"
+    knots = c(27, 37, 39)
 
     # with China model
     # csvv.dir = "/shares/gcp/social/parameters/labor/post_replication/"
@@ -93,23 +100,32 @@ paths_interacted_poly4_function  =  function(interacted=TRUE){
 
 location.dict = list()
 location.dict[["USA.5.221"]] = 'USA, San Francisco'
-location.dict[["SWE.15"]] = 'SWE, Stockholm'
-location.dict[["IRN.14.148"]] = 'IRAN, Shush'
-location.dict[["USA.14.608"]] = 'USA, Chicago'
-location.dict[["POL.9.200"]] = 'Pol, Ostroleka City'
-location.dict[["GBR.1.108"]] = 'Gods own county aka toms hometown'
-location.dict[["SDN.6.16.75.230"]] = 'SDN, Ez Zeidab'
-location.dict[["MLI.9.49"]] = 'MLI, Niafunke'
-location.dict[["THA.3.R3edeff05b7928bfc"]] = 'THA, Bangkok' # subnode though
-location.dict[["ARE.3"]] = 'UAE, Dubai'
-location.dict[["EGY.16"]] = 'EGY, Aswan'
-location.dict[["SDN.6.15.73.226"]] = 'SDN, Wadi Halfa'
-location.dict[["CAN.2.33.913"]] = 'Vancouver, CAN'
-location.dict[["GBR.1.R7074136591e79d11"]] = 'London, GBR'
+# location.dict[["SWE.15"]] = 'SWE, Stockholm'
+# location.dict[["IRN.14.148"]] = 'IRAN, Shush'
+# location.dict[["USA.14.608"]] = 'USA, Chicago'
+# location.dict[["NGA.25.510"]] = 'NGA, Lagos'
+# location.dict[["IND.10.121.371"]] = 'IND, Delhi'
+# location.dict[["POL.9.200"]] = 'Pol, Ostroleka City'
+# location.dict[["GBR.1.108"]] = 'Gods own county aka toms hometown'
+# location.dict[["SDN.6.16.75.230"]] = 'SDN, Ez Zeidab'
+# location.dict[["MLI.9.49"]] = 'MLI, Niafunke'
+# location.dict[["THA.3.R3edeff05b7928bfc"]] = 'THA, Bangkok' # subnode though
+# location.dict[["ARE.3"]] = 'UAE, Dubai'
+# location.dict[["EGY.16"]] = 'EGY, Aswan'
+# location.dict[["SDN.6.15.73.226"]] = 'SDN, Wadi Halfa'
+# location.dict[["CAN.2.33.913"]] = 'Vancouver, CAN'
+# location.dict[["GBR.1.R7074136591e79d11"]] = 'London, GBR'
+location.dict[["QAT.1"]] = 'Doha, QAT'
+location.dict[["USA.2.70"]] = 'Anchorage, USA'
+location.dict[["ZAF.8.263"]] = 'Bloemfontein, S Africa'
 
-regions = c('CAN.2.33.913', 'GBR.1.R7074136591e79d11')
+# resume here. find the zero diff IR in china
+# location.dict[["CHN"]] = ', CHN'
+
+# regions = c('CAN.2.33.913', 'GBR.1.R7074136591e79d11')
 # regions = c('SDN.4.11.49.163', 'THA.3.R3edeff05b7928bfc', 'USA.5.221', 'CAN.3.50.1276')
 # regions = c("USA.5.221", "SWE.15", "IRN.14.148", "USA.14.608")
+regions = c("QAT.1", "USA.2.70", "ZAF.8.263", "USA.5.221")
 
 # paths <- paths()
 # sector <- "low"
@@ -157,9 +173,51 @@ regions = c('CAN.2.33.913', 'GBR.1.R7074136591e79d11')
 
 #Spline
 paths_spline <- paths_spline_function()
-sector = "high"
+sector = "low"
 
-# mixed model delta beta
+
+#####################################
+####### plank pose delta beta #######
+#####################################
+
+for(region in regions) {
+    args = list(
+            sector=sector,
+            db.prefix=glue("deltabeta_{sector}_"),
+            regions=region,
+            years=2099,
+            base_year=2015,
+            inc.adapt=T,
+            csvv.dir = paths_spline$csvv.dir,
+            csvv.name = paths_spline$csvv.name,
+            cov.dir=paths_spline$cov.dir, 
+            covarkey = "region", 
+            filetype="csv",
+            func=get_curve_rcspline_labor, 
+            get.covariates=T, 
+            load.covariates=T,
+            covar.names=c("climtas", "loggdppc"),
+            TT_lower_bound=-20,
+            TT_upper_bound=60,
+            x.lim=c(-30, 60),
+            bound_to_hist=F,
+            export.singles=F,
+            export.matrix=F,
+            delta.beta=T,
+            csv=TRUE,
+            export.path=paths_spline$output.dir,
+            ncname="1.1",
+            tas_value="tasmax",
+            location.dict=location.dict,
+            y.lab = "Change in work time",
+            interacted='mixed_model')
+
+    yp = do.call(generate_yellow_purple,args)
+}
+
+#####################################
+###### mixed model delta beta ######
+#####################################
 
 # for(region in regions) {
 
@@ -199,47 +257,51 @@ sector = "high"
 
 # }
 
-for(region in regions) {
-    args =list(
-            sector=sector,
-            db.prefix=glue("deltabeta_{sector}"),
-            regions=region,
-            years=2099,
-            base_year=2015,
-            # y.lim=c(-10, 20),
-            inc.adapt=F,
-            bound_to_hist=F,
-            csvv.dir = paths_spline$csvv.dir,
-            csvv.name = paths_spline$csvv.name,
-            # cov.dir=paths_spline$cov.dir, 
-            # covarkey = "region", 
-            # filetype="csv",
-            func=get_curve_rcspline_labor, 
-            get.covariates=F, 
-            load.covariates=F,
-            # covar.names=c('tmean','loggdppc'), 
-            # list.names=c('climtas','loggdppc'), 
-            TT_lower_bound=-30,
-            TT_upper_bound=60,
-            TT_step = 1,
-            x.lim=c(-30, 60),
-            bound_to_hist=F,
-            export.singles=F,
-            export.matrix=F,
-            delta.beta=T,
-            export.path=paths_spline$output.dir,
-            ncname="1.1",
-            tas_value="tasmax",
-            location.dict=NULL,
-            y.lab = "Change in work time",
-            knots=paths_spline$knots,
-            interacted=F)
+#####################################
+#####################################
 
-    yp = do.call(generate_yellow_purple,args)
-}
+# for(region in regions) {
+#     args =list(
+#             sector=sector,
+#             db.prefix=glue("deltabeta_{sector}"),
+#             regions=region,
+#             years=2099,
+#             base_year=2015,
+#             # y.lim=c(-10, 20),
+#             inc.adapt=F,
+#             bound_to_hist=F,
+#             csvv.dir = paths_spline$csvv.dir,
+#             csvv.name = paths_spline$csvv.name,
+#             # cov.dir=paths_spline$cov.dir, 
+#             # covarkey = "region", 
+#             # filetype="csv",
+#             func=get_curve_rcspline_labor, 
+#             get.covariates=F, 
+#             load.covariates=F,
+#             # covar.names=c('tmean','loggdppc'), 
+#             # list.names=c('climtas','loggdppc'), 
+#             TT_lower_bound=-30,
+#             TT_upper_bound=60,
+#             TT_step = 1,
+#             x.lim=c(-30, 60),
+#             bound_to_hist=F,
+#             export.singles=F,
+#             export.matrix=F,
+#             delta.beta=T,
+#             export.path=paths_spline$output.dir,
+#             ncname="1.1",
+#             tas_value="tasmax",
+#             location.dict=NULL,
+#             y.lab = "Change in work time",
+#             knots=paths_spline$knots,
+#             interacted=F)
+
+#     yp = do.call(generate_yellow_purple,args)
+# }
 
 
-
+#####################################
+#####################################
 
 # #interacted arguments - interacted poly 4 model
 # # ONLY FEED IN ONE IR AT A TIME, IT BUGS OTHERWISE!!
