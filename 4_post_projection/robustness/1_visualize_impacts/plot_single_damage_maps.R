@@ -80,14 +80,24 @@ plot_impact_map = function(folder, name, output, rcp, ssp, adapt, weight, risk){
 
 
 ######################
+# MAIN MODEL CORRECT REBASING NEW UNINT REG CSVV
+######################
+
+folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_new_csvv/',
+  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+
+name = 'uninteracted_main_model_new'
+output = 'main_model_correct_rebasing_new_csvv_single/'
+
+######################
 # MAIN MODEL CORRECT REBASING
 ######################
 
-folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_sac/',
-  'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
+# folder = glue('/mnt/battuta_shares/gcp/outputs/labor/impacts-woodwork/main_model_correct_rebasing_single_sac/',
+#   'uninteracted_splines_27_37_39_by_risk_empshare_noFE_YearlyAverageDay/rcp85/CCSM4/high/SSP3/csv')
 
-name = 'uninteracted_main_model'
-output = 'main_model_correct_rebasing_single_sac/'
+# name = 'uninteracted_main_model'
+# output = 'main_model_correct_rebasing_single_sac/'
 
 ######################
 # PLANK POSE
