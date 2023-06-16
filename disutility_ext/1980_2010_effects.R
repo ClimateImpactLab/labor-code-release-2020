@@ -292,22 +292,40 @@ ggplot(data = effects) +
 
 
 #effects relative to optimum
-soc_ec <- fread("/home/rfrost/repos/labor-code-release-2020/disutility_ext/country_level_econvars_SSP3.csv")
+soc_ec_adm0 <- fread("/home/rfrost/repos/labor-code-release-2020/disutility_ext/country_level_econvars_SSP3.csv")
+soc_ec_adm0 <- subset(soc_ec_adm0, year == 2099)
+soc_ec_adm0 <- subset(soc_ec_adm0, model == "high")
+total_pop <- sum(soc_ec_adm0$pop)
+soc_ec_adm0$gdppc_w <- soc_ec_adm0$gdppc*(soc_ec_adm0$pop/total_pop)
+soc_ec_adm0 <- subset(soc_ec_adm0, !(is.na(gdppc)))
+mean_gdppc <- sum(soc_ec_adm0$gdppc_w)
+
+disutility <- ((globe_mean*(mean_gdppc*0.6)/(250*6*60))/0.5)*(100/mean_gdppc)
+
+
+soc_ec <- fread("/home/rfrost/repos/labor-code-release-2020/disutility_ext/pop_gdppc_for_rebecca.csv")
 soc_ec <- subset(soc_ec, year == 2010)
 soc_ec <- subset(soc_ec, model == "high")
 
-gdp <- subset(soc_ec, select = c(region,gdp,pop,gdppc))
+
+gdp <- subset(soc_ec, select = c(region,pop,gdppc))
 soc_ec$wage <- (soc_ec$gdppc*0.6)/(250*6*60)
 soc_ec <- subset(soc_ec, select = c(region, wage))
 
 shp <- st_read("/home/rfrost/repos/mortality/outreach/WP_2023/ir_shp/impact-region.shp")
 
-df <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_1950_to_2010_daily.csv")
-df_mean <- aggregate(value ~ month + day+ hierid, data = df, FUN = mean)
-rm(df)
-dfs <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_spline_1950_to_2010_daily.csv")
-dfs_mean <- aggregate(value ~  month + day + hierid, data = dfs, FUN = mean)
-
+#df <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_1950_to_2010_daily.csv")
+#df_mean <- aggregate(value ~ month + day+ hierid, data = df, FUN = mean)
+#write.csv(df_mean,"/home/rfrost/repos/labor-code-release-2020/df_mean.csv")
+df_mean <- fread("/home/rfrost/repos/labor-code-release-2020/df_mean.csv")
+#df_mean <- subset(df, year == 2010)
+#rm(df)
+#dfs <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_spline_1950_to_2010_daily.csv")
+#dfs_mean <- aggregate(value ~  month + day + hierid, data = dfs, FUN = mean)
+dfs_mean <- fread("/home/rfrost/repos/labor-code-release-2020/dfs_mean.csv")
+#write.csv(dfs_mean,"/home/rfrost/repos/labor-code-release-2020/dfs_mean.csv")
+#dfs_mean <- subset(dfs, year == 2010)
+#rm(dfs)
 #subset(df_mean, month !=2 & day != 29)
 
 dfb <- merge(df_mean, dfs_mean,  by.x = c("hierid","month","day"),  by.y = c("hierid","month","day"), all.x = TRUE, all.y = TRUE)
@@ -334,51 +352,85 @@ dfb$d_l <- dfb$f_l - dfb$f_l_opt_l
 
 dfb$diff <- dfb$d_h - dfb$d_l
 
-countries <- data.frame(do.call("rbind", strsplit(as.character(dfb$hierid), ".", fixed = TRUE)))
-dfb <- cbind(dfb, countries$X1)
-dfb <- dfb %>% rename("adm0" = "countries$X1")
+#countries <- data.frame(do.call("rbind", strsplit(as.character(dfb$hierid), ".", fixed = TRUE)))
+#dfb <- cbind(dfb, countries$X1)
+#dfb <- dfb %>% rename("adm0" = "V2")
 
-dfb <- merge(dfb, soc_ec, by.x = "adm0", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
+dfb <- merge(dfb, soc_ec, by.x = "hierid", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
 
 dfb$diff_dis <- (-1)*(dfb$diff*dfb$wage)/0.5
 
-effects <- aggregate(cbind(diff,diff_dis,d_h,d_l) ~ hierid + adm0, data = dfb, FUN = sum)
+dfb$h_dis <- (-1)*(dfb$d_h*dfb$wage)/0.5
+dfb$l_dis <- (-1)*(dfb$d_l*dfb$wage)/0.5
+
+effects <- aggregate(cbind(diff,diff_dis,d_h,d_l,h_dis, l_dis) ~ hierid, data = dfb, FUN = sum)
 
 effects <- merge(shp, effects, by.x = "hierid", by.y = "hierid", all.x = TRUE, all.y = TRUE)
 
-effects <- merge(effects, gdp, by.x = "adm0", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
+effects <- merge(effects, gdp, by.x = "hierid", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
 
+effects$gdp <- effects$gdppc*effects$pop
 effects$diff_dis_p <- ifelse(effects$gdp != 0,((effects$diff_dis*effects$pop)/effects$gdp)*100, 0)
+effects$h_dis_p <- ifelse(effects$gdp != 0,((effects$h_dis*effects$pop)/effects$gdp)*100, 0)
+effects$l_dis_p <- ifelse(effects$gdp != 0,((effects$l_dis*effects$pop)/effects$gdp)*100, 0)
 
+#pop <- read.csv("/home/rfrost/repos/mortality/outreach/WP_2023/pop_backward_proj_no_round.csv")
+
+#pop <- subset(pop, year == 2010)
+
+#pop <- subset(pop, select = c(region,pop))
+#effects <- subset(effects, select = -c(pop))
+#effects <- merge(effects, pop, by.x = "hierid", by.y = "region", all.x = FALSE, all.y = TRUE)
+#effects <- subset(effects, !(is.na(effects$adm0)))
+effects <- subset(effects, effects$pop != 0)
+
+total_pop <- sum(effects$pop)
+
+effects$pw_dis_diff <- (effects$diff_dis_p)*(effects$pop/total_pop)
+
+sum(effects$pw_dis_diff)
 
 #color.values <- rev(c("#2c7bb6","#9dcfe4","#e7f8f8","grey95", "#ffedaa","#fec980","#d7191c"))
 color.values <- c("grey95", "#ffedaa","#fec980","#d7191c")
 
-bound = ceiling(max(abs(effects$diff_dis_p), na.rm=TRUE))
+bound = ceiling(max(abs(effects$h_dis_p), na.rm=TRUE))
 #bound = ceiling(max(abs(effects$dis_h_1/365), na.rm=TRUE))
 bound = 16
 #scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
 scale_v = c(0, 0.005, 0.05, 0.2, 1)
 rescale_value <- scale_v*bound
 
-limits_val = round(c(0, bound), 8)
+limits_val = round(c(0, bound), 5)
 
-breaks_labels_val = round(seq(0, bound, 2*bound/8), 8)
+breaks_labels_val = round(seq(0, bound, 2*bound/5), 5)
 
 effects <- subset(effects, !(is.na(effects$hierid)))
-effects <- subset(effects, adm0 != "ATA")
+#effects <- subset(effects, adm0 != "ATA")
 #effects <- subset(effects, !(is.na(effects$effect_HR)))
+ir <- subset(shp, hierid == "NGA.25.510")
+
+lakeslist = c("CA-", "USA.23.1273","USA.14.642","USA.50.3082","USA.50.3083",
+  "USA.23.1275","USA.15.740", "USA.24.1355", "USA.33.1855", "USA.36.2089", 
+  "USA.23.1272", "UGA.32.80.484","UGA.32.80.484.2761", "TZA.13.59.1169", 
+  "TZA.5.26.564", "TZA.17.86.1759", "ATA")
+effects <- subset(effects, !(hierid %in% lakeslist))
 
 ggplot(data = effects) +
-  geom_sf(aes(fill = diff_dis_p), color=NA)  + 
+  geom_sf(aes(fill = h_dis_p), color=NA)  + 
   theme_void() +
   #scale_fill_gradient2(low="red",mid = "grey99", high = "navy", midpoint=0,na.value = "grey99",guide = "colourbar") +
   #theme(legend.key.height=unit(0.5, 'cm'),legend.position = "bottom", legend.key.width=unit(0.5, "cm"),axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title = element_text(family="Times New Roman",hjust = 0.5),panel.background = element_blank(),legend.title=element_text(size=10, family="Times New Roman"),legend.text=element_text(size=10,family="Times New Roman")) +
   theme(legend.key.height=unit(0.5, 'cm'),legend.position = "bottom", legend.key.width=unit(0.5, "cm"),axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title = element_text(family="CenturySch",hjust = 0.5,),panel.background = element_blank(),legend.title=element_text(size=10, family="CenturySch"),legend.text=element_text(size=10,family="CenturySch")) +
+  geom_rect(aes(xmin = -88.893717 , xmax = -86.893717 , ymin = 40.813365 , ymax = 42.813365), color = "black", fill = NA, size =0.01)  +
+  geom_rect(aes(xmin = 9.716375 , xmax = 11.716375 , ymin = 58.970345 , ymax = 60.970345), color = "black", fill = NA, size =0.01)  +
+  geom_rect(aes(xmin = -47.582095 , xmax = -45.582095 , ymin = -24.60702 , ymax = -22.60702), color = "black", fill = NA, size =0.01)  +
+  geom_rect(aes(xmin = 115.33405 , xmax = 117.33405 , ymin = 38.954685 , ymax = 40.954685), color = "black", fill = NA, size =0.01)  +
+  geom_rect(aes(xmin = 76.08533 , xmax = 78.08533 , ymin = 27.87319 , ymax = 29.87319), color = "black", fill = NA, size =0.01)  +
+  geom_rect(aes(xmin = 2.404933 , xmax = 4.404933 , ymin = 5.482383 , ymax = 7.482383), color = "black", fill = NA, size =0.01)  +
   #ggtitle(glue("Difference in Disutility Between High and Low Risk Workers")) +
   scale_fill_gradientn(
     colors = color.values,
-    values=rescale(rescale_value),
+    values= rescale(rescale_value),
     na.value = "grey95",
     limits = limits_val, #center color scale so white is at 0
     breaks = breaks_labels_val, 
@@ -392,6 +444,7 @@ ggplot(data = effects) +
                            title.hjust = 0.5,
                            label.hjust = 0.7))
 ggsave("/home/rfrost/repos/labor-code-release-2020/disutility_ext/hist_dis_map.png",bg = "white")
+ggsave("/home/rfrost/repos/labor-code-release-2020/disutility_ext/hist_dis_map.pdf",bg = "white")
 
 key_irs <- subset(effects, hierid == "USA.14.608" | hierid == "USA.5.221" | hierid ==  "USA.22.1228" | hierid == "DEU.3.12.141" |hierid == "FRA.11.75" | hierid == "CHN.6.46.280" | hierid == "CHN.2.18.78" |hierid == "BGD.3.9.18.132" | hierid == "IND.10.121.371" | hierid == "BRA.25.5212.R3fd4ed07b36dfd9c" | hierid == "NGA.25.510" | hierid == "NOR.12.288")
 effects$city <- ifelse(effects$hierid == "USA.14.608", "Chicago", "")
@@ -407,7 +460,7 @@ effects$city <- ifelse(effects$hierid == "BRA.25.5212.R3fd4ed07b36dfd9c", "Sao P
 effects$city <- ifelse(effects$hierid == "NGA.25.510", "Lagos", effects$city)
 effects$city <- ifelse(effects$hierid == "NOR.12.288", "Oslo", effects$city)
 
-key_irs <- subset(effects, select = c(city,diff_dis_p))
+key_irs <- subset(effects, select = c(city,diff_dis_p,h_dis_p, l_dis_p))
 key_irs <- subset(key_irs, city != "")
 
 write.csv(key_irs, "/home/rfrost/repos/labor-code-release-2020/disutility_ext/key_irs_disutility_diff_mean.csv")
@@ -433,8 +486,6 @@ effects$pop_total <- effects$pop0to4 + effects$pop5to64 + effects$pop65plus
 
 effects$HR_total_d <- effects$effect_HR_d*effects$pop_total
 effects$LR_total_d <- effects$effect_LR_d*effects$pop_total
-
-
 
 totals <- aggregate(cbind(HR_total_d,LR_total_d ) ~ ISO, data = effects, FUN = 'sum')
 totals <- merge(totals,gdp, by.x="ISO", by.y = "region", all.x = TRUE, all.y = TRUE)
