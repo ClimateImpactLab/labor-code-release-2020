@@ -76,7 +76,7 @@ gen temp_poly4 = tavg_1_pop_ma_30yr^4
 			
 save "`out'/riskshare_reg_data.dta", replace
 
-foreach spec in 1 2 3 4{
+foreach spec in 1 2 3 4 5 6 7 8{
 
 if `spec' == 1 {
 			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr, noabsorb residuals(resid_`spec')
@@ -99,8 +99,29 @@ if `spec' == 4 {
 			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 ib3.continent_code, noabsorb residuals(resid_`spec')
 			loc saveas "log_inc_lrtk_continent_fes"
 		}
+        
+if `spec' == 5 { 
+			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 ib3.continent_code i.year, noabsorb residuals(resid_`spec')
+			loc saveas "log_inc_lrtk_continent_year_fes"
+		}
+        
+if `spec' == 6 { 
+			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 i.year, noabsorb residuals(resid_`spec')
+			loc saveas "log_inc_lrtk_year_fes"
+		}
+        
+if `spec' == 7 {
+			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr ib3.continent_code i.year, noabsorb residuals(resid`spec')
+			loc saveas "log_inc_poly4_continent_year_fes"
+		}
+        
+if `spec' == 8 {
+			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr i.year, noabsorb residuals(resid`spec')
+			loc saveas "log_inc_poly4_year_fes"
+		}
 
-		if inlist(`spec', 1, 2, 3, 4) {
+
+		if inlist(`spec', 1, 2, 3, 4, 5, 6, 7, 8) {
 			di "`out'/ster/"
 			estimates save "`out'/ster/`saveas'.ster", replace
 		}
@@ -146,6 +167,22 @@ if `spec' == 4 {
 						
 						if `spec' == 4 {
 							loc temp_cmd "_b[_cons] + _b[log_inc]*`log_inc' + _b[temp_poly1]*temp + _b[temp_poly2]*temp^2 + _b[temp_poly3]*temp^3 + _b[temp_poly4]*temp^4"
+						}
+                        
+						if `spec' == 5 {
+							loc temp_cmd "_b[_cons] + _b[log_inc]*`log_inc' + _b[temp_poly1]*temp + _b[temp_poly2]*temp^2 + _b[temp_poly3]*temp^3 + _b[temp_poly4]*temp^4"
+						}
+                        
+						if `spec' == 6 {
+							loc temp_cmd "_b[_cons] + _b[log_inc]*`log_inc' + _b[temp_poly1]*temp + _b[temp_poly2]*temp^2 + _b[temp_poly3]*temp^3 + _b[temp_poly4]*temp^4"
+						}
+                        
+						if `spec' == 7 {
+							loc temp_cmd "_b[_cons] + _b[log_inc]*`log_inc' + _b[tavg_1_pop_ma_30yr]*temp + _b[tavg_2_pop_ma_30yr]*temp^2 + _b[tavg_3_pop_ma_30yr]*temp^3 + _b[tavg_4_pop_ma_30yr]*temp^4"
+						}
+                                                
+						if `spec' == 8 {
+							loc temp_cmd "_b[_cons] + _b[log_inc]*`log_inc' + _b[tavg_1_pop_ma_30yr]*temp + _b[tavg_2_pop_ma_30yr]*temp^2 + _b[tavg_3_pop_ma_30yr]*temp^3 + _b[tavg_4_pop_ma_30yr]*temp^4"
 						}
 
 						predictnl yhat = `temp_cmd', se(se_hi) ci(lowerci_hi upperci_hi)
@@ -200,6 +237,26 @@ if `spec' == 4 {
 							loc inc_var inc_log
 						}
 					
+						if `spec' == 5 {
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[temp_poly1]*`temp1' + _b[temp_poly2]*`temp2' + _b[temp_poly3]*`temp3' + _b[temp_poly4]*`temp4'"
+							loc inc_var inc_log
+						}
+                        
+						if `spec' == 6 {
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[temp_poly1]*`temp1' + _b[temp_poly2]*`temp2' + _b[temp_poly3]*`temp3' + _b[temp_poly4]*`temp4'"
+							loc inc_var inc_log
+						}
+                        
+						if `spec' == 7 {
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`tavg1' + _b[tavg_2_pop_ma_30yr]*`tavg2' + _b[tavg_3_pop_ma_30yr]*`tavg3' + _b[tavg_4_pop_ma_30yr]*`tavg4'"
+							loc inc_var inc_log
+						}
+                        
+						if `spec' == 8 {
+							loc inc_cmd "_b[_cons] + _b[log_inc]*inc_log + _b[tavg_1_pop_ma_30yr]*`tavg1' + _b[tavg_2_pop_ma_30yr]*`tavg2' + _b[tavg_3_pop_ma_30yr]*`tavg3' + _b[tavg_4_pop_ma_30yr]*`tavg4'"
+							loc inc_var inc_log
+						}
+                    
 						predictnl yhat = `inc_cmd', se(se_hi) ci(lowerci_hi upperci_hi)
 						keep inc_log yhat se_hi lowerci_hi upperci_hi
 						
