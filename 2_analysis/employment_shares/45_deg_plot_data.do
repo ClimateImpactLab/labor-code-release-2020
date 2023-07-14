@@ -24,7 +24,7 @@ use "`out'/riskshare_reg_data.dta", clear
 
 		loc temp_cmd "_b[_cons] + _b[log_inc]*log_inc + _b[temp_poly1]*temp_poly1 + _b[temp_poly2]*temp_poly2 + _b[temp_poly3]*temp_poly3 + _b[temp_poly4]*temp_poly4"
 
-		predictnl yhat_lrtk = `temp_cmd', se(se_lrtk) ci(lowerci_lrtk upperci_lrtk)
+		predictnl yhat_lrtk = predict(), se(se_lrtk) ci(lowerci_lrtk upperci_lrtk)
 
 		preserve
 
@@ -43,7 +43,7 @@ use "`out'/riskshare_reg_data.dta", clear
 
 		loc temp_cmd "_b[_cons] + _b[log_inc]*log_inc + _b[tavg_1_pop_ma_30yr]*tavg_1_pop_ma_30yr + _b[tavg_2_pop_ma_30yr]*tavg_2_pop_ma_30yr + _b[tavg_3_pop_ma_30yr]*tavg_3_pop_ma_30yr + _b[tavg_4_pop_ma_30yr]*tavg_4_pop_ma_30yr"
 
-		predictnl yhat_main = `temp_cmd', se(se_main) ci(lowerci_main upperci_main)
+		predictnl yhat_main = predict(), se(se_main) ci(lowerci_main upperci_main)
 
 * merge the two together to generate data for 45 deg plots
 		preserve

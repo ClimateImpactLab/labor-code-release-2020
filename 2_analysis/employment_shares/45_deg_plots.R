@@ -1,7 +1,7 @@
 rm(list=ls())
 library(tidyverse)
 library(glue)
-library(cilpath.r)
+#library(cilpath.r)
 library(lfe)
 library(sf)
 library(rgdal)
@@ -11,9 +11,9 @@ library(gridExtra)
 library(numbers)
 library(cowplot)
 
-cilpath.r:::cilpath()
+#cilpath.r:::cilpath()
 
-out = glue("/home/nsharma/repos/labor-code-release-2020/output/employment_shares") # change username here
+out = glue("/home/jonahmgilbert/repos/labor-code-release-2020/output/employment_shares") # change username here
 
 plot = read_csv(glue("{out}/yhat_values/45_deg_plot.csv")) %>% 
       rename(temp = tavg_1_pop_ma_30yr) 
@@ -35,7 +35,7 @@ plot2 <- ggplot() +
   xlab("predicted riskshare values- LR(T^K)") + ylab("predicted riskshare values- LRT^K") + 
   ylim(0,1) + xlim(0,1)
 
-# combine line graph and histogram togther
+# combine line graph and histogram together
 theme_set(theme_minimal())
 
 p <- plot_grid(

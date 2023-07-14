@@ -18,7 +18,7 @@ library(numbers)
 library(stargazer)
 
 #cilpath.r:::cilpath()
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+#source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 lab = glue("/mnt/CIL_labor")
 out = glue("/home/jonahmgilbert/repos/labor-code-release-2020/output/employment_shares") # change username here
@@ -56,20 +56,32 @@ dat_ss <- dat_ss[complete.cases(dat_ss),]
 
 # load data for graph
 yhat_inc = read_csv(glue("{out}/yhat_values/log_inc_poly4_IncPred.csv"))
-yhat_temp = read_csv(glue("{out}/yhat_values/log_inc_poly4_TempPred.csv")) 
+yhat_temp = read_csv(glue("{out}/yhat_values/log_inc_poly4_TempPred.csv"))
 yhat_temp_poly4 = read_csv(glue("{out}/yhat_values/log_inc_poly4_TempPredMinMax.csv")) #change input filename here for 50C max temperature
+yhat_inc$Model = "no Continent FE"
+yhat_temp$Model = "no Continent FE"
+yhat_temp_poly4$Model = "no Continent FE"
+
 yhat_inc_continent_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_fes_IncPred.csv"))
 yhat_temp_continent_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_fes_TempPred.csv"))
+yhat_inc_continent_fe$Model = "Continent FE"
+yhat_temp_continent_fe$Model = "Continent FE"
+
 yhat_inc_continent_year_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_year_fes_IncPred.csv"))
 yhat_temp_continent_year_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_continent_year_fes_TempPredMinMax.csv"))
+yhat_inc_continent_year_fe$Model = "Continent, Year FE"
+yhat_temp_continent_year_fe$Model ="Continent, Year FE"
+
 yhat_inc_year_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_year_fes_IncPred.csv"))
 yhat_temp_year_fe = read_csv(glue("{out}/yhat_values/log_inc_poly4_year_fes_TempPredMinMax.csv"))
+yhat_inc_year_fe$Model = "Year FE"
+yhat_temp_year_fe$Model = "Year FE"
 
 # graphs
 
 # temperature prediction with in-sample data limits
 temp_pred <- ggplot() + 
-  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share)) + 
+  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share), color = "lightblue") + 
   geom_ribbon(data=yhat_temp,aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
   geom_line(data = yhat_temp, aes(x = temp, y = yhat, linetype= "no Continent FE")) + labs(colour = "Log GDP PC") + 
@@ -78,11 +90,11 @@ temp_pred <- ggplot() +
   geom_line(data = yhat_temp_continent_fe, aes(x = temp, y = yhat, linetype= "Continent FE")) +
   geom_ribbon(data=yhat_temp_continent_year_fe%>% filter(temp <= 29 & temp >=7),aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
-  geom_line(data = yhat_temp_continent_year_fe%>% filter(temp <= 29 & temp >=7), aes(x = temp, y = yhat, linetype= "Continent + Year FE")) + 
+  geom_line(data = yhat_temp_continent_year_fe%>% filter(temp <= 29 & temp >=7), aes(x = temp, y = yhat, linetype= "Continent, Year FE")) + 
   geom_ribbon(data=yhat_temp_year_fe%>% filter(temp <= 29 & temp >=7),aes(x = temp, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
   geom_line(data = yhat_temp_year_fe %>% filter(temp <= 29 & temp >=7), aes(x = temp, y = yhat, linetype= "Year FE")) + 
-  scale_linetype_manual("Model", values = c("no Continent FE" = 1, "Continent FE" = 2, "Continent + Year FE" = 3, "Year FE" = 4)) + labs(colour = "LRT") + 
+  scale_linetype_manual("Model", values = c("no Continent FE" = 1, "Continent FE" = 2, "Continent, Year FE" = 3, "Year FE" = 4)) + labs(colour = "LRT") + 
   xlab("LRT - in sample") + ylab("predicted riskshare values- LR(T^K)")
 
 temp_pred
@@ -104,6 +116,7 @@ ggsave(glue("{out}/plot/predictions/temp_pred_scatter_min_max.pdf"), plot = temp
 # income predictions with in-sample min and max
 inc_pred <- ggplot()  + 
   geom_point(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y= ind_highrisk_share)) + 
+  geom_density(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y = after_stat(count)/2000 - 0.25)) +
   geom_ribbon(data=yhat_inc,aes(x = inc_log, ymin = lowerci_hi, ymax = upperci_hi), 
               inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
   geom_line(data = yhat_inc, aes(x= inc_log, y= yhat, linetype= "no Continent FE")) + labs(colour = "LRT") + 
@@ -123,6 +136,37 @@ inc_pred
 
 ggsave(glue("{out}/plot/predictions/inc_pred_continent_fe_scatter.pdf"), plot = inc_pred, width = 10, height = 7)
 
+
+# income predictions with in-sample min and max
+inc_pred_main <- ggplot()  + 
+  geom_point(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y= ind_highrisk_share + 0.25), color = 'lightblue') + 
+  geom_histogram(data = dat_ss, aes(x= log_gdppc_adm1_pwt_ds_15ma, y = ..count../sum(..count..)), fill = 'lightblue', bins = 20) +
+  geom_ribbon(data=yhat_inc,aes(x = inc_log, ymin = lowerci_hi + 0.25, ymax = upperci_hi + 0.25), 
+              inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
+  geom_line(data = yhat_inc, aes(x= inc_log, y= yhat + 0.25)) + labs(colour = "LRT") + 
+  xlab("Log GDP PC") + ylab("predicted riskshare values") + 
+  scale_y_continuous(labels = function(x) format(x-0.25), limits = c(0,1.3))
+
+inc_pred_main
+
+ggsave(glue("{out}/plot/predictions/inc_pred_main.pdf"), plot = inc_pred_main, width = 10, height = 7)
+
+
+# temperature prediction with in-sample data limits
+temp_pred_main <- ggplot() + 
+  geom_point(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y= ind_highrisk_share + 0.25), color = "lightblue") + 
+  geom_histogram(data = dat_ss, aes(x= tavg_1_pop_MA_30yr, y = ..count../sum(..count..)), fill = 'lightblue', bins = 20) +
+  geom_ribbon(data=yhat_temp_poly4 %>% filter(between(temp,0,30)),aes(x = temp, ymin = lowerci_hi + 0.25, ymax = upperci_hi + 0.25), 
+              inherit.aes = FALSE, alpha = 0.6, fill = "grey") + 
+  geom_line(data = yhat_temp_poly4 %>% filter(between(temp,0,30)), aes(x = temp, y = yhat + 0.25)) + labs(colour = "Log GDP PC")+ labs(colour = "LRT") + 
+  xlab("LRT - in sample") + ylab("predicted riskshare values- LR(T^K)")+ 
+  scale_y_continuous(labels = function(x) format(x-0.25), limits = c(0,1.3))
+
+temp_pred_main
+
+
+ggsave(glue("{out}/plot/predictions/temp_pred_main_scatter.pdf"), plot = temp_pred_main, width = 10, height = 7)
+
 # regressions for table
 
 fit1 = lm(ind_highrisk_share ~ tavg_1_pop_MA_30yr + tavg_2_pop_MA_30yr + 
@@ -132,12 +176,12 @@ summary(fit1)
 
 fit2 = lm(ind_highrisk_share ~ tavg_1_pop_MA_30yr + tavg_2_pop_MA_30yr + 
             tavg_3_pop_MA_30yr + tavg_4_pop_MA_30yr + 
-            log_gdppc_adm1_pwt_ds_15ma + factor(continent), data=dat)
+            log_gdppc_adm1_pwt_ds_15ma + relevel(factor(continent), ref = "Asia"), data=dat)
 summary(fit2)
 
 fit3 = lm(ind_highrisk_share ~ tavg_1_pop_MA_30yr + tavg_2_pop_MA_30yr + 
             tavg_3_pop_MA_30yr + tavg_4_pop_MA_30yr + 
-            log_gdppc_adm1_pwt_ds_15ma + factor(continent) + factor(year), data=dat)
+            log_gdppc_adm1_pwt_ds_15ma + relevel(factor(continent), ref = "Asia") + factor(year), data=dat)
 summary(fit3)
 
 fit4 = lm(ind_highrisk_share ~ tavg_1_pop_MA_30yr + tavg_2_pop_MA_30yr + 
@@ -146,13 +190,14 @@ fit4 = lm(ind_highrisk_share ~ tavg_1_pop_MA_30yr + tavg_2_pop_MA_30yr +
 summary(fit4)
 
 stargazer(fit1, fit2, fit3, fit4, title = "Risk-share Regression Results", align=TRUE, 
-          dep.var.caption = c("High risk share"), dep.var.labels = c(""), 
-          column.labels = c("without continent FE", "with continent FE", "with year and continent FE", "with year FE"), 
-          covariate.labels = c("Temperature", "Temperature^2", "Temperature^3",
-                               "Temperature^4", "Log Income", "Americas", 
-                               "Asia", "Europe", "Constant"), 
+          dep.var.caption = c("Share of high-risk workers"), dep.var.labels = c(""), 
+          covariate.labels = c("Long-run Avg. Daily Maximum Temperature",
+                               "Long-run Avg. Daily Maximum Temperature^2",
+                               "Long-run Avg. Daily Maximum Temperature^3",
+                               "Long-run Avg. Daily Maximum Temperature^4", "Log Income", "Africa", 
+                               "Americas", "Europe", "Constant"), 
           add.lines = list(c("Continent fixed effects", "No", "Yes", "Yes", "No"),c("Year fixed effects", "No", "No", "Yes", "Yes")),
-          omit.stat=c("ser","f"),
+          omit.stat=c("ser","f", "rsq"),
           omit = "year",
           no.space=TRUE)
 
