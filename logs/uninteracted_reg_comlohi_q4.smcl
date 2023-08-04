@@ -1,0 +1,100 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/rfrost/repos/labor-code-release-2020/logs/uninteracted_reg_comlohi_q4.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 Aug 2023, 09:12:43
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_comlohi"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. gl reg_list common by_risk
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each of the two regressions
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         di "`reg_list'"
+{txt}  3{com}. 
+.         use $dataset, clear
+{txt}  4{com}.         drop high_risk
+{txt}  5{com}.         rename high_risk2 high_risk
+{txt}  6{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  7{com}.                 sample 0.1
+{txt}  8{com}.         {c )-}
+{txt}  9{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt} 10{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt} 11{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt} 12{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 13{com}. 
+.         * differentiate treatment if reg is by risk
+.         if "`reg'" == "by_risk" loc reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt} 14{com}.         else if "`reg'" == "common" loc reg_treatment (${c -(}vars_T_splines{c )-})
+{txt} 15{com}.         else di in red "bad reg specification -> pick 'common' or 'by_risk'"
+{txt} 16{com}.         di "`reg_treatment'"
+{txt} 17{com}. 
+.         * both regressions have interacted controls
+.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 18{com}.         di "`reg_control'"
+{txt} 19{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 20{com}.         foreach f in $`fe' {c -(}
+{txt} 21{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 22{com}.         {c )-}
+{txt} 23{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/uninteracted_reg_`reg'_q4.ster"
+{txt} 24{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
+{txt} 25{com}. 
+.         * set the regression weight (pop_adj for common, risk_adj for by-risk)
+.         if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
+{txt} 26{com}.         else loc weight "risk_adj_sample_wgt"
+{txt} 27{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 28{com}.         reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 29{com}. 
+.         * count regression N by risk
+.         gen included = e(sample)
+{txt} 30{com}.         count if included == 1 & high_risk == 1
+{txt} 31{com}.         estadd scalar high_N = `r(N)'
+{txt} 32{com}.         count if included == 1 & high_risk == 0
+{txt} 33{com}.         estadd scalar low_N = `r(N)'
+{txt} 34{com}. 
+.         estimates notes: "`spec_desc'"
+{txt} 35{com}.         estimates save "`ster_name'", replace
+{txt} 36{com}. 
+.         di "COMPLETED: `reg' regression."
+{txt} 37{com}. 
+. {c )-}
+
+{txt}(Written by R.              )
+{res}{err}variable {bf}high_risk2{sf} not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. exit, clear
