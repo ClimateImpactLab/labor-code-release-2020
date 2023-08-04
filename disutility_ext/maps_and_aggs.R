@@ -67,7 +67,7 @@ dfb$h_dis <- (-1)*(dfb$d_h*dfb$wage)/0.5
 dfb$l_dis <- (-1)*(dfb$d_l*dfb$wage)/0.5
 
 #add up results over the full year
-effects <- aggregate(cbind(diff, d_h, d_l) ~ ISO + hierid, data = dfb, FUN = sum)
+effects <- aggregate(cbind(diff, d_h, d_l,diff_dis,h_dis, l_dis) ~ ISO + hierid, data = dfb, FUN = sum)
 effects <- merge(effects, soc_ec, by.x = "hierid", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
 
 #calculate disultility as % of annual income
@@ -94,7 +94,7 @@ effects$city <- ifelse(effects$hierid == "USA.3.101", "Pheonix (Maricopa County)
 effects$city <- ifelse(effects$hierid == "IRQ.10", "Baghdad", effects$city)
 
 key_irs <- subset(effects, city != "")
-key_irs <- subset(key_irs, select = c(city, HR_d_p_gdp, LR_d_p_gdp ))
+key_irs <- subset(key_irs, select = c(city, diff_dis_p, h_dis_p, l_dis_p ))
 
 write.csv(key_irs, "~/repos/labor-code-release-2020/disutility_ext/outputs/key_cities.csv")
 
@@ -135,7 +135,18 @@ ggplot(data = effects) +
   theme_void() +
   #scale_fill_gradient2(low="red",mid = "grey99", high = "navy", midpoint=0,na.value = "grey99",guide = "colourbar") +
   #theme(legend.key.height=unit(0.5, 'cm'),legend.position = "bottom", legend.key.width=unit(0.5, "cm"),axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title = element_text(family="Times New Roman",hjust = 0.5),panel.background = element_blank(),legend.title=element_text(size=10, family="Times New Roman"),legend.text=element_text(size=10,family="Times New Roman")) +
-  theme(legend.key.height=unit(0.5, 'cm'),legend.position = "bottom", legend.key.width=unit(0.5, "cm"),axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title = element_text(family="CenturySch",hjust = 0.5,),panel.background = element_blank(),legend.title=element_text(size=10, family="CenturySch"),legend.text=element_text(size=10,family="CenturySch")) +
+  #theme(legend.key.height=unit(0.5, 'cm'),legend.position = "bottom", legend.key.width=unit(0.5, "cm"),axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title = element_text(family="CenturySch",hjust = 0.5,),panel.background = element_blank(),legend.title=element_text(size=10, family="CenturySch"),legend.text=element_text(size=10,family="CenturySch")) +
+  theme(plot.title = element_text(hjust=0.5, size = 10), 
+        plot.caption = element_text(hjust=0.5, size = 7), 
+        legend.title = element_text(hjust=0.5, size = 10), 
+        legend.position = "bottom",
+        legend.text = element_text(size = 7),
+        axis.title= element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank()) +   
+  #labs(title = map.title, caption = caption_val) +
   # BOXES
   #geom_rect(aes(xmin = -88.893717 , xmax = -86.893717 , ymin = 40.813365 , ymax = 42.813365), color = "black", fill = NA, size =0.01)  +
   #geom_rect(aes(xmin = 9.716375 , xmax = 11.716375 , ymin = 58.970345 , ymax = 60.970345), color = "black", fill = NA, size =0.01)  +
@@ -151,25 +162,27 @@ ggplot(data = effects) +
     limits = limits_val, #center color scale so white is at 0
     breaks = breaks_labels_val, 
     labels = breaks_labels_val, #set freq of tick labels
-    guide = guide_colorbar(title = "WTP (% 2010 Income)",
+    guide = guide_colorbar(title = "Willingness to Pay for Low-Risk Job (% 2010 Income)",
                            direction = "horizontal",
                            barheight = unit(4, units = "mm"),
-                           barwidth = unit(200, units = "mm"),
+                           barwidth = unit(100, units = "mm"),
                            draw.ulim = F,
                            title.position = 'top',
                            title.hjust = 0.5,
-                           label.hjust = 0.7))
-ggsave("~/repos/labor-code-release-2020/disutility_ext/outputs/Value_LR_job_map.pdf",bg = "white")
+                           label.hjust = 0.5))
+
+ggsave("~/repos/labor-code-release-2020/disutility_ext/outputs/Value_LR_job_map.pdf",bg = "white",width = 8, height = 6)
 
 #  Make aggregations #
 
 # Global pop-weighted average # 
+
 effects <- subset(effects, effects$pop != 0)
 total_pop <- sum(effects$pop)
 effects$pw_dis_diff <- (effects$diff_dis_p)*(effects$pop/total_pop)
 world_pw_mean <- sum(effects$pw_dis_diff)
 
-USA <- subset(effects, ISO == "USA")
+USA <- subset(effects, ISO.x == "USA")
 USA_geo <- data.frame(do.call("rbind", strsplit(as.character(USA$hierid), ".", fixed = TRUE)))
 USA <- cbind(USA, USA_geo)
 USA  <- USA  %>% rename("state_code" = "X2")
@@ -183,44 +196,40 @@ alaska_pop <- sum(alaska$pop)
 alaska$pw_dis_diff <- (alaska$diff_dis_p)*(alaska$pop/alaska_pop)
 alaska_pw_mean <- sum(alaska$pw_dis_diff)
 
-CAN <- subset(effects, ISO == "CAN")
+CAN <- subset(effects, ISO.x == "CAN")
 can_pop <- sum(CAN$pop)
 CAN$pw_dis_diff <- (CAN$diff_dis_p)*(CAN$pop/can_pop)
 can_pw_mean <- sum(CAN$pw_dis_diff)
 
-CAN <- subset(effects, ISO == "CAN")
-can_pop <- sum(CAN$pop)
-CAN$pw_dis_diff <- (CAN$diff_dis_p)*(CAN$pop/can_pop)
-can_pw_mean <- sum(CAN$pw_dis_diff)
 
-SDN <- subset(effects, ISO == "SDN")
+SDN <- subset(effects, ISO.x == "SDN")
 sdn_pop <- sum(SDN$pop)
 SDN$pw_dis_diff <- (SDN$diff_dis_p)*(SDN$pop/sdn_pop)
 sdn_pw_mean <- sum(SDN$pw_dis_diff)
 
-IND <- subset(effects, ISO == "IND")
+IND <- subset(effects, ISO.x == "IND")
 ind_pop <- sum(IND$pop)
 IND$pw_dis_diff <- (IND$diff_dis_p)*(IND$pop/ind_pop)
-idn_pw_mean <- sum(IND$pw_dis_diff)
+ind_pw_mean <- sum(IND$pw_dis_diff)
 
-PAK <- subset(effects, ISO == "PAK")
+PAK <- subset(effects, ISO.x == "PAK")
 pak_pop <- sum(PAK$pop)
 PAK$pw_dis_diff <- (PAK$diff_dis_p)*(PAK$pop/pak_pop)
 pak_pw_mean <- sum(PAK$pw_dis_diff)
 
-CHN <- subset(effects, ISO == "CHN")
+CHN <- subset(effects, ISO.x == "CHN")
 chn_pop <- sum(CHN$pop)
 CHN$pw_dis_diff <- (CHN$diff_dis_p)*(CHN$pop/chn_pop)
 chn_pw_mean <- sum(CHN$pw_dis_diff)
 
-BRA <- subset(effects, ISO == "BRA")
+BRA <- subset(effects, ISO.x == "BRA")
 bra_pop <- sum(BRA$pop)
 BRA$pw_dis_diff <- (BRA$diff_dis_p)*(BRA$pop/bra_pop)
 bra_pw_mean <- sum(BRA$pw_dis_diff)
 
-AUS <- subset(effects, ISO == "AUS")
+AUS <- subset(effects, ISO.x == "AUS")
 aus_pop <- sum(AUS$pop)
-AUS$pw_dis_diff <- (AUS$diff_dis_p)*(AUS$pop/bra_pop)
+AUS$pw_dis_diff <- (AUS$diff_dis_p)*(AUS$pop/aus_pop)
 aus_pw_mean <- sum(AUS$pw_dis_diff)
 
 #get continents and regions!
@@ -234,12 +243,28 @@ sub_saharan_africa <- subset(conts, sub_region == "Sub-Saharan Africa")
 europe <- as.matrix(unique(europe$iso))
 sub_saharan_africa <- unique(sub_saharan_africa$iso)
 
-EUR <- subset(effects, ISO %in% europe)
+EUR <- subset(effects, ISO.x %in% europe)
 EUR_pop <- sum(EUR$pop)
-EUR$pw_dis_diff <- (EUR$diff_dis_p)*(EUR$pop/bra_pop)
+EUR$pw_dis_diff <- (EUR$diff_dis_p)*(EUR$pop/EUR_pop)
 eur_pw_mean <- sum(EUR$pw_dis_diff)
 
-SSA <- subset(effects, ISO %in% sub_saharan_africa)
+SSA <- subset(effects, ISO.x %in% sub_saharan_africa)
 ssa_pop <- sum(EUR$pop)
 SSA$pw_dis_diff <- (SSA$diff_dis_p)*(SSA$pop/ssa_pop)
 ssa_pw_mean <- sum(SSA$pw_dis_diff)
+
+agg_titles <- c("World", "USA", "Alaska", "Canada","Sudan","India", "Pakisan","China","Brazil","Australia","Sub-Saharan Africa","Europe")
+agg_values <- c(world_pw_mean, usa_pw_mean, alaska_pw_mean, can_pw_mean, sdn_pw_mean, ind_pw_mean, pak_pw_mean, chn_pw_mean, bra_pw_mean, aus_pw_mean, ssa_pw_mean, eur_pw_mean)
+
+aggregates <- as.data.frame(cbind(agg_titles,agg_values))
+
+fwrite(aggregates,"~/repos/labor-code-release-2020/disutility_ext/outputs/regional_aggregates.csv")
+
+#Quantiles
+effects$pop_w <- (effects$pop/total_pop)
+quants <- as.matrix(quantile(effects$dis_diff ,na.rm = T, probs = c(0.05,0.1, 0.25,0.5,0.75,0.90,0.95), weights = pop_w))
+percs <- c("5th","10th","25th","50th","75th","90th","95th")
+
+pw_quants <- as.data.frame(cbind(percs,quants))
+fwrite(pw_quant,"~/repos/labor-code-release-2020/disutility_ext/outputs/pop_w_quantiles.csv")
+
