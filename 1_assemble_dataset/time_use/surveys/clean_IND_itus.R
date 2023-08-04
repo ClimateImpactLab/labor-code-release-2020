@@ -52,7 +52,7 @@ b0.1 = read_dta(glue("{input}/Block-0-1-Identification-Household-Characteristics
 		hhsize = B1_q1 # this one is the same as old data
 		) %>%
 	rename(Key_hhold = Hhold_key) %>%
-	select( # select the datat we want and variables needed for merging (come back to this)
+  dplyr::select( # select the datat we want and variables needed for merging (come back to this)
 		Key_hhold, State, District, hhsize
 		)
 	# mutate_if(is.labelled, as_factor) %>%
@@ -64,7 +64,8 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 	rename(
 		sex = B2_c4,
 		age = B2_c5, # same as old data
-		industry = B2_c11 
+		industry = B2_c11, 
+		ent_stat = B2_c9
 		) %>%
 	mutate(
 		male = ifelse(sex == 1, 1, 0), #same as old data
@@ -77,6 +78,7 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 			1,
 			0
 			),
+		self_emp = ifelse(ent_stat == 11, 1, 0),
 		high_risk = ifelse(
 			high_risk_old == 1 | (industry >= 700 & industry < 740), # add in transportation
 			1,
@@ -84,8 +86,8 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 			)
 		) %>%
 	rename(Key_membno = Key_Membno) %>%
-	select( # select the datat we want and variables needed for merging (come back to this)
-		Key_hhold, Key_membno, sex, age, male, high_risk_old, high_risk #age, age2,
+  dplyr::select( # select the datat we want and variables needed for merging (come back to this)
+		Key_hhold, Key_membno, sex, age, male, high_risk_old, high_risk, self_emp #age, age2,
 		) %>%
 	distinct() # filter out a handful of duplicated obs
 
@@ -101,7 +103,7 @@ b3 = read_dta(glue("{input}/Block-3-Time-disposition-selected-days-week-records.
 		sample_wgt = wgt_combined_dt,
 		age_b3 = age
 		) %>%
-	select(Key_membno, Key_hhold, response_code, date_normal, date_weekly_variant, date_abnormal, age_b3, sample_wgt) %>%
+  dplyr::select(Key_membno, Key_hhold, response_code, date_normal, date_weekly_variant, date_abnormal, age_b3, sample_wgt) %>%
 	group_by(Key_membno, Key_hhold, response_code, age_b3) %>%
 	summarize(
 		# in some cases, it seems like there are multiple observations per individual.
@@ -128,7 +130,7 @@ b3 = read_dta(glue("{input}/Block-3-Time-disposition-selected-days-week-records.
 				)
 			)
 		) %>%
-	select(-date_type) %>%
+  dplyr::select(-date_type) %>%
 	filter(date != 0) %>% # we've done what we can to recover correct dates, missing dates are now dropped.
 	distinct(Key_membno, Key_hhold, date, day_type, .keep_all=TRUE) %>% # in some cases, an id appears twice. we keep only the first one
 	filter( 
@@ -148,9 +150,10 @@ b3.5 = read_dta(glue("{input}/Block-3-Item-5-Particulars-activity-selected-days-
 		) %>%
 	mutate(
 		is_work = ifelse(activity_code <= 329 | activity_code %in% c(751, 892), 1, 0),
+		high_risk2 = ifelse(activity_code <= 229 | activity_code == 312 | activity_code == 313 | activity_code == 314 | activity_code == 315 | activity_code == 316 | activity_code == 317 | activity_code == 318 | activity_code == 319 | activity_code == 326, 1, 0),
 		day_type = as.numeric(day_type)
 		) %>%
-	select(Key_membno, Key_hhold, day_type, time_spent, activity_code, is_work)
+  dplyr::select(Key_membno, Key_hhold, day_type, time_spent, activity_code, is_work, high_risk2)
 
 b3_5_raw = read_dta(glue("{input}/Block-3-Item-5-Particulars-activity-selected-days-records.dta"))
 
@@ -159,6 +162,7 @@ b3_all = left_join(b3, b3.5, by=c('Key_membno', 'Key_hhold', 'day_type')) %>%
 	dplyr::group_by(Key_membno, Key_hhold, date, day_type) %>%
 	dplyr::summarize(
 		mins_worked = sum(time_spent[is_work == 1]),
+		mins_worked_hr = sum(time_spent[is_work == 1 & high_risk2 ==1]),
 		mins_not_worked = sum(time_spent[is_work == 0]),
 		total_mins = sum(time_spent),
 		sample_wgt = first(sample_wgt),
@@ -166,6 +170,10 @@ b3_all = left_join(b3, b3.5, by=c('Key_membno', 'Key_hhold', 'day_type')) %>%
 		) %>%
 	filter(total_mins <= 1440) %>% # filter out the 4 observations where the minutes add up to 2880 (48 hours)
 	data.table()
+
+b3_all$perc_hr <- ifelse(b3_all$mins_worked == 0, NA, b3_all$mins_worked_hr/b3_all$mins_worked)
+
+b3_all$high_risk2 <- ifelse(b3_all$perc_hr >= 0.5, 1, 0)
 
 
 expect(
@@ -227,7 +235,7 @@ final_dataset = all_geo %>%
 		ind_id = group_indices(., Key_membno, Key_hhold)
 		) %>% 
 	dplyr::select(
-		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, hhsize, sample_wgt
+		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, high_risk2, self_emp, hhsize, sample_wgt
 		) %>% 
 	filter(
 		year == 1999 | year == 1998,
@@ -239,8 +247,8 @@ final_dataset = all_geo %>%
 
 # head(final_dataset)
 
-write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use.csv"))
-write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use.dta"))
+write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_SE.csv"))
+write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_SE.dta"))
 
 location_names = final_dataset %>%
 	dplyr::select(

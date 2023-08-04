@@ -19,20 +19,20 @@ global t_version_list tmax
 global chn_week_list chn_prev_week
 
 * possible values: splines_wchn, splines_nochn, polynomials_wchn, polynomials_nochn, bins_nochn, bins_wchn
-global variables_list polynomials_wchn
+global variables_list splines_nochn
 
 * set which parts of the code we want to run and how many lead/lag weeks we want
 * possible values: YES or NO
 global drop_holidays "YES"
 global clean_raw_surveys "NO"
-global combine_surveys "NO"
-global include_chn "YES" 
+global combine_surveys "YES"
+global include_chn "NO" 
 
 * set the following global to lcl or no_ll
-global leadlag "no_ll"
+global leadlag "lcl"
 * number of weeks we want for the lead/lag weeks
 * global n_ll 1 * for 1 week of lead and lag
-global n_ll 0
+global n_ll 1
 
 ******* parameters that need to be modified *******
 
@@ -56,7 +56,7 @@ if "${combine_surveys}" == "YES" {
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
 	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
-	import delimited using "$temp_path/all_time_use.csv", clear
+	import delimited using "$temp_path/all_time_use_SE.csv", clear
 
 	count
 
@@ -85,7 +85,7 @@ if "${combine_surveys}" == "YES" {
 	drop if missing(hhsize)
 	drop if missing(date)
 
-	save "$temp_path/all_time_use_clean.dta", replace
+	save "$temp_path/all_time_use_clean_SE.dta", replace
 
 	****** merge in income and population ***********
 	* do  "$/1_preparation/income/map_names.do"
@@ -120,10 +120,10 @@ if "${combine_surveys}" == "YES" {
 	drop year
 
 	* all merged
-	merge 1:n adm1_id using "$temp_path/all_time_use_clean.dta", nogen keep(3)
+	merge 1:n adm1_id using "$temp_path/all_time_use_clean_SE.dta", nogen keep(3)
 	*cap drop dow
 	*drop adm1_id_old
-	save "$temp_path/all_time_use_pop_merged.dta", replace
+	save "$temp_path/all_time_use_pop_merged_SE.dta", replace
 
 	*****************************
 	****** adjust weight ********
@@ -132,7 +132,7 @@ if "${combine_surveys}" == "YES" {
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
 	
 	
-	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted_SE.dta", clear
 
 	* generate new weights: population weights separated by high and low risk
 	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
@@ -181,7 +181,7 @@ if "${combine_surveys}" == "YES" {
 
 	drop *sum_sample
 
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_SE.dta", replace
 
 
 	*****************************
@@ -190,13 +190,13 @@ if "${combine_surveys}" == "YES" {
 
 	* filter out remaining holidays
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked_SE.dta", clear
 	
 	* drop holidays if we want
 	if "${drop_holidays}" == "YES" {
 		drop if is_holiday == 1		
 	}
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_SE.dta", replace
 	
 }
 
@@ -306,7 +306,7 @@ foreach t_version in $t_version_list {
 
 			* this is the cleaned and merged time use data file
 			* with weights generated, income merged, and holidays labeled
-			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", clear
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_SE.dta", clear
 			cap drop adm1_id_old
 
 			cap restore, not
@@ -402,7 +402,7 @@ foreach t_version in $t_version_list {
 			gen week_fe = date
 			replace week_fe = week(week_fe)
 			
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}.dta", replace
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_SE.dta", replace
 		}
 	}
 }

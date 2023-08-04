@@ -34,6 +34,11 @@ replace male = 0 if male == 2
 * hhsize
 rename v209 hhsize 
 
+* self employment
+rename v409 class_w
+gen self_emp =1 if class_w == 3
+replace self_emp = 0 if class_w <  3 | class_w >  3
+
 * high_risk
 rename v408a economic_activity
 gen high_risk = 0
@@ -42,6 +47,24 @@ replace high_risk = 1 if economic_activity >= 23 & economic_activity <= 45
 replace high_risk = 1 if inlist(economic_activity, 60,61,62,92)
 drop if economic_activity == 0
 drop if missing(economic_activity)
+
+*high risk 2
+rename v407a occup 
+gen high_risk2 = 1 if occup >= 1 & occup <= 5 
+replace high_risk2 = 1 if occup >= 104 & occup <= 105
+replace high_risk2 = 1 if occup == 39
+replace high_risk2 = 1 if occup >= 111 & occup <= 112
+replace high_risk2 = 1 if occup >= 61 & occup <= 64
+replace high_risk2 = 1 if occup >= 71 & occup <= 73
+replace high_risk2 = 1 if occup >= 76 & occup <= 78
+replace high_risk2 = 1 if occup >= 81 & occup <= 84
+replace high_risk2 = 1 if occup == 86
+replace high_risk2 = 1 if occup == 87
+replace high_risk2 = 1 if occup == 91
+replace high_risk2 = 1 if occup == 95
+replace high_risk2 = 1 if occup == 99
+replace high_risk2 = 0 if high_risk2 != 1 & occup != .
+
 
 
 * region
@@ -183,9 +206,9 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 self_emp hhsize sample_wgt
 
 
-save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace
+save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_SE.dta", replace
 
-export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_SE.csv", replace

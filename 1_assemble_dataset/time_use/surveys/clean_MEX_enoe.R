@@ -146,10 +146,12 @@ sociodemo = read_data('sdemt') %>%
 		sex = SEX,
 		age = EDA,
 		industry = SCIAN,
-		sample_wgt = FAC
+		sample_wgt = FAC,
+		class_w = POS_OCU,
+		occ = C_OCU11C
 		) %>%
 	mutate_at(
-		vars(age, industry, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, 
+		vars(age, industry, occ, class_w, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG,
 			N_REN, H_MUD, UPM, PER, sample_wgt, municipality),
 		~ as.numeric(as.character(.), stringsAsFactors=FALSE)
 		) %>%
@@ -166,6 +168,8 @@ sociodemo = read_data('sdemt') %>%
 		# and gas generation (3), construction (4), manufacturing (5),
 		# transportation (8)
 		high_risk = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
+		high_risk2 = ifelse(occ %in% c(5, 7, 9, 10), 1, 0),
+		self_emp = ifelse(class_w == 3, 1, 0),
 		# create an ID variable--first step of this is to get an identifier for
 		# that tracks each round of the five-round panel
 		# see ENOEROtación de panel y CONSECUTIVO.pdf for information about this
@@ -173,12 +177,14 @@ sociodemo = read_data('sdemt') %>%
 		) %>%
 	as.data.table() %>% # switch to data.table for speed
 	.[,id := .GRP, by=c('consecutivo', 'CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'N_REN', 'H_MUD')] %>%
-	select(
+  dplyr::select(
 		id, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, N_REN, H_MUD, UPM, PER,
-		municipality, state, sex, age, industry, sample_wgt, 
-		male, high_risk
+		municipality, state, sex, age, industry, occ, sample_wgt, 
+		male, high_risk, high_risk2, self_emp
 		) %>%
 	data.table()
+
+
 
 # 2.2. Process data for HOGARES (hogt) table
 hogares = read_data('hogt') %>%
@@ -196,7 +202,7 @@ hogares = read_data('hogt') %>%
 		month = D_MES,
 		year = D_ANIO
 		) %>%
-	select(
+  dplyr::select(
 		CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, H_MUD, UPM, PER,
 		day, month, year
 		) %>%
@@ -211,7 +217,7 @@ vivienda = read_data('vivt') %>%
 		vars(CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, PER, hhsize),
 		~ as.numeric(as.character(.), stringsAsFactors=FALSE)
 		) %>%
-	select(
+  dplyr::select(
 		CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, UPM, hhsize, PER
 		) %>%
 	data.table()
@@ -249,20 +255,26 @@ ca = read_data('coe1t') %>%
 			.
 			)
 		) %>%
-	select(-time_worked_TDIA, -P5C) %>%
+  dplyr::select(-time_worked_TDIA, -P5C) %>%
 	rename(
 		hrs_worked = time_worked_THRS
 		) %>%
 	mutate(
 		# replace non-response with actual NAs
 		hrs_worked = ifelse(hrs_worked == 999, NA, hrs_worked),
-		mins_worked = rowSums(select(., starts_with('time_worked')), na.rm=TRUE),
+		mins_worked = rowSums(dplyr::select(., starts_with('time_worked')), na.rm=TRUE),
 		) %>%
-	select(
+  dplyr::select(
 		CD_A, ENT, CON, V_SEL, N_HOG, H_MUD, N_PRO_VIV, N_ENT, N_REN, UPM, PER,
 		hrs_worked, mins_worked
 		) %>%
 	data.table()
+
+#extra table
+pw = read_data('coe2t') 
+pw$piece_work <- ifelse(pw$P6_2 == 1, 1, 0)
+pw = subset(pw, select = c(CD_A, ENT, CON, V_SEL, N_HOG, H_MUD, N_PRO_VIV, N_ENT, UPM, PER, piece_work))
+pw$piece_work <- ifelse(is.na(pw$piece_work),0,pw$piece_work)
 
 # Note that the "hours worked" (weekly hours reported as a total by the interviewee) 
 # and "minutes worked" (calculated from the daily hours and minutes reported 
@@ -289,6 +301,11 @@ outcome = merge(
 		by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'H_MUD', 'N_PRO_VIV', 
 			'N_ENT', 'N_REN', 'UPM', 'PER')
 		) %>%
+  merge(
+    pw,
+    by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'H_MUD', 'N_PRO_VIV', 
+         'N_ENT', 'N_REN', 'UPM', 'PER')
+  ) %>%
 	mutate(
 		year = year + 2000,
 		date = as.Date(glue('{year}/{month}/{day}')),
@@ -312,7 +329,7 @@ outcome = merge(
 
 # keep only distinct obs
 enoe_geo = outcome %>% 
-	select(state, municipality) %>%
+  dplyr::select(state, municipality) %>%
 	unique()
 
 # note that this is done preserving accents, as accented characters seem to be
@@ -330,7 +347,7 @@ enoe_cw = fread(
 		state_name = "NOMBRE.ENTIDAD.FEDERATIVA",
 		municipality_name = "NOMBRE.DE.MUNICIPIO./.DEMARCACI\303\223N.TERRITORIAL"
 		) %>%
-	select(
+  dplyr::select(
 		state, state_name, municipality, municipality_name
 		)
 
@@ -342,7 +359,7 @@ shp = st_read(
 	layer = 'national_municipal'
 	) %>%
 	as.data.table() %>%
-	select(NOM_ENT, NOM_MUN, CVEGEO) %>%
+  dplyr::select(NOM_ENT, NOM_MUN, CVEGEO) %>%
 	rename(
 		state_name = NOM_ENT,
 		municipality_name = NOM_MUN
@@ -356,9 +373,9 @@ final = outcome %>%
 	rename(
 		ind_id = id
 		) %>% 
-	select(
+  dplyr::select(
 		ind_id, state_name, municipality_name, 
-		prev_sunday, mins_worked, male, age, high_risk, hhsize, 
+		prev_sunday, mins_worked, male, age, high_risk, high_risk2, self_emp, hhsize, 
 		sample_wgt
 		) %>% 
 	mutate(
@@ -366,14 +383,14 @@ final = outcome %>%
 		month = month(prev_sunday),
 		day = day(prev_sunday)
 		) %>%
-	select(
+  dplyr::select(
 		-prev_sunday)
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_SE.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_SE.dta"))
 
 location_names = final %>% 
-	select(state_name, municipality_name) %>%
+  dplyr::select(state_name, municipality_name) %>%
 	distinct()
 fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_location_names.csv"))
 

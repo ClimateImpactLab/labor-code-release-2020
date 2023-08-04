@@ -1,0 +1,101 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/rfrost/repos/labor-code-release-2020/logs/interacted_splines_bra.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}28 Jun 2023, 11:58:21
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_OUTPUT{c )-}/interacted_reg_output/ster"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. gl reg_list 1_factor 2_factor
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each of the two regressions
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         di "`reg_list'"
+{txt}  3{com}. 
+.         use $dataset, clear
+{txt}  4{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  5{com}.                 sample 0.1
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt}  8{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt}  9{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt} 10{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 11{com}. 
+.         * differentiate treatment if reg is by risk
+.         if "`reg'" == "1_factor" loc reg_treatment (${c -(}vars_T_splines{c )-} ${c -(}vars_T_x_gdp_splines{c )-})##i.high_risk
+{txt} 12{com}.         else if "`reg'" == "2_factor" loc reg_treatment (${c -(}vars_T_splines{c )-} ${c -(}vars_T_x_gdp_splines{c )-} ${c -(}vars_T_x_lr_tmax_splines{c )-})##i.high_risk
+{txt} 13{com}.         else di in red "bad reg specification -> pick '1 factor' or '2 factor'"
+{txt} 14{com}.         di "`reg_treatment'"
+{txt} 15{com}. 
+.         * both regressions have interacted controls
+.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 16{com}.         di "`reg_control'"
+{txt} 17{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 18{com}.         foreach f in $`fe' {c -(}
+{txt} 19{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 20{com}.         {c )-}
+{txt} 21{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/interacted_reg_`reg'_bra.ster"
+{txt} 22{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
+{txt} 23{com}. 
+.         * set the regression weight
+.         loc weight "rep_unit_year_sample_wgt"
+{txt} 24{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 25{com}.         reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'] if ISO == "BRA", absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 26{com}. 
+.         * count regression N by risk
+.         gen included = e(sample)
+{txt} 27{com}.         count if included == 1 & high_risk == 1
+{txt} 28{com}.         estadd scalar high_N = `r(N)'
+{txt} 29{com}.         count if included == 1 & high_risk == 0
+{txt} 30{com}.         estadd scalar low_N = `r(N)'
+{txt} 31{com}. 
+.         estimates notes: "`spec_desc'"
+{txt} 32{com}.         estimates save "`ster_name'", replace
+{txt} 33{com}. 
+.         di "COMPLETED: `reg' regression."
+{txt} 34{com}. 
+. {c )-}
+
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6 c.tmax_rcspl_3kn_t0#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v6#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v6#c.log_gdp_pc_adm1)##i.high_risk
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6 c.tmax_rcspl_3kn_t0#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v6#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v6#c.log_gdp_pc_adm1)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = rep_unit_year_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{err}ISO not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. exit, clear
