@@ -9,6 +9,7 @@ library(sf)
 library(scales)
 library(purrr)
 library(glue)
+library(Hmisc)
 
 # Code to make the Dataset - DON'T RUN THIS IT TAKES FOREVER, this is just here for documentation
 
@@ -91,7 +92,7 @@ effects$city <- ifelse(effects$hierid == "NGA.25.510", "Lagos", effects$city)
 effects$city <- ifelse(effects$hierid == "NOR.12.288", "Oslo", effects$city)
 effects$city <- ifelse(effects$hierid == "NOR.12.288", "Oslo", effects$city)
 effects$city <- ifelse(effects$hierid == "USA.3.101", "Pheonix (Maricopa County)", effects$city)
-effects$city <- ifelse(effects$hierid == "IRQ.10", "Baghdad", effects$city)
+effects$city <- ifelse(effects$hierid == "IRQ.10.55", "Baghdad", effects$city)
 
 key_irs <- subset(effects, city != "")
 key_irs <- subset(key_irs, select = c(city, diff_dis_p, h_dis_p, l_dis_p ))
@@ -262,9 +263,10 @@ fwrite(aggregates,"~/repos/labor-code-release-2020/disutility_ext/outputs/region
 
 #Quantiles
 effects$pop_w <- (effects$pop/total_pop)
-quants <- as.matrix(quantile(effects$dis_diff ,na.rm = T, probs = c(0.05,0.1, 0.25,0.5,0.75,0.90,0.95), weights = pop_w))
+
+quants <- as.matrix(weighted.quantile(effects$diff_dis_p, weights = effects$pop_w, probs = c(0.05,0.1, 0.25,0.5,0.75,0.90,0.95)))
 percs <- c("5th","10th","25th","50th","75th","90th","95th")
 
 pw_quants <- as.data.frame(cbind(percs,quants))
-fwrite(pw_quant,"~/repos/labor-code-release-2020/disutility_ext/outputs/pop_w_quantiles.csv")
+fwrite(pw_quants,"~/repos/labor-code-release-2020/disutility_ext/outputs/pop_w_quantiles.csv")
 
