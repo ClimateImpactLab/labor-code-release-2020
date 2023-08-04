@@ -44,7 +44,7 @@ library(data.table)
 library(haven)
 library(testthat)
 library(foreign)
-cilpath.r:::cilpath()
+#cilpath.r:::cilpath()
 
 input = glue("{ROOT_INT_DATA}/surveys/WEU_MTUS/raw_data/")
 
@@ -72,26 +72,34 @@ gbr = read_dta(glue("{input}/SupplementaryData/region-race-uk.dta")) %>%
 fra = read_dta(glue("{input}/SupplementaryData/region-race-fra1998.dta")) %>%
 	data.frame() %>%
 	zap_labels() %>%
-	select(-ethnic) %>%
+  dplyr::select(-ethnic) %>%
 	distinct() # drop duplicates
 
 esp = read_dta(glue("{input}/SupplementaryData/region-race-spa.dta")) %>%
 	data.frame() %>%
 	zap_labels() %>%
-	select(-ethnic) %>%
+  dplyr::select(-ethnic) %>%
 	distinct() # drop duplicates
 
 # merge by country, then rbind
+
 gbr_comb = comb %>%
-	filter(countrya == 37) %>%
-	mutate(iso = "GBR") %>%
-	merge(gbr, all.x=FALSE, by=c("countrya", "survey", "hldid", "persid"))
+  filter(countrya == 37) %>%
+  mutate(iso = "GBR") 
+
+gbr_comb$persid <- as.double(gbr_comb$persid)
+
+gbr_comb = gbr_comb %>%
+  merge(gbr, all.x=FALSE, by=c("countrya", "survey", "hldid", "persid"))
 
 fra_comb = comb %>%
-	filter(countrya == 12) %>%
-	mutate(iso = "FRA") %>%
-	merge(fra, all.x=FALSE, by=c("countrya", "survey", "swave", "msamp", "hldid", "persid"))
+  filter(countrya == 12) %>%
+  mutate(iso = "FRA") 
 
+fra_comb$hldid <- as.double(fra_comb$hldid)
+
+fra_comb =  fra_comb %>%
+  merge(fra, all.x=FALSE, by=c("countrya", "survey", "swave", "msamp", "hldid", "persid"))
 
 # !!!!! all.x changed from TRUE to FALSE, no effect on france, but elimited some obs for spain
 esp_comb = comb %>%
@@ -117,7 +125,7 @@ ep_adult = fread(glue("{input}/MTUS-adult-episode.csv"))
 ep_child = fread(glue("{input}/MTUS-child-episode.csv"))
 
 ep = rbind(ep_adult, ep_child)   %>%
-	select(countrya, survey, swave, msamp, hldid, persid, id, day, cday, month, year) %>%
+  dplyr::select(countrya, survey, swave, msamp, hldid, persid, id, day, cday, month, year) %>%
 	mutate(
 		id = ifelse(id > 13 & id == persid, 1, id)
 		)%>%
@@ -133,7 +141,7 @@ comb_all = comb_geo %>%
 #########################################################
 
 
-comb_all[comb_all < 0] <-NA
+comb_all[comb_all < 0] <- NA
 
 final = comb_all %>%
 	filter(
@@ -146,10 +154,12 @@ final = comb_all %>%
 		) %>%
 	mutate( 
 		# create the variables that will be used in the estimating dataset
-		mins_worked = rowSums(select(., main7, main8, main9, main10, main11, main12, main13, main14), na.rm=TRUE),
-		total_mins = rowSums(select(., starts_with("main")), na.rm=TRUE),
+		mins_worked = rowSums(dplyr::select(., main7, main8, main9, main10, main11, main12, main13, main14), na.rm=TRUE),
+		total_mins = rowSums(dplyr::select(., starts_with("main")), na.rm=TRUE),
 		mins_not_worked = total_mins - mins_worked,
 		high_risk = ifelse(occup %in% c(12, 13), 1, 0),
+		high_risk2 = ifelse(occup %in% c(10, 12, 13), 1, 0),
+		self_emp = ifelse(occup ==14, 1, 0),
 		male = ifelse(sex == 1, 1, 0),
 		) %>%
 	rename(
@@ -165,8 +175,8 @@ expect(all(final$mins_worked + final$mins_not_worked == final$total_mins, na.rm=
 
 # need to add a region name column here that will allow for matching with shapefiles
 final = final %>% 
-	select( # select the variables we want to write out into the estimating dataset
-		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk, age, male, hhsize, propwt, region
+  dplyr::select( # select the variables we want to write out into the estimating dataset
+		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk,  high_risk2, self_emp, age, male, hhsize, propwt, region
 		) %>% 
 	mutate(
 		ind_id = group_indices(., countrya, survey, swave, msamp, hldid, persid)
@@ -176,41 +186,41 @@ final = final %>%
 		sample_wgt = propwt,
 		region_code = region
 		) %>% 
-	select(
-		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, age, male, hhsize, sample_wgt
+  dplyr::select(
+		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, high_risk2, self_emp, age, male, hhsize, sample_wgt
 		)
 
 final_gbr = final %>% 
 	filter(
 		iso == "GBR") %>% 
-	select(
+  dplyr::select(
 		-iso)
 
 final_fra = final %>% 
 	filter(
 		iso == "FRA") %>% 
-	select(
+  dplyr::select(
 		-iso)
 
 final_esp = final %>% 
 	filter(
 		iso == "ESP") %>% 
-	select(
+  dplyr::select(
 		-iso)
 
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.dta"))
-fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.csv"))
-fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.csv"))
-fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.csv"))
-write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.dta"))
-write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.dta"))
-write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_SE.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_SE.dta"))
+fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_SE.csv"))
+fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_SE.csv"))
+fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_SE.csv"))
+write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_SE.dta"))
+write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_SE.dta"))
+write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_SE.dta"))
 
 
 final  = final %>%
-	select( # select the variables we want to write out into the estimating dataset
+  dplyr::select( # select the variables we want to write out into the estimating dataset
 		iso, region_code
 		) %>%
 	distinct()

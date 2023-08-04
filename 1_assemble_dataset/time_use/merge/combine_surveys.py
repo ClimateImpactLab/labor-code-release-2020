@@ -1,11 +1,11 @@
 # this file takes the cleaned survey data and match the region names to admin ids using crosswalks
 
 import sys
-sys.path.insert(0, '~/repos/labor-code-release-2020/0_subroutines') 
+sys.path.append('/home/rfrost/repos/labor-code-release-2020/0_subroutines/') 
 import paths
 import pandas as pd
 import re
-import cilpath
+# import cilpath
 import geopandas as gpd
 from pandas import ExcelFile
 
@@ -35,9 +35,9 @@ for country in ['USA','MEX','BRA','FRA','GBR','ESP','IND','CHN']:
 survey_names = ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS' ,'IND_ITUS','MEX_ENOE','CHN_CHNS']
 surveys = {}
 for s in survey_names:
-  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use.csv")
+  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use_SE.csv")
 
-columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','male','sample_wgt']
+columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','high_risk2','self_emp','male','sample_wgt']
 
 surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
   cw['ESP'],
@@ -99,5 +99,5 @@ for s in ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_
   all_surveys = pd.concat([all_surveys,surveys[s]], axis = 0)
 
 
-all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use.csv", index = False)
+all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use_SE.csv", index = False)
 

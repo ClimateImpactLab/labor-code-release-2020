@@ -58,6 +58,7 @@ library(testthat)
 library(arules)
 library(parallel)
 library(foreign)
+library(dplyr)
 
 cores = detectCores()
 
@@ -74,14 +75,14 @@ atussum = fread(glue("{input}/atussum_0314/atussum_0314.dat")) %>%
 		empstat = TRDPFTPT, # see atussum_0314.do for employment status information.
 		sex = TESEX,
 		age = TEAGE
-		) %>%
-	mutate(
-		total_mins = rowSums(select(., starts_with("t", ignore.case=FALSE))),
-		mins_worked = rowSums(select(., starts_with("t05"))),
-		mins_not_worked = rowSums(select(select(., starts_with("t", ignore.case=FALSE)), -starts_with("t05"))),
-		male = ifelse(sex == 1, 1, 0),
-		) %>%
-	select(id, empstat, sex, age, total_mins, mins_worked, mins_not_worked, male)
+		) 
+
+atussum$total_mins = as.matrix(rowSums(dplyr::select(atussum, starts_with("t", ignore.case=FALSE))))
+atussum$mins_worked = as.matrix(rowSums(dplyr::select(atussum, starts_with("t05"))))
+atussum$mins_not_worked = atussum$total_mins-atussum$mins_worked 
+  
+atussum$male = ifelse(atussum$sex == 1, 1, 0)
+atussum = subset(atussum, select = c(id, empstat, sex, age, total_mins, mins_worked, mins_not_worked, male))
 
 expect(
 	all(atussum$total_mins == 1440), 
@@ -127,9 +128,12 @@ atuscps = fread(glue("{input}/atuscps_0314/atuscps_0314.dat")) %>%
 		statefips = GESTFIPS,
 		lineno = PULINENO,
 		month = HRMONTH,
-		year = HRYEAR4
-		) %>%
-	select(id, hhid, hhid2, statefips, hrsersuf, lineno, month, year) %>%
+		year = HRYEAR4,
+		w_class1 = PRDTCOW1, 
+		occ1 = PRDTOCC1
+		) 
+
+atuscps = subset(atuscps, select = c(id, hhid, hhid2, statefips, hrsersuf, lineno, month, year, w_class1, occ1)) %>%
 	mutate(hhid = as.double(hhid)) %>%
 	data.table()
 
@@ -147,7 +151,9 @@ atuscps = fread(glue("{input}/atuscps_0314/atuscps_0314.dat")) %>%
 
 
 # this function loads the standardized CPS data and merges it with the atuscps data. There is one file per year 2002-2014.
+
 load_merge_cps = function(year) {
+  
 	ds = read_dta(glue("{input}/CEPR_CPS/cepr_org_{year}.dta")) %>%
 		mutate(statefips = state) %>% # keep the state FIPS code
 		mutate_at( # convert labelled variables into values (in stata-speak, -decode-)
@@ -158,7 +164,7 @@ load_merge_cps = function(year) {
 			vars(hhid, hhid2),
 			as.numeric
 			) %>%
-		select(hhid, hhid2, lineno, month, year, state, fipscounty, 
+	  dplyr::select(hhid, hhid2, lineno, month, year, state, fipscounty, 
 			hrsersuf, starts_with("cmsa"), starts_with("smsa")) %>%
 		distinct(hhid, lineno, month, .keep_all=TRUE) %>% # remove duplicates (there are a handful)
 		data.table()
@@ -205,7 +211,7 @@ fips_cw = fread(glue("{input}/Crosswalk_Files/fs04ctst.csv")) %>%
 	rename(
 		fips = FIPS,
 		fips_name = `COUNTY/TOWN`) %>%
-	select(fips, fips_name) %>%
+  dplyr::select(fips, fips_name) %>%
 	distinct(fips, .keep_all=TRUE)
 
 # load SMSA and CMSA to count name crosswalk
@@ -219,7 +225,7 @@ print("Warning: Geographic matching is done partially using a lookup table that 
 smsa_cw = fread(glue("{input}/Crosswalk_Files/CEPR/CEPR_SMSA_County_Lookup_Clean.csv"))
 
 smsastat05 = smsa_cw %>%
-	select(statename, smsastat05_mast, best_county) %>%
+  dplyr::select(statename, smsastat05_mast, best_county) %>%
 	rename(
 		state = statename,
 		smsastat05 = smsastat05_mast,
@@ -229,7 +235,7 @@ smsastat05 = smsa_cw %>%
 	distinct(state, smsastat05, .keep_all=TRUE)
 
 smsastat14 = smsa_cw %>% 
-	select(statename, smsastat14_mast, best_county) %>%
+  dplyr::select(statename, smsastat14_mast, best_county) %>%
 	rename(
 		state = statename, 
 		smsastat14 = smsastat14_mast,
@@ -239,7 +245,7 @@ smsastat14 = smsa_cw %>%
 	distinct(smsastat14, state, .keep_all=TRUE)
 
 cmsacode05 = smsa_cw %>%
-	select(statename, cmsacode05, best_county) %>%
+  dplyr::select(statename, cmsacode05, best_county) %>%
 	rename(
 		state = statename,
 		best_county_cmsacode05 = best_county
@@ -248,7 +254,7 @@ cmsacode05 = smsa_cw %>%
 	distinct(cmsacode05, state, .keep_all=TRUE)
 
 cmsacode14 = smsa_cw %>%
-	select(statename, cmsacode14, best_county) %>%
+  dplyr::select(statename, cmsacode14, best_county) %>%
 	rename(
 		state = statename,
 		best_county_cmsacode14 = best_county
@@ -292,7 +298,7 @@ get_master_county_name = function(data) {
 
 # create master lookup table
 cps_geo = cps_raw %>%
-	select(state, fipscounty, cmsacode05, cmsacode14, smsastat14, smsastat05, statefips, fips) %>%
+  dplyr::select(state, fipscounty, cmsacode05, cmsacode14, smsastat14, smsastat05, statefips, fips) %>%
 	unique()
 
 # merge in a master county name
@@ -309,12 +315,14 @@ find_nearest_geo = function(pid, hh, maxdiff=365.25*3) {
 		filter(hhid==hh) %>%
 		as.data.table()
 
-	tomatch[, c('date') := .(paste(cps_year, cps_month, 1, sep="-"))]
+	#tomatch[, c('date') := .(paste(cps_year, cps_month, 1, sep="-"))]
+	tomatch$date = paste(tomatch$cps_year, tomatch$cps_month, 1, sep="-")
 
 	if (nrow(tomatch) %in% c(0, 1)) {
 		return(tomatch[0,])
 	}
-
+	pid = as.numeric(pid)
+	
 	old_date = tomatch %>% 
 		filter(id==pid) %>% 
 		pull(date)
@@ -327,13 +335,13 @@ find_nearest_geo = function(pid, hh, maxdiff=365.25*3) {
 
 	diff = as.Date(new_date) - as.Date(old_date)
 
-	if (as.numeric(abs(diff)) > maxdiff | is.na(diff)) {
-		# return NA if we can't get a close enough observation
-		return(new_vals[0,])
+	if (as.numeric(abs(diff[1])) > maxdiff | is.na(diff[1])) {
+	  # return NA if we can't get a close enough observation
+	  return(new_vals[0,])
 	} else {
-		new_vals %<>%
-			get_master_county_name()
-		return(new_vals) 
+	  new_vals %<>%
+	    get_master_county_name()
+	  return(new_vals) 
 	}
 }
 
@@ -358,11 +366,11 @@ cps_unmatched = cps %>%
 # first thing tomorrow--check this worked, if so can rbind the above and be done.
 imputed_geo = mcmapply(
 		find_nearest_geo,
-		pid=cps_unmatched$id, 
+		pid =cps_unmatched$id, 
 		hh=cps_unmatched$hhid,
 		mc.cores=20) %>%
 	rbindlist(fill=TRUE) %>%
-	select(-date)
+  dplyr::select(-date)
 
 cps_all = rbindlist(list(cps_matched, imputed_geo), use.names=TRUE)	
 
@@ -378,7 +386,7 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		month = as.numeric(substr(date, 5, 6)),
 		day = as.numeric(substr(date, 7, 8))
 		) %>%
-	select( # remove crosswalk variables that are no longer needed
+  dplyr::select( # remove crosswalk variables that are no longer needed
 		-starts_with("best_county"), -fips_name) %>%
 	filter( # filter to our desired demographics
 		age >= 15 & age <= 65,
@@ -393,15 +401,23 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 	mutate(
 		ind_id = group_indices(., id, hhid, lineno, hhid2) 
 		) %>%
-	select(
-		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sample_wgt
+  dplyr::select(
+		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sample_wgt, w_class1, occ1, id
 		) 
 
+final$high_risk2 <- ifelse(final$occ1 ==12 | final$occ1 ==14 | final$occ1 ==18 | final$occ1 ==19 | final$occ1 ==20 | final$occ1 ==21| final$occ1 ==22, 1, 0)
+final$self_emp <- ifelse(final$w_class1 == 3 | final$w_class1 == 10, 1,0)
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.dta"))
+final <- dplyr::select(final, select = -c(w_class1, occ1))
 
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_SE.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_SE.dta"))
+
+#analysis
+weather <- subset(final, why == 3)
+
+final_old <- fread(glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.csv"))
 location_names = final %>% 
-	select(state, master_county_name) %>%
+  dplyr::select(state, master_county_name) %>%
 	distinct()
 fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_location_names.csv"))
