@@ -35,10 +35,10 @@ adjust <- "adjusted" #"original"
 if (adjust == "adjusted") {
   r <-0.35
   e <-  0.5
-  x <- 0.5
+  x <- 3
 } else {
   r <- 0
-  e <-  0.5
+  e <- 0.5
   x <- 0
 }
 
@@ -212,5 +212,5 @@ value <- c("mean")
 mean <- as.data.frame(cbind(value,mean))
 mean
 
-fwrite(dfb, glue('/home/rfrost/repos/labor-code-release-2020/disutility_ext/outputs/hedonic_valuation_{adjust}_{heckman}_r0.35_x-0.5.csv'))
+fwrite(dfb, glue('/home/rfrost/repos/labor-code-release-2020/disutility_ext/outputs/hedonic_valuation_{adjust}_{heckman}_r0.35_x3.csv'))
 
