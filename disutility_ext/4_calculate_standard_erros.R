@@ -1,6 +1,3 @@
-#This script takes the temperature realizations from 1950 to 2010 and calculates the average for every day of the year
-#It calculates the disutlitly associated with a high-risk job in each IR
-#It then calculates the aggregates for a list of countries/regions
 library(data.table)
 library(dplyr)
 library(tidyr)
@@ -9,13 +6,10 @@ library(sf)
 library(scales)
 library(purrr)
 library(glue)
-#library(Hmisc)
-
-#SET OPTIONS!
 
 #add adjustments for assumptions about labor elasticity and piece rate/self employment
 
-adjust <- "original"  #"adjusted"
+adjust <- "adjusted"  #"original"
 
 
 if (adjust == "adjusted") {
@@ -53,40 +47,68 @@ dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregi
 dfb <- rename(dfb, temp = value.x)
 dfb <- rename(dfb, temp_s = value.y)
 
+dfb <- aggregate(cbind(temp, temp_s) ~ hierid, data=dfb, FUN=sum)
+
+soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+soc_ec <- subset(soc_ec, year == 2010)
+soc_ec <- subset(soc_ec, ssp == "SSP3")
+soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
+soc_ec$wage <- (soc_ec$gdppc*0.6)/(250*6*60)
+
+dfb <- merge(dfb, soc_ec, by.x = "hierid", by.y = "region", all.x = FALSE, all.y = TRUE, allow.cartesian=TRUE)
+total_pop <- sum(dfb$pop)
+
+dfb$a <- dfb$temp - 366*30.6007075824072
+dfb$b <- dfb$temp_s - 366*((30.6007075824072-27)^3)
+dfb$c <- dfb$temp - 366*29.3189751020172
+dfb$d <- dfb$temp_s - 366*((29.3189751020172-27)^3)
+dfb$pop_w <- dfb$pop/total_pop
+dfb$pi_term <- 100/dfb$gdppc
+dfb$wage_term <- dfb$wage/0.5
+
+
+dfb$big_a <- dfb$a*dfb$pi_term*dfb$pop_w*dfb$wage_term
+dfb$big_b <- dfb$b*dfb$pi_term*dfb$pop_w*dfb$wage_term
+dfb$big_c <- dfb$c*dfb$pi_term*dfb$pop_w*dfb$wage_term
+dfb$big_d <- dfb$d*dfb$pi_term*dfb$pop_w*dfb$wage_term
+
+A <- sum(dfb$big_a)
+B <- sum(dfb$big_b)
+C <- sum(dfb$big_c)
+D <- sum(dfb$big_d)
+
+
 if (heckman == "heckman") {
   ###################################################
   # Uninteracted Main Model with Heckman Correction #
   ###################################################
   
-  #These are hardcoded values for the betas from the main uninteracted model 
-  LR_temp <- rep(0.0254575, nrow(dfb))
-  LR_temp_s <- rep(-0.0030206, nrow(dfb))
+  vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/heckman_vars_covars.csv')
   
-  HR_temp <- rep(0.7888221, nrow(dfb))
-  HR_temp_s <- rep(-0.019498, nrow(dfb))
+  V_LR_T <- as.numeric(vcv[1,2])
+  V_LR_TS <- as.numeric(vcv[2,2])
+  V_HR_T <- as.numeric(vcv[3,2])
+  V_HR_TS <- as.numeric(vcv[4,2])
   
+   
+  C_LR_T_LR_TS  <- as.numeric(vcv[5,2])
+  C_LR_T_HR_TS  <- as.numeric(vcv[6,2])
+  C_LR_T_HR_T   <- as.numeric(vcv[7,2])
+  C_LR_TS_HR_T  <- as.numeric(vcv[8,2])
+  C_LR_TS_HR_TS <- as.numeric(vcv[9,2])
+  C_HR_T_HR_TS  <- as.numeric(vcv[10,2])
   
-  dfb <- cbind(dfb,LR_temp,LR_temp_s,HR_temp,HR_temp_s)
+  Var_diss <- (A^2)*V_HR_T + (B^2)*V_HR_TS + (C^2)*V_LR_T + (D^2)*V_LR_TS
+  Var_diss <- Var_diss + 2*(A*B*C_HR_T_HR_TS - A*C*C_LR_T_HR_T -A*D*C_LR_TS_HR_T - B*C*C_LR_T_HR_TS -B*D*C_LR_TS_HR_TS +C*D*C_LR_T_LR_TS)
   
-  #Predict LS based on temp for each group on actual temp realizations and the optimal temp
-  dfb$f_h <- dfb$temp*dfb$HR_temp + dfb$temp_s*dfb$HR_temp_s
-  dfb$f_h_opt_h <- 30.6723*dfb$HR_temp + ((30.6723-27)^3)*dfb$HR_temp_s
+  SE_diss <- (Var_diss)^0.5
   
-  dfb$f_l <- dfb$temp*dfb$LR_temp + dfb$temp_s*dfb$LR_temp_s
-  dfb$f_l_opt_l <- 28.6751*dfb$LR_temp + ((28.6751-27)^3)*dfb$LR_temp_s
-  
-  #Calculate each group's daily decrease in LS  relative to its own optimum
-  dfb$d_h <- dfb$f_h - dfb$f_h_opt_h
-  dfb$d_h <- dfb$d_h*adjustment
-  dfb$d_l <- dfb$f_l - dfb$f_l_opt_l
-  
-  dfb$diff <- dfb$d_h - dfb$d_l
+
 } else {
   if (interacted == "interacted") {
     ################################
     # Income Adaptation + Clipping #
     ################################
-    
     
     #These are hardcoded values for the betas from the hi 1 factor, low uninteracted model
     LR_temp_c <- rep(0.0499968692364216, nrow(dfb))
@@ -97,6 +119,41 @@ if (heckman == "heckman") {
     
     HR_temp_inc_c <- rep(-0.423440709308935, nrow(dfb))
     HR_temp_s_inc_c <- rep(0.0062603009512727, nrow(dfb))
+    
+    vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_vars_covars.csv')
+    
+    V_LR_T <- as.numeric(vcv[1,2])
+    V_LR_TS <- as.numeric(vcv[2,2])
+    V_HR_T <- as.numeric(vcv[3,2])
+    V_HR_TS <- as.numeric(vcv[4,2])
+    V_HR_T_G <- as.numeric(vcv[5,2])
+    V_HR_TS_G <- as.numeric(vcv[6,2])
+    
+    C_HR_TS_HR_TS_G <- as.numeric(vcv[7,2])
+    C_HR_T_G_HR_TS_G <- as.numeric(vcv[8,2])
+    C_HR_T_HR_TS_G   <- as.numeric(vcv[9,2])
+    C_HR_T_HR_T_G <- as.numeric(vcv[10,2])
+    C_HR_T_G_HR_TS <- as.numeric(vcv[11,2])
+    C_LR_TS_HR_TS_G  <- as.numeric(vcv[12,2])
+    C_LR_T_HR_T_G <- as.numeric(vcv[13,2])
+    C_LR_T_LR_TS <- as.numeric(vcv[14,2])
+    C_LR_T_HR_TS <- as.numeric(vcv[15,2])
+    C_LR_T_HR_T <- as.numeric(vcv[16,2])
+    C_LR_TS_HR_T <- as.numeric(vcv[17,2])
+    C_LR_TS_HR_TS <- as.numeric(vcv[18,2])
+    C_HR_T_HR_TS <- as.numeric(vcv[19,2])
+    C_LR_T_HR_TS_G <- as.numeric(vcv[20,2])
+    C_LR_TS_HR_T_G <- as.numeric(vcv[21,2])
+    
+    
+    vcv_matrix <- matrix(c(V_LR_T, C_LR_T_LR_TS, C_LR_T_HR_T, C_LR_T_HR_TS, C_LR_T_HR_T_G,C_LR_T_HR_TS_G,
+                           C_LR_T_LR_TS, V_LR_TS, C_LR_TS_HR_T, C_LR_TS_HR_TS, C_LR_TS_HR_T_G, C_LR_TS_HR_TS_G,
+                           C_LR_T_HR_T, C_LR_TS_HR_T, V_HR_T,C_HR_T_HR_TS,C_HR_T_HR_T_G,C_HR_T_HR_TS_G,
+                           C_LR_T_HR_TS, C_LR_TS_HR_TS, C_HR_T_HR_TS, V_HR_TS, C_HR_T_G_HR_TS, C_HR_TS_HR_TS_G ,
+                           C_LR_T_HR_T_G, C_LR_TS_HR_T_G, C_HR_T_HR_T_G, C_HR_T_G_HR_TS, V_HR_T_G, C_HR_T_G_HR_TS_G,
+                           C_LR_T_HR_TS_G, C_LR_TS_HR_TS_G, C_HR_T_HR_TS_G, C_HR_TS_HR_TS_G, C_HR_T_G_HR_TS_G, V_HR_TS_G), 
+                         nrow = 6, ncol = 6, byrow = TRUE)
+    
     
     dfb <- cbind(dfb,LR_temp_c,LR_temp_s_c,HR_temp_c,HR_temp_s_c, HR_temp_inc_c, HR_temp_s_inc_c)
     
@@ -146,81 +203,25 @@ if (heckman == "heckman") {
     
   } else {
     
-    ########################################################
-    # Do the welfare calculations - Uninteracted Main Model #
-    ########################################################
+    ###########################
+    # Uninteracted Main Model #
+    ###########################
     
-    #These are hardcoded values for the betas from the main uninteracted model 
-    LR_temp <- rep(0.0499968692364216, nrow(dfb))
-    LR_temp_s <- rep(-0.0030990557122301, nrow(dfb))
+    V_LR_T <- 0.0819070932463607
+    V_LR_TS <- 0.0000126415533199
+    V_HR_T <- 0.50201239982258
+    V_HR_TS <- 0.0000455119674331
     
-    HR_temp <- rep(0.726375435490015, nrow(dfb))
-    HR_temp_s <- rep(-0.0186751538193722, nrow(dfb))
+    C_LR_T_LR_TS <- -0.0005300212712299
+    C_LR_TS_HR_TS <- -0.0000019212496857
+    C_LR_T_HR_TS <- 0.0000137095839116
+    C_LR_TS_HR_T <- -0.000000802135702971
+    C_LR_T_HR_T <- -0.0005501298406159
+    C_HR_T_HR_TS <- -0.0024129062049402
     
-    dfb <- cbind(dfb,LR_temp,LR_temp_s,HR_temp,HR_temp_s)
+    Var_diss <- (A^2)*V_HR_T + (B^2)*V_HR_TS + (C^2)*V_LR_T + (D^2)*V_LR_TS
+    Var_diss <- Var_diss + 2*(A*B*C_HR_T_HR_TS - A*C*C_LR_T_HR_T -A*D*C_LR_TS_HR_T - B*C*C_LR_T_HR_TS -B*D*C_LR_TS_HR_TS +C*D*C_LR_T_LR_TS)
     
-    #Predict LS based on temp for each group on actual temp realizations and the optimal temp
-    dfb$f_h <- dfb$temp*dfb$HR_temp + dfb$temp_s*dfb$HR_temp_s
-    dfb$f_h_opt_h <- 30.6007075824072*dfb$HR_temp + ((30.6007075824072-27)^3)*dfb$HR_temp_s
-    
-    dfb$f_l <- dfb$temp*dfb$LR_temp + dfb$temp_s*dfb$LR_temp_s
-    dfb$f_l_opt_l <- 29.3189751020172*dfb$LR_temp + ((29.31897510201722-27)^3)*dfb$LR_temp_s
-    
-    #Calculate each group's daily decrease in LS  relative to its own optimum
-    dfb$d_h <- dfb$f_h - dfb$f_h_opt_h
-    dfb$d_l <- dfb$f_l - dfb$f_l_opt_l
-    
-    dfb$diff <- (dfb$d_h - dfb$d_l)*adjustment
+    SE_diss <- (Var_diss)^0.5
   }
 }
-
-# * ~ * ~ * ~ * ~ * ~ * ~ #
-# DEBUGGING RESONSE CURVE #
-# * ~ * ~ * ~ * ~ * ~ * ~ #
-
-#use this part to plot the response curve if you want
-
-#dfb <- subset(dfb, select = c(hierid,month,day,temp, temp_s, loggdppc,d_l, d_h,diff, f_l, f_l_opt_l, f_h, f_h_opt_h))
-#dfb$section <- ifelse(dfb$temp < 27, 1, 0)
-#dfb$section <- ifelse(dfb$temp >= 27, 2, dfb$section )
-#dfb$section <- ifelse(dfb$temp >= 37, 3, dfb$section )
-#dfb$section <- ifelse(dfb$temp >= 39, 4, dfb$section )
-
-#ggplot(dfb, aes(x=temp, y=d_h)) + geom_point(aes(color=loggdppc), size=0.5, alpha =1/10)
-
-
-countries <- data.frame(do.call("rbind", strsplit(as.character(dfb$hierid), ".", fixed = TRUE)))
-dfb <- cbind(dfb, countries$X1)
-dfb <- dfb %>% rename("ISO" = "V2")
-rm(countries)
-
-# add up results over the full year
-dfb <- aggregate(cbind(diff, d_h, d_l) ~ hierid, data = dfb, FUN = sum)
-
-soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-soc_ec <- subset(soc_ec, year == 2010)
-soc_ec <- subset(soc_ec, ssp == "SSP3")
-soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
-soc_ec <- subset(soc_ec, select = c(region,gdp,pop,gdppc))
-soc_ec$wage <- (soc_ec$gdppc*0.6)/(250*6*60)
-
-dfb <- merge(dfb, soc_ec, by.x = "hierid", by.y = "region", all.x = TRUE, all.y = TRUE,allow.cartesian=TRUE)
-
-dfb$diff_dis <- (-1)*(dfb$diff*dfb$wage)/0.5
-
-dfb$h_dis <- (-1)*(dfb$d_h*dfb$wage)/0.5
-dfb$l_dis <- (-1)*(dfb$d_l*dfb$wage)/0.5
-
-
-#calculate disultility as % of annual income
-dfb$diff_dis_p <- ifelse(dfb$gdppc != 0,((dfb$diff_dis)/dfb$gdppc)*100, 0)
-dfb$h_dis_p <- ifelse(dfb$gdppc != 0,((dfb$h_dis)/dfb$gdppc)*100, 0)
-dfb$l_dis_p <- ifelse(dfb$gdppc != 0,((dfb$l_dis)/dfb$gdppc)*100, 0)
-
-total_pop <- sum(dfb$pop, na.rm = TRUE)
-dfb$pop_w <- dfb$pop/total_pop
-
-#Check mean before writing
-weighted.mean(dfb$diff_dis_p, dfb$pop, na.rm =TRUE)
-
-fwrite(dfb, glue('/home/rfrost/repos/labor-code-release-2020/disutility_ext/outputs/hedonic_valuation_{adjust}{r_label}{e_label}{x_label}_{heckman}_{interacted}.csv'))
