@@ -116,12 +116,14 @@ if (heckman == "heckman") {
     ################################################################################################################
     
     #find optimum of the quadratic formula (This is from a previous version,we are using the LR optimum now)
-    #dfb$a <- (-3*0.062+0.006*3*dfb$loggdppc)
-    #dfb$b <- 54*(-1)*(-3*0.062+0.006*3*dfb$loggdppc)
-    #dfb$c <- 729*(-3*0.062+ 0.006*3*dfb$loggdppc)+ dfb$loggdppc*(-0.42)+ 4.32
-    #dfb$inc_adpt_opt <- (-dfb$b - (dfb$b^2-4*dfb$a*dfb$c)^0.5)/(2*dfb$a)
+    dfb$a <- (-3*0.062+0.006*3*dfb$loggdppc)
+    dfb$b <- 54*(-1)*(-3*0.062+0.006*3*dfb$loggdppc)
+    dfb$c <- 729*(-3*0.062+ 0.006*3*dfb$loggdppc)+ dfb$loggdppc*(-0.42)+ 4.32
+    dfb$inc_adpt_opt_r1 <- (-dfb$b - (dfb$b^2-4*dfb$a*dfb$c)^0.5)/(2*dfb$a)
+    dfb$inc_adpt_opt_r2 <- (-dfb$b + (dfb$b^2-4*dfb$a*dfb$c)^0.5)/(2*dfb$a)
+    dfb$inc_adpt_opt <- ifelse(dfb$inc_adpt_opt_r1> dfb$inc_adpt_opt_r2, dfb$inc_adpt_opt_r1, dfb$inc_adpt_opt_r2)
     
-    dfb$inc_adpt_opt <- 29.3189751020172
+    #dfb$inc_adpt_opt <- 29.3189751020172
     
     #Predict LS based on temp for each group on actual temp realizations and the optimal temp
     dfb$f_h <- dfb$temp*dfb$HR_temp_c + dfb$temp_s*dfb$HR_temp_s_c + dfb$temp*dfb$HR_temp_inc_c*dfb$loggdppc + dfb$temp_s*dfb$HR_temp_s_inc_c*dfb$loggdppc
