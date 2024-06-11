@@ -121,7 +121,7 @@ if (heckman == "heckman") {
     vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
     vcv <- as.matrix(vcv[c(1:42),c(1:42)])
     
-    n <- 100
+    n <- 1000
     set.seed(12346) 
     resampled <- mvtnorm::rmvnorm(n = n, mu, vcv)
     
@@ -142,7 +142,7 @@ if (heckman == "heckman") {
     
     results <- matrix(0, 1, n)
     
-    for (i in 1:100){
+    for (i in 1:n){
       LR_temp_c <- rep(resampled[i,1], nrow(dfb))
       LR_temp_s_c <- rep(resampled[i,2], nrow(dfb))
       
