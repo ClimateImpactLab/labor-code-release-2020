@@ -1,11 +1,11 @@
 library(data.table)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(sf)
-library(scales)
-library(purrr)
-library(glue)
+#library(dplyr)
+#library(tidyr)
+#library(ggplot2)
+#library(sf)
+#library(scales)
+#library(purrr)
+#library(glue)
 library(mvtnorm)
 
 #add adjustments for assumptions about labor elasticity and piece rate/self employment
@@ -44,16 +44,16 @@ heckman <- "no_heckman" # "no_heckman"
 interacted <- "interacted" #uninteracted
 
 #Read in Weather Data
-#dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
-dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
+dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
+#dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
 
 dfb <- rename(dfb, temp = value.x)
 dfb <- rename(dfb, temp_s = value.y)
 
 dfb <- aggregate(cbind(temp, temp_s) ~ hierid, data=dfb, FUN=sum)
 
-#soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+#soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
 
 soc_ec <- subset(soc_ec, year == 2010)
 soc_ec <- subset(soc_ec, ssp == "SSP3")
@@ -121,7 +121,7 @@ if (heckman == "heckman") {
     vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
     vcv <- as.matrix(vcv[c(1:42),c(1:42)])
     
-    n <- 100
+    n <- 1000
     set.seed(12346) 
     resampled <- mvtnorm::rmvnorm(n = n, mu, vcv)
     
@@ -142,7 +142,7 @@ if (heckman == "heckman") {
     
     results <- matrix(0, 1, n)
     
-    for (i in 1:100){
+    for (i in 1:n){
       LR_temp_c <- rep(resampled[i,1], nrow(dfb))
       LR_temp_s_c <- rep(resampled[i,2], nrow(dfb))
       
@@ -198,7 +198,8 @@ if (heckman == "heckman") {
       # add up results over the full year
       dfb <- aggregate(cbind(diff, d_h, d_l) ~ hierid, data = dfb, FUN = sum)
       
-      soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+      soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+      #soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
       soc_ec <- subset(soc_ec, year == 2010)
       soc_ec <- subset(soc_ec, ssp == "SSP3")
       soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
