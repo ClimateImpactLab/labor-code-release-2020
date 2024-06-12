@@ -1,6 +1,6 @@
 library(data.table)
-#library(dplyr)
-#library(tidyr)
+library(dplyr)
+library(tidyr)
 #library(ggplot2)
 #library(sf)
 #library(scales)
@@ -115,13 +115,13 @@ if (heckman == "heckman") {
     # Income Adaptation + Clipping #
     ################################
     dfb_original <- dfb
-    coefs <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
+    coefs <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
     mu <- as.matrix(coefs$V2)
-    #vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_vars_covars.csv')
-    vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
+    vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_vars_covars.csv')
+    #vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
     vcv <- as.matrix(vcv[c(1:42),c(1:42)])
     
-    n <- 1000
+    n <- 10000
     set.seed(12346) 
     resampled <- mvtnorm::rmvnorm(n = n, mu, vcv)
     
@@ -250,3 +250,7 @@ if (heckman == "heckman") {
     SE_diss <- (Var_diss)^0.5
   }
 }
+
+mean(results)
+
+sd(results)
