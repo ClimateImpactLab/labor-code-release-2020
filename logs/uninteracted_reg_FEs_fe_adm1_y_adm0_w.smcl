@@ -1,0 +1,77 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home/rfrost/repos/labor-code-release-2020/logs/uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}12 Jun 2024, 12:59:01
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_FEs"
+{txt}
+{com}. 
+. * other selections
+. global test_code "no"
+{txt}
+{com}. global fe_list fe_adm1_y_adm0_w 
+{txt}
+{com}. * fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y
+. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each fixed effect selected
+. foreach fe in $fe_list {c -(}
+{txt}  2{com}. 
+.         use $dataset, clear
+{txt}  3{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  4{com}.                 sample 0.1
+{txt}  5{com}.         {c )-}
+{txt}  6{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt}  7{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt}  8{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt}  9{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 10{com}.         local reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt} 11{com}.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 12{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 13{com}.         foreach f in $`fe' {c -(}
+{txt} 14{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 15{com}.         {c )-}
+{txt} 16{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'.ster"
+{txt} 17{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = `fe'"
+{txt} 18{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 19{com}.         qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 20{com}.         estimates notes: "`spec_desc'"
+{txt} 21{com}.         estimates save "`ster_name'", replace
+{txt} 22{com}. 
+.         di "COMPLETED: reg with `fe' fixed effects."
+{txt} 23{com}. 
+. {c )-}
+{err}{p 0 4 2}
+file {bf:{err}/shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta}
+not found
+{p_end}
+{txt}{search r(601), local:r(601);}
+
+end of do-file
+
+{search r(601), local:r(601);}
+
+
+{com}. 
