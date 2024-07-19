@@ -5,7 +5,7 @@ library(data.table)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(sf)
+#library(sf)
 library(scales)
 library(purrr)
 library(glue)
@@ -46,11 +46,11 @@ if (adjust == "adjusted") {
 adjustment <- (1-e*x*r)
 
 heckman <- "no_heckman" # "no_heckman"
-interacted <- "interacted" #uninteracted
+interacted <- "uninteracted" #interacted
 
 #Read in Weather Data
-#dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
-dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
+dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
+#dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
 
 dfb <- rename(dfb, temp = value.x)
 dfb <- rename(dfb, temp_s = value.y)
@@ -202,8 +202,8 @@ rm(countries)
 # add up results over the full year
 dfb <- aggregate(cbind(diff, d_h, d_l) ~ hierid, data = dfb, FUN = sum)
 
-#soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+#soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
 soc_ec <- subset(soc_ec, year == 2010)
 soc_ec <- subset(soc_ec, ssp == "SSP3")
 soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
@@ -225,6 +225,12 @@ dfb$l_dis_p <- ifelse(dfb$gdppc != 0,((dfb$l_dis)/dfb$gdppc)*100, 0)
 
 total_pop <- sum(dfb$pop, na.rm = TRUE)
 dfb$pop_w <- dfb$pop/total_pop
+
+#phx <- subset(dfb, hierid =="USA.3.101")
+#weighted.mean(phx$diff_diss_p, na.rm=TRUE)
+
+#hst <- subset(dfb, hierid =="USA.44.2640")
+#weighted.mean(hst$diff_diss_p, na.rm=TRUE)
 
 #Check mean before writing
 weighted.mean(dfb$diff_dis_p, dfb$pop, na.rm =TRUE)

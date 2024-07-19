@@ -8,21 +8,22 @@ run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
 cap log close 
-log using "${DIR_LOG}/rf_uninteracted_reg_FEs.smcl", replace
+log using "${DIR_LOG}/rf_uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl", replace
 
 * select dataset and output folder
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 loc rf_folder 	"${DIR_RF}/uninteracted_reg_FEs"
 
 * other selections
-global fe_list fe_adm0_y fe_adm0_my fe_adm0_m_y fe_adm0_wk fe_adm3_my 
+global fe_list fe_adm1_y_adm0_w 
+*fe_adm0_y fe_adm0_my fe_adm0_m_y fe_adm0_wk fe_adm3_my 
 global ref_temp 27 
 
 * full response function
 numlist "-20(0.1)47"
 gl full_response `r(numlist)'
 * 6 table values
-numlist "45 40 35 30 10 5 0"
+numlist "45 40 35 30 10 5 0 -5 -10"
 gl table_values `r(numlist)'
 
 

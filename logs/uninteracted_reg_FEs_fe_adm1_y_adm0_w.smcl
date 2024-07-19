@@ -1,9 +1,9 @@
 {smcl}
-{txt}{sf}{ul off}{.-}
+{com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/home/rfrost/repos/labor-code-release-2020/logs/uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}12 Jun 2024, 12:59:01
+ {txt}opened on:  {res}12 Jun 2024, 13:24:40
 {txt}
 {com}. 
 . * select dataset and output folder
@@ -63,15 +63,14 @@
 .         di "COMPLETED: reg with `fe' fixed effects."
 {txt} 23{com}. 
 . {c )-}
-{err}{p 0 4 2}
-file {bf:{err}/shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta}
-not found
-{p_end}
-{txt}{search r(601), local:r(601);}
-
-end of do-file
-
-{search r(601), local:r(601);}
-
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm1_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+{txt}(note: file /home/rfrost/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w.ster not found)
+{txt}file {bf:/home/rfrost/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w.ster} saved
+COMPLETED: reg with fe_adm1_y_adm0_w fixed effects.
 
 {com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
