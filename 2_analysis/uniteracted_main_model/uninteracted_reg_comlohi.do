@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
@@ -16,7 +16,7 @@ loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections
 gl test_code "no"
-gl reg_list by_risk
+gl reg_list by_risk common
 loc fe fe_adm0_wk
 
 ********************
@@ -62,7 +62,7 @@ foreach reg in $reg_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/uninteracted_reg_`reg'_test.ster"
+	local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
 
 	* set the regression weight (pop_adj for common, risk_adj for by-risk)

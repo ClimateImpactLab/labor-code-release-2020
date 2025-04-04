@@ -1,0 +1,2 @@
+./generate.sh: line 20: unexpected EOF while looking for matching `"'
+./generate.sh: line 22: syntax error: unexpected end of file

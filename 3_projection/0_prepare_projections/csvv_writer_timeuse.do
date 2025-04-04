@@ -6,11 +6,13 @@ macro drop _all
 set more off
 cap log close
 set matsize 10000
-cilpath
+
+* get paths
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 
-global ster_dir = "/home/`c(username)'/repos/labor-code-release-2020/output/ster"
-global csvv_dir = "/home/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
+global ster_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/ster"
+global csvv_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
 *global fun_form = "polynomials"
 global fun_form = "splines"
 * N is polynomial order or number of knots
@@ -30,10 +32,10 @@ global FE = "fe_week_adm0"
 
 if "${fun_form}" == "splines" {
 
-	global knots_loc  "21_37_41"
+	global knots_loc  "27_37_39"
 	global dataset = "uninteracted_reg_comlohi"
 	global spline_varname = "rcspl"
-	global ster_filename = "uninteracted_reg_by_risk.ster"
+	global ster_filename = "uninteracted_reg_by_risk_2025.ster"
 
 } 
 else if "${fun_form}" == "polynomials" {
@@ -46,7 +48,7 @@ else if "${fun_form}" == "polynomials" {
 else di "wrong specification of functional form"
 
 * change this to your repo on ther server, pull from master first
-global repo = "/home/`c(username)'/repos/labor-code-release-2020"
+global repo = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020"
 do "$repo/2_analysis/0_subroutines/utils.do"
 do "$repo/2_analysis/0_subroutines/functions.do"
 
@@ -343,7 +345,7 @@ program define write_csvv
 
 	calculate_nobs_residvcv
 
-	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_old.csvv"
+	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_2025.csvv"
 	local csvv `csvv_path'
 
 	* cd "$csvv_dir" 

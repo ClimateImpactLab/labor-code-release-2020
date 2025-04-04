@@ -20,10 +20,10 @@ program define gen_controls_and_FEs
 		}
 	}
 
-	* define fixed effect specifications
+	* define fixed effect specifications (MAIN PAPER SPEC IS fe_adm0_wk)
 	global fe_adm0_y	"adm3_id dow_week adm0_id#year"
 	global fe_adm0_my	"adm3_id dow_week adm0_id#month#year" 
-	global fe_adm0_wk 	"adm3_id dow_week adm0_id#year adm0_id#week_fe"
+	global fe_adm0_wk 	"adm3_id dow_week adm0_id#year adm0_id#week_fe" 
 	global fe_adm3_my	"adm3_id dow_week adm3_id#month#year"
 	global fe_adm0_m_y 	"adm3_id dow_week adm0_id#year adm0_id#month"
 	global fe_adm1_w_y      "adm3_id dow_week adm1_id#year adm1_id#week_fe"

@@ -19,8 +19,8 @@ clear all
 set more off
 pause off
 
-loc lab "/mnt/CIL_labor"
-loc out "/home/`c(username)'/repos/labor-code-release-2020/output/employment_shares"
+loc lab "/project/cil/norgay/CIL_labor"
+loc out "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares"
 loc ster "`out'/ster"
 
 * specify income variable you want to use here
@@ -80,24 +80,24 @@ foreach spec in 1 2 3 4{
 
 if `spec' == 1 {
 			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr, noabsorb residuals(resid_`spec')
-			loc saveas "log_inc_poly4"
+			loc saveas "log_inc_poly4_2025"
 		}
 
 * continent dummies, uninteracted. base level of continent FE changed to asia
 if `spec' == 2 {
 			reghdfe ind_highrisk_share log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr ib3.continent_code, noabsorb residuals(resid`spec')
-			loc saveas "log_inc_poly4_continent_fes"
+			loc saveas "log_inc_poly4_continent_fes_2025"
 		}
 
 if `spec' == 3 { 
 			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4, noabsorb residuals(resid_`spec')
-			loc saveas "log_inc_lrtk"
+			loc saveas "log_inc_lrtk_2025"
 		}
 
 * continent dummies, uninteracted. base level of continent FE changed to asia
 if `spec' == 4 { 
 			reghdfe ind_highrisk_share log_inc temp_poly1 temp_poly2 temp_poly3 temp_poly4 ib3.continent_code, noabsorb residuals(resid_`spec')
-			loc saveas "log_inc_lrtk_continent_fes"
+			loc saveas "log_inc_lrtk_continent_fes_2025"
 		}
 
 		if inlist(`spec', 1, 2, 3, 4) {
