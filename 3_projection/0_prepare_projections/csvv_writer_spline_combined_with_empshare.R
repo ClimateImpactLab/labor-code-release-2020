@@ -8,10 +8,10 @@ library(stringr)
 library(dplyr)
 
 # set up paths
-REPO = '/home/nsharma/repos'
+REPO = '/project/cil/home_dirs/egrenier/repos'
 lab_repo = paste0(REPO, "/labor-code-release-2020")
 csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/single_test_correct_rebasing/")
-pp_tools_repo = "~/repos/post-projection-tools/"
+pp_tools_repo = paste0(REPO, "/post-projection-tools/")
 
 # Source dylan's YP package, to get the read.csvv function
 source(paste0(pp_tools_repo, "response_function/yellow_purple_package.R"))
@@ -23,8 +23,8 @@ FE = "noFE"
 interaction = "uninteracted"
 weight = "risk_adj_sample_wgt"
 
-csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt.csvv")
-csvv_name_empshare = paste0("labor_empshare_", FE, ".csvv")
+csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_2025.csvv")
+csvv_name_empshare = paste0("labor_empshare_", FE, "_2025.csvv")
 
 
 ##############################################
@@ -126,15 +126,15 @@ if(FE == "continentFE"){
 ##############################################
 
 # Initiate the file
-fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_new.csvv"))
+fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
 
 # Write the csvv!
 writeLines(
   c(
     "---",
-    paste0("oneline: Labor ", interaction, " regression restricted cubic spline term (3 knots), located at 21_37_41. Empshare with ", FE), 
+    paste0("oneline: Labor ", interaction, " regression restricted cubic spline term (3 knots), located at 27_37_39. Empshare with ", FE), 
      
-    paste0("version: LABOR-", str_to_upper(interaction), "-RCSPLINE-3KNOTS-COMBINED-EMPSHARE-Knots-21_37_41.-",FE),
+    paste0("version: LABOR-", str_to_upper(interaction), "-RCSPLINE-3KNOTS-COMBINED-EMPSHARE-Knots-27_37_39.-",FE),
       
     paste0( "description: Generated from labor ", interaction, " regression with restricted cubic spline, 3 knots.",
              "The first 2 gammas are for the low-risk sector. The next 2 for the high-risk sector.",
@@ -150,10 +150,10 @@ writeLines(
     "  climtasmax: long run average daily maximum temperature [C]",
     "  outcome: labor productivity [minutes worked by individual]",
     "  loggdppc: 15-year moving average of log GDP per capita [log USD2000]",
-    "  climtas: poly 1 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C]",
-    "  climtas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^2]",
-    "  climtas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^3]",
-    "  climtas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^4]",
+    "  climtas: poly 1 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C]",
+    "  climtas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^2]",
+    "  climtas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^3]",
+    "  climtas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^4]",
     "  outcome: share of high-risk labor [unitless]",
     
     FE_desc,
@@ -179,5 +179,5 @@ writeLines(
     fileConn)
 
 close(fileConn)
-print(paste0(csvv_dir,"uninteracted_main_model_new.csvv"))
+print(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
 

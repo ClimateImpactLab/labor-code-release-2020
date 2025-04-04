@@ -5,21 +5,11 @@
 * the user needs to determine where the repo is located
 * and where the large raw data files are
 
-
-* for use on our internal remote servers
-* remove this once the data has been shifted to an external location
-if "`c(hostname)'" == "battuta" {
-	gl shares_path "/mnt/sacagawea_shares"
-}
-else {
-	gl shares_path "/shares"
-}
-
 * set internal data path
 *gl ROOT_INT_DATA = "${shares_path}/gcp/estimation/labor/code_release_int_data"
-gl ROOT_INT_DATA = "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data"
+gl ROOT_INT_DATA = "/project/cil/kupe_shares/CIL_temp_storage/labor/code_release_int_data"
 * set repo path
-gl ROOT_REPO = "/home/`c(username)'/repos"
+gl ROOT_REPO = "/project/cil/home_dirs/egrenier/repos"
 gl DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
 
 * set logs path

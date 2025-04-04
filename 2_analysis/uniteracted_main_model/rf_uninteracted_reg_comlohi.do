@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * select dataset and output folder
@@ -29,9 +29,9 @@ foreach row_values in full_response table_values {
 	clear 
 
 	* set the ster file names and the output CSV
-	local comm_ster		"`reg_folder'/uninteracted_reg_common.ster"
-	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk.ster"
-	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'.csv"
+	local comm_ster		"`reg_folder'/uninteracted_reg_common_2025.ster"
+	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk_2025.ster"
+	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'_2025.csv"
 
 	* create the temp list that we want to predict for
 	qui make_temp_dist, list($`row_values') ref($ref_temp)

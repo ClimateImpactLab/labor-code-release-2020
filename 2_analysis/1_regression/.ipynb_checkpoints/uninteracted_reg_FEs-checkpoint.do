@@ -52,7 +52,7 @@ foreach fe in $fe_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'_2025.ster"
+	local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = `fe'"
 
 	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"

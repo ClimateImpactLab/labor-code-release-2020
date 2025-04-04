@@ -11,7 +11,7 @@ program define init
 	macro drop _all
 	set more off
 	cap log close
-	cilpath
+	run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 end
 
@@ -42,14 +42,14 @@ program define write_csvv_header
 	if "`have_fe'" == "have_fe"{
 		file write csvv "oneline: Employment share regression for labor sector, with continent fixed effects" _n
 		file write csvv "version: empshareFE_2019_10" _n
-		file write csvv "dependencies: LogIncPoly4ContinentFEs.ster" _n
+		file write csvv "dependencies: LogIncPoly4ContinentFEs_2025.ster" _n
 		file write csvv "description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. " _n
 
 	}
 	else{
 		file write csvv "oneline: Employment share regression for labor sector, without continent fixed effects" _n
 		file write csvv "version: empshare_2019_10" _n
-		file write csvv "dependencies: LogIncPoly4.ster" _n
+		file write csvv "dependencies: LogIncPoly4_2025.ster" _n
 		file write csvv "description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. " _n
 
 	}
@@ -60,9 +60,9 @@ program define write_csvv_header
 	file write csvv "variables:" _n
 	file write csvv "  loggdppc: 15-year moving average of log GDP per capita [log USD2000]" _n
 	file write csvv "  climmeantas: poly 1 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C]" _n
-	file write csvv "  climmeantas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^2]" _n
-	file write csvv "  climmeantas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^3]" _n
-	file write csvv "  climmeantas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C^4]" _n
+	file write csvv "  climmeantas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^2]" _n
+	file write csvv "  climmeantas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^3]" _n
+	file write csvv "  climmeantas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^4]" _n
 	file write csvv "  outcome: share of high-risk labor [NA]" _n
 
 	if "`have_fe'" == "have_fe"{
@@ -85,12 +85,12 @@ program define write_csvv_prednames_covarnames
 
 	if "`have_fe'" == "have_fe"{
 		di "1"
-		estimates use "/home/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes.ster"
+		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes.ster"
 
 	}
 	else {
 		di "2"
-		estimates use "/home/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4.ster"
+		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4.ster"
 	}
 
 	file write csvv "prednames" _n
@@ -188,12 +188,12 @@ program define calculate_nobs_residvcv
 
 	if "`have_fe'" == "have_fe"{
 		di "1"
-		estimates use "/home/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes.ster"
+		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes_2025.ster"
 
 	}
 	else{
 		di "2"
-		estimates use "/home/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4.ster"
+		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_2025.ster"
 	}	
 	global nobs = e(N)
 
@@ -214,14 +214,14 @@ program define write_csvv
 	generate_coefs `have_fe'
 
 	if "`have_fe'" == "have_fe"{
-		local csvv_filename "labor_empshare_continentFE.csvv"	
+		local csvv_filename "labor_empshare_continentFE_2025.csvv"	
 	}
 	else {
-		local csvv_filename "labor_empshare_noFE.csvv"	
+		local csvv_filename "labor_empshare_noFE_2025.csvv"	
 
 	}
 
-	local csvv_path "/home/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
+	local csvv_path "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
 	local csvv "`csvv_path'/`csvv_filename'"
 
 	cd `csvv_path'
