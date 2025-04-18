@@ -15,8 +15,8 @@ library(testit)
 library(glue)
 library(data.table)
 
-source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
-source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
+source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
+source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 #############
 # GET DATA
@@ -25,7 +25,7 @@ source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 # response function
 rf = read_csv(
 		glue("{DIR_RF}/uninteracted_reg_comlohi/",
-		"uninteracted_reg_comlohi_full_response.csv"))
+		"uninteracted_reg_comlohi_full_response_2025.csv"))
 
 # temperature distribution and densities
 temp_dist = read_csv(
@@ -104,7 +104,7 @@ q = ggplot(get(hist)) +
 
 
 # Combine and export
-pdf(glue('{DIR_FIG}/rf_plots/uninteracted_reg_comlohi_{hist}.pdf'))
+pdf(glue('{DIR_OUTPUT}/rf_plots/uninteracted_reg_comlohi_{hist}_2025.pdf'))
 plot(p/q)
 dev.off()
 

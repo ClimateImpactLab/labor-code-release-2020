@@ -8,7 +8,7 @@ run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
 cap log close 
-log using "${DIR_LOG}/uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl", replace
+log using "${DIR_LOG}/uninteracted_reg_FEs.smcl", replace
 
 * select dataset and output folder
 gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
@@ -16,8 +16,8 @@ loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 
 * other selections
 global test_code "no"
-global fe_list fe_adm1_y_adm0_w 
-* fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y
+global fe_list fe_adm0_m_y fe_adm0_my fe_adm1_y_adm0_w fe_adm0_wk
+* fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y fe_adm1_y_adm0_w
 
 ********************
 *	RUN REGRESSION
@@ -52,7 +52,7 @@ foreach fe in $fe_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'_2025.ster"
+	local ster_name "`reg_folder'/uninteracted_reg_FE_`fe'.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = `fe'"
 
 	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = risk_adj_sample_wgt], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
