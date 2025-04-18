@@ -1,7 +1,7 @@
 # setup paths for R
 
-ROOT_REPO <- "~/repos"
-ROOT_INT_DATA <- "/shares/gcp/estimation/labor/code_release_int_data"
+ROOT_REPO <- "/project/cil/home_dirs/egrenier/repos"
+ROOT_INT_DATA <- "/project/cil/kupe_shares/gcp/estimation/labor/code_release_int_data"
 
 DIR_OUTPUT <- paste0(ROOT_REPO,"/output")
 DIR_EXT_DATA <- paste0(ROOT_REPO, "/data")
