@@ -2,7 +2,7 @@ Note: You will find many response function files throughout this directory and i
 
 # Running a Labor Projection
 
-0. Generating the response function file (.cssvv)
+## 0. Generating the response function file (.cssvv)
 
 ### Background Information
 The first step to running a projection is building the response function file. The response functions come from seperate regressions estimating the impact of temperature on labor supply (usually denoted "timeuse" in the code base) and the relationship between long-run temperature, long run income per-capita and the share of high risk workers (usually denoted "empshare"). The former allows us to project the labor supply impacts of climate change in minutes/worker/day. The latter enables us to measure how temperature and socioeconomics shape the composition of the labor force, a proxy in this paper for adaptation.
@@ -15,7 +15,7 @@ Response functions in STATA .ster format will be stored in `/project/cil/home_di
 
 We run two sets of projections for the labor sector, one for each set of regression coefficients. We do this in 3 steps. First, generate the time use .csvv `3_projection/0_prepare_projections/csvv_writer_timeuse.do` (NOTE HERE TO EDIT PATHS TO HOWEVER I STRUCTURE DIRECTORY ONCE INTERACTED IS RUN). Next, generate the employment share .csvv `3_projection/0_prepare_projections/csvv_writer_empshare.do` (PATHS HERE TOO). Finally, combine the individual .csvvs into the projection ready .csvv file (Paper spec response function codes are `uninteracted_main_model` and `<interacted model goes here>`.
 
-1. Running a projection
+## 1. Running a projection
 
 ### What kind of run are you executing?
 
@@ -73,11 +73,11 @@ There are two options for running a projection on the RCC:
 
 # Post-Projection
 
-### Aggregation
+## 3. Aggregation
 
 3 relevant kinds of aggregation. some aggregate to ADM levels higher than IRs and to global values allowing us to make time series, other types will transform minutes/worker/day to $ valued results. **fill this in later**
 
-### Extraction
+## 4. Extraction
 
 Haven't gotten here yet.
 

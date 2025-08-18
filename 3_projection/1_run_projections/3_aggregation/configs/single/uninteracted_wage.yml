@@ -1,0 +1,7 @@
+outputdir: /project/cil/gcp/outputs/labor/impacts-woodwork/single/global-uninteracted_main_model
+levels-weighting: population * income * 0.00487
+aggregate-weighting-numerator: population * income * 0.00487
+aggregate-weighting-denominator: sum-to-1
+infix: wage
+aggregated-unit: "2005 PPP $USD"
+levels-unit: "2005 PPP $USD"

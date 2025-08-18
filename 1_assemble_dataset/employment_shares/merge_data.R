@@ -2,11 +2,11 @@
 rm(list = ls())
 library(tidyverse)
 library(glue)
-library(cilpath.r)
+#library(cilpath.r)
 library(zoo)
 library(countrycode)
 
-cilpath.r:::cilpath()
+#cilpath.r:::cilpath()
 
 lab = glue("{DB}/Global ACP/labor/1_preparation/employment_shares/data/")
 

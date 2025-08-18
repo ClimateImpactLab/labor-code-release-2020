@@ -42,7 +42,7 @@ if (adjust == "adjusted") {
 
 adjustment <- (1-e*x*r)
 
-heckman <- "no_heckman" # "heckman"
+heckman <- "heckman" # "heckman"
 interacted <- "uninteracted" #interacted
 
 #Read in Weather Data
@@ -53,7 +53,7 @@ dfb <- rename(dfb, temp_s = value.y)
 if (heckman == "heckman") {
   
   #vcv <- as.matrix(fread("~/repos/labor-code-release-2020/disutility_ext/heckman_vcv.csv"))
-  vcv <- as.matrix(fread("~/repos/labor-code-release-2020/disutility_ext/original_vcv.csv"))
+  vcv <- as.matrix(fread("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/disutility_ext/original_vcv.csv"))
   
   #Varience LR Linear
   {#Low Linear

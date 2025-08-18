@@ -71,7 +71,16 @@ load.map <- function(shploc = "/shares/gcp/climate/_spatial_data/world-combo-new
 print("loading world shapefile, this might take a few minutes, since it's a large file...")
 
 #list of water bodies to exclude from map (Great lakes & Lake Victoria & Antarctica)
-lakeslist <- list("CA-","ATA")
+#lakeslist <- list("CA-","ATA") 
+
+lakeslist <- list("CA-", "USA.23.1273", "USA.14.642",
+                  "USA.50.3082", "USA.50.3083", "USA.23.1275",
+                  "USA.15.740", "USA.24.1355", "USA.33.1855",
+                  "USA.36.2089", "USA.23.1272", "UGA.32.80.484",
+                  "UGA.31.79.483.2760", "UGA.32.80.484.2761",
+                  "TZA.13.59.1169", "TZA.5.26.564", "TZA.17.86.1759",
+                  "ATA", "PER.8.71.705", "PER.7.67.677",
+                  "ARM.7", "USA.23.1274", "TZA.8.37.779")
 
 #load Climate impact lab  impact-region map
 shp_master <- readOGR(dsn = shploc, layer = shpname, stringsAsFactors = FALSE) %>% #read shapefile
@@ -159,7 +168,7 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
     if (color.scheme=="div"){
       #rescale_val <- c(topcode.lb, 0, topcode.ub) #scale value for color bar, middle color "grey95" takes on value ~0 
       if (is.null(color.values)){
-      color.values <- rev(c("#d7191c", "#fec980", "#ffedaa","grey95", "#e7f8f8", "#9dcfe4", "#2c7bb6"))
+      color.values <- (c("#d7191c", "#fec980", "#ffedaa","grey95", "#e7f8f8", "#9dcfe4", "#2c7bb6"))
       }
     } else if (color.scheme=="seq"){ #sequential
       if (is.null(color.values)){
