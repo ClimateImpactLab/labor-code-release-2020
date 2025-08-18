@@ -1,7 +1,7 @@
 
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 library(glue)
 library(parallel)
 # Load in the required packages, installing them if necessary 
@@ -22,14 +22,17 @@ plot_impact_timeseries = function(rcp, ssp, iam, adapt, risk, region, aggregatio
   if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
     return()
   }
-  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
-
+  #df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{region}_timeseries.csv'))
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/median/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}.csv')) %>% filter(is.na(region))
+   
   if (aggregation == "-pop-allvars-aggregated") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
   } else if (aggregation == "-gdp-aggregated") {
     plot_title <- "Impacts as Percentage of GDP"
   } else if (aggregation == "-wage-aggregated") {
     plot_title <- "Impacts in Dollars"
+  } else if (aggregation == "-pop-aggregated"){
+    plot_title <- "Mins per Worker per Day"
   } else {
     print("wrong aggregation!")
     return()
@@ -90,7 +93,8 @@ mcmapply(plot_impact_timeseries,
 
 # plot only those we need
 plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
-  adapt="fulladapt",risk="allrisk",region="global",aggregation = "-pop-allvars-aggregated")
+  adapt="fulladapt",risk="highriskimpacts",region="global",aggregation = "-pop-aggregated")
+
 plot_impact_timeseries(rcp="rcp85",ssp="SSP3",iam="high",
   adapt="noadapt",risk="allrisk",region="global",aggregation = "-pop-allvars-aggregated")
 

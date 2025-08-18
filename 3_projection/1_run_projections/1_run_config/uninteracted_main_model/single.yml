@@ -1,0 +1,6 @@
+import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/uninteracted_main_model.yml"
+mode: writecalcs
+outputdir: "/project/cil/gcp/outputs/labor/impacts-woodwork/single"
+singledir: single-070825
+do_farmers: true
+do_historical: true

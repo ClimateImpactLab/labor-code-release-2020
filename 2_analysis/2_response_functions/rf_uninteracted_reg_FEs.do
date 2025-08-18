@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
@@ -14,15 +14,15 @@ log using "${DIR_LOG}/rf_uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl", replace
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 loc rf_folder 	"${DIR_RF}/uninteracted_reg_FEs"
 
-* other selections
-global fe_list fe_adm1_y_adm0_w 
-*fe_adm0_y fe_adm0_my fe_adm0_m_y fe_adm0_wk fe_adm3_my 
+* other selections, see ster folder for all possible fe codes
+global fe_list fe_adm0_m_y fe_adm0_my fe_adm0_wk fe_adm1_y_adm0_w
 global ref_temp 27 
 
 * full response function
 numlist "-20(0.1)47"
 gl full_response `r(numlist)'
-* 6 table values
+
+* table values
 numlist "45 40 35 30 10 5 0 -5 -10"
 gl table_values `r(numlist)'
 
@@ -34,7 +34,9 @@ gl table_values `r(numlist)'
 foreach row_values in full_response table_values {
 
 	foreach fe in $fe_list {
-
+		
+		clear 
+		
 		* set the ster file name and the output CSV
 		local ster_name	"`reg_folder'/uninteracted_reg_FE_`fe'.ster"
 		local rf_name 	"`rf_folder'/uninteracted_reg_FE_`fe'_`row_values'.csv"

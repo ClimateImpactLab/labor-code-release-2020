@@ -3,12 +3,12 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
 cap log close 
-log using "/home/rfrost/repos/labor-code-release-2020/logs/interacted_splines_lr_interaction_and_mixed_weight.smcl", replace
+log using "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/logs/interacted_splines_lr_interaction_and_mixed_weight.smcl", replace
 
 * select dataset and output folder
 gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
@@ -16,9 +16,12 @@ loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster"
 
 * other selections
 gl test_code "no"
-gl reg_list 1_factor 
-*2_factor
+gl reg_list 2_factor // 1_factor
 loc fe fe_adm0_wk
+
+* Note on weights: 
+* 	run regression 1_factor with mixed weights (see line 131, 144,)
+*	run regression 2_factor with rep_unit_year_sample_wgt
 
 ********************
 *	RUN REGRESSION
@@ -121,11 +124,11 @@ foreach reg in $reg_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/interacted_reg_`reg'_lr_interaction_mixed_weight.ster"
+	local ster_name "`reg_folder'/interacted_reg_`reg'_2025.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment withlr interaction, fe = $fe, reg_type = `reg'"
 
 	* set the regression weight
-	replace risk_adj_sample_wgt = rep_unit_year_sample_wgt if high_risk ==1
+	*replace risk_adj_sample_wgt = rep_unit_year_sample_wgt if high_risk ==1
 	loc weight "risk_adj_sample_wgt"
 
 	di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
@@ -138,7 +141,7 @@ foreach reg in $reg_list {
 	count if included == 1 & high_risk == 0
 	estadd scalar low_N = `r(N)'
 
-	estimates notes: "`spec_desc' change weight to mixed version, and specify interactions such that we correctly recover LR and HR curves"
+	estimates notes: "`spec_desc' representative unit-year weights" // or: "mixed weights (representative unit-year for high-risk, risk_adj for low-risk)"
 	estimates save "`ster_name'", replace
 
 	di "COMPLETED: `reg' regression."

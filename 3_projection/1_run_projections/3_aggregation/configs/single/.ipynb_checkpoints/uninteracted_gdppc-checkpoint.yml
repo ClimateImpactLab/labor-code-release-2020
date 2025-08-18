@@ -1,0 +1,14 @@
+# Usage:
+#  - `targetdir: /full/path/to/files/to/aggregate [specify full single directory]
+#  -  (optional) `outputdir: /directory/to/drop/files` [specify output directory] 
+
+# wage levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+
+# outputdir: if not specified will drop outputs in targetdir
+targetdir: /project/cil/gcp/outputs/labor/impacts-woodwork/single/uninteracted_main_model/rcp85/CCSM4/low/SSP3
+levels-weighting: income * 0.00487
+aggregate-weighting-numerator: income * 0.00487
+aggregate-weighting-denominator: sum-to-1
+aggregated-unit: "% GDP Per Capita"
+levels-unit: "% GDP Per Capita"
+infix: gdppc

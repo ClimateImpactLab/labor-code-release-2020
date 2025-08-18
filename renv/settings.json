@@ -1,7 +1,10 @@
 {
   "bioconductor.version": null,
   "external.libraries": [],
-  "ignored.packages": [],
+  "ignored.packages": [
+    "cilpath.r",
+    "maptools"
+  ],
   "package.dependency.fields": [
     "Imports",
     "Depends",

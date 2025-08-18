@@ -1,8 +1,8 @@
 # Produces maps displayed in the energy paper. Uses Functions in mapping.R
 # done 26 aug 2020
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -20,12 +20,8 @@ source(paste0(DIR_REPO_LABOR, "/4_post_projection/0_utils/mapping.R"))
 
 mymap = load.map(shploc = paste0(ROOT_INT_DATA, "/shapefiles/world-combo-new-nytimes"))
 
-
 #############################################
 # map of overall impact in 2099
-
-
-
 
 plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suffix="",output_folder = DIR_FIG){
 
@@ -34,8 +30,9 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
   }
 
   # browser()
-  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
-
+  #df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/median/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) # browser()
+  df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/z_old/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.csv')) #%>% filter(year==!!year)
+  
   if (aggregation == "-pop-allvars-levels") {
     plot_title <- "Pop Weighted Impacts - Mins Worked"
 
@@ -102,14 +99,17 @@ plot_impact_map = function(rcp, ssp, iam, adapt, year, risk, aggregation="", suf
                      color.scheme = color_scheme, 
                      rescale_val = rescale_value,
                      colorbar.title = plot_title, 
+                     plot.lakes = F,
                      map.title = glue("{ssp}-{rcp}-{iam}-{risk}-{adapt}{aggregation}-{year}"))
   
   ggsave(glue("{output_folder}/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}_{year}_map.pdf"), p)
   # return(p)
 }
 
-# plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="highrisk",aggregation="-wage-levels", output_folder = DIR_FIG)
+plot_impact_map(rcp="rcp85",ssp="SSP3",iam="high", adapt="fulladapt",year=2099,risk="riskshare",aggregation="", output_folder = DIR_FIG)
 
+# why is my data not plotting? check data:
+#df= read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data/median/{ssp}-{rcp}_{iam}_{risk}_{adapt}{aggregation}{suffix}.csv')) %>% filter(year==!!year)
 
 # the following two blocks can plot everything
 args = expand.grid(rcp=c("rcp85","rcp45"),

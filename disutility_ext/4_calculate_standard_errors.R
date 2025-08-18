@@ -38,11 +38,6 @@ if (adjust == "adjusted") {
   x_label <- paste0("")
 }
 
-dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
-
-dfb <- rename(dfb, temp = value.x)
-dfb <- rename(dfb, temp_s = value.y)
-
 adjustment <- (1-e*x*r)
 
 heckman <- "no_heckman" # "no_heckman"
@@ -50,7 +45,6 @@ interacted <- "interacted" #uninteracted
 
 #Read in Weather Data
 dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
-#dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
 
 dfb <- rename(dfb, temp = value.x)
 dfb <- rename(dfb, temp_s = value.y)
@@ -68,10 +62,10 @@ soc_ec$wage <- (soc_ec$gdppc*0.6)/(250*6*60)
 dfb <- merge(dfb, soc_ec, by.x = "hierid", by.y = "region", all.x = FALSE, all.y = TRUE, allow.cartesian=TRUE)
 total_pop <- sum(dfb$pop)
 
-dfb$a <- dfb$temp - 366*30.6007075824072
-dfb$b <- dfb$temp_s - 366*((30.6007075824072-27)^3)
-dfb$c <- dfb$temp - 366*29.3189751020172
-dfb$d <- dfb$temp_s - 366*((29.3189751020172-27)^3)
+dfb$a <- dfb$temp - 366*30.604584663960
+dfb$b <- dfb$temp_s - 366*((30.604584663960-27)^3)
+dfb$c <- dfb$temp - 366*29.405891622251
+dfb$d <- dfb$temp_s - 366*((29.405891622251-27)^3)
 dfb$pop_w <- dfb$pop/total_pop
 dfb$pi_term <- 100/dfb$gdppc
 dfb$wage_term <- dfb$wage/0.5
@@ -119,10 +113,10 @@ if (heckman == "heckman") {
     ################################
     # Income Adaptation + Clipping #
     ################################
-<<<<<<< HEAD
+#<<<<<<< HEAD
     dfb_original <- dfb
     coefs <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
-=======
+#=======
     dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
     
     dfb <- rename(dfb, temp = value.x)
@@ -140,17 +134,17 @@ if (heckman == "heckman") {
     
     
     coefs <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
->>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
+#>>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
     mu <- as.matrix(coefs$V2)
     vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_vars_covars.csv')
     #vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
     vcv <- as.matrix(vcv[c(1:42),c(1:42)])
     
-<<<<<<< HEAD
+#<<<<<<< HEAD
     n <- 10000
-=======
+#=======
     n <- 100
->>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
+#>>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
     set.seed(12346) 
     resampled <- mvtnorm::rmvnorm(n = n, mu, vcv)
     
