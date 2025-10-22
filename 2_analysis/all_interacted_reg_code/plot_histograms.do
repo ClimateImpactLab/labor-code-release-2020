@@ -3,7 +3,7 @@
 ************
 
 * get paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 ***********************************
 * PROGRAM: PLOT HISTOGRAMS & COUNTS
@@ -20,7 +20,7 @@ program define plot_histograms
 	di " COLLAPSER $collapser"
 
 	** PATHS
-	local datapath = "/mnt/CIL_labor/2_regression/time_use/input"
+	local datapath = "/project/cil/norgay/CIL_labor/2_regression/time_use/input"
 
 	** PULL IN TERCILE CUTOFF DATA
 	if "`tercile_unit'" == "hierid" {

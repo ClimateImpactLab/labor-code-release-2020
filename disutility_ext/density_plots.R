@@ -9,14 +9,14 @@ library(glue)
 
 regions <- c("USA.14.608","NOR.12.288","BRA.25.5212.R3fd4ed07b36dfd9c","CHN.2.18.78","IND.10.121.371","NGA.25.510")
 
-df <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_1950_to_2010_daily.csv")
+df <- fread("/project/cil/battuta_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_1950_to_2010_daily.csv")
 df <- subset(df, hierid %in% regions)
 df <- aggregate(value ~ month + day+ hierid, data = df, FUN = mean)
-dfs <- fread("/shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_spline_1950_to_2010_daily.csv")
+dfs <- fread("/project/cil/battuta_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_spline_1950_to_2010_daily.csv")
 dfs <- subset(dfs, hierid %in% regions)
 dfs<- aggregate(value ~  month + day + hierid, data = dfs, FUN = mean)
 
-soc_ec <- fread("/home/rfrost/repos/labor-code-release-2020/disutility_ext/country_level_econvars_SSP3.csv")
+soc_ec <- fread("/project/cil/home_dirs/rfrost/repos/labor-code-release-2020/disutility_ext/country_level_econvars_SSP3.csv")
 soc_ec <- subset(soc_ec, year == 2010)
 soc_ec <- subset(soc_ec, model == "high")
 

@@ -5,11 +5,20 @@
 
 #----------------------------------------------------------------------------------
 
+ROOT_REPO <- "/project/cil/home_dirs/maiqi/repos"
+ROOT_INT_DATA <- "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data"
 
+DIR_OUTPUT <- paste0(ROOT_REPO,"/output")
+DIR_EXT_DATA <- paste0(ROOT_REPO, "/data")
+
+DIR_REPO_LABOR <- paste0(ROOT_REPO,"/labor-code-release-2020")
+
+DIR_EXT_DATA <- paste0(DIR_REPO_LABOR,"/data")
+DIR_FIG <- paste0(DIR_REPO_LABOR,"/figures")
 
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 if(!require(gg.gap)) install.packages("gg.gap")
 library(gg.gap)
@@ -129,7 +138,6 @@ regions = c(
   )
 
 
-
 # code to find the cities in deciles: 
 
 all_IRs = read_csv(paste0(DIR_REPO_LABOR, "/data/misc/IR_names_w_deciles.csv"))
@@ -140,11 +148,10 @@ cities_w_deciles = merge(cities_500, all_IRs, by = "region")
 # write_csv(cities_w_deciles, paste0(DIR_REPO_LABOR, "/data/misc/IR_income_deciles_500kcities.csv"))
 # cities_w_deciles %>% dplyr::filter(decile == 10)
 
-
 for (rg in regions) {
-  input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc_correct_rebasing_for_integration"
+  input.dir = "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc_kernal"
 
-  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_gdp_",rg,".csv")) %>%
+  df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv_-gdp_",rg,".csv")) %>%
         # dplyr::mutate(value = value*100000) %>%
         dplyr::filter(year %in% 2099, iam == "high", rcp == "rcp85") %>%
         dplyr::mutate(value = -value * 100) %>% 
@@ -155,8 +162,12 @@ for (rg in regions) {
 
   gg2 = ggkd(df.kd = dplyr::filter(df) , ir.name = rg,
       y.label = "density", x.label = "percentage GDP")
-  ggsave(paste0(DIR_FIG,'/mc_correct_rebasing_for_integration/kernel_density_',rg ,"_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
-      
+  ggsave(
+    paste0("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/figures/fig6_kernel_density/",
+           "kernel_density_", rg, "_2099_common_axis.pdf"),
+    plot = gg2, width = 7, height = 7, units = "in"
+  )
+  
 }
 
 

@@ -12,7 +12,7 @@ loc rf_folder 	"${DIR_OUTPUT}/interacted_reg_output/rf"
 cap mkdir `rf_folder'
 
 * other selections
-global reg_list 1_factor // 2_factor
+global reg_list 2_factor // 2_factor
 global ref_temp 27 
 
 * full response function
@@ -32,7 +32,7 @@ foreach row_values in full_response {
 	foreach reg in $reg_list {
 
 		* set the ster file name and the output CSV
-		local ster_name	"`reg_folder'/interacted_reg_`reg'_lr_interaction_mixed_weight_2025.ster" // _2025.ster"
+		local ster_name	"`reg_folder'/interacted_reg_`reg'_2025.ster" // _2025.ster"
 		local rf_name 	"`rf_folder'/interacted_reg_`reg'_`row_values'_2025.csv"
 		
 		* create the temp list that we want to predict for

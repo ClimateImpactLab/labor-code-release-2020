@@ -10,9 +10,11 @@ library(readr)
 library(glue)
 library(data.table)
 library(cowplot)
+library(tidyverse)
+library(parallel)
 
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 #################
 # DEFINE OUTPATH

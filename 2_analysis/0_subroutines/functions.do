@@ -324,6 +324,8 @@ prog def collect_spline_terms
 
 end
 
+
+
 cap prog drop collect_gdp_spline_terms
 prog def collect_gdp_spline_terms
 	syntax , splines(numlist) unint_gdp(string) int_gdp(string)
@@ -356,6 +358,95 @@ prog def collect_gdp_spline_terms
 	}
 
 end
+
+// cap program drop collect_spline_terms_1_factor
+// program define collect_spline_terms_1_factor
+//
+//     syntax , splines(numlist) unint_gdp(string) int_gdp(string)
+//
+//     foreach i in `splines' {
+//
+//         // ---------- UNINT:${unint_gdp`i'} = LR ----------
+//         #delimit ;
+//         global `unint_gdp'`i' = "
+//             _b[tmax_rcspl_3kn_t`i'_lr]   +
+//             _b[tmax_rcspl_3kn_t`i'_lr_v1]+
+//             _b[tmax_rcspl_3kn_t`i'_lr_v2]+
+//             _b[tmax_rcspl_3kn_t`i'_lr_v3]+
+//             _b[tmax_rcspl_3kn_t`i'_lr_v4]+
+//             _b[tmax_rcspl_3kn_t`i'_lr_v5]+
+//             _b[tmax_rcspl_3kn_t`i'_lr_v6]
+//         " ;
+//         #delimit cr
+//
+//         // ---------- INT: ${int_gdp`i'} = (HR) ----------
+//         #delimit ;
+//         global `int_gdp'`i' = "
+//             (  _b[tmax_rcspl_3kn_t`i'_hr]   +
+//                _b[tmax_rcspl_3kn_t`i'_hr_v1]+
+//                _b[tmax_rcspl_3kn_t`i'_hr_v2]+
+//                _b[tmax_rcspl_3kn_t`i'_hr_v3]+
+//                _b[tmax_rcspl_3kn_t`i'_hr_v4]+
+//                _b[tmax_rcspl_3kn_t`i'_hr_v5]+
+//                _b[tmax_rcspl_3kn_t`i'_hr_v6]
+//              )
+//         " ;
+//         #delimit cr
+//     }
+// end
+
+
+cap program drop collect_mix_spline_terms
+program define collect_mix_spline_terms
+
+    syntax , splines(numlist) unint(string) int_gdp(string) int_base(string)
+
+    foreach i in `splines' {
+
+        // ---------- UNINT:${uninti'} = LR----------
+        #delimit ;
+        global `unint'`i' = "
+            _b[tmax_rcspl_3kn_t`i'_lr]   +
+            _b[tmax_rcspl_3kn_t`i'_lr_v1]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v2]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v3]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v4]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v5]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v6]
+        " ;
+        #delimit cr
+
+        // ---------- ${int_gdpi'} = (HR*GDP)----------
+        #delimit ;
+        global `int_gdp'`i' = "
+            (  _b[tmax_rcspl_3kn_t`i'_hr_g]   +
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v1]+
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v2]+
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v3]+
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v4]+
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v5]+
+               _b[tmax_rcspl_3kn_t`i'_hr_g_v6]
+            ) 
+        " ;
+        #delimit cr
+	
+	// ---------- ${int_basei'} = HR----------
+        #delimit ;
+        global `int_base'`i' = "
+            (  _b[tmax_rcspl_3kn_t`i'_hr]   +
+               _b[tmax_rcspl_3kn_t`i'_hr_v1]+
+               _b[tmax_rcspl_3kn_t`i'_hr_v2]+
+               _b[tmax_rcspl_3kn_t`i'_hr_v3]+
+               _b[tmax_rcspl_3kn_t`i'_hr_v4]+
+               _b[tmax_rcspl_3kn_t`i'_hr_v5]+
+               _b[tmax_rcspl_3kn_t`i'_hr_v6]
+            ) 
+        " ;
+        #delimit cr
+    }
+end
+
+
 
 cap prog drop collect_lrt_spline_terms
 prog def collect_lrt_spline_terms

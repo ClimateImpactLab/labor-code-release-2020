@@ -1,9 +1,9 @@
 {smcl}
 {com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/logs/rf_uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl
+       {txt}log:  {res}/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/rf_uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}13 May 2025, 12:35:45
+ {txt}opened on:  {res} 2 Sep 2025, 15:14:47
 {txt}
 {com}. 
 . * select dataset and output folder
@@ -77,56 +77,56 @@
 {res}{txt}(671 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y_full_response.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y_full_response.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(200 real changes made)
 (0 real changes made)
 {res}{txt}(671 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my_full_response.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my_full_response.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(200 real changes made)
 (0 real changes made)
 {res}{txt}(671 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk_full_response.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk_full_response.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(200 real changes made)
 (0 real changes made)
 {res}{txt}(671 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w_full_response.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w_full_response.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(4 real changes made)
 (0 real changes made)
 {res}{txt}(9 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y_table_values.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y_table_values.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(4 real changes made)
 (0 real changes made)
 {res}{txt}(9 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my_table_values.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my_table_values.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(4 real changes made)
 (0 real changes made)
 {res}{txt}(9 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk_table_values.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk_table_values.csv saved
 {res}matching these splines with the transformed-after-aggregated data
 {txt}(4 real changes made)
 (0 real changes made)
 {res}{txt}(9 missing values generated)
 note: confidence intervals calculated using Z critical values
 note: confidence intervals calculated using Z critical values
-{res}{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w_table_values.csv saved
+{res}{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w_table_values.csv saved
 
 {com}. 
 . cap log close 

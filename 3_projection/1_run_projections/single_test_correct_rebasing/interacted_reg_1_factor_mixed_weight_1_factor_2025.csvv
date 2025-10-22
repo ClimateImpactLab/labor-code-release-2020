@@ -1,0 +1,30 @@
+---
+oneline: Labor interacted regression (income interaction) with a restricted cubic spline term (3 knots), located at 27_37_39
+version: LABOR-RCSPLINE-3KNOTS-interacted-Knots-27_37_39
+dependencies: /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/interacted_reg_output/ster/interacted_reg_1_factor/interacted_reg_1_factor_2025.ster
+description: Generated with csvv_writer_timeuse.do, from labor interacted regression with restricted cubic spline, 3 knots. The first 6 gammas are for the low-risk sector. The next 6 for the high-risk sector.
+csvv-version: girdin-2017-01-10
+variables:
+  tasmax: daily maximum temperature [C]
+  tasmax_rcspline1: restricted cubic spline term of daily max temperature [C^3]
+  climtasmax: long run average daily maximum temperature [C]
+  loggdppc: log of gdp per capita [log USD2000]
+  outcome: labor productivity [minutes worked by individual]
+...
+observations
+6599335
+prednames
+tasmax, tasmax_rcspline1, tasmax, tasmax_rcspline1, tasmax, tasmax_rcspline1
+covarnames
+1, 1, 1, 1, loggdppc, loggdppc
+gamma
+.0535577983010383,-.0030842487493238,4.319629331066793,-.0623342264059723,-.423439940630417,.0062602967628043
+gammavcv
+.0819920191784559,-.0005305928316601,.0008295199874001,.0000115277252294,-4.59455729889e-06,-1.52808021284e-06
+-.0005305928316601,.0000126400886744,-.0000689335807601,-3.05566273878e-06,6.61108366306e-06,3.33114132471e-07
+.0008295199873999,-.0000689335807601,8.9702156683814,-.0599080615188487,-.9330301407695494,.00627080401659
+.0000115277252294,-3.05566273888e-06,-.0599080615188484,.000873932682829,.0062621264729585,-.000091461189365
+-4.59455729889e-06,6.61108366306e-06,-.9330301407695494,.0062621264729584,.0972127981112176,-.0006563884458505
+-1.52808021324e-06,3.33114132631e-07,.0062708040165902,-.000091461189365,-.0006563884458505,9.58739070222e-06
+residvcv
+642346.1404924288

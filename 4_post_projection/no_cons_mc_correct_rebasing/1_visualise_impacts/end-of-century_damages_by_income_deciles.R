@@ -11,8 +11,8 @@ pacman::p_load(ggplot2,
                parallel)
 
 
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -21,7 +21,7 @@ pacman::p_load(ggplot2,
                readr)
 
 
-DB_data = '/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates/'
+DB_data = '/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates/'
 
 # Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
 

@@ -15,8 +15,8 @@ library(testit)
 library(glue)
 library(data.table)
 
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 #############
 # GET DATA

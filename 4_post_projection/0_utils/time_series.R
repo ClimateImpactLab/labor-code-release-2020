@@ -21,7 +21,7 @@ ggtimeseries <- function(df.list = NULL,
                          legend.title = "Adaptation", legend.breaks = c("full adaptation", "income adaptation", "no adaptation", "total mortality-related costs"), 
                          legend.values = c("#009E73", "#E69F00", "#D55E00", "#000000"), 
                          x.label = "Year", y.label = "Deaths per 100,000", 
-                         y.limits = NULL, x.limits = c(2000, 2100),
+                         y.limits = c(0.0, 5.0), x.limits = c(2000, 2100),
                          rcp.value = NULL, ssp.value = NULL, iam.value = NULL) {
   
   #base plot
@@ -37,7 +37,7 @@ ggtimeseries <- function(df.list = NULL,
           axis.line = element_line(colour = "black")) +
     xlab(x.label) + ylab(y.label) +
     coord_cartesian(ylim = y.limits, xlim = x.limits)  +
-    #theme(legend.position = c(0.15, 0.85)) +
+    theme(legend.position = c(0.15, 0.85)) +
     ggtitle(paste0(rcp.value,"-", ssp.value, "-", iam.value)) 
 
     

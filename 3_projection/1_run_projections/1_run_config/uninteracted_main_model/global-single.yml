@@ -1,6 +1,6 @@
-import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/uninteracted_main_model.yml"
+import: "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/uninteracted_main_model.yml"
 mode: writecalcs
-outputdir: "/project/cil/gcp/outputs/labor/impacts-woodwork/single"
-singledir: global-uninteracted_main_model
+outputdir: " /project/cil/home_dirs/maiqi/projection_test/labor"
+singledir: "/project/cil/home_dirs/maiqi/projection_test/labor"
 do_farmers: true
 do_historical: true

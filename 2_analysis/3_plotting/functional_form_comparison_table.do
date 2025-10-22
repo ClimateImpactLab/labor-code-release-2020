@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * reg list 

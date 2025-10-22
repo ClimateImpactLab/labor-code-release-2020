@@ -5,7 +5,7 @@ clear all
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * select dataset and output folder
@@ -17,7 +17,7 @@ loc table_folder 	"${DIR_OUTPUT}/interacted_reg_output"
 *	GENERATE LATEX TABLE
 ***********************************
 
-import delim "`rf_folder'/interacted_reg_1_factor_marg_table_values.csv", clear
+import delim "`rf_folder'/interacted_reg_1_factor_marg_table_values_2025.csv", clear
 
 * get the N and R squared for each model
 

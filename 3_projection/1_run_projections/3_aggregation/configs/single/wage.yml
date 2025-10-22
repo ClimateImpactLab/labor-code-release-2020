@@ -1,0 +1,8 @@
+outputdir: /project/cil/gcp/outputs/labor/impacts-corpsepose/single/single-interacted-test
+#writedir: /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/aggregation_interacted_single
+levels-weighting: population * income * 0.00487
+aggregate-weighting-numerator: population * income * 0.00487
+aggregate-weighting-denominator: sum-to-1
+infix: wage
+aggregated-unit: "2005 PPP $USD"
+levels-unit: "2005 PPP $USD"

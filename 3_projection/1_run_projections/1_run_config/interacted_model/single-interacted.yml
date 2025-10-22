@@ -1,0 +1,9 @@
+import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/interacted_model.yml"
+mode: writecalcs
+outputdir: "/project/cil/gcp/outputs/labor/impacts-corpsepose/single"
+singledir: single-interacted-test
+do_farmers: true
+do_historical: true
+only-rcp: rcp85
+only-ssp: SSP3
+only-iam: high

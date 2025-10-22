@@ -6,6 +6,7 @@
 
 # outputdir: if not specified will drop outputs in targetdir
 outputdir: /project/cil/gcp/outputs/labor/impacts-woodwork/single/global-uninteracted_main_model
+writedir: /project/cil/home_dirs/maiqi/projection_test/labor-aggregation
 levels-weighting: population * 0.00487 / population 
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: population * income
