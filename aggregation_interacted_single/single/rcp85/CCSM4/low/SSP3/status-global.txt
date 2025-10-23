@@ -1,5 +1,0 @@
-Tue Sep 16 16:12:10 2025 generate.aggregate gdppc: Complete
-Tue Sep 16 16:18:53 2025 generate.aggregate gdp: Complete
-Tue Sep 16 16:20:31 2025 generate.aggregate gdp: Complete
-Tue Sep 16 16:24:56 2025 generate.aggregate pop: Complete
-Tue Sep 16 17:27:48 2025 generate.aggregate wage: Complete
