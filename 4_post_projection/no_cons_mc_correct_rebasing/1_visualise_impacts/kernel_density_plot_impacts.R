@@ -5,20 +5,11 @@
 
 #----------------------------------------------------------------------------------
 
-ROOT_REPO <- "/project/cil/home_dirs/maiqi/repos"
-ROOT_INT_DATA <- "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data"
 
-DIR_OUTPUT <- paste0(ROOT_REPO,"/output")
-DIR_EXT_DATA <- paste0(ROOT_REPO, "/data")
-
-DIR_REPO_LABOR <- paste0(ROOT_REPO,"/labor-code-release-2020")
-
-DIR_EXT_DATA <- paste0(DIR_REPO_LABOR,"/data")
-DIR_FIG <- paste0(DIR_REPO_LABOR,"/figures")
 
 rm(list = ls())
-source("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 if(!require(gg.gap)) install.packages("gg.gap")
 library(gg.gap)
@@ -153,7 +144,7 @@ cities_w_deciles = merge(cities_500, all_IRs, by = "region")
 
 
 for (rg in regions) {
-  input.dir = "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc_kernal"
+  input.dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data_mc_correct_rebasing_for_integration"
   # browser()
   df = read_csv(paste0(input.dir, "/SSP3-",rg,"valuescsv__",rg,".csv")) %>%
         dplyr::filter(year %in% 2099, iam == "high", rcp == "rcp85") %>% 
@@ -169,7 +160,6 @@ for (rg in regions) {
   ggsave(paste0(DIR_FIG,'/mc_correct_rebasing_for_integration/kernel_density_impacts_',rg ,"_2099_common_axis.pdf"), plot=gg2, width = 7, height = 7)
       
 }
-
 
 
 

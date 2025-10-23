@@ -3,7 +3,7 @@
 *****************
 
 * get functions and paths
-run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
@@ -19,12 +19,6 @@ loc xtiles		"${ROOT_INT_DATA}/xtiles/rep_unit_terciles_uncollapsed.dta"
 gl test_code "no"
 gl reg_list inc_t1 inc_t2 inc_t3 inc_q1_clim_q1 inc_q1_clim_q2 inc_q2_clim_q1 inc_q2_clim_q2 // clim_t1 clim_t2 clim_t3
 loc fe fe_adm0_wk
-
-* ensure required folders exist
-cap mkdir "${DIR_STER}/subsampled_splines"
-
-local reg_folder "${DIR_STER}/subsampled_splines"
-
 
 ********************
 *	RUN REGRESSION

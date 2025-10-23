@@ -17,9 +17,9 @@ library(data.table)
 library(plyr)
 library(tidyverse)
 library(tidyr)
-source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R")
-source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R')
-source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R")
+source('~/repos/labor-code-release-2020/0_subroutines/paths.R')
+source('~/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 # set macro: nochn, wchn
 reg = "nochn"

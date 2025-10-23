@@ -6,9 +6,9 @@
 clear all 
 
 * get paths
-run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.do"
-run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/0_subroutines/utils.do"
-run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/all_interacted_reg_code/plot_histograms.do"
+run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/home/`c(username)'/repos/labor-code-release-2020/2_analysis/0_subroutines/utils.do"
+run "/home/`c(username)'/repos/labor-code-release-2020/2_analysis/all_interacted_reg_code/plot_histograms.do"
 
 * select input and output folder
 gl ster_dir "${DIR_OUTPUT}/interacted_reg_output/ster"
@@ -23,7 +23,7 @@ gl rf_folder "${DIR_OUTPUT}/interacted_reg_output"
 
 local N_knots 3 
 
-global reg_list 1_factor_2025
+global reg_list 1_factor
 * takes: 1_factor 2_factor
 
 global data_subset_list no_chn
@@ -52,7 +52,7 @@ foreach weight in $hist_weight_list {
 }
 
 generate_grids $tercile $interaction
-generate_coef_spline_1factor 3 rcspl
+generate_coef_spline 3 rcspl
 
 foreach reg in $reg_list{
 	cap mkdir "${DIR_OUTPUT}/interacted_reg_output/plots/`reg'"
@@ -65,7 +65,7 @@ foreach reg in $reg_list{
 						foreach hist_style in ${hist_style_list} {
 							di "`reg_list'"
 							loc ster_name "interacted_reg_`reg'"
-							plot_interacted_spline $interaction `f' `p' `data_subset' all_data_with_ci `ster_name' `hist_weight' `hist_style'
+							plot_interacted_spline $interaction `f' `p' `data_subset' all_data_no_ci `ster_name' `hist_weight' `hist_style'
 						}
 					}
 				}

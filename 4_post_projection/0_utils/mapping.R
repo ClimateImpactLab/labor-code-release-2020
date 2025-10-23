@@ -62,16 +62,7 @@ pacman::p_load(ggplot2,         # ggplot
                 scales,         #rescale
                 maps            # cities database
                 )
-library(ggplot2)
-library(dplyr) #left_join, filter
-library(magrittr) #%>%
-#library(rgdal) #readOGR, spTransform
-#library(rgeos) #gBuffer
-library(raster) #area
-library(rnaturalearth) #lakes
-library(RColorBrewer) #hex color codes from color palettes
-library(sf)
-library(terra)
+
 #---------------------------------------------------------------------------------------------
 
 # function to load map and put into dataframe
@@ -219,56 +210,17 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
             panel.border = element_blank()) +   
       labs(title = map.title, caption = caption_val) 
     
-    if (plot.lakes) {
-      # --- Load Natural Earth lakes WITHOUT vsicurl; prefer package copy; fallback to download ---
-      lakes_sf <- NULL
+    if (plot.lakes){
       
-      # 1) Try package-local shapefile (works offline)
-      pkg_shp <- system.file("shapes/ne_110m_lakes.shp", package = "rnaturalearthdata")
-      if (nzchar(pkg_shp) && file.exists(pkg_shp)) {
-        lakes_sf <- sf::st_read(pkg_shp, quiet = TRUE)
-      }
+      #load lakes
+      lakes10 <- ne_download(scale = 110, type = 'lakes', category = 'physical') %>%
+        spTransform(CRS(map.crs)) %>% #set crs
+        fortify(lakes10, region = "name") #set spatial data as df
+
+      lakes <- dplyr::filter(lakes10, lakes10$lat <= max(map.df$lat) & lakes10$lat >= min(map.df$lat) & lakes10$long <= max(map.df$long) & lakes10$long >= min(map.df$long)) #newly subsetted lakes based on limits of map.df
       
-      # 2) If not found in package, try to download via rnaturalearth (may require internet)
-      if (is.null(lakes_sf)) {
-        lakes_sf <- try(
-          rnaturalearth::ne_download(scale = 110, type = "lakes", category = "physical",
-                                     returnclass = "sf"),  # return sf directly
-          silent = TRUE
-        )
-        if (inherits(lakes_sf, "try-error")) lakes_sf <- NULL
-      }
-      
-      if (is.null(lakes_sf)) {
-        warning("Lakes layer unavailable (no local copy, and remote download failed). ",
-                "Continuing without lakes overlay this time.")
-      } else {
-        # Ensure valid geometry and lon/lat CRS
-        lakes_sf <- sf::st_make_valid(lakes_sf)
-        suppressWarnings({ lakes_sf <- sf::st_buffer(lakes_sf, 0) })
-        lakes_sf <- sf::st_transform(lakes_sf, 4326)
-        
-        # Convert to data.frame for your ggplot workflow (keep the rest of your code unchanged)
-        lakes_sp <- as(lakes_sf, "Spatial")
-        lakes_df <- ggplot2::fortify(lakes_sp, region = "name")
-        
-        # Clip to map extent (uses long/lat columns from your fortified map.df)
-        lakes_df <- dplyr::filter(
-          lakes_df,
-          lat  <= max(map.df$lat)  & lat  >= min(map.df$lat) &
-            long <= max(map.df$long) & long >= min(map.df$long)
-        )
-        
-        # Overlay
-        p.map <- p.map + geom_polygon(
-          data = lakes_df,
-          aes(x = long, y = lat, group = group),
-          fill = lakes.color
-        )
-      }
+      p.map <- p.map + geom_polygon(data = lakes, aes(x=long, y=lat, group=group), fill=lakes.color) # lakes overlay
     }
-    
-    
     
     if(color.scheme=="div" | color.scheme=="seq"){ #need to use scale_fill_gradient for continuous values
       

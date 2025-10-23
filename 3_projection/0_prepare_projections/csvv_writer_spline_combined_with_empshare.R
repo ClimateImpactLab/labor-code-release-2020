@@ -5,30 +5,26 @@
 
 rm(list = ls())
 library(stringr)
-library(plyr)
 library(dplyr)
-library(data.table)
-library(easyNCDF)
-library(sf)
-library(glue)
-library(readstata13)
+
 # set up paths
-REPO = '/project/cil/home_dirs/maiqi/repos'
+REPO = '/project/cil/home_dirs/egrenier/repos'
 lab_repo = paste0(REPO, "/labor-code-release-2020")
 csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/single_test_correct_rebasing/")
 pp_tools_repo = paste0(REPO, "/post-projection-tools/")
 
 # Source dylan's YP package, to get the read.csvv function
 source(paste0(pp_tools_repo, "response_function/yellow_purple_package.R"))
+
 # Option for type of FE in employment shares - options are "noFE" or "continentFE"
 FE = "noFE"
 
 # Option for choosing interacted/uninteracted regression - options are "interacted" or "uninteracted"
-interaction = "interacted"
+interaction = "uninteracted"
 weight = "risk_adj_sample_wgt"
 
-csvv_name_spline = glue("interacted_reg_1_factor_mixed_weight_1_factor_2025.csvv")
-csvv_name_empshare = glue("labor_empshare_noFE_2025.csvv")
+csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_2025.csvv")
+csvv_name_empshare = paste0("labor_empshare_", FE, "_2025.csvv")
 
 
 ##############################################
@@ -61,11 +57,9 @@ num_coef_empshare = length(empshare$V1)
 # 2 . Get a nice list of prednames, covar names, and gammas
 ##############################################
 
-obs_spline   <- as.numeric(spline$observations)
-obs_empshare <- as.numeric(empshare$observations)
-observations <- obs_spline + obs_empshare
-observations
-
+observations = 
+    as.numeric(levels(spline$observations))[spline$observations] + 
+    as.numeric(levels(empshare$observations))[empshare$observations]
 
 list_preds = paste0(
                 paste(unlist(spline$prednames), collapse=', '), 
@@ -132,7 +126,7 @@ if(FE == "continentFE"){
 ##############################################
 
 # Initiate the file
-fileConn<-file(paste0(csvv_dir,"interacted_main_model_2025.csvv"))
+fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
 
 # Write the csvv!
 writeLines(
@@ -185,5 +179,5 @@ writeLines(
     fileConn)
 
 close(fileConn)
-print(paste0(csvv_dir,"interacted_main_model_2025.csvv"))
+print(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
 

@@ -2,8 +2,8 @@
 # %GDP time series (full, income, and no adapt)
 
 rm(list = ls())
-source("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 library(glue)
 library(parallel)
 library(imputeTS)

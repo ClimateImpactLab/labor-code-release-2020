@@ -1,5 +1,5 @@
 conda activate risingverse-py27
-cd "/project/cil/home_dirs/maiqi/repos/prospectus-tools/gcp/extract"
+cd "/home/liruixue/repos/prospectus-tools/gcp/extract"
 R
 
 library(glue)
@@ -11,7 +11,7 @@ library(dplyr)
 get_valuescsv <- function(ssp, region, aggregation, file_type){
 
 	quantiles_command = paste0("python -u quantiles.py ",
-		"/project/cil/home_dirs/liruixue/repos/labor-code-release-2020/3_projection/",
+		"/home/liruixue/repos/labor-code-release-2020/3_projection/",
 		"2_extract_projection_outputs/mc/extraction_configs/",
 		"damage_function_valuescsv.yml  --only-ssp=", ssp, 
 		" --region=", region, " ",
@@ -23,21 +23,6 @@ get_valuescsv <- function(ssp, region, aggregation, file_type){
 
 	print(quantiles_command)
 	system(quantiles_command)
-}
-
-get_valuescsv <- function(ssp, region, aggregation, file_type){
-  quantiles_command = paste0("/software/python-anaconda-2022.05-el8-x86_64/bin/python -u quantiles.py ",
-                             "/project/cil/home_dirs/liruixue/repos/labor-code-release-2020/3_projection/",
-                             "2_extract_projection_outputs/mc/extraction_configs/",
-                             "damage_function_valuescsv.yml --only-ssp=", ssp,
-                             " --region=", region, " ",
-                             "--suffix=valuescsv ", aggregation, " ", region, " ",
-                             "uninteracted_main_model",aggregation,
-                             file_type, " -uninteracted_main_model-histclim",
-                             aggregation, file_type
-  )
-  print(quantiles_command)
-  system(quantiles_command)
 }
 
 

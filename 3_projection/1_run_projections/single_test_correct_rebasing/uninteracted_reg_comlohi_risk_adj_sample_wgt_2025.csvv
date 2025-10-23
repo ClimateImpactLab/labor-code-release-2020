@@ -1,7 +1,7 @@
 ---
 oneline: Labor uninteracted regression  with a restricted cubic spline term (3 knots), located at 27_37_39
 version: LABOR-RCSPLINE-3KNOTS-uninteracted-Knots-27_37_39
-dependencies: /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/ster/uninteracted_reg_comlohi/uninteracted_reg_by_risk_2025.ster
+dependencies: /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_comlohi/uninteracted_reg_by_risk_2025.ster
 description: Generated with csvv_writer_timeuse.do, from labor uninteracted regression with restricted cubic spline, 3 knots. The first 2 gammas are for the low-risk sector. The next 2 for the high-risk sector.
 csvv-version: girdin-2017-01-10
 variables:
