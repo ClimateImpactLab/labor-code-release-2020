@@ -13,7 +13,7 @@
 # - household size
 # - a clear way of merging in further variables as necessary
 #     - proposed way of doing this: clean up the whole dataset, then subset at 
-#		the very end.
+#		the very end.∂
 
 # This dataset will cover:
 # - Mexico, 2005-2013
@@ -23,7 +23,7 @@
 # first avoids incorrect conversion we also set stringsAsFactors=FALSE in an abundance
 # of caution. see this SO post for more information: 
 # https://stackoverflow.com/questions/6917518/r-as-numeric-function-not-returning-correct-from-data-frame
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
@@ -44,6 +44,7 @@ library(foreign)
 ####################
 
 input = glue("{ROOT_INT_DATA}/surveys/MEX_ENOE/raw_data/")
+input = '/project/cil/sacagawea_shares/gcp/estimation/labor/code_release_int_data/surveys/MEX_ENOE/raw_data/'
 # unzip all the zipped files
 files_2004 = list.files(
 	glue('{input}/1987-2004/'), 
@@ -169,6 +170,10 @@ sociodemo = read_data('sdemt') %>%
 		# transportation (8)
 		high_risk = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
 		high_risk2 = ifelse(occ %in% c(5, 7, 9, 10), 1, 0),
+		high_risk3 = ifelse(industry %in% c(1), 1, 0),
+		high_risk4 = ifelse(industry %in% c(1, 2, 4), 1, 0),
+		manuf = ifelse(industry %in% c(2, 3, 4, 5, 8), 1, 0),
+		manuf2 = ifelse(industry %in% c(3, 5, 8), 1, 0),
 		self_emp = ifelse(class_w == 3, 1, 0),
 		# create an ID variable--first step of this is to get an identifier for
 		# that tracks each round of the five-round panel
@@ -180,7 +185,7 @@ sociodemo = read_data('sdemt') %>%
   dplyr::select(
 		id, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, N_REN, H_MUD, UPM, PER,
 		municipality, state, sex, age, industry, occ, sample_wgt, 
-		male, high_risk, high_risk2, self_emp
+		male, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, self_emp
 		) %>%
 	data.table()
 
@@ -273,9 +278,12 @@ ca = read_data('coe1t') %>%
 #extra table
 pw = read_data('coe2t') 
 pw$piece_work <- ifelse(pw$P6_2 == 1, 1, 0)
-pw = subset(pw, select = c(CD_A, ENT, CON, V_SEL, N_HOG, H_MUD, N_PRO_VIV, N_ENT, UPM, PER, piece_work))
+pw = subset(pw, select = c(CD_A, ENT, CON, V_SEL, N_HOG, H_MUD, N_PRO_VIV, N_ENT, N_REN, UPM, PER, piece_work))
 pw$piece_work <- ifelse(is.na(pw$piece_work),0,pw$piece_work)
-
+cols = c("CD_A", "ENT", "CON", "V_SEL", "N_HOG", "H_MUD",
+          "N_PRO_VIV", "N_ENT", "N_REN", "UPM", "PER")
+pw[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
+rm(cols)
 # Note that the "hours worked" (weekly hours reported as a total by the interviewee) 
 # and "minutes worked" (calculated from the daily hours and minutes reported 
 # day by day by the interviewee) differ in some cases. We choose the minutes worked
@@ -301,19 +309,19 @@ outcome = merge(
 		by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'H_MUD', 'N_PRO_VIV', 
 			'N_ENT', 'N_REN', 'UPM', 'PER')
 		) %>%
-  merge(
-    pw,
-    by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'H_MUD', 'N_PRO_VIV', 
-         'N_ENT', 'N_REN', 'UPM', 'PER')
-  ) %>%
+  # merge(
+  #   pw,
+  #   by=c('CD_A', 'ENT', 'CON', 'V_SEL', 'N_HOG', 'H_MUD', 'N_PRO_VIV', 
+  #        'N_ENT', 'N_REN', 'UPM', 'PER')
+  # ) %>%
 	mutate(
 		year = year + 2000,
 		date = as.Date(glue('{year}/{month}/{day}')),
 		prev_sunday = as.Date(
 			ifelse(
-				wday(date, label=TRUE) == 'Sun',
-				floor_date(date, 'week', week_start = 7) - 7,
-				floor_date(date, 'week', week_start = 7)),
+			  lubridate::wday(date, label=TRUE) == 'Sun',
+			  lubridate::floor_date(date, 'week', week_start = 7) - 7,
+			  lubridate::floor_date(date, 'week', week_start = 7)),
 			origin = '1970-01-01')
 		
 		) %>%
@@ -375,7 +383,7 @@ final = outcome %>%
 		) %>% 
   dplyr::select(
 		ind_id, state_name, municipality_name, 
-		prev_sunday, mins_worked, male, age, high_risk, high_risk2, self_emp, hhsize, 
+		prev_sunday, mins_worked, male, age, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, self_emp, hhsize, 
 		sample_wgt
 		) %>% 
 	mutate(
@@ -386,8 +394,8 @@ final = outcome %>%
   dplyr::select(
 		-prev_sunday)
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_SE.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_SE.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_3sector_alt.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_3sector_alt.dta"))
 
 location_names = final %>% 
   dplyr::select(state_name, municipality_name) %>%

@@ -1,6 +1,6 @@
 * this code cleans 
 
-do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 use "$ROOT_INT_DATA/surveys/BRA_PME/pme_all_lodown.dta", clear
 
@@ -65,7 +65,23 @@ replace high_risk2 = 1 if occup == 95
 replace high_risk2 = 1 if occup == 99
 replace high_risk2 = 0 if high_risk2 != 1 & occup != .
 
+* high risk 3 + manufacturing
+gen high_risk3 = 1 if economic_activity >= 1 & economic_activity <= 5
+replace high_risk3 = 0 if high_risk3 != 1
 
+gen high_risk4 = 1 if economic_activity >= 1 & economic_activity <= 14
+replace high_risk4 = 1 if inlist(economic_activity, 45)
+replace high_risk4 = 0 if high_risk4 != 1
+
+gen manuf = 1 if economic_activity >=10 & economic_activity <= 21
+replace manuf = 1 if economic_activity >= 23 & economic_activity <= 45
+replace manuf = 1 if inlist(economic_activity, 60,61,62,92)
+replace manuf = 0 if manuf != 1
+
+gen manuf2 = 1 if economic_activity >=15 & economic_activity <= 21
+replace manuf2 = 1 if economic_activity >= 23 & economic_activity <= 41
+replace manuf2 = 1 if inlist(economic_activity, 60,61,62,92)
+replace manuf2 = 0 if manuf2 != 1
 
 * region
 rename v035 metropolitan_region
@@ -206,9 +222,9 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 self_emp hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 high_risk3 high_risk4 manuf manuf2 self_emp hhsize sample_wgt
 
 
-save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_SE.dta", replace
+save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_alt.dta", replace
 
-export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_SE.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_alt.csv", replace

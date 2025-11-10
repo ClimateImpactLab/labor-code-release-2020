@@ -14,7 +14,7 @@
 
 #clean environment
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 #load packages
 library(readstata13)
@@ -30,7 +30,7 @@ options(digits=15)
 
 input_file <- glue(
   '{ROOT_INT_DATA}/temp/',
-  'all_time_use_pop_merged.dta')
+  'all_time_use_pop_merged_3sector_alt.dta')
 
 #####################################
 
@@ -121,6 +121,6 @@ df$pop_adj_sample_wgt <- df$pop_adj_sample_wgt/sum_all #normalize pop_adj_sample
 #save dataset
 output_file <- glue(
   '{ROOT_INT_DATA}/temp/',
-  'all_time_use_pop_merged_reweighted.dta')
+  'all_time_use_pop_merged_reweighted_3sector_alt.dta')
 write.dta(df, output_file)
 

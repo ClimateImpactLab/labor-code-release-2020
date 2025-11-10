@@ -1,0 +1,10 @@
+outputdir: /project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/interacted_model
+# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+levels-weighting: population * 0.00487 / population 
+aggregate-weighting-numerator: population * income * 0.00487
+aggregate-weighting-denominator: population * income
+aggregated-unit: "% GDP"
+levels-unit: "% GDP"
+infix: gdp
+ssp: SSP3
+batch: batch3

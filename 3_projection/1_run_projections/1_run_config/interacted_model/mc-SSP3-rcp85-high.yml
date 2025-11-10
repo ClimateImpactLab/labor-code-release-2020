@@ -1,0 +1,10 @@
+import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/interacted_model.yml"
+mode: montecarlo
+outputdir: "/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo"
+timeout: 12
+do_historical: true
+do_farmers: true
+only-rcp: rcp85
+only-ssp: SSP3
+only-iam: high
+only-batch-number: 14

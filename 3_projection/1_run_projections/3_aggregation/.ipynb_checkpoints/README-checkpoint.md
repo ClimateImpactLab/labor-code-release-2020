@@ -31,7 +31,7 @@ Running this aggregation config will give you 2 types of aggregated netcdfs:
 
 Running this aggregation config will give you 2 types of aggregated netcdfs:
 
-1. Levels aggregation in wages per year by IR (suffix `-wage-levels.nc4`). Applies the following formula to each IR 
+1. Levels aggregation in wages per year by IR (suffix `-wage-levels.nc4`).
 2. Standard aggregation (suffix `wage-aggregated.nc4`).
 
 ## GDP 

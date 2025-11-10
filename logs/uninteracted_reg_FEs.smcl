@@ -1,9 +1,9 @@
 {smcl}
-{txt}{sf}{ul off}{.-}
+{com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/logs/uninteracted_reg_FEs.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}18 Apr 2025, 09:45:32
+ {txt}opened on:  {res}26 Aug 2025, 11:26:41
 {txt}
 {com}. 
 . * select dataset and output folder
@@ -66,29 +66,8 @@
 {txt}(Written by R.              )
 (0 observations deleted)
 {res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#month#high_risk) vce(cl cluster_adm1yymm)
-{txt}(note: file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y.ster not found)
 {txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_m_y.ster saved
 COMPLETED: reg with fe_adm0_m_y fixed effects.
 (Written by R.              )
 (0 observations deleted)
 {res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#month#year#high_risk) vce(cl cluster_adm1yymm)
-{txt}(note: file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my.ster not found)
-{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_my.ster saved
-COMPLETED: reg with fe_adm0_my fixed effects.
-(Written by R.              )
-(0 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm1_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-{txt}(note: file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w.ster not found)
-{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm1_y_adm0_w.ster saved
-COMPLETED: reg with fe_adm1_y_adm0_w fixed effects.
-(Written by R.              )
-(0 observations deleted)
-{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
-{txt}(note: file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk.ster not found)
-{txt}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/uninteracted_reg_FEs/uninteracted_reg_FE_fe_adm0_wk.ster saved
-COMPLETED: reg with fe_adm0_wk fixed effects.
-
-{com}. 
-. cap log close
-{smcl}
-{com}{sf}{ul off}

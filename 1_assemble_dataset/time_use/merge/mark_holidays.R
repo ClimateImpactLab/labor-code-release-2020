@@ -1,16 +1,16 @@
 # filter out all countries' holidays
 # author: Simon Greenhill, sgreenhill@uchicago.edu
 # date: 2/27/2020
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
+library(lubridate)
 library(data.table)
 library(glue)
 library(haven)
 library(foreign)
 library(parallel)
 library(numbers)
-library(lubridate)
 
 # cilpath.r:::cilpath()
 cores = 10
@@ -34,7 +34,7 @@ get_nth_weekday_v = function(years, month, weekday, n) {
 		max = 7 * n
 
 		ret = days[
-			wday(days, label=TRUE) == weekday & 
+			lubridate::wday(days, label=TRUE) == weekday & 
 			day(days) <= max & 
 			day(days) > min
 			]
@@ -61,7 +61,7 @@ get_last_weekday_v = function(years, month, weekday) {
 
 		# get a list of all the dates in the month that fall on the desired 
 		# weekday, then return the last one
-		ret = days[wday(days, label=TRUE) == weekday]
+		ret = days[lubridate::wday(days, label=TRUE) == weekday]
 		return(ret[length(ret)])
 	}
 
@@ -198,7 +198,7 @@ get_years = function(country_code, df=time_use) {
 # get the full dataset
 time_use = glue(
 	'{ROOT_INT_DATA}',
-	'/temp/all_time_use_pop_merged_reweighted_clustered.dta') %>%
+	'/temp/all_time_use_pop_merged_reweighted_clustered_3sector_alt.dta') %>%
 	read_dta() %>%
 	data.table()
 
@@ -227,167 +227,167 @@ holidays_BRA = data.frame(year=years_BRA) %>%
 # China is complicated and does not fit with out "nth day of kth month" approach
 # so we are just hard coding this
 
-years_CHN = get_years('CHN')
+#years_CHN = get_years('CHN')
 
-holidays_CHN = data.frame(year=years_CHN) %>%
-  mutate(
-    new_year = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
-    labor_day1 = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
-    labor_day2 = ifelse(
-      year >1999 & year <= 2007 ,
-      as.Date(glue('{year}/5/2'), format='%Y/%m/%d'),
-      NA
-    ),
-    labor_day3 = ifelse(
-      year >1999 & year <= 2007 ,
-      as.Date(glue('{year}/5/3'), format='%Y/%m/%d'),
-      NA
-    ),
-    national_day1 = as.Date(glue('{year}/10/1'), format='%Y/%m/%d'),
-    national_day2 = as.Date(glue('{year}/10/2'), format='%Y/%m/%d'),
-    national_day3 = ifelse(
-      year >1999 ,
-      as.Date(glue('{year}/10/3'), format='%Y/%m/%d'),
-      NA
-    ),
-  	chinese_new_year1 = recode(year,
-  	  `1991` = '1991/2/15',
-      `1992` = '1992/2/4',
-      `1993` = '1993/1/23',
-      `1994` = '1994/2/10',
-      `1995` = '1995/1/31',
-      `1996` = '1996/2/19',
-      `1997` = '1997/2/7',
-      `1998` = '1998/1/28',
-      `1999` = '1999/2/16',
-      `2000` = '2000/2/5',
-      `2001` = '2001/1/24',
-      `2002` = '2002/2/12',
-      `2003` = '2003/2/1',
-      `2004` = '2004/1/22',
-      `2005` = '2005/2/9',
-      `2006` = '2006/1/29',
-      `2007` = '2007/2/18',
-      `2008` = '2008/2/6',
-      `2009` = '2009/1/25',
-      `2010` = '2010/2/13'),
-  	# from 2008 to 2010, the first day is coded as the eve
-    chinese_new_year2 = as.Date(chinese_new_year1, origin='1970-1-1') + 1,
-    chinese_new_year3 = as.Date(chinese_new_year1, origin='1970-1-1') + 2,
-    qing_ming = ifelse(
-      year > 2007,
-        recode(
-          year, 
-          `2008` = '2008/4/4',
-          `2009` = '2009/4/4',
-          `2010` = '2010/4/5',
-        ),
-      NA
-    ),
-    duan_wu = ifelse(
-      year > 2007,
-      recode(
-        year, 
-        `2008` = '2008/6/8',
-        `2009` = '2009/5/28',
-        `2010` = '2010/6/16',
-      ),
-      NA
-    ),
-    mid_autumn = ifelse(
-      year > 2007,
-      recode(
-        year, 
-        `2008` = '2008/9/14',
-        `2009` = '2009/10/3',
-        `2010` = '2010/9/22',
-      ),
-      NA
-    ),
-  ) %>%
-  mutate_at(
-    # ifelse outputs numerics, convert these back to dates
-    vars(labor_day2, labor_day3, national_day3, chinese_new_year1,
-    	chinese_new_year2,chinese_new_year3,qing_ming,duan_wu,mid_autumn),
-    ~ as.Date(., origin='1970-1-1')
-  )
+#holidays_CHN = data.frame(year=years_CHN) %>%
+#  mutate(
+#    new_year = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
+#    labor_day1 = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
+#    labor_day2 = ifelse(
+#      year >1999 & year <= 2007 ,
+#      as.Date(glue('{year}/5/2'), format='%Y/%m/%d'),
+#      NA
+#    ),
+#    labor_day3 = ifelse(
+#      year >1999 & year <= 2007 ,
+#      as.Date(glue('{year}/5/3'), format='%Y/%m/%d'),
+#      NA
+#    ),
+#    national_day1 = as.Date(glue('{year}/10/1'), format='%Y/%m/%d'),
+#    national_day2 = as.Date(glue('{year}/10/2'), format='%Y/%m/%d'),
+#    national_day3 = ifelse(
+#      year >1999 ,
+#      as.Date(glue('{year}/10/3'), format='%Y/%m/%d'),
+#      NA
+#    ),
+#  	chinese_new_year1 = recode(year,
+#  	  `1991` = '1991/2/15',
+#     `1992` = '1992/2/4',
+#     `1993` = '1993/1/23',
+#      `1994` = '1994/2/10',
+#      `1995` = '1995/1/31',
+#      `1996` = '1996/2/19',
+#      `1997` = '1997/2/7',
+#      `1998` = '1998/1/28',
+#      `1999` = '1999/2/16',
+#      `2000` = '2000/2/5',
+#      `2001` = '2001/1/24',
+#      `2002` = '2002/2/12',
+#      `2003` = '2003/2/1',
+#      `2004` = '2004/1/22',
+#      `2005` = '2005/2/9',
+#      `2006` = '2006/1/29',
+#      `2007` = '2007/2/18',
+#      `2008` = '2008/2/6',
+#      `2009` = '2009/1/25',
+#      `2010` = '2010/2/13'),
+#  	# from 2008 to 2010, the first day is coded as the eve
+#    chinese_new_year2 = as.Date(chinese_new_year1, origin='1970-1-1') + 1,
+#    chinese_new_year3 = as.Date(chinese_new_year1, origin='1970-1-1') + 2,
+#    qing_ming = ifelse(
+#      year > 2007,
+#        recode(
+#          year, 
+#          `2008` = '2008/4/4',
+#          `2009` = '2009/4/4',
+#          `2010` = '2010/4/5',
+#        ),
+#      NA
+#    ),
+#    duan_wu = ifelse(
+#     year > 2007,
+#      recode(
+#        year, 
+#        `2008` = '2008/6/8',
+#        `2009` = '2009/5/28',
+#        `2010` = '2010/6/16',
+#      ),
+#      NA
+#    ),
+#    mid_autumn = ifelse(
+#      year > 2007,
+#      recode(
+#        year, 
+#        `2008` = '2008/9/14',
+#        `2009` = '2009/10/3',
+#        `2010` = '2010/9/22',
+#      ),
+#      NA
+#    ),
+#  ) %>%
+#  mutate_at(
+#    # ifelse outputs numerics, convert these back to dates
+#    vars(labor_day2, labor_day3, national_day3, chinese_new_year1,
+#    	chinese_new_year2,chinese_new_year3,qing_ming,duan_wu,mid_autumn),
+#    ~ as.Date(., origin='1970-1-1')
+#  )
 
 #######
 # ESP #
 #######
 
-years_ESP = get_years('ESP')
-holidays_ESP = data.frame(year=years_ESP) %>%
-	mutate(
-		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
-		kings_day = as.Date(glue('{year}/1/6'), format='%Y/%m/%d'),
-		good_friday = get_good_friday(year),
-		labor_day = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
-		ascention = as.Date(glue('{year}/8/15'), format='%Y/%m/%d'),
-		national_day = as.Date(glue('{year}/10/12'), format='%Y/%m/%d'),
-		all_saints = as.Date(glue('{year}/11/1'), format='%Y/%m/%d'),
-		constitution_day = as.Date(glue('{year}/12/6'), format='%Y/%m/%d'),
-		immaculate_conception = as.Date(glue('{year}/12/8'), format='%Y/%m/%d'),
-		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d')
-		)
+#years_ESP = get_years('ESP')
+#holidays_ESP = data.frame(year=years_ESP) %>%
+#	mutate(
+#		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
+#		kings_day = as.Date(glue('{year}/1/6'), format='%Y/%m/%d'),
+#		good_friday = get_good_friday(year),
+#		labor_day = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
+#		ascention = as.Date(glue('{year}/8/15'), format='%Y/%m/%d'),
+#		national_day = as.Date(glue('{year}/10/12'), format='%Y/%m/%d'),
+#		all_saints = as.Date(glue('{year}/11/1'), format='%Y/%m/%d'),
+#		constitution_day = as.Date(glue('{year}/12/6'), format='%Y/%m/%d'),
+#		immaculate_conception = as.Date(glue('{year}/12/8'), format='%Y/%m/%d'),
+#		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d')
+#		)
 
 #######
 # FRA #
 #######
 
-years_FRA = get_years('FRA')
-holidays_FRA = data.frame(year=years_FRA) %>%
-	mutate(
-		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
-		easter_monday = get_easter_monday(year),
-		labor_day = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
-		victory_day = as.Date(glue('{year}/5/8'), format='%Y/%m/%d'),
-		ascension_day = get_ascension_day(year),
-		pentecostal_monday = get_pentecostal_monday(year),
-		bastille_day = as.Date(glue('{year}/7/14'), format='%Y/%m/%d'),
-		ascention = as.Date(glue('{year}/8/15'), format='%Y/%m/%d'),
-		all_saints = as.Date(glue('{year}/11/1'), format='%Y/%m/%d'),
-		armistice = as.Date(glue('{year}/11/11'), format='%Y/%m/%d'),
-		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d')
-		)
+#years_FRA = get_years('FRA')
+#holidays_FRA = data.frame(year=years_FRA) %>%
+#	mutate(
+#		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
+#		easter_monday = get_easter_monday(year),
+#		labor_day = as.Date(glue('{year}/5/1'), format='%Y/%m/%d'),
+#		victory_day = as.Date(glue('{year}/5/8'), format='%Y/%m/%d'),
+#		ascension_day = get_ascension_day(year),
+#		pentecostal_monday = get_pentecostal_monday(year),
+#		bastille_day = as.Date(glue('{year}/7/14'), format='%Y/%m/%d'),
+#		ascention = as.Date(glue('{year}/8/15'), format='%Y/%m/%d'),
+#		all_saints = as.Date(glue('{year}/11/1'), format='%Y/%m/%d'),
+#		armistice = as.Date(glue('{year}/11/11'), format='%Y/%m/%d'),
+#		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d')
+#		)
 
 #######
 # GBR #
 #######
 
-years_GBR = get_years('GBR')
-holidays_GBR = data.frame(year=years_GBR) %>%
-	mutate(
-		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
-		new_years_wday = wday(new_years, label=TRUE),
-		# if new years falls on a saturday or a sunday, the holiday is celebrated
-		# the following monday
-		new_years = ifelse(new_years_wday %in% c('Sat', 'Sun'),
-			get_nth_weekday_v(month=1, year=year, weekday='Mon', n=1),
-			new_years) %>%
-			as.Date(origin='1970-1-1'),
-		good_friday = get_good_friday(year),
-		easter_monday = get_easter_monday(year),
-		labor_day = get_nth_weekday_v(month=5, year=year, weekday='Mon', n=1),
-		last_mon_may = get_last_weekday_v(month=5, year=year, weekday='Mon'),
-		last_mon_aug = get_last_weekday_v(month=8, year=year, weekday='Mon'),
-		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d'),
-		xmas_wday = wday(christmas, label=TRUE),
-		# if christmas falls on a saturday or a sunday, the holiday is celebrated
-		# the following monday
-		christmas = ifelse(
-			xmas_wday == 'Sat',
-			as.Date(glue('{year}/12/27'), format='%Y/%m/%d'),
-			ifelse(xmas_wday == 'Sun',
-				as.Date(glue('{year}/12/28'), format='%Y/%m/%d'),
-				christmas
-				)
-			) %>%
-			as.Date(origin='1970-1-1'),
-		boxing_day = as.Date(glue('{year}/12/26'), format='%Y/%m/%d')
+#years_GBR = get_years('GBR')
 
-		) %>%
-	select(-new_years_wday, -xmas_wday)
+#holidays_GBR = data.frame(year=years_GBR) %>%
+#	mutate(
+#		new_years = as.Date(glue('{year}/1/1'), format='%Y/%m/%d'),
+#		new_years_wday = lubridate::wday(new_years, label=TRUE),
+#		# if new years falls on a saturday or a sunday, the holiday is celebrated
+#		# the following monday
+#		new_years = ifelse(new_years_wday %in% c('Sat', 'Sun'),
+#			get_nth_weekday_v(month=1, year=year, weekday='Mon', n=1),
+#			new_years) %>%
+#			as.Date(origin='1970-1-1'),
+#		good_friday = get_good_friday(year),
+#		easter_monday = get_easter_monday(year),
+#		labor_day = get_nth_weekday_v(month=5, year=year, weekday='Mon', n=1),
+#		last_mon_may = get_last_weekday_v(month=5, year=year, weekday='Mon'),
+#		last_mon_aug = get_last_weekday_v(month=8, year=year, weekday='Mon'),
+#		christmas = as.Date(glue('{year}/12/25'), format='%Y/%m/%d'),
+#		xmas_wday = lubridate::wday(christmas, label=TRUE),
+#		# if christmas falls on a saturday or a sunday, the holiday is celebrated
+#		# the following monday
+#		christmas = ifelse(
+#			xmas_wday == 'Sat',
+#			as.Date(glue('{year}/12/27'), format='%Y/%m/%d'),
+#			ifelse(xmas_wday == 'Sun',
+#				as.Date(glue('{year}/12/28'), format='%Y/%m/%d'),
+#				christmas
+#				)
+#			) %>%
+#			as.Date(origin='1970-1-1'),
+#		boxing_day = as.Date(glue('{year}/12/26'), format='%Y/%m/%d')
+#		) %>%
+#	select(-new_years_wday, -xmas_wday)
 
 
 #######
@@ -450,9 +450,14 @@ holidays_MEX = data.frame(year=years_MEX) %>%
 # 3. CALCULATE HOLIDAYS #
 #########################
 
+#resolution = data.frame(
+#	iso = c('BRA', 'ESP', 'FRA', 'GBR', 'IND', 'MEX', 'USA'), # 'CHN',
+#	res = c('weekly', 'daily', 'daily', 'daily', 'daily', 'weekly', 'daily') #'weekly',
+#	)
+
 resolution = data.frame(
-	iso = c('BRA', 'CHN', 'ESP', 'FRA', 'GBR', 'IND', 'MEX', 'USA'),
-	res = c('weekly', 'weekly', 'daily', 'daily', 'daily', 'daily', 'weekly', 'daily')
+	iso = c('BRA', 'IND', 'MEX', 'USA'), # 'CHN',
+	res = c('weekly', 'daily', 'weekly', 'daily') #'weekly',
 	)
 
 final = time_use %>%
@@ -473,7 +478,7 @@ final = final %>%
 
 write.dta(final, glue(
 	'{ROOT_INT_DATA}/temp/',
-	'all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta'))
+	'all_time_use_pop_merged_reweighted_clustered_holidays_marked_3sector_alt.dta'))
 
 
 

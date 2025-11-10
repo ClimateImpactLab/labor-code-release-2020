@@ -1,0 +1,180 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/logs/subsampled_splines.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}20 Aug 2025, 16:43:13
+{txt}
+{com}. 
+. * select dataset and output folder
+. gl dataset              "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+{txt}
+{com}. loc reg_folder  "${c -(}DIR_STER{c )-}/subsampled_splines"
+{txt}
+{com}. loc xtiles              "${c -(}ROOT_INT_DATA{c )-}/xtiles/rep_unit_terciles_uncollapsed.dta"
+{txt}
+{com}. 
+. * other selections
+. gl test_code "no"
+{txt}
+{com}. gl reg_list inc_t1 inc_t2 inc_t3 inc_q1_clim_q1 inc_q1_clim_q2 inc_q2_clim_q1 inc_q2_clim_q2 // clim_t1 clim_t2 clim_t3
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each of the two regressions
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.         use $dataset, clear
+{txt}  3{com}. 
+.         * if test code mode is on, take a random sample
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  4{com}.                 sample 0.1
+{txt}  5{com}.         {c )-}
+{txt}  6{com}. 
+.         * only include non-zero observations
+.         keep if mins_worked > 0
+{txt}  7{com}. 
+.         ********************
+.         *       SUBSET THE DATA
+.         ********************
+. 
+.         * categorize into terciles and quantiles
+.         merge m:1 rep_unit using `xtiles', keepusing(clim_t inc_t clim_q inc_q) nogen assert(3)
+{txt}  8{com}. 
+.         subsample_data `reg'
+{txt}  9{com}. 
+.         * get rid of some awkward naming
+.         rename *27_37_39_* **
+{txt} 10{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt} 11{com}.         gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 12{com}. 
+.         * differentiate treatment if reg is by risk
+.         loc reg_treatment (${c -(}vars_T_splines{c )-})##i.high_risk
+{txt} 13{com}. 
+.         * both regressions have interacted controls
+.         local reg_control (${c -(}usual_controls{c )-})##i.high_risk
+{txt} 14{com}.         
+.         * interact each fixed effect with the risk binary
+.         local reg_fe ""                                 
+{txt} 15{com}.         foreach f in $`fe' {c -(}
+{txt} 16{com}.                 local reg_fe `reg_fe' `f'#high_risk
+{txt} 17{com}.         {c )-}
+{txt} 18{com}. 
+.         * set the regression weight
+.         loc weight "risk_adj_sample_wgt"
+{txt} 19{com}. 
+.         * set the ster file name and the notes to be included
+.         local ster_name "`reg_folder'/subsampled_splines_`reg'.ster"
+{txt} 20{com}.         local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment, fe = $fe, reg_type = `reg', weight = `weight'"
+{txt} 21{com}. 
+.         di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 22{com}.         qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 23{com}. 
+.         * count regression N by risk
+.         gen included = e(sample)
+{txt} 24{com}.         count if included == 1 & high_risk == 1
+{txt} 25{com}.         estadd scalar high_N = `r(N)'
+{txt} 26{com}.         count if included == 1 & high_risk == 0
+{txt} 27{com}.         estadd scalar low_N = `r(N)'
+{txt} 28{com}. 
+.         estimates notes: `spec_desc'
+{txt} 29{com}.         estimates save `ster_name', replace
+{txt} 30{com}. 
+.         di "COMPLETED: `reg' regression."
+{txt} 31{com}. 
+. {c )-}
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,599,388{txt}  
+{col 5}{hline 41}
+(3,725,156 observations deleted)
+{res}reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.high_risk (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.high_risk [pweight = risk_adj_sample_wgt], absorb(adm3_id#high_risk dow_week#high_risk adm0_id#year#high_risk adm0_id#week_fe#high_risk) vce(cl cluster_adm1yymm)
+  1,050,325
+
+{txt}added scalar:
+             e(high_N) =  {res}1050325
+  1,823,905
+
+{txt}added scalar:
+              e(low_N) =  {res}1823905
+{txt}(note: file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_t1.ster not found)
+{err}file /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/output/ster/subsampled_splines/subsampled_splines_inc_t1.ster could not be opened
+{txt}{search r(603), local:r(603);}
+
+end of do-file
+
+{search r(603), local:r(603);}
+
+{com}. do "/home/maiqi/SD1415265.000000"
+{txt}
+{com}. *********************
+. *       STATA PATHS
+. *********************
+. * set up paths for stata programs
+. * the user needs to determine where the repo is located
+. * and where the large raw data files are
+. 
+. * set internal data path
+. *gl ROOT_INT_DATA = "${c -(}shares_path{c )-}/gcp/estimation/labor/code_release_int_data"
+. gl ROOT_INT_DATA = "/project/cil/kupe_shares/CIL_temp_storage/labor/code_release_int_data"
+{txt}
+{com}. * set repo path
+. gl ROOT_REPO = "/project/cil/home_dirs/maiqi/repos"
+{txt}
+{com}. gl DIR_REPO_LABOR = "${c -(}ROOT_REPO{c )-}/labor-code-release-2020"
+{txt}
+{com}. 
+. * set logs path
+. gl DIR_LOG = "${c -(}DIR_REPO_LABOR{c )-}/logs"
+{txt}
+{com}. 
+. * set external data path
+. gl DIR_EXT_DATA = "${c -(}DIR_REPO_LABOR{c )-}/data"
+{txt}
+{com}. 
+. * set output folder paths
+. gl DIR_OUTPUT = "${c -(}DIR_REPO_LABOR{c )-}/output"
+{txt}
+{com}. 
+. gl DIR_FIG = "${c -(}DIR_OUTPUT{c )-}/figures"
+{txt}
+{com}. 
+. gl DIR_STER = "${c -(}DIR_OUTPUT{c )-}/ster"
+{txt}
+{com}. 
+. gl DIR_RF = "${c -(}DIR_OUTPUT{c )-}/rf"
+{txt}
+{com}. 
+. gl DIR_TABLE = "${c -(}DIR_OUTPUT{c )-}/table"
+{txt}
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. do "/home/maiqi/SD1415265.000000"
+{txt}
+{com}. *****************
+. *       INITIALIZE
+. *****************
+. 
+. * get functions and paths
+. run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+{txt}
+{com}. run "${c -(}DIR_REPO_LABOR{c )-}/2_analysis/0_subroutines/functions.do"
+{txt}
+{com}. 
+. * log results
+. cap log close 
+{smcl}
+{com}{sf}{ul off}

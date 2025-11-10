@@ -46,7 +46,7 @@
 
 # Based on the above, I will only clean atussum and atusresp, and the spatial
 # data, because those contain all the data we need.
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 # set up the environment
 library(tidyverse)
 library(magrittr)
@@ -66,7 +66,7 @@ cores = detectCores()
 # 1. Load raw data #
 ####################
 
-input = glue("{ROOT_INT_DATA}/surveys/USA_ATUS/raw/")
+input = glue("{ROOT_INT_DATA}/surveys/USA_ATUS/raw")
 
 # clean time diary data
 atussum = fread(glue("{input}/atussum_0314/atussum_0314.dat")) %>%
@@ -107,7 +107,11 @@ atusresp = fread(glue("{input}/atusresp_0314/atusresp_0314.dat")) %>%
 		TRMJIND1 <= 13 & TRMJIND1 > 0,
 		) %>%
 	mutate(
-		high_risk = ifelse(TRMJIND1 %in% c(1, 2, 3, 4, 6), 1, 0)
+		high_risk = ifelse(TRMJIND1 %in% c(1, 2, 3, 4, 6), 1, 0),
+		high_risk3 = ifelse(TRMJIND1 %in% c(1), 1, 0),
+		high_risk4 = ifelse(TRMJIND1 %in% c(1, 2, 3), 1, 0),
+		manuf = ifelse(TRMJIND1 %in% c(2, 3, 4, 6), 1, 0),
+		manuf2 = ifelse(TRMJIND1 %in% c(4, 6), 1, 0)
 		)
 
 
@@ -364,13 +368,13 @@ cps_unmatched = cps %>%
 	filter(is.na(master_county_name))
 
 # first thing tomorrow--check this worked, if so can rbind the above and be done.
-imputed_geo = mcmapply(
-		find_nearest_geo,
-		pid =cps_unmatched$id, 
-		hh=cps_unmatched$hhid,
-		mc.cores=20) %>%
-	rbindlist(fill=TRUE) %>%
-  dplyr::select(-date)
+# imputed_geo = mcmapply(
+# 		find_nearest_geo,
+# 		pid =cps_unmatched$id, 
+# 		hh=cps_unmatched$hhid,
+# 		mc.cores=12) %>%
+# 	rbindlist(fill=TRUE) %>%
+#   dplyr::select(-date)
 
 cps_all = rbindlist(list(cps_matched, imputed_geo), use.names=TRUE)	
 
@@ -402,7 +406,7 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		ind_id = group_indices(., id, hhid, lineno, hhid2) 
 		) %>%
   dplyr::select(
-		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sample_wgt, w_class1, occ1, id
+		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, high_risk3, high_risk4, manuf, manuf2, sample_wgt, w_class1, occ1, id
 		) 
 
 final$high_risk2 <- ifelse(final$occ1 ==12 | final$occ1 ==14 | final$occ1 ==18 | final$occ1 ==19 | final$occ1 ==20 | final$occ1 ==21| final$occ1 ==22, 1, 0)
@@ -410,8 +414,8 @@ final$self_emp <- ifelse(final$w_class1 == 3 | final$w_class1 == 10, 1,0)
 
 final <- dplyr::select(final, select = -c(w_class1, occ1))
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_SE.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_SE.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_3sector_alt.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_3sector_alt.dta"))
 
 #analysis
 weather <- subset(final, why == 3)

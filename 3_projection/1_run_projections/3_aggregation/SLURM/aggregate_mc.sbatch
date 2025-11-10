@@ -10,24 +10,24 @@
 #SBATCH --array=0-989
 
 # ==== DEFINE CONFIGS ==== #
-PARENT_DIR="/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/3_aggregation/configs/montecarlo"
+PARENT_DIR="/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/3_aggregation/configs/montecarlo/interacted_model"
 
 CONFIG_FILES=(
-  "pop-batch0.yml"
-  "pop-batch1.yml"
-  "pop-batch2.yml"
-  "pop-batch3.yml"
-  "pop-batch4.yml"
-  "pop-batch5.yml"
-  "pop-batch6.yml"
-  "pop-batch7.yml"
-  "pop-batch8.yml"
-  "pop-batch9.yml"
-  "pop-batch10.yml"
-  "pop-batch11.yml"
-  "pop-batch12.yml"
-  "pop-batch13.yml"
-  "pop-batch14.yml"
+  "wage-batch0.yml"
+  "wage-batch1.yml"
+  "wage-batch2.yml"
+  "wage-batch3.yml"
+  "wage-batch4.yml"
+  "wage-batch5.yml"
+  "wage-batch6.yml"
+  "wage-batch7.yml"
+  "wage-batch8.yml"
+  "wage-batch9.yml"
+  "gdp-batch10.yml"
+  "wage-batch11.yml"
+  "wage-batch12.yml"
+  "wage-batch13.yml"
+  "wage-batch14.yml"
 )
 
 SET_SIZE=${#CONFIG_FILES[@]}
@@ -36,11 +36,11 @@ SET_SIZE=${#CONFIG_FILES[@]}
 CONFIG="${PARENT_DIR}/${CONFIG_FILES[$(( SLURM_ARRAY_TASK_ID % SET_SIZE ))]}"
 
 # ==== STAGGERING VIA SLEEP ==== #
-INTERVAL=20                                    # seconds between each batch of 15
+INTERVAL=10    # seconds between each batch of 15
 group_index=$(( SLURM_ARRAY_TASK_ID / SET_SIZE ))
 sleep_time=$(( group_index * INTERVAL ))
 
-echo "Task ${SLURM_ARRAY_TASK_ID} sleeping for ${sleep_time}s"  >&2
+echo "Task ${SLURM_ARRAY_TASK_ID} sleeping for ${sleep_time}s" >&2
 sleep $sleep_time
 
 # ==== LOAD ENV + GO TO WORK DIR ==== #

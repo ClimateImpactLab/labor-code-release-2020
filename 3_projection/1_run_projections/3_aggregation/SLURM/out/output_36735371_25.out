@@ -1,0 +1,449 @@
+Running aggregate.sh with config: /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/3_aggregation/configs/median/uninteracted_wage.yml
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC-ESM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC-ESM/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MPI-ESM-MR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MPI-ESM-MR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/bcc-csm1-1/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/bcc-csm1-1/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_01/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_01/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_89/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_89/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CCSM4/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CCSM4/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CNRM-CM5/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CNRM-CM5/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_99/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_99/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CSIRO-Mk3-6-0/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CSIRO-Mk3-6-0/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC-ESM-CHEM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC-ESM-CHEM/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_06/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_06/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_89/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_89/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/inmcm4/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/inmcm4/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+Loading weights...
+Loaded.
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+Loading weights...
+Loaded.
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-incadapt.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-global.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-histclim.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_94/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-CM3_94/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-ESM2G/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-ESM2G/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_99/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_99/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC5/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MIROC5/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_94/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_CanESM2_94/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/IPSL-CM5A-MR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/IPSL-CM5A-MR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-ESM2M/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-ESM2M/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MPI-ESM-LR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MPI-ESM-LR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_01/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_01/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/ACCESS1-0/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/ACCESS1-0/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_06/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_06/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_11/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_GFDL-ESM2G_11/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CESM1-BGC/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CESM1-BGC/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CanESM2/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/CanESM2/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_11/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/surrogate_MRI-CGCM3_11/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MRI-CGCM3/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/MRI-CGCM3/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-CM3/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/GFDL-CM3/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/IPSL-CM5A-LR/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/IPSL-CM5A-LR/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/NorESM1-M/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/NorESM1-M/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/BNU-ESM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp85/BNU-ESM/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC-ESM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC-ESM/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MPI-ESM-MR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MPI-ESM-MR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/bcc-csm1-1/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/bcc-csm1-1/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-ESM2G_01/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-ESM2G_01/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_89/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_89/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CCSM4/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CCSM4/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CNRM-CM5/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CNRM-CM5/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_99/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_99/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CSIRO-Mk3-6-0/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CSIRO-Mk3-6-0/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC-ESM-CHEM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC-ESM-CHEM/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_89/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_89/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/inmcm4/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/inmcm4/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_94/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-CM3_94/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-ESM2G/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-ESM2G/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_99/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_99/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC5/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+Loading weights...
+Loaded.
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+Loading weights...
+Loaded.
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-incadapt.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-global.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+uninteracted_main_model-histclim.nc4
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+rebased
+highriskimpacts
+clip
+lowriskimpacts
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MIROC5/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_94/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_CanESM2_94/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/IPSL-CM5A-MR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/IPSL-CM5A-MR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-ESM2M/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-ESM2M/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MPI-ESM-LR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MPI-ESM-LR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_01/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_01/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/ACCESS1-0/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/ACCESS1-0/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_06/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_06/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-ESM2G_11/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_GFDL-ESM2G_11/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CESM1-BGC/high/SSP3
+high SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CESM1-BGC/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CanESM2/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/CanESM2/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_11/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/surrogate_MRI-CGCM3_11/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MRI-CGCM3/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/MRI-CGCM3/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-CM3/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/GFDL-CM3/low/SSP3
+low SSP3
+uninteracted_main_model-noadapt.nc4
+uninteracted_main_model-incadapt.nc4
+uninteracted_main_model.nc4
+uninteracted_main_model-global.nc4
+uninteracted_main_model-histclim.nc4
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/IPSL-CM5A-LR/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/IPSL-CM5A-LR/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/NorESM1-M/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/NorESM1-M/low/SSP3
+low SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/BNU-ESM/high/SSP3
+high SSP3
+/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model-global/median/rcp45/BNU-ESM/low/SSP3
+low SSP3

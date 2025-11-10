@@ -25,7 +25,7 @@
 # I will clean these blocks individually and then merge them together
 
 # set up the environment
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
@@ -34,7 +34,7 @@ library(data.table)
 library(bit64)
 library(haven)
 library(testthat)
-library(arules)
+#library(arules)
 library(parallel)
 library(stringr)
 library(foreign)
@@ -67,11 +67,14 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 		industry = B2_c11, 
 		ent_stat = B2_c9
 		) %>%
+  mutate(industry = as.numeric(industry)) %>%
+  filter(!is.na(industry)) %>%
 	mutate(
 		male = ifelse(sex == 1, 1, 0), #same as old data
 		#age2 = age^2,
 		# risk information taken from 1987 National Industrial Classification (NIC-1987) codes:
 		# http://mospi.nic.in/classification/national-industrial-classification/national-industrial-classification-1987
+		# https://www.dropbox.com/scl/fi/rmk9x6dacdoruqlwelvb8/NIC87_Codes.csv?rlkey=9tg0had5n7lsdo6gsvla974sr&e=1&st=u14hmo39&dl=0 <- if unavailable from india website
 		# also create a "high_risk_old" variable which is intended to mimic the way high risk was constructed prviously
 		high_risk_old = ifelse(
 			industry < 400 | (industry >= 500 & industry < 600),
@@ -83,11 +86,31 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 			high_risk_old == 1 | (industry >= 700 & industry < 740), # add in transportation
 			1,
 			0
-			)
+			),
+		high_risk3 = ifelse(
+		  industry < 99, 
+		  1, 
+		  0
+		),
+		high_risk4 = ifelse(
+		  industry < 200 | (industry >= 500 & industry < 600), 
+		  1, 
+		  0
+		),
+		manuf = ifelse(
+		  high_risk == 1 & high_risk3 == 0,
+		  1,
+		  0
+		),
+		manuf2 = ifelse(
+		  high_risk == 1 & high_risk4 == 0,
+		  1,
+		  0
+		)
 		) %>%
 	rename(Key_membno = Key_Membno) %>%
   dplyr::select( # select the datat we want and variables needed for merging (come back to this)
-		Key_hhold, Key_membno, sex, age, male, high_risk_old, high_risk, self_emp #age, age2,
+		Key_hhold, Key_membno, sex, age, male, high_risk_old, high_risk, high_risk3, high_risk4, manuf, manuf2, self_emp, age #, age2,
 		) %>%
 	distinct() # filter out a handful of duplicated obs
 
@@ -235,7 +258,7 @@ final_dataset = all_geo %>%
 		ind_id = group_indices(., Key_membno, Key_hhold)
 		) %>% 
 	dplyr::select(
-		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, high_risk2, self_emp, hhsize, sample_wgt
+		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, self_emp, hhsize, sample_wgt
 		) %>% 
 	filter(
 		year == 1999 | year == 1998,
@@ -245,10 +268,10 @@ final_dataset = all_geo %>%
 	distinct()
 
 
-# head(final_dataset)
+head(final_dataset)
 
-write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_SE.csv"))
-write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_SE.dta"))
+write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_alt.csv"))
+write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_alt.dta"))
 
 location_names = final_dataset %>%
 	dplyr::select(
