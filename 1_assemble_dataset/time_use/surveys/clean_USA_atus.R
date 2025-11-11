@@ -409,6 +409,7 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, high_risk3, high_risk4, manuf, manuf2, sample_wgt, w_class1, occ1, id
 		) 
 
+# (12) "soldiers" (14) grounds cleaning and maintenance (18) Farming fishing forestry (19) construction + mining (20) installation, maintenance, repair (21) production occups (22) tranportation
 final$high_risk2 <- ifelse(final$occ1 ==12 | final$occ1 ==14 | final$occ1 ==18 | final$occ1 ==19 | final$occ1 ==20 | final$occ1 ==21| final$occ1 ==22, 1, 0)
 final$self_emp <- ifelse(final$w_class1 == 3 | final$w_class1 == 10, 1,0)
 

@@ -169,7 +169,7 @@ sociodemo = read_data('sdemt') %>%
 		# and gas generation (3), construction (4), manufacturing (5),
 		# transportation (8)
 		high_risk = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
-		high_risk2 = ifelse(occ %in% c(5, 7, 9, 10), 1, 0),
+		high_risk2 = ifelse(occ %in% c(5, 7, 9, 10), 1, 0), # (5) Industrial workers + craftsmen, (7) Transport operators, (9) "soldiers" (10) Ag workers
 		high_risk3 = ifelse(industry %in% c(1), 1, 0),
 		high_risk4 = ifelse(industry %in% c(1, 2, 4), 1, 0),
 		manuf = ifelse(industry %in% c(2, 3, 4, 5, 8), 1, 0),
