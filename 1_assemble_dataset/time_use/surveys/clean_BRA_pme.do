@@ -65,6 +65,19 @@ replace high_risk2 = 1 if occup == 95
 replace high_risk2 = 1 if occup == 99
 replace high_risk2 = 0 if high_risk2 != 1 & occup != .
 
+* (1) Agriculture, (2) Manufacturing, etc. (3) Mining + Construction
+gen occup_code = .
+replace occup_code = 1 if inrange(occup, 61, 63)
+replace occup_code = 2 if inlist(occup, 104, 39, 105) | ///
+                          inlist(occup, 111, 112) | ///
+                          inlist(occup, 72, 73) | ///
+                          inrange(occup, 1, 5) | ///
+                          inrange(occup, 76, 78) | ///
+                          inrange(occup, 81, 84) | ///
+                          inlist(occup, 86, 87, 91, 95, 99)
+replace occup_code = 3 if inlist(occup, 64, 71)
+replace occup_code = 0 if !inlist(occup_code, 1, 2, 3) & !missing(occup)
+
 * high risk 3 + manufacturing
 gen high_risk3 = 1 if economic_activity >= 1 & economic_activity <= 5
 replace high_risk3 = 0 if high_risk3 != 1
@@ -222,9 +235,9 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 high_risk3 high_risk4 manuf manuf2 self_emp hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 high_risk3 high_risk4 manuf manuf2 occup_code self_emp hhsize sample_wgt
 
 
-save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_alt.dta", replace
+save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_occup_codes.dta", replace
 
-export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_alt.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_occup_codes.csv", replace

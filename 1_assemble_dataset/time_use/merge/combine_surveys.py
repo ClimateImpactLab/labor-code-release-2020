@@ -21,50 +21,44 @@ time_use_identifiers = {}
 
 # read a csv file that contains the paths to adm1 and adm2 shps
 shp_list = pd.read_csv(paths.DIR_REPO_LABOR + "/1_assemble_dataset/time_use/weather/gis_config_lines.csv")
-
-#shp_list = pd.read_csv("/shares/gcp/estimation/labor/climate_data/config/gis_config_lines.csv")
 countries = shp_list.shp_id.unique()
 cw = {}
 
 # for country in countries: 
-for country in ['USA','MEX','BRA','IND']: #,'CHN''FRA','GBR','ESP',
+for country in ['USA','FRA','GBR','ESP','MEX','BRA','IND']: #,'CHN'
     print(country)
     cw[country] = pd.read_csv(paths.ROOT_INT_DATA + "/crosswalks/shapefile_to_timeuse_crosswalk_" + country +".csv")
 
-# survey_names = ['USA_ATUS','CHN_CHNS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE']
-survey_names = ['USA_ATUS','BRA_PME','IND_ITUS','MEX_ENOE'] #,'CHN_CHNS''GBR_MTUS','ESP_MTUS','FRA_MTUS' ,
+survey_names = ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE'] #'CHN_CHNS',
 surveys = {}
 for s in survey_names:
-  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use_3sector_alt.csv")
+  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use_3sector_occup_codes.csv")
 
-columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','high_risk2','high_risk3', 'high_risk4', 'manuf', 'manuf2', 'self_emp','male', 'sample_wgt']
+columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','high_risk2','high_risk3', 'high_risk4', 'manuf', 'manuf2', 'occup_code', 'self_emp','male', 'sample_wgt']
 
-#surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
-#  cw['ESP'],
-#  on = 'region_code',
-#  how = "inner",
-#  indicator = False )[columns_wanted] 
+surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
+  cw['ESP'],
+  on = 'region_code',
+  how = "inner",
+  indicator = False )[columns_wanted] 
 
+surveys['FRA_MTUS'] = surveys['FRA_MTUS'].merge(
+  cw['FRA'],
+  on = 'region_code',
+  how = "inner",
+  indicator = False )[columns_wanted] 
 
-#surveys['FRA_MTUS'] = surveys['FRA_MTUS'].merge(
-#  cw['FRA'],
-#  on = 'region_code',
-#  how = "inner",
-#  indicator = False )[columns_wanted] 
-
-#surveys['GBR_MTUS'] = surveys['GBR_MTUS'].merge(
-#  cw['GBR'],
-#  on = 'region_code',
-#  how = "inner",
-#  indicator = False )[columns_wanted] 
-
+surveys['GBR_MTUS'] = surveys['GBR_MTUS'].merge(
+  cw['GBR'],
+  on = 'region_code',
+  how = "inner",
+  indicator = False )[columns_wanted] 
 
 surveys['USA_ATUS'] = surveys['USA_ATUS'].merge(
   cw['USA'],
   on = ['state','master_county_name'],
   how = "inner",
   indicator = False )[columns_wanted] 
-
 
 #surveys['CHN_CHNS'] = surveys['CHN_CHNS'].merge(
 #  cw['CHN'],
@@ -77,7 +71,6 @@ surveys['IND_ITUS'] = surveys['IND_ITUS'].merge(
   on = ['district_name','st_name'],
   how = "inner",
   indicator = False )[columns_wanted] 
-
 
 surveys['BRA_PME'] = surveys['BRA_PME'].merge(
   cw['BRA'],
@@ -93,11 +86,10 @@ surveys['MEX_ENOE'] = surveys['MEX_ENOE'].merge(
   indicator = False )[columns_wanted] 
 
 all_surveys = pd.DataFrame()
-# for s in ['USA_ATUS','CHN_CHNS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE']:
-for s in ['USA_ATUS','BRA_PME','IND_ITUS','MEX_ENOE']: #,'CHN_CHNS''GBR_MTUS','ESP_MTUS','FRA_MTUS',
+for s in ['USA_ATUS','GBR_MTUS','ESP_MTUS','FRA_MTUS','BRA_PME','IND_ITUS','MEX_ENOE']: #,'CHN_CHNS'
   print(s)
   all_surveys = pd.concat([all_surveys,surveys[s]], axis = 0)
 
 
-all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use_3sector_alt.csv", index = False)
+all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use_3sector_occup_codes.csv", index = False)
 

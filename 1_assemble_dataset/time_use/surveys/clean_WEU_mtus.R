@@ -159,7 +159,14 @@ final = comb_all %>%
 		high_risk = ifelse(occup %in% c(12, 13), 1, 0),
 		high_risk2 = ifelse(occup %in% c(10, 12, 13), 1, 0),
 		high_risk3 = ifelse(occup %in% c(12), 1, 0),
+		high_risk4 = ifelse(occup %in% c(12), 1, 0), # definitions for high_risk4/manuf2 identical to high_risk3/manuf. This is just for merging purposes later on
 		manuf = ifelse(occup %in% c(13), 1, 0),
+		manuf2 = ifelse(occup %in% c(13), 1, 0),
+		occup_code = case_when(
+		  occup %in% c(12) ~ 1,
+		  occup %in% c(10, 13) ~ 2,
+		  TRUE ~ 0
+		),
 		self_emp = ifelse(occup ==14, 1, 0),
 		male = ifelse(sex == 1, 1, 0),
 		) %>%
@@ -177,7 +184,7 @@ final2=final
 # need to add a region name column here that will allow for matching with shapefiles
 final = final %>% 
   dplyr::select( # select the variables we want to write out into the estimating dataset
-		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk,  high_risk2, high_risk3, manuf, self_emp, age, male, hhsize, propwt, region
+		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, occup_code, self_emp, age, male, hhsize, propwt, region
 		) %>% 
 	mutate(
 		ind_id = group_indices(., countrya, survey, swave, msamp, hldid, persid)
@@ -188,7 +195,7 @@ final = final %>%
 		region_code = region
 		) %>% 
   dplyr::select(
-		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, high_risk2, high_risk3, manuf, self_emp, age, male, hhsize, sample_wgt
+		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, occup_code, self_emp, age, male, hhsize, sample_wgt
 		)
 
 final_gbr = final %>% 
@@ -210,14 +217,14 @@ final_esp = final %>%
 		-iso)
 
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector.dta"))
-fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector.csv"))
-fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector.csv"))
-fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector.csv"))
-write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector.dta"))
-write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector.dta"))
-write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector_occup_codes.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector_occup_codes.dta"))
+fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector_occup_codes.csv"))
+fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector_occup_codes.csv"))
+fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector_occup_codes.csv"))
+write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector_occup_codes.dta"))
+write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector_occup_codes.dta"))
+write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector_occup_codes.dta"))
 
 
 final  = final %>%

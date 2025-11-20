@@ -37,8 +37,7 @@ global n_ll 0
 ******* parameters that need to be modified *******
 
 * no need to modify this string, we drop china in later part of the code
-*local countries_all CHN USA MEX BRA GBR FRA ESP IND 
-local countries_all CHN USA MEX BRA IND 
+local countries_all CHN USA MEX BRA GBR FRA ESP IND 
 
 if "${clean_raw_surveys}" == "YES"{
 	* clean surveys of individual countries 
@@ -56,7 +55,7 @@ if "${combine_surveys}" == "YES" {
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
 	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
-	import delimited using "$temp_path/all_time_use_3sector_alt.csv", clear
+	import delimited using "$temp_path/all_time_use_3sector_occup_codes.csv", clear
 
 	count
 
@@ -85,7 +84,7 @@ if "${combine_surveys}" == "YES" {
 	drop if missing(hhsize)
 	drop if missing(date)
 
-	save "$temp_path/all_time_use_clean_3sector_alt.dta", replace
+	save "$temp_path/all_time_use_clean_3sector_occup_codes.dta", replace
 
 	****** merge in income and population ***********
 	* do  "$/1_preparation/income/map_names.do"
@@ -120,10 +119,10 @@ if "${combine_surveys}" == "YES" {
 	drop year
 
 	* all merged
-	merge 1:n adm1_id using "$temp_path/all_time_use_clean_3sector_alt.dta", nogen keep(3)
+	merge 1:n adm1_id using "$temp_path/all_time_use_clean_3sector_occup_codes.dta", nogen keep(3)
 	*cap drop dow
 	*drop adm1_id_old
-	save "$temp_path/all_time_use_pop_merged_3sector_alt.dta", replace
+	save "$temp_path/all_time_use_pop_merged_3sector_occup_codes.dta", replace
 
 	*****************************
 	****** adjust weight ********
@@ -131,9 +130,9 @@ if "${combine_surveys}" == "YES" {
 	
 	* Important here that you use R/4.2.1 (`module load R/4.2.1`)
 	
-	*rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
 	
-	use "$temp_path/all_time_use_pop_merged_reweighted_3sector_alt.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted_3sector_occup_codes.dta", clear
 
 	* generate new weights: population weights separated by high and low risk
 	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
@@ -188,7 +187,7 @@ if "${combine_surveys}" == "YES" {
 
 	drop *sum_sample
 
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_3sector_alt.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_3sector_occup_codes.dta", replace
 
 
 	*****************************
@@ -196,14 +195,14 @@ if "${combine_surveys}" == "YES" {
 	*****************************
 
 	* filter out remaining holidays
-	*rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked_3sector_alt.dta", clear
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked_3sector_occup_codes.dta", clear
 	
 	* drop holidays if we want
 	if "${drop_holidays}" == "YES" {
 		drop if is_holiday == 1		
 	}
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_alt.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_occup_codes.dta", replace
 	
 }
 
@@ -313,7 +312,7 @@ foreach t_version in $t_version_list {
 
 			* this is the cleaned and merged time use data file
 			* with weights generated, income merged, and holidays labeled
-			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_alt.dta", clear
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_occup_codes.dta", clear
 			cap drop adm1_id_old
 
 			cap restore, not
@@ -409,7 +408,7 @@ foreach t_version in $t_version_list {
 			gen week_fe = date
 			replace week_fe = week(week_fe)
 			
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_3sector_alt.dta", replace
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_3sector_occup_codes.dta", replace
 		}
 	}
 }

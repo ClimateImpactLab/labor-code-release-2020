@@ -163,6 +163,11 @@ b3 = read_dta(glue("{input}/Block-3-Time-disposition-selected-days-week-records.
 	data.table()
 # ?????? keep only the first one?
 
+duplicated_rows <- duplicated(b3[, .(Key_membno, Key_hhold)]) | 
+  duplicated(b3[, .(Key_membno, Key_hhold)], fromLast = TRUE)
+
+# Subset to keep only duplicated rows
+b3_duplicates <- b3[duplicated_rows]
 
 # block 3.5: activity data
 b3.5 = read_dta(glue("{input}/Block-3-Item-5-Particulars-activity-selected-days-records.dta")) %>%
@@ -174,9 +179,12 @@ b3.5 = read_dta(glue("{input}/Block-3-Item-5-Particulars-activity-selected-days-
 	mutate(
 		is_work = ifelse(activity_code <= 329 | activity_code %in% c(751, 892), 1, 0),
 		high_risk2 = ifelse(activity_code <= 229 | activity_code == 312 | activity_code == 313 | activity_code == 314 | activity_code == 315 | activity_code == 316 | activity_code == 317 | activity_code == 318 | activity_code == 319 | activity_code == 326, 1, 0),
+		occup_code = ifelse(activity_code %in% c(111:117, 119:127, 129:135, 137, 139:146, 148, 149), 1, 0), # 1: agriculture, 2: manufacturing etc., 3: mining + construction
+		occup_code = ifelse(activity_code %in% c(152:156, 159, 165, 221:227, 229, 312:319, 326), 2, occup_code),
+		occup_code = ifelse(activity_code %in% c(161:164, 166, 167, 169, 211:217, 219), 3, occup_code),
 		day_type = as.numeric(day_type)
 		) %>%
-  dplyr::select(Key_membno, Key_hhold, day_type, time_spent, activity_code, is_work, high_risk2)
+  dplyr::select(Key_membno, Key_hhold, day_type, time_spent, activity_code, is_work, high_risk2, occup_code)
 
 b3_5_raw = read_dta(glue("{input}/Block-3-Item-5-Particulars-activity-selected-days-records.dta"))
 
@@ -186,6 +194,9 @@ b3_all = left_join(b3, b3.5, by=c('Key_membno', 'Key_hhold', 'day_type')) %>%
 	dplyr::summarize(
 		mins_worked = sum(time_spent[is_work == 1]),
 		mins_worked_hr = sum(time_spent[is_work == 1 & high_risk2 ==1]),
+		mins_worked_oc1 = sum(time_spent[is_work == 1 & occup_code ==1]),
+		mins_worked_oc2 = sum(time_spent[is_work == 1 & occup_code ==2]),
+		mins_worked_oc3 = sum(time_spent[is_work == 1 & occup_code ==3]),
 		mins_not_worked = sum(time_spent[is_work == 0]),
 		total_mins = sum(time_spent),
 		sample_wgt = first(sample_wgt),
@@ -195,9 +206,14 @@ b3_all = left_join(b3, b3.5, by=c('Key_membno', 'Key_hhold', 'day_type')) %>%
 	data.table()
 
 b3_all$perc_hr <- ifelse(b3_all$mins_worked == 0, NA, b3_all$mins_worked_hr/b3_all$mins_worked)
+b3_all$perc_oc1 <- ifelse(b3_all$mins_worked == 0, NA, b3_all$mins_worked_oc1/b3_all$mins_worked)
+b3_all$perc_oc2 <- ifelse(b3_all$mins_worked == 0, NA, b3_all$mins_worked_oc2/b3_all$mins_worked)
+b3_all$perc_oc3 <- ifelse(b3_all$mins_worked == 0, NA, b3_all$mins_worked_oc3/b3_all$mins_worked)
 
 b3_all$high_risk2 <- ifelse(b3_all$perc_hr >= 0.5, 1, 0)
-
+b3_all$occup_code <- ifelse(b3_all$perc_oc1 >= 0.5, 1, 
+                            ifelse(b3_all$perc_oc2 >= 0.5, 2,
+                                   ifelse(b3_all$perc_oc3 >= 0.5, 3, 0)))
 
 expect(
 	all(b3_all$total_mins == 1440), 
@@ -258,7 +274,7 @@ final_dataset = all_geo %>%
 		ind_id = group_indices(., Key_membno, Key_hhold)
 		) %>% 
 	dplyr::select(
-		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, self_emp, hhsize, sample_wgt
+		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, high_risk2, high_risk3, high_risk4, manuf, manuf2, occup_code, self_emp, hhsize, sample_wgt
 		) %>% 
 	filter(
 		year == 1999 | year == 1998,
@@ -270,8 +286,8 @@ final_dataset = all_geo %>%
 
 head(final_dataset)
 
-write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_alt.csv"))
-write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_alt.dta"))
+write.csv(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_occup_codes.csv"))
+write.dta(final_dataset, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_time_use_3sector_occup_codes.dta"))
 
 location_names = final_dataset %>%
 	dplyr::select(
