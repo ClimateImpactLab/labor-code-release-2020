@@ -55,7 +55,7 @@ if "${combine_surveys}" == "YES" {
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
 	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
-	import delimited using "$temp_path/all_time_use_3sector_occup_codes.csv", clear
+	import delimited using "$temp_path/all_time_use.csv", clear
 
 	count
 
@@ -84,7 +84,7 @@ if "${combine_surveys}" == "YES" {
 	drop if missing(hhsize)
 	drop if missing(date)
 
-	save "$temp_path/all_time_use_clean_3sector_occup_codes.dta", replace
+	save "$temp_path/all_time_use_clean.dta", replace
 
 	****** merge in income and population ***********
 	* do  "$/1_preparation/income/map_names.do"
@@ -119,10 +119,10 @@ if "${combine_surveys}" == "YES" {
 	drop year
 
 	* all merged
-	merge 1:n adm1_id using "$temp_path/all_time_use_clean_3sector_occup_codes.dta", nogen keep(3)
+	merge 1:n adm1_id using "$temp_path/all_time_use_clean.dta", nogen keep(3)
 	*cap drop dow
 	*drop adm1_id_old
-	save "$temp_path/all_time_use_pop_merged_3sector_occup_codes.dta", replace
+	save "$temp_path/all_time_use_pop_merged.dta", replace
 
 	*****************************
 	****** adjust weight ********
@@ -132,7 +132,7 @@ if "${combine_surveys}" == "YES" {
 	
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
 	
-	use "$temp_path/all_time_use_pop_merged_reweighted_3sector_occup_codes.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
 
 	* generate new weights: population weights separated by high and low risk
 	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
@@ -140,19 +140,14 @@ if "${combine_surveys}" == "YES" {
 	}
 	
 	* create new var to weight observations when running 3 sectors (uncomment lines with "sector", comment lines with "high_risk")
-	gen sector = cond(high_risk4 == 1, 1, cond(manuf2 == 1, 2, 0))
-	assert high_risk4 + manuf2 <= 1
-	bysort iso sector: gen risk_prop = _N
-	*bysort iso high_risk: gen risk_prop = _N 
+	bysort iso high_risk: gen risk_prop = _N 
 	by iso: replace risk_prop = risk_prop/_N 
 	gen risk_adj_sample_wgt = pop_adj_sample_wgt * risk_prop
-	bysort sector: egen risk_sum = total(risk_adj_sample_wgt)
-	*bysort high_risk: egen risk_sum = total(risk_adj_sample_wgt)
+	bysort high_risk: egen risk_sum = total(risk_adj_sample_wgt)
 	gen total_risk_share = _N 
-	bysort sector: replace total_risk_share = _N / total_risk_share
-	*bysort high_risk: replace total_risk_share = _N / total_risk_share
+	bysort high_risk: replace total_risk_share = _N / total_risk_share
 	replace risk_adj_sample_wgt = risk_adj_sample_wgt / risk_sum * total_risk_share
-	drop total_risk_share risk_prop risk_sum sample_wgt sector
+	drop total_risk_share risk_prop risk_sum sample_wgt
 
 	* Sample weights by ADM2-by-year
 	gegen adm2_year_tot_wgt = total(adm2_adj_sample_wgt), by(adm2_id year)
@@ -187,7 +182,7 @@ if "${combine_surveys}" == "YES" {
 
 	drop *sum_sample
 
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_3sector_occup_codes.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered.dta", replace
 
 
 	*****************************
@@ -196,13 +191,13 @@ if "${combine_surveys}" == "YES" {
 
 	* filter out remaining holidays
 	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked_3sector_occup_codes.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta", clear
 	
 	* drop holidays if we want
 	if "${drop_holidays}" == "YES" {
 		drop if is_holiday == 1		
 	}
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_occup_codes.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
 	
 }
 
@@ -312,7 +307,7 @@ foreach t_version in $t_version_list {
 
 			* this is the cleaned and merged time use data file
 			* with weights generated, income merged, and holidays labeled
-			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_3sector_occup_codes.dta", clear
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", clear
 			cap drop adm1_id_old
 
 			cap restore, not
@@ -408,7 +403,7 @@ foreach t_version in $t_version_list {
 			gen week_fe = date
 			replace week_fe = week(week_fe)
 			
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_3sector_occup_codes.dta", replace
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}.dta", replace
 		}
 	}
 }

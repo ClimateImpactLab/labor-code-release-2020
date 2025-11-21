@@ -41,31 +41,21 @@ replace self_emp = 0 if class_w <  3 | class_w >  3
 
 * high_risk
 rename v408a economic_activity
-gen high_risk = 0
-replace high_risk = 1 if economic_activity >= 1 & economic_activity <= 21
-replace high_risk = 1 if economic_activity >= 23 & economic_activity <= 45
-replace high_risk = 1 if inlist(economic_activity, 60,61,62,92)
+gen high_risk = .
+replace high_risk = 1 if economic_activity >= 1 & economic_activity <= 5
+replace high_risk = 0 if high_risk != 1
 drop if economic_activity == 0
 drop if missing(economic_activity)
 
-*high risk 2
-rename v407a occup 
-gen high_risk2 = 1 if occup >= 1 & occup <= 5 
-replace high_risk2 = 1 if occup >= 104 & occup <= 105
-replace high_risk2 = 1 if occup == 39
-replace high_risk2 = 1 if occup >= 111 & occup <= 112
-replace high_risk2 = 1 if occup >= 61 & occup <= 64
-replace high_risk2 = 1 if occup >= 71 & occup <= 73
-replace high_risk2 = 1 if occup >= 76 & occup <= 78
-replace high_risk2 = 1 if occup >= 81 & occup <= 84
-replace high_risk2 = 1 if occup == 86
-replace high_risk2 = 1 if occup == 87
-replace high_risk2 = 1 if occup == 91
-replace high_risk2 = 1 if occup == 95
-replace high_risk2 = 1 if occup == 99
-replace high_risk2 = 0 if high_risk2 != 1 & occup != .
+* manuf
+gen manuf .
+replace manuf = 1 if economic_activity >=10 & economic_activity <= 21
+replace manuf = 1 if economic_activity >= 23 & economic_activity <= 45
+replace manuf = 1 if inlist(economic_activity, 60,61,62,92)
+replace manuf = 0 if manuf != 1
 
-* (1) Agriculture, (2) Manufacturing, etc. (3) Mining + Construction
+* occup_code (1) Agriculture, (2) Manufacturing, etc. (3) Mining + Construction
+rename v407a occup 
 gen occup_code = .
 replace occup_code = 1 if inrange(occup, 61, 63)
 replace occup_code = 2 if inlist(occup, 104, 39, 105) | ///
@@ -78,24 +68,6 @@ replace occup_code = 2 if inlist(occup, 104, 39, 105) | ///
 replace occup_code = 3 if inlist(occup, 64, 71)
 replace occup_code = 0 if !inlist(occup_code, 1, 2, 3) & !missing(occup)
 
-* high risk 3 + manufacturing
-gen high_risk3 = 1 if economic_activity >= 1 & economic_activity <= 5
-replace high_risk3 = 0 if high_risk3 != 1
-
-gen high_risk4 = 1 if economic_activity >= 1 & economic_activity <= 14
-replace high_risk4 = 1 if inlist(economic_activity, 45)
-replace high_risk4 = 0 if high_risk4 != 1
-
-gen manuf = 1 if economic_activity >=10 & economic_activity <= 21
-replace manuf = 1 if economic_activity >= 23 & economic_activity <= 45
-replace manuf = 1 if inlist(economic_activity, 60,61,62,92)
-replace manuf = 0 if manuf != 1
-
-gen manuf2 = 1 if economic_activity >=15 & economic_activity <= 21
-replace manuf2 = 1 if economic_activity >= 23 & economic_activity <= 41
-replace manuf2 = 1 if inlist(economic_activity, 60,61,62,92)
-replace manuf2 = 0 if manuf2 != 1
-
 * region
 rename v035 metropolitan_region
 * values:
@@ -106,8 +78,6 @@ rename v035 metropolitan_region
 * 35 = São Paulo
 * 41 = Curitiba
 * 43 = Porto Alegre
-
-
 
 * household identifiers
 rename v040 control_number
@@ -235,9 +205,9 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk high_risk2 high_risk3 high_risk4 manuf manuf2 occup_code self_emp hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk manuf occup_code self_emp hhsize sample_wgt
 
 
-save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_occup_codes.dta", replace
+save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace
 
-export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use_3sector_occup_codes.csv", replace
+export delimited using "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.csv", replace

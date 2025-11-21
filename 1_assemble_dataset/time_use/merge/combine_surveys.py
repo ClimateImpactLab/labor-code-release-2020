@@ -34,7 +34,7 @@ surveys = {}
 for s in survey_names:
   surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use_3sector_occup_codes.csv")
 
-columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','high_risk2','high_risk3', 'high_risk4', 'manuf', 'manuf2', 'occup_code', 'self_emp','male', 'sample_wgt']
+columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','manuf','occup_code', 'self_emp','male','sample_wgt']
 
 surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
   cw['ESP'],
@@ -91,5 +91,5 @@ for s in ['USA_ATUS','GBR_MTUS','ESP_MTUS','FRA_MTUS','BRA_PME','IND_ITUS','MEX_
   all_surveys = pd.concat([all_surveys,surveys[s]], axis = 0)
 
 
-all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use_3sector_occup_codes.csv", index = False)
+all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use.csv", index = False)
 

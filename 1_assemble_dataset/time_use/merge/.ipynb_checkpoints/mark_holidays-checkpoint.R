@@ -198,7 +198,7 @@ get_years = function(country_code, df=time_use) {
 # get the full dataset
 time_use = glue(
 	'{ROOT_INT_DATA}',
-	'/temp/all_time_use_pop_merged_reweighted_clustered_3sector_occup_codes.dta') %>%
+	'/temp/all_time_use_pop_merged_reweighted_clustered.dta') %>%
 	read_dta() %>%
 	data.table()
 
@@ -473,7 +473,7 @@ final = final %>%
 
 write.dta(final, glue(
 	'{ROOT_INT_DATA}/temp/',
-	'all_time_use_pop_merged_reweighted_clustered_holidays_marked_3sector_occup_codes.dta'))
+	'all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta'))
 
 
 

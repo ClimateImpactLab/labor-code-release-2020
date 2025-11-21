@@ -46,6 +46,9 @@
 
 # Based on the above, I will only clean atussum and atusresp, and the spatial
 # data, because those contain all the data we need.
+
+#' ELLIOT TO DO: Document new cleaning process and edit above ^
+
 source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 # set up the environment
 library(tidyverse)
@@ -60,7 +63,7 @@ library(parallel)
 library(foreign)
 library(dplyr)
 
-cores = detectCores()
+cores = detectCores() # this doesnt work on the rcc at all, always "detects" 64 cores
 
 ####################
 # 1. Load raw data #
@@ -107,11 +110,8 @@ atusresp = fread(glue("{input}/atusresp_0314/atusresp_0314.dat")) %>%
 		TRMJIND1 <= 13 & TRMJIND1 > 0,
 		) %>%
 	mutate(
-		high_risk = ifelse(TRMJIND1 %in% c(1, 2, 3, 4, 6), 1, 0),
-		high_risk3 = ifelse(TRMJIND1 %in% c(1), 1, 0),
-		high_risk4 = ifelse(TRMJIND1 %in% c(1, 2, 3), 1, 0),
+		high_risk = ifelse(TRMJIND1 %in% c(1), 1, 0),
 		manuf = ifelse(TRMJIND1 %in% c(2, 3, 4, 6), 1, 0),
-		manuf2 = ifelse(TRMJIND1 %in% c(4, 6), 1, 0)
 		)
 
 
@@ -406,11 +406,10 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		ind_id = group_indices(., id, hhid, lineno, hhid2) 
 		) %>%
   dplyr::select(
-		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, high_risk3, high_risk4, manuf, manuf2, sample_wgt, w_class1, occ1, id
+		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, manuf, sample_wgt, w_class1, occ1, id
 		) 
 
 # (12) security + armed forces (14) grounds cleaning and maintenance (18) Farming fishing forestry (19) construction + mining (20) installation, maintenance, repair (21) production occups (22) tranportation
-final$high_risk2 <- ifelse(final$occ1 %in% c(12,14,18,19,20,21,22), 1, 0)
 final$occup_code <- ifelse(final$occ1 ==18, 1, 0)
 final$occup_code <- ifelse(final$occ1 %in% c(12,14,20,21,22), 2, final$occup_code)
 final$occup_code <- ifelse(final$occ1 ==19, 3, final$occup_code)
@@ -418,13 +417,12 @@ final$self_emp <- ifelse(final$w_class1 == 3 | final$w_class1 == 10, 1,0)
 
 final <- dplyr::select(final, select = -c(w_class1, occ1))
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_3sector_occup_codes.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use_3sector_occup_codes.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.dta"))
 
 #analysis
 weather <- subset(final, why == 3)
 
-final_old <- fread(glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/USA_ATUS_time_use.csv"))
 location_names = final %>% 
   dplyr::select(state, master_county_name) %>%
 	distinct()
