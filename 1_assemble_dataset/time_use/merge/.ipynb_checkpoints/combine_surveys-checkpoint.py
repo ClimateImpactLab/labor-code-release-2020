@@ -32,9 +32,9 @@ for country in ['USA','FRA','GBR','ESP','MEX','BRA','IND']: #,'CHN'
 survey_names = ['USA_ATUS','BRA_PME','GBR_MTUS','ESP_MTUS','FRA_MTUS','IND_ITUS','MEX_ENOE'] #'CHN_CHNS',
 surveys = {}
 for s in survey_names:
-  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use_3sector_occup_codes.csv")
+  surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use.csv")
 
-columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','manuf','occup_code', 'self_emp','male','sample_wgt']
+columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','sector','high_risk_old','occup_code', 'self_emp','male','sample_wgt']
 
 surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
   cw['ESP'],

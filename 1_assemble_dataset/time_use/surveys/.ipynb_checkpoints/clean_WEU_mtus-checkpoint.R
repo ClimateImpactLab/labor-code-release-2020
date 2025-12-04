@@ -35,6 +35,8 @@
 #	  to edit a bunch fo scripts manually.)
 # 3. Write sanity checks for the combined data (eg, daily hours add up to 24, ages in reasonable range)
 
+#' ELLIOT TO DO: Document new cleaning process and edit above ^
+
 # set up the environment
 source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(tidyverse)
@@ -156,10 +158,14 @@ final = comb_all %>%
 		mins_worked = rowSums(dplyr::select(., main7, main8, main9, main10, main11, main12, main13, main14), na.rm=TRUE),
 		total_mins = rowSums(dplyr::select(., starts_with("main")), na.rm=TRUE),
 		mins_not_worked = total_mins - mins_worked,
-		high_risk = ifelse(occup %in% c(12, 13), 1, 0),
-		high_risk2 = ifelse(occup %in% c(10, 12, 13), 1, 0),
-		high_risk3 = ifelse(occup %in% c(12), 1, 0),
-		manuf = ifelse(occup %in% c(13), 1, 0),
+		high_risk = ifelse(occup %in% c(12), 1, 0), # ag/forestry/fishing
+		manuf = ifelse(occup %in% c(13), 1, 0), # manuf/construction/mining/transportation (for 3-sector regression)
+        high_risk_old = ifelse(occup %in% c(12, 13), 1, 0),
+		occup_code = case_when(
+		  occup %in% c(12) ~ 1, # ag etc.
+		  occup %in% c(10, 13) ~ 2, # manuf
+		  TRUE ~ 0 # low risk occupations (note: no ag)
+		),
 		self_emp = ifelse(occup ==14, 1, 0),
 		male = ifelse(sex == 1, 1, 0),
 		) %>%
@@ -177,7 +183,7 @@ final2=final
 # need to add a region name column here that will allow for matching with shapefiles
 final = final %>% 
   dplyr::select( # select the variables we want to write out into the estimating dataset
-		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk,  high_risk2, high_risk3, manuf, self_emp, age, male, hhsize, propwt, region
+		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk, manuf, high_risk_old, occup_code, self_emp, age, male, hhsize, propwt, region
 		) %>% 
 	mutate(
 		ind_id = group_indices(., countrya, survey, swave, msamp, hldid, persid)
@@ -188,7 +194,7 @@ final = final %>%
 		region_code = region
 		) %>% 
   dplyr::select(
-		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, high_risk2, high_risk3, manuf, self_emp, age, male, hhsize, sample_wgt
+		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, manuf, high_risk_old, occup_code, self_emp, age, male, hhsize, sample_wgt
 		)
 
 final_gbr = final %>% 
@@ -210,14 +216,14 @@ final_esp = final %>%
 		-iso)
 
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use_3sector.dta"))
-fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector.csv"))
-fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector.csv"))
-fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector.csv"))
-write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use_3sector.dta"))
-write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use_3sector.dta"))
-write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use_3sector.dta"))
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/WEU_MTUS_time_use.dta"))
+fwrite(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.csv"))
+fwrite(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.csv"))
+fwrite(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.csv"))
+write.dta(final_gbr, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/GBR_MTUS_time_use.dta"))
+write.dta(final_fra, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/FRA_MTUS_time_use.dta"))
+write.dta(final_esp, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/ESP_MTUS_time_use.dta"))
 
 
 final  = final %>%

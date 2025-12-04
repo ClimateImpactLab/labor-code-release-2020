@@ -139,42 +139,64 @@ if "${combine_surveys}" == "YES" {
 		cap drop `v'
 	}
 	
-	* create new var to weight observations when running 3 sectors (uncomment lines with "sector", comment lines with "high_risk")
-	bysort iso high_risk: gen risk_prop = _N 
-	by iso: replace risk_prop = risk_prop/_N 
-	gen risk_adj_sample_wgt = pop_adj_sample_wgt * risk_prop
-	bysort high_risk: egen risk_sum = total(risk_adj_sample_wgt)
-	gen total_risk_share = _N 
-	bysort high_risk: replace total_risk_share = _N / total_risk_share
-	replace risk_adj_sample_wgt = risk_adj_sample_wgt / risk_sum * total_risk_share
-	drop total_risk_share risk_prop risk_sum sample_wgt
+	capture program drop create_risk_weights
+	program define create_risk_weights
+	
+		syntax varname, base_weight(varname) [suffix(string)]
+    
+		* Store the grouping variable name
+		local group_var `varlist'
+    
+		* Set default suffix to empty if not provided
+		if "`suffix'" == "" {
+			local suffix ""
+		}
+    
+		* Calculate proportions within iso
+		bysort iso `group_var': gen `group_var'_prop = _N 
+		by iso: replace `group_var'_prop = `group_var'_prop/_N 
+    
+		* Adjust weights by proportion
+		gen risk_adj_sample_wgt`suffix' = `base_weight' * `group_var'_prop
+		bysort `group_var': egen `group_var'_sum = total(risk_adj_sample_wgt`suffix')
+		gen total_`group_var'_share = _N 
+		bysort `group_var': replace total_`group_var'_share = _N / total_`group_var'_share
+		replace risk_adj_sample_wgt`suffix' = risk_adj_sample_wgt`suffix' / `group_var'_sum * total_`group_var'_share
+    
+		* clean up
+		drop total_`group_var'_share `group_var'_prop `group_var'_sum
+    
+		* Representative unit sample weights - by rep_unit
+		gegen rep_unit_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit)
+		gen rep_unit_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_tot_wgt`suffix'
+		gegen test_sum`suffix' = total(rep_unit_sample_wgt`suffix'), by(rep_unit)
+    
+		* Representative unit sample weights - by rep_unit and year
+		gegen rep_unit_year_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit year)
+		gen rep_unit_year_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_year_tot_wgt`suffix'
+		gegen test_sum_2`suffix' = total(rep_unit_year_sample_wgt`suffix'), by(rep_unit year)
+    
+		* Test weights
+		count if (round(test_sum`suffix') != 1) | (round(test_sum_2`suffix') != 1)
+		if `r(N)' != 0 {
+			di as error "Whoops, you biffed it! Sample weights for `group_var' don't add to 1."
+		}
+		else {
+			di as result "Great job, sample weights for `group_var' correctly generated."
+			drop rep_unit_tot_wgt`suffix' rep_unit_year_tot_wgt`suffix' test_sum`suffix' test_sum_2`suffix'
+		}
+    
+	end
 
-	* Sample weights by ADM2-by-year
-	gegen adm2_year_tot_wgt = total(adm2_adj_sample_wgt), by(adm2_id year)
-	gen adm2_year_adj_sample_wgt = adm2_adj_sample_wgt/adm2_year_tot_wgt
-	drop adm2_year_tot_wgt
-
-	* Representative unit sample weights - by rep_unit and year
+	* Create rep_unit variable (only needs to be done once)
 	gen rep_unit = adm1_id
 	replace rep_unit = adm0_id if inlist(iso, "USA", "GBR", "FRA")
 
-	gegen rep_unit_tot_wgt = total(risk_adj_sample_wgt), by(rep_unit)
-	gen rep_unit_sample_wgt = risk_adj_sample_wgt/rep_unit_tot_wgt
-	gegen test_sum = total(rep_unit_sample_wgt), by(rep_unit)
-
-	gegen rep_unit_year_tot_wgt = total(risk_adj_sample_wgt), by(rep_unit year)
-	gen rep_unit_year_sample_wgt = risk_adj_sample_wgt/rep_unit_year_tot_wgt
-	gegen test_sum_2 = total(rep_unit_year_sample_wgt), by(rep_unit year)
-
-	* test new weights - remove once successfully run!
-	count if (round(test_sum) != 1) | (round(test_sum_2) != 1)
-	if `r(N)' != 0 {
-		di "Whoops, you biffed it! Sample weights don't add to 1."
-		}
-	else {
-		di "Great job, sample weights correctly generated."
-		drop rep_unit_tot_wgt rep_unit_year_tot_wgt test_sum test_sum_2
-		}
+	* run function to create weights for each of the three variables. Occupations code weights to
+	* be made in regression script for flexibility
+	create_risk_weights high_risk, base_weight(pop_adj_sample_wgt)
+	create_risk_weights high_risk_old, base_weight(pop_adj_sample_wgt) suffix(_old)
+	create_risk_weights sector, base_weight(pop_adj_sample_wgt) suffix(_sector)
 
 	* redefine clusters so that all the regressions generate standard errors
 	egen cluster_adm0yymm = group(iso month year)
@@ -402,6 +424,10 @@ foreach t_version in $t_version_list {
 			* generate week of year fixed effect using stata's built in function
 			gen week_fe = date
 			replace week_fe = week(week_fe)
+			
+			* drop straggler duplicates 
+			drop if (iso == "MEX" & ind_id == 361587 & year == 2007 & month == 7 & day == 1)
+			drop if (iso == "GBR" & ind_id == 22798  & year == 2001 & month == 2 & day == 14)
 			
 			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}.dta", replace
 		}

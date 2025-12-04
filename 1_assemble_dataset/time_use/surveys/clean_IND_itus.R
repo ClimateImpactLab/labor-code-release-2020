@@ -22,7 +22,7 @@
 # - Block 2: individual-level characteristics (all individuals, including those for whom time-use data not collected)
 # - Block 3: dates for which surveys were conducted
 # - Block 3.5: activity-level data for all recorded individuals, organized by time of day and survey-date
-# I will clean these blocks individually and then merge them together
+# blocks are cleaned individually and merged together
 
 # set up the environment
 source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
@@ -48,14 +48,12 @@ input = glue("{ROOT_INT_DATA}/surveys/IND_ITUS/Time_use_survey_1998")
 b0.1 = read_dta(glue("{input}/Block-0-1-Identification-Household-Characteristics-records.dta")) %>%
 	data.table() %>%
 	rename(
-		hhsize = B1_q1 # this one is the same as old data
+		hhsize = B1_q1 
 		) %>%
 	rename(Key_hhold = Hhold_key) %>%
-  dplyr::select( # select the datat we want and variables needed for merging (come back to this)
+  dplyr::select( 
 		Key_hhold, State, District, hhsize
 		)
-	# mutate_if(is.labelled, as_factor) %>%
-	# data.table()
 
 # block 2: individual-level characteristics
 b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta")) %>%
@@ -69,27 +67,34 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
   mutate(industry = as.numeric(industry)) %>%
   filter(!is.na(industry)) %>%
 	mutate(
-		male = ifelse(sex == 1, 1, 0), #same as old data
-		#age2 = age^2,
-		# risk information taken from 1987 National Industrial Classification (NIC-1987) codes:
-		# http://mospi.nic.in/classification/national-industrial-classification/national-industrial-classification-1987
-		# https://www.dropbox.com/scl/fi/rmk9x6dacdoruqlwelvb8/NIC87_Codes.csv?rlkey=9tg0had5n7lsdo6gsvla974sr&e=1&st=u14hmo39&dl=0 <- if unavailable from india website
-		# also create a "high_risk_old" variable which is intended to mimic the way high risk was constructed prviously
+		male = ifelse(sex == 1, 1, 0),
+		# risk information taken from 1987 National Industrial Classification (NIC-1987) codes (in the codebooks directory)
+		# high_risk is ag/forestry/fishing workers
+		# sector == 1 is the same as high_risk == 1, sector == 2 is for manufacturing/mining/construction/transportation
+		# high_risk_old replicates previous sector definitions
 		self_emp = ifelse(ent_stat == 11, 1, 0),
 		high_risk = ifelse(
 		  industry < 99, 
 		  1, 
 		  0
 		),
-		manuf = ifelse(
-		  (industry > 99 & industry < 200) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740), 
-		  1, 
-		  0
-		)
+		sector = ifelse(
+          high_risk == 1,
+          1,
+          ifelse(
+            (industry > 99 & industry < 200) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740), 
+            2, 
+            0
+          )
+        ),
+        high_risk_old = ifelse((industry < 200) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740), 
+            1, 
+            0
+        )
 		) %>%
 	rename(Key_membno = Key_Membno) %>%
   dplyr::select( 
-		Key_hhold, Key_membno, sex, age, male, high_risk, manuf, self_emp, age
+		Key_hhold, Key_membno, sex, age, male, high_risk, sector, high_risk_old, self_emp, age
 		) %>%
 	distinct() # filter out a handful of duplicated obs
 
@@ -249,7 +254,7 @@ final_dataset = all_geo %>%
 		ind_id = group_indices(., Key_membno, Key_hhold)
 		) %>% 
 	dplyr::select(
-		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, manuf, occup_code, self_emp, hhsize, sample_wgt
+		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, sector, high_risk_old, occup_code, self_emp, hhsize, sample_wgt
 		) %>% 
 	filter(
 		year == 1999 | year == 1998,

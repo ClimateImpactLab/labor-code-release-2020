@@ -165,13 +165,19 @@ sociodemo = read_data('sdemt') %>%
 		# keep two copies -- ENT is needed for merging
 		state = ENT,
 		male = ifelse(sex == '1', 1, 0),
-		# high risk: agriculture and fishing (1), mining (2), electricity, water
-		# and gas generation (3), construction (4), manufacturing (5),
-		# transportation (8)
-		high_risk = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
-		high_risk2 = ifelse(occ %in% c(5, 7, 9, 10), 1, 0),
-		high_risk3 = ifelse(industry %in% c(1), 1, 0),
-		manuf = ifelse(industry %in% c(2, 3, 4, 5, 8), 1, 0),
+		# high risk: agriculture and fishing (1), 
+		# manuf: mining (2), electricity, water and gas generation (3), construction (4), manufacturing (5), transportation (8)
+		high_risk = ifelse(industry %in% c(1), 1, 0),
+        sector = ifelse(high_risk == 1, 
+                        1, 
+                        ifelse(industry %in% c(2, 3, 4, 5, 8), 2, 0)
+                       ),
+        high_risk = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
+		occup_code = case_when(
+		  occ %in% c(10) ~ 1,
+		  occ %in% c(5,7,9) ~ 2, # (5) Industrial workers + craftsmen, (7) Transport operators, (9) security (10) Ag workers
+		  TRUE ~ 0 # low risk (no mining/construction occupation category)
+		),
 		self_emp = ifelse(class_w == 3, 1, 0),
 		# create an ID variable--first step of this is to get an identifier for
 		# that tracks each round of the five-round panel
@@ -183,7 +189,7 @@ sociodemo = read_data('sdemt') %>%
   dplyr::select(
 		id, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, N_REN, H_MUD, UPM, PER,
 		municipality, state, sex, age, industry, occ, sample_wgt, 
-		male, high_risk, high_risk2, high_risk3, manuf, self_emp
+		male, high_risk, sector, high_risk_old, occup_code, self_emp
 		) %>%
 	data.table()
 
@@ -381,7 +387,7 @@ final = outcome %>%
 		) %>% 
   dplyr::select(
 		ind_id, state_name, municipality_name, 
-		prev_sunday, mins_worked, male, age, high_risk, high_risk2, high_risk3, manuf, self_emp, hhsize, 
+		prev_sunday, mins_worked, male, age, high_risk, sector, high_risk_old, occup_code, self_emp, hhsize, 
 		sample_wgt
 		) %>% 
 	mutate(
@@ -392,8 +398,13 @@ final = outcome %>%
   dplyr::select(
 		-prev_sunday)
 
-fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_3sector.csv"))
-write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use_3sector.dta"))
+# filter out the 2 observations where the survey date was miscoded
+final = final %>%
+  filter(!(ind_id == 73997 & sample_wgt == 1876 & month == 4 & day == 10)) %>%
+  filter(!(ind_id == 83404 & sample_wgt == 1876 & month == 4 & day == 10))
+
+fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
+write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.dta"))
 
 location_names = final %>% 
   dplyr::select(state_name, municipality_name) %>%

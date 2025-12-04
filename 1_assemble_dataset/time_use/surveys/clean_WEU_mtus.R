@@ -27,16 +27,6 @@
 # 3. Merge in date information (from episode file)
 # 4. Subset and create variables for estimating dataset
 
-# Future code will: 
-# 1. Implement this replication for each country
-# 2. Append all country data together 
-# 	 (ideally, we could write a master script that functionalizes each cleaning script, 
-#     allowing us to specify the variables we want in the estimating dataset without having
-#	  to edit a bunch fo scripts manually.)
-# 3. Write sanity checks for the combined data (eg, daily hours add up to 24, ages in reasonable range)
-
-#' ELLIOT TO DO: Document new cleaning process and edit above ^
-
 # set up the environment
 source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(tidyverse)
@@ -159,7 +149,8 @@ final = comb_all %>%
 		total_mins = rowSums(dplyr::select(., starts_with("main")), na.rm=TRUE),
 		mins_not_worked = total_mins - mins_worked,
 		high_risk = ifelse(occup %in% c(12), 1, 0), # ag/forestry/fishing
-		manuf = ifelse(occup %in% c(13), 1, 0), # manuf/construction/mining/transportation (for 3-sector regression)
+		sector = ifelse(occup %in% c(13), 1, 0), # manuf/construction/mining/transportation (for 3-sector regression)
+    high_risk_old = ifelse(occup %in% c(12, 13), 1, 0), # old definition of high_risk
 		occup_code = case_when(
 		  occup %in% c(12) ~ 1, # ag etc.
 		  occup %in% c(10, 13) ~ 2, # manuf
@@ -182,7 +173,7 @@ final2=final
 # need to add a region name column here that will allow for matching with shapefiles
 final = final %>% 
   dplyr::select( # select the variables we want to write out into the estimating dataset
-		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk, manuf, occup_code, self_emp, age, male, hhsize, propwt, region
+		iso, countrya, survey, hldid, persid, swave, msamp, cday, month, year, mins_worked, high_risk, sector, high_risk_old, occup_code, self_emp, age, male, hhsize, propwt, region
 		) %>% 
 	mutate(
 		ind_id = group_indices(., countrya, survey, swave, msamp, hldid, persid)
@@ -193,7 +184,7 @@ final = final %>%
 		region_code = region
 		) %>% 
   dplyr::select(
-		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, manuf, occup_code, self_emp, age, male, hhsize, sample_wgt
+		iso, region_code, ind_id, year, month, day, mins_worked, high_risk, sector, high_risk_old, occup_code, self_emp, age, male, hhsize, sample_wgt
 		)
 
 final_gbr = final %>% 

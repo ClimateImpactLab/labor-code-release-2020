@@ -168,7 +168,8 @@ sociodemo = read_data('sdemt') %>%
 		# high risk: agriculture and fishing (1), 
 		# manuf: mining (2), electricity, water and gas generation (3), construction (4), manufacturing (5), transportation (8)
 		high_risk = ifelse(industry %in% c(1), 1, 0),
-		manuf = ifelse(industry %in% c(2, 3, 4, 5, 8), 1, 0),
+    sector = ifelse(high_risk == 1, 1, ifelse(industry %in% c(2, 3, 4, 5, 8), 2, 0)),
+    high_risk_old = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
 		occup_code = case_when(
 		  occ %in% c(10) ~ 1,
 		  occ %in% c(5,7,9) ~ 2, # (5) Industrial workers + craftsmen, (7) Transport operators, (9) security (10) Ag workers
@@ -185,7 +186,7 @@ sociodemo = read_data('sdemt') %>%
   dplyr::select(
 		id, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, N_REN, H_MUD, UPM, PER,
 		municipality, state, sex, age, industry, occ, sample_wgt, 
-		male, high_risk, manuf, occup_code, self_emp
+		male, high_risk, sector, high_risk_old, occup_code, self_emp
 		) %>%
 	data.table()
 
@@ -383,7 +384,7 @@ final = outcome %>%
 		) %>% 
   dplyr::select(
 		ind_id, state_name, municipality_name, 
-		prev_sunday, mins_worked, male, age, high_risk, manuf, occup_code, self_emp, hhsize, 
+		prev_sunday, mins_worked, male, age, high_risk, sector, high_risk_old, occup_code, self_emp, hhsize, 
 		sample_wgt
 		) %>% 
 	mutate(

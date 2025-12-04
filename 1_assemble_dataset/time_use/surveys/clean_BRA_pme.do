@@ -1,4 +1,4 @@
-* this code cleans 
+* this code cleans the brazil data
 
 do "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
@@ -40,6 +40,7 @@ gen self_emp =1 if class_w == 3
 replace self_emp = 0 if class_w <  3 | class_w >  3
 
 * high_risk
+* workers are high risk if they are agricultural/fishing/forestry workers, low-risk if non-ag
 rename v408a economic_activity
 gen high_risk = .
 replace high_risk = 1 if economic_activity >= 1 & economic_activity <= 5
@@ -47,13 +48,21 @@ replace high_risk = 0 if high_risk != 1
 drop if economic_activity == 0
 drop if missing(economic_activity)
 
-* manuf
-gen manuf .
-replace manuf = 1 if economic_activity >=10 & economic_activity <= 21
-replace manuf = 1 if economic_activity >= 23 & economic_activity <= 45
-replace manuf = 1 if inlist(economic_activity, 60,61,62,92)
-replace manuf = 0 if manuf != 1
+* sector classification gives us a second category (sector == 2) for
+* maunfacturing/construction/mining/transportation
+gen sector = .
+replace sector = 2 if economic_activity >=10 & economic_activity <= 21
+replace sector = 2 if economic_activity >= 23 & economic_activity <= 45
+replace sector = 2 if inlist(economic_activity, 60,61,62,92)
+replace sector = 0 if sector != 2
+replace sector = 1 if high_risk == 1
 
+* create variable for old high_risk classification
+* (sector == 1 or sector == 2 from above)
+gen high_risk_old = .
+replace high_risk_old = 1 if sector == 1 | sector == 2
+
+* occupation codes regression
 * occup_code (1) Agriculture, (2) Manufacturing, etc. (3) Mining + Construction
 rename v407a occup 
 gen occup_code = .
@@ -205,7 +214,7 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk manuf occup_code self_emp hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk sector high_risk_old occup_code self_emp hhsize sample_wgt
 
 
 save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace

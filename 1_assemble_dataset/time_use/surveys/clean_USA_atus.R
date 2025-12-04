@@ -110,10 +110,10 @@ atusresp = fread(glue("{input}/atusresp_0314/atusresp_0314.dat")) %>%
 		TRMJIND1 <= 13 & TRMJIND1 > 0,
 		) %>%
 	mutate(
-		high_risk = ifelse(TRMJIND1 %in% c(1), 1, 0),
-		manuf = ifelse(TRMJIND1 %in% c(2, 3, 4, 6), 1, 0),
-		)
-
+		high_risk = ifelse(TRMJIND1 %in% c(1), 1, 0), 
+    sector = ifelse(high_risk == 1, 1, ifelse(TRMJIND1 %in% c(2, 3, 4, 6), 2, 0)),
+    high_risk_old = ifelse(TRMJIND1 %in% c(1, 2, 3, 4, 6), 1, 0)   
+    )
 
 # clean region data
 # this requires several steps: 
@@ -406,7 +406,7 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		ind_id = group_indices(., id, hhid, lineno, hhid2) 
 		) %>%
   dplyr::select(
-		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, manuf, sample_wgt, w_class1, occ1, id
+		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sector, high_risk_old, sample_wgt, w_class1, occ1, id
 		) 
 
 # (12) security + armed forces (14) grounds cleaning and maintenance (18) Farming fishing forestry (19) construction + mining (20) installation, maintenance, repair (21) production occups (22) tranportation
