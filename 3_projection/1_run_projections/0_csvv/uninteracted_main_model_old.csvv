@@ -17,7 +17,7 @@ variables:
   outcome: share of high-risk labor [unitless]
 ...
 observations
-NA
+6599335
 prednames
 tasmax, tasmax_rcspline1, tasmax, tasmax_rcspline1, 1, 1, 1, 1, 1, 1
 covarnames

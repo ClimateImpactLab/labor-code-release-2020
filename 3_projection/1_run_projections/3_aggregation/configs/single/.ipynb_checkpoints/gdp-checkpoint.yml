@@ -5,7 +5,7 @@
 # wage levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
 
 # outputdir: if not specified will drop outputs in targetdir
-outputdir: /project/cil/gcp/outputs/labor/impacts-corpsepose/single/single-interacted-test
+outputdir: /project/cil/gcp/outputs/labor/impacts-woodwork/single/uninteracted_main_model
 levels-weighting: population * 0.00487 / population 
 aggregate-weighting-numerator: population * income * 0.00487
 aggregate-weighting-denominator: population * income

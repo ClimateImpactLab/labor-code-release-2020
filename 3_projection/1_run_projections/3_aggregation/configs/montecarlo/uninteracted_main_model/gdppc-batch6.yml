@@ -7,3 +7,4 @@ aggregated-unit: "% GDP Per Capita"
 levels-unit: "% GDP Per Capita"
 infix: gdppc
 ssp: SSP3
+batch: batch6

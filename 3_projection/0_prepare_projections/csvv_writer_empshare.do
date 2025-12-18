@@ -221,7 +221,7 @@ program define write_csvv
 
 	}
 
-	local csvv_path "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
+	local csvv_path "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/temp"
 	local csvv "`csvv_path'/`csvv_filename'"
 
 	cd `csvv_path'

@@ -10,7 +10,7 @@ library(dplyr)
 # set up paths
 REPO = '/project/cil/home_dirs/egrenier/repos'
 lab_repo = paste0(REPO, "/labor-code-release-2020")
-csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/single_test_correct_rebasing/")
+csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/0_csvv/temp/")
 pp_tools_repo = paste0(REPO, "/post-projection-tools/")
 
 # Source dylan's YP package, to get the read.csvv function
@@ -57,9 +57,7 @@ num_coef_empshare = length(empshare$V1)
 # 2 . Get a nice list of prednames, covar names, and gammas
 ##############################################
 
-observations = 
-    as.numeric(levels(spline$observations))[spline$observations] + 
-    as.numeric(levels(empshare$observations))[empshare$observations]
+observations = as.numeric(spline$observations) + as.numeric(empshare$observations)
 
 list_preds = paste0(
                 paste(unlist(spline$prednames), collapse=', '), 
@@ -126,7 +124,7 @@ if(FE == "continentFE"){
 ##############################################
 
 # Initiate the file
-fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
+fileConn<-file(paste0(csvv_dir,"/../uninteracted_main_model_2025.csvv"))
 
 # Write the csvv!
 writeLines(
@@ -179,5 +177,5 @@ writeLines(
     fileConn)
 
 close(fileConn)
-print(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
+print(paste0(csvv_dir,"/../uninteracted_main_model_2025.csvv"))
 
