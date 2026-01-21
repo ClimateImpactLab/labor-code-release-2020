@@ -1,0 +1,37 @@
+---
+oneline: Employment share regression for labor sector, with continent fixed effects
+version: empshareFE_2019_10
+dependencies: LogIncPoly4ContinentFEs_2025.ster
+description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. 
+csvv-version: girdin-2017-01-10
+variables:
+  loggdppc: 15-year moving average of log GDP per capita [log USD2000]
+  climmeantas: poly 1 daily mean temperature, population weighted to aggregate to IR level, then averaged for 15 years [C]
+  climmeantas-poly-2: poly 2 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^2]
+  climmeantas-poly-3: poly 3 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^3]
+  climmeantas-poly-4: poly 4 daily mean temperature, population weighted to aggregate to IR level, then averaged for 30 years [C^4]
+  outcome: share of high-risk labor [NA]
+  hierid-america: dummy variable for north and south America [NA]
+  hierid-asia: dummy variable for Asia and Oceania [NA]
+  hierid-europe: dummy variable for Europe [NA]
+...
+observations
+1073
+prednames
+1, 1, 1, 1, 1, 1, 1, 1, 1
+covarnames
+1, loggdppc,climmeantas,climmeantas-poly-2,climmeantas-poly-3,climmeantas-poly-4,hierid-america,hierid-asia,hierid-europe
+gamma
+2.187213358266654,-.1647593145945699,.0005811801410281,-.0007978959974798,.0000106939381621,2.96332938628e-07,-.1325318547740322,0,-.0495161230939348
+gammavcv
+.0026669269804712,-.0002125410850531,-.0000642844040665,-3.67176160284e-06,3.27008281341e-07,-5.56847815367e-09,.0001477983445229,0,.0001435045220418
+-.0002125410850531,.0000223850911968,5.87912208708e-07,9.48070025951e-08,-1.21570050261e-09,-5.31059196347e-11,-.0000159619640803,0,-.0000261011240874
+-.0000642844040665,5.87912208708e-07,.0000137582481408,-2.31677435669e-07,-3.38341465936e-08,9.73614728564e-10,-4.69606571191e-06,0,-6.01128057122e-06
+-3.67176160284e-06,9.48070025951e-08,-2.31677435669e-07,6.12177446436e-08,-2.57969982663e-09,2.90193545747e-11,-3.06802918211e-07,0,5.27703307724e-07
+3.27008281341e-07,-1.21570050261e-09,-3.38341465936e-08,-2.57969982663e-09,2.87372329645e-10,-5.93890317562e-12,1.72384825463e-08,0,-1.27942040082e-08
+-5.56847815367e-09,-5.31059196347e-11,9.73614728564e-10,2.90193545747e-11,-5.93890317562e-12,1.40664552747e-13,-7.28889124828e-11,0,1.49051500573e-10
+.0001477983445229,-.0000159619640803,-4.69606571191e-06,-3.06802918211e-07,1.72384825463e-08,-7.28889124828e-11,.0000891639959598,0,.0000692842200974
+0,0,0,0,0,0,0,0,0
+.0001435045220418,-.0000261011240874,-6.01128057122e-06,5.27703307724e-07,-1.27942040082e-08,1.49051500573e-10,.0000692842200974,0,.0001753682303293
+residvcv
+.0119008655188565

@@ -5,10 +5,15 @@
 
 rm(list = ls())
 library(stringr)
+library(plyr)
 library(dplyr)
-
+library(data.table)
+library(easyNCDF)
+library(sf)
+library(glue)
+library(readstata13)
 # set up paths
-REPO = '/project/cil/home_dirs/egrenier/repos'
+REPO = '/project/cil/home_dirs/maiqi/repos'
 lab_repo = paste0(REPO, "/labor-code-release-2020")
 csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/single_test_correct_rebasing/")
 pp_tools_repo = paste0(REPO, "/post-projection-tools/")
@@ -23,7 +28,7 @@ FE = "noFE"
 interaction = "uninteracted"
 weight = "risk_adj_sample_wgt"
 
-csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_2025.csvv")
+csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_2025_appro272841.csvv")
 csvv_name_empshare = paste0("labor_empshare_", FE, "_2025.csvv")
 
 
@@ -126,7 +131,7 @@ if(FE == "continentFE"){
 ##############################################
 
 # Initiate the file
-fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
+fileConn<-file(paste0(csvv_dir,"uninteracted_main_model_appro272841.csvv"))
 
 # Write the csvv!
 writeLines(
@@ -179,5 +184,5 @@ writeLines(
     fileConn)
 
 close(fileConn)
-print(paste0(csvv_dir,"uninteracted_main_model_2025.csvv"))
+print(paste0(csvv_dir,"uninteracted_main_model_appro272841.csvv"))
 

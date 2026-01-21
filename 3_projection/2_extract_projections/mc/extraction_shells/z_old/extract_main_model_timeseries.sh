@@ -1,17 +1,9 @@
-####################################################################################################
-# This script extracts projection results, mainly for timeseries plots (one regions in all years).
-#
-# How to use:
-#   1. Log in to a computing node.
-#   2. conda activate risingverse-py27
-#   3. Change directories and edit the section marked "CHANGE HERE", especially extract_main_model_mc_ts.yml.
-#   4. Run:
-#        bash <path_to_this_script>
-#
-# Runtime:
-#   - A few minutes, depending on how much you extract.
-####################################################################################################
-
+#!/bin/bash
+# This bash script is a wrapper that calls quantiles.py. INSPIRED BY AG EXTRACTIONS – THANK YOU DAVID DU FOR THIS SCRIPT 
+# In command line, run:
+#   1. module load python
+#   2. source activate risingverse-py27
+#   3. bash extract_main_model.sh
 
 #Set directories
 REPO="/project/cil/home_dirs/maiqi/repos" #confirm path points to your repos folder, if you follow CLI convention this should not change 
@@ -19,7 +11,6 @@ projection_root="/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/unin
 DB="/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/uninteracted_main_model"  #path to where data should be placed
 output="/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/timeseries"
 
-#########CHANGE HERE###################################################################################################################################################
 NOW=$(date +%Y%m%dT%H%M%S%z)
 CUR_SCRIPT=$(basename "$0")
 LOG_DIR="/project/cil/home_dirs/maiqi/tmp/extract_logs"
@@ -29,7 +20,6 @@ LOG_FILE="${LOG_DIR}/${CUR_SCRIPT}_labor_${NOW}.txt"
 echo "Projection system outputs pulled from ${projection_root}" >> "$LOG_FILE"
 echo "Extraction output directory is ${output}" >> "$LOG_FILE"
 
-# no yearlist is defaulted for all years
 show_output="TRUE" # if FALSE parallelizes using run_bg below
 aggregated="TRUE"  
 levels="FALSE"     
@@ -43,10 +33,9 @@ spatiallist=( aggregated )
 
 echo "DEBUG: Using default years from config/data" >> "$LOG_FILE"
 
+
 CONFIG=${REPO}/labor-code-release-2020/3_projection/2_extract_projections/mc/extraction_configs/extract_main_model_mc_ts.yml
 echo "Config file used ${CONFIG}" >> "${LOG_FILE}"
-############################################################################################################################################################
-
 
 cd ${REPO}/prospectus-tools/gcp/extract
 echo "Repo is now ${REPO}" >> "${LOG_FILE}"

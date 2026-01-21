@@ -236,5 +236,5 @@ program define write_csvv
 end
 
 
-* write_csvv have_fe
+write_csvv have_fe
 write_csvv no_fe
