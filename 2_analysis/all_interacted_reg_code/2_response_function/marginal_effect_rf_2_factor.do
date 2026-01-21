@@ -9,12 +9,12 @@ run "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/pa
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * select dataset and output folder
-loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster"
+loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster/knots_interacted"
 loc rf_folder 	"${DIR_OUTPUT}/interacted_reg_output/response_function"
 cap mkdir `rf_folder'
 
 * other selections are 2_factor. change here to run 2_factor model
-global reg_list 1_factor
+global reg_list 2_factor
 global ref_temp 27 
 
 * full response function
@@ -34,15 +34,15 @@ foreach row_values in table_values {
 	foreach reg in $reg_list {
 
 		* set the ster file name and the output CSV
-		local ster_name	"`reg_folder'/interacted_reg_`reg'_2025.ster"
-		local rf_name 	"`rf_folder'/interacted_reg_`reg'_marg_`row_values'_2025.csv"
+		local ster_name	"`reg_folder'/interacted_reg_2_factor_2025_272841.ster"
+		local rf_name 	"`rf_folder'/interacted_reg_`reg'_marg_`row_values'_272841.csv"
 		
 		* create the temp list that we want to predict for
 		qui make_temp_dist, list($`row_values') ref($ref_temp)
 		est use `ster_name'
 
 		* generate spline terms 
-		make_spline_terms 27 37 39
+		make_spline_terms 27 28 41
 		
 		* run code based on the model
 		if "$reg_list" == "1_factor" {

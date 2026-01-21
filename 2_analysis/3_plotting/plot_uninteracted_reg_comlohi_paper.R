@@ -10,16 +10,17 @@ library(readr)
 library(glue)
 library(data.table)
 library(cowplot)
+library(parallel)
 
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R')
+source('/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/2_analysis/0_subroutines/functions.R')
 
 #################
 # DEFINE OUTPATH
 #################
 
 # Define output path
-outpath = glue("{DIR_FIG}/paper")
+outpath = glue("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/rf_plots/uninteracted_reg_comlohi_2026")
 dir.create(outpath, showWarnings=F)
 
 # Define plot name
@@ -33,11 +34,11 @@ format = "pdf"
 # response function
 rf = read_csv(
   glue("{DIR_RF}/uninteracted_reg_comlohi/",
-       "uninteracted_reg_comlohi_full_response_2025.csv"))
+       "uninteracted_reg_comlohi_full_response_2026_272841.csv"))
 
 # temperature distribution and densities
 temp_dist = read_csv(
-  glue("{DIR_OUTPUT}/temp_dist/nochn_temp_dist.csv")
+  glue("{DIR_OUTPUT}/temp_dist/Dec2025/global_temp_dist.csv")
 )
 
 ####################
@@ -100,63 +101,98 @@ plot_temp_panels <- function(data,
   y_range = range(data$lowerci, data$upperci, na.rm = TRUE)
   hist_max = max(hist_df$weight, na.rm = TRUE)
   
-  make_strip <- function(r, tag_letter, y_range, hist_max) {
+  make_strip <- function(r, tag_letter, hist_max) {
     
-    d_sub = filter(data, risk==r)
-    h_sub = filter(hist_df, risk==r)
+    d_sub <- dplyr::filter(data, risk == r)
+    h_sub <- dplyr::filter(hist_df, risk == r)
     
-    # response plot
-    p <- ggplot(d_sub, aes(x=temp, y=yhat)) +
-      geom_line(size=1, colour="#5E4987") +
-      geom_ribbon(aes(ymin=lowerci, ymax=upperci), alpha=0.2, fill="#5E4987",colour = NA) +
-      scale_y_continuous(limits=c(-123,40), breaks=seq(-100, 40, 50), expand=c(0,0)) +
-      scale_x_continuous(breaks=seq(-20, 47, 20),
-                         limits=c(-24, 47),
-                         expand=c(0,0),
-                         minor_breaks=NULL) +
-      labs(y=NULL,
-           tag=tag_letter) +
+    # Common x scale
+    x_breaks  <- seq(-20, 47, 20)
+    x_limits  <- c(-24, 47)
+    
+    # ---------- Top: response function ----------
+    p <- ggplot(d_sub, aes(x = temp, y = yhat)) +
+      geom_line(size = 1, colour = "#5E4987") +
+      geom_ribbon(aes(ymin = lowerci, ymax = upperci),
+                  alpha = 0.2, fill = "#5E4987", colour = NA) +
+      scale_y_continuous(
+        limits = c(-400, 40),
+        expand = c(0, 0)
+      ) +
+      scale_x_continuous(
+        breaks = x_breaks, limits = x_limits,
+        expand = c(0, 0), minor_breaks = NULL
+      ) +
+      labs(x = NULL, y = NULL, tag = tag_letter) +
       theme_minimal() +
-      theme(axis.line=element_blank(),
-            axis.line.y=element_line(color = "black"),
-            axis.ticks=element_line(color = "black"),
-            axis.ticks.length=unit(3, "pt"),
-            panel.grid=element_blank(),
-            panel.background=element_blank(),
-            legend.position="none",
-            plot.tag.position=c(0.02, 0.98),
-            plot.tag=element_text(size = 14, hjust = 0, vjust = 1))
+      theme(
+        panel.grid = element_blank(),
+        panel.background = element_blank(),
+        legend.position = "none",
         
-    # histogram plot
-    q = ggplot(h_sub, aes(x=temp, y=weight)) +
-      geom_col() +
-      scale_y_continuous(limits=c(0, hist_max), expand = c(0,0)) +
-      scale_x_continuous(breaks=seq(-20, 47, 20), limits=c(-24, 47), expand=c(0,0), minor_breaks=NULL) +
-      labs(x=NULL,
-           y=NULL) +
-      theme_minimal() +
-      theme(axis.line=element_blank(),
-            axis.line.y=element_line(color = "black"),
-            axis.ticks=element_line(color="black"),
-            axis.ticks.length=unit(3, "pt"),
-            axis.text.y=element_blank(),
-            axis.ticks.y=element_blank(),
-            panel.grid=element_blank(),
-            panel.background=element_blank(),
-            legend.position="none")
+        # keep y axis line, remove x axis elements (shared x shown below)
+        axis.line = element_blank(),
+        axis.line.y = element_line(color = "black"),
+        axis.ticks = element_line(color = "black"),
+        axis.ticks.length = unit(3, "pt"),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        
+        # IMPORTANT: kill margins so it touches the histogram
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0),
+        
+        plot.tag.position = c(0.02, 0.98),
+        plot.tag = element_text(size = 14, hjust = 0, vjust = 1)
+      )
     
-    p / q
+    # ---------- Bottom: histogram ----------
+    q <- ggplot(h_sub, aes(x = temp, y = weight)) +
+      geom_col() +
+      scale_y_continuous(
+        limits = c(0, hist_max),
+        expand = c(0, 0)
+      ) +
+      scale_x_continuous(
+        breaks = x_breaks, limits = x_limits,
+        expand = c(0, 0), minor_breaks = NULL
+      ) +
+      labs(x = NULL, y = NULL) +
+      theme_minimal() +
+      theme(
+        panel.grid = element_blank(),
+        panel.background = element_blank(),
+        legend.position = "none",
+        
+        axis.line = element_blank(),
+        axis.line.y = element_line(color = "black"),
+        axis.ticks = element_line(color = "black"),
+        axis.ticks.length = unit(3, "pt"),
+        
+        # remove bottom y numbers/ticks (keep axis line)
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        
+        # IMPORTANT: kill margins so it touches the response plot
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0)
+      )
+    
+    # Stack with zero gap and 2:1 height ratio
+    (p / q) + patchwork::plot_layout(heights = c(2, 1))
   }
   
+  
+  hist_max <- max(hist_df$weight, na.rm = TRUE)
+  
   strips <- mapply(
-    FUN=make_strip,
-    r=risk_levels,
-    tag_letter=LETTERS[seq_along(risk_levels)],
-    MoreArgs=list(y_range=y_range, hist_max=hist_max),
-    SIMPLIFY=F
+    FUN = make_strip,
+    r = risk_levels,
+    tag_letter = LETTERS[seq_along(risk_levels)],
+    MoreArgs = list(hist_max = hist_max),
+    SIMPLIFY = FALSE
   )
   
-  wrap_plots(strips, ncol=length(risk_levels), align="v")
+  wrap_plots(strips, ncol = length(risk_levels))
+  
 }
 
 # Example usage
@@ -169,4 +205,4 @@ print(plot_temp_panels(data, hist_no_wgt, hist_adj_wgt, use_adj=TRUE)) # THIS IS
 # plot and save
 p = plot_temp_panels(data, hist_no_wgt, hist_adj_wgt, use_adj=TRUE)
 outfile = glue("{outpath}/{outname}.{format}")
-ggsave(outfile, plot=p, width=9, height=9)
+ggsave(outfile, plot=p, width=12, height=4)

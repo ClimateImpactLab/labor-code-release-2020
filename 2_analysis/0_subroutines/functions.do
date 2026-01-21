@@ -234,24 +234,31 @@ end
 
 * 	make a list of temps accordingly
 ***************************************
+cap program drop make_temp_dist
+program define make_temp_dist
+    // Build temp/ref/min from an arbitrary list of temperatures
+    syntax , list(numlist) ref(real)
 
-cap prog drop make_temp_dist
-prog def make_temp_dist
-	syntax , list(numlist) ref(real)
+    clear
 
-	loc num : word count `list'
-	set obs `num'
+    local n : word count `list'
+    set obs `n'
 
-	gen temp = .
-	gen ref = `ref'
+    gen double temp = .
+    forvalues i = 1/`n' {
+        local v : word `i' of `list'
+        replace temp = `v' in `i'
+    }
 
-	loc i = 1
-	foreach temp in `list' {
-		replace temp = `temp' in `i'
-		loc ++i
-	}
+    gen double ref = `ref'
+    gen double min = temp - ref
 
+    order temp ref min
+    label var temp "temperature for prediction"
+    label var ref  "reference temperature"
+    label var min  "temp - ref"
 end
+
 
 
 ***************************************
@@ -310,13 +317,13 @@ prog def collect_spline_terms
 		;
 
 		gl `int'`i' = "
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v2] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v3] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v4] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v5] +
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v6] "
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5] +
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6] "
 		;
 
 		#d cr
@@ -324,6 +331,295 @@ prog def collect_spline_terms
 
 end
 
+
+
+cap prog drop collect_indu_spline_terms
+prog def collect_indu_spline_terms
+    // splines: which t index (0,1)
+    // unint : prefix for uninteracted spline sums  -> e.g. ${unint0}
+    // int1  : prefix for risk_level==1 (high-risk ag)  -> e.g. ${int_ag0}
+    // int2  : prefix for risk_level==2 (high-risk nonag)-> e.g. ${int_noag0}
+    syntax , splines(numlist) unint(string) int1(string) int2(string)
+
+    foreach i in `splines' {
+
+        // ----- baseline: low-risk (risk_level==0) -----;
+        #d ;
+        gl `unint'`i' = "
+            _b[tmax_rcspl_3kn_t`i'] +
+            _b[tmax_rcspl_3kn_t`i'_v1] +
+            _b[tmax_rcspl_3kn_t`i'_v2] +
+            _b[tmax_rcspl_3kn_t`i'_v3] +
+            _b[tmax_rcspl_3kn_t`i'_v4] +
+            _b[tmax_rcspl_3kn_t`i'_v5] +
+            _b[tmax_rcspl_3kn_t`i'_v6] "
+        ;
+
+        // ----- interaction for high-risk agriculture: risk_level == 1 -----;
+        gl `int1'`i' = "
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6] "
+        ;
+
+        // ----- interaction for high-risk non-agriculture: risk_level == 2 -----;
+        gl `int2'`i' = "
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v2] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v3] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v4] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v5] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v6] "
+        ;
+        #d cr
+    }
+
+end
+
+
+cap program drop collect_agcoma_spline_terms
+program define collect_agcoma_spline_terms
+
+    syntax , splines(numlist) unint(name) int_ag(name) int_ma(name) int_co(name)
+
+    foreach i of numlist `splines' {
+
+        #delimit ;
+        global `unint'`i'  ///
+            _b[tmax_rcspl_3kn_t`i']     + ///
+            _b[tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+        #delimit ;
+        global `int_ag'`i'  ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.agri#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+        #delimit ;
+        global `int_ma'`i'  ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.manuft#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+	
+	#delimit ;
+        global `int_co'`i'  ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.connmine#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+    }
+end
+
+cap program drop collect_sector_spline_terms
+program define collect_sector_spline_terms
+
+    syntax , splines(numlist) unint(name) int_ag(name) int_nonag(name)
+
+    foreach i of numlist `splines' {
+
+        #delimit ;
+        global `unint'`i'  ///
+            _b[tmax_rcspl_3kn_t`i']     + ///
+            _b[tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+        #delimit ;
+        global `int_ag'`i'  ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+	#delimit ;
+	global `int_nonag'`i'  ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i']     + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+	    _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v6]  ;
+	#delimit cr
+
+    }
+end
+
+cap program drop collect_sector_spline_terms_42
+program define collect_sector_spline_terms_42
+
+    syntax , splines(numlist) unint(name) int_hr4(name) int_manuf2(name)
+
+    foreach i of numlist `splines' {
+
+        #delimit ;
+        global `unint'`i'  ///
+            _b[tmax_rcspl_3kn_t`i']     + ///
+            _b[tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+        #delimit ;
+        global `int_hr3'`i'  ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.risk_level4#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+
+        #delimit ;
+        global `int_manuf'`i'  ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i']     + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v1]  + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v2]  + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v3]  + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v4]  + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v5]  + ///
+            _b[1.manuf2#c.tmax_rcspl_3kn_t`i'_v6]  ;
+        #delimit cr
+    }
+end
+
+*==========================================================
+* GDP spline terms for risk_level = 0 (low), 1 (hr_ag), 2 (hr_noag)
+*==========================================================
+cap prog drop collect_gdp_spline_terms_level
+prog def collect_gdp_spline_terms_level
+    // splines: list of spline indices (e.g. 0 1)
+    // unint_gdp : prefix for baseline (low, risk_level==0)
+    // agri_gdp  : prefix for hr_ag (risk_level==1)
+    // noag_gdp  : prefix for hr_noag (risk_level==2)
+    syntax , splines(numlist) unint_gdp(string) ag_gdp(string) nonag_gdp(string)
+
+    foreach i in `splines' {
+
+        #d ;
+
+        * ---------- baseline: low risk (risk_level==0) ----------;
+        gl `unint_gdp'`i' = "
+            _b[c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1]
+        " ;
+
+        * ---------- increment: hr_ag (risk_level==1) vs low ----------;
+        gl `ag_gdp'`i' = "
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1]
+        " ;
+
+        * ---------- increment: hr_noag (risk_level==2) vs low ----------;
+        gl `nonag_gdp'`i' = "
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1]
+        " ;
+
+        #d cr
+    }
+end
+
+*==========================================================
+* LRT spline terms for risk_level = 0 (low), 1 (hr_ag), 2 (hr_noag)
+* NOTE: replace log_lrt_pc_adm1 with your actual LRT variable
+*==========================================================
+cap prog drop collect_lrt_spline_terms_level
+prog def collect_lrt_spline_terms_level
+    syntax , splines(numlist) unint_lrt(string) ag_lrt(string) nonag_lrt(string)
+
+    foreach i in `splines' {
+
+        #d ;
+
+        * ---------- baseline: low risk ----------;
+        gl `unint_lrt'`i' = "
+            _b[c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+            _b[c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1]
+        " ;
+
+        * ---------- increment: hr_ag vs low ----------;
+        gl `ag_lrt'`i' = "
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+            _b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1]
+        " ;
+
+        * ---------- increment: hr_noag vs low ----------;
+        gl `nonag_lrt'`i' = "
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+            _b[2.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1]
+        " ;
+
+        #d cr
+    }
+end
 
 
 cap prog drop collect_gdp_spline_terms
@@ -345,63 +641,18 @@ prog def collect_gdp_spline_terms
 		;
 		
 		gl `int_gdp'`i' = "
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1] "
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'#c.log_gdp_pc_adm1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.log_gdp_pc_adm1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.log_gdp_pc_adm1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.log_gdp_pc_adm1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.log_gdp_pc_adm1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.log_gdp_pc_adm1] +
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.log_gdp_pc_adm1] "
 		;
 
 		#d cr
 	}
 
-end
-
-cap program drop collect_spline_terms_1_factor
-program define collect_spline_terms_1_factor
-
-    syntax , splines(numlist) unint_gdp(string) int_gdp(string)
-
-    foreach i in `splines' {
-
-        // ---------- UNINT:${unint_gdp`i'} = LR ----------
-        #delimit ;
-        global `unint_gdp'`i' = "
-            _b[tmax_rcspl_3kn_t`i'_lr]   +
-            _b[tmax_rcspl_3kn_t`i'_lr_v1]+
-            _b[tmax_rcspl_3kn_t`i'_lr_v2]+
-            _b[tmax_rcspl_3kn_t`i'_lr_v3]+
-            _b[tmax_rcspl_3kn_t`i'_lr_v4]+
-            _b[tmax_rcspl_3kn_t`i'_lr_v5]+
-            _b[tmax_rcspl_3kn_t`i'_lr_v6]
-        " ;
-        #delimit cr
-
-        // ---------- INT: ${int_gdp`i'} = (HR) − (LR) ----------
-        #delimit ;
-        global `int_gdp'`i' = "
-            (  _b[tmax_rcspl_3kn_t`i'_hr]   +
-               _b[tmax_rcspl_3kn_t`i'_hr_v1]+
-               _b[tmax_rcspl_3kn_t`i'_hr_v2]+
-               _b[tmax_rcspl_3kn_t`i'_hr_v3]+
-               _b[tmax_rcspl_3kn_t`i'_hr_v4]+
-               _b[tmax_rcspl_3kn_t`i'_hr_v5]+
-               _b[tmax_rcspl_3kn_t`i'_hr_v6]
-             )
-             -
-            (  _b[tmax_rcspl_3kn_t`i'_lr]   +
-               _b[tmax_rcspl_3kn_t`i'_lr_v1]+
-               _b[tmax_rcspl_3kn_t`i'_lr_v2]+
-               _b[tmax_rcspl_3kn_t`i'_lr_v3]+
-               _b[tmax_rcspl_3kn_t`i'_lr_v4]+
-               _b[tmax_rcspl_3kn_t`i'_lr_v5]+
-               _b[tmax_rcspl_3kn_t`i'_lr_v6]
-            )
-        " ;
-        #delimit cr
-    }
 end
 
 
@@ -451,6 +702,50 @@ program define collect_mix_spline_terms
 end
 
 
+cap program drop collect_mix_lrt_spline_terms
+program define collect_mix_lrt_spline_terms
+
+    syntax , splines(numlist) unint(string) int_lrt(string)
+
+    foreach i in `splines' {
+
+        // ---------- UNINT:${unint_gdpi'} = LR----------
+        #delimit ;
+        global `unint'`i' = "
+            _b[tmax_rcspl_3kn_t`i'_lr]   +
+            _b[tmax_rcspl_3kn_t`i'_lr_v1]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v2]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v3]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v4]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v5]+
+            _b[tmax_rcspl_3kn_t`i'_lr_v6]
+        " ;
+        #delimit cr
+
+        // ---------- INT: ${int_gdpi'} = (HR*GDP) − (LR)----------
+        #delimit ;
+        global `int_lrt'`i' = "
+            (  _b[tmax_rcspl_3kn_t`i'_hr_l]   +
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v1]+
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v2]+
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v3]+
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v4]+
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v5]+
+               _b[tmax_rcspl_3kn_t`i'_hr_l_v6]
+            )
+            -
+            (  _b[tmax_rcspl_3kn_t`i'_lr]   +
+               _b[tmax_rcspl_3kn_t`i'_lr_v1]+
+               _b[tmax_rcspl_3kn_t`i'_lr_v2]+
+               _b[tmax_rcspl_3kn_t`i'_lr_v3]+
+               _b[tmax_rcspl_3kn_t`i'_lr_v4]+
+               _b[tmax_rcspl_3kn_t`i'_lr_v5]+
+               _b[tmax_rcspl_3kn_t`i'_lr_v6]
+            )
+        " ;
+        #delimit cr
+    }
+end
 
 cap prog drop collect_lrt_spline_terms
 prog def collect_lrt_spline_terms
@@ -471,13 +766,13 @@ prog def collect_lrt_spline_terms
 		;
 		
 		gl `int_lrt'`i' = "
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] + 
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
-			_b[1.high_risk#c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1] "
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'#c.lr_tmax_p1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v1#c.lr_tmax_p1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v2#c.lr_tmax_p1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v3#c.lr_tmax_p1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v4#c.lr_tmax_p1] + 
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v5#c.lr_tmax_p1] +
+			_b[1.risk_level#c.tmax_rcspl_3kn_t`i'_v6#c.lr_tmax_p1] "
 		;
 
 		#d cr
@@ -510,13 +805,13 @@ prog def collect_polynomial_terms
 		;
 
 		gl `int'`degree' = 
-			"_b[1.high_risk#c.tmax_p`degree'] +" + 
-			"_b[1.high_risk#c.tmax_p`degree'_v1] +" + 
-			"_b[1.high_risk#c.tmax_p`degree'_v2] +" +
-			"_b[1.high_risk#c.tmax_p`degree'_v3] +" + 
-			"_b[1.high_risk#c.tmax_p`degree'_v4] +" +
-			"_b[1.high_risk#c.tmax_p`degree'_v5] +" +
-			"_b[1.high_risk#c.tmax_p`degree'_v6] "
+			"_b[1.risk_level#c.tmax_p`degree'] +" + 
+			"_b[1.risk_level#c.tmax_p`degree'_v1] +" + 
+			"_b[1.risk_level#c.tmax_p`degree'_v2] +" +
+			"_b[1.risk_level#c.tmax_p`degree'_v3] +" + 
+			"_b[1.risk_level#c.tmax_p`degree'_v4] +" +
+			"_b[1.risk_level#c.tmax_p`degree'_v5] +" +
+			"_b[1.risk_level#c.tmax_p`degree'_v6] "
 		;
 
 		#d cr
@@ -577,13 +872,13 @@ prog def collect_bin_terms
 		;
 
 		gl `int'`bin' = 
-			"_b[1.high_risk#c.`coef'] +" + 
-			"_b[1.high_risk#c.`coef'_v1] +" + 
-			"_b[1.high_risk#c.`coef'_v2] +" + 
-			"_b[1.high_risk#c.`coef'_v3] +" + 
-			"_b[1.high_risk#c.`coef'_v4] +" + 
-			"_b[1.high_risk#c.`coef'_v5] +" + 
-			"_b[1.high_risk#c.`coef'_v6] "
+			"_b[1.risk_level#c.`coef'] +" + 
+			"_b[1.risk_level#c.`coef'_v1] +" + 
+			"_b[1.risk_level#c.`coef'_v2] +" + 
+			"_b[1.risk_level#c.`coef'_v3] +" + 
+			"_b[1.risk_level#c.`coef'_v4] +" + 
+			"_b[1.risk_level#c.`coef'_v5] +" + 
+			"_b[1.risk_level#c.`coef'_v6] "
 		;
 
 		#d cr

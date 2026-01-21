@@ -1,31 +1,10 @@
-****************************************************
-* This file generates the full response table (at 0.1-degree resolution)
-* as well as the table values used in the paper.
-*
-* How to use:
-*   1. Log in to a computing node.
-*   2. Update the following settings in this file:
-*        - comm_ster
-*        - by_risk_ster
-*        - rf_name
-*	 - !!!! Here is a function with knots (make_spline_terms). Check it!
-*   3. The response function for the "sector" specification
-*      is generated separately.
-*
-* Runtime:
-*   - Runs immediately.
-****************************************************
-
-
-
-
 *****************
 *	INITIALIZE
 *****************
 
 * get functions and paths
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
-run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
+run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/function_test_manuf.do"
 
 * select dataset and output folder
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_comlohi"
@@ -50,9 +29,9 @@ foreach row_values in full_response table_values {
 	clear 
 
 	* set the ster file names and the output CSV
-	local comm_ster		"`reg_folder'/uninteracted_reg_common_2026_272841.ster"
-	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk_2026_272841.ster"
-	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'_2026_272841.csv"
+	local comm_ster		"`reg_folder'/uninteracted_reg_common_2025_1dum_manuf.ster"
+	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk_2025_1dum_manuf.ster"
+	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'_2025_1dum_manuf.csv"
 
 	* create the temp list that we want to predict for
 	qui make_temp_dist, list($`row_values') ref($ref_temp)
@@ -65,7 +44,7 @@ foreach row_values in full_response table_values {
 	est use `comm_ster'
 
 	* generate spline terms and collect in macros
-	make_spline_terms 27 28 41
+	make_spline_terms 27 37 39
 	collect_spline_terms, splines(0 1) unint(common) int(unused)
 
 	* predict common response
@@ -83,7 +62,7 @@ foreach row_values in full_response table_values {
 	est use `by_risk_ster'
 
 	* generate spline terms and collect in macros
-	make_spline_terms 27 28 41
+	make_spline_terms 27 37 39
 	collect_spline_terms, splines(0 1) unint(unint) int(int)
 
 	* predict response function by risk
@@ -103,6 +82,7 @@ foreach row_values in full_response table_values {
 	export delim `rf_name', replace
 
 }
+
 	   
 	  
 

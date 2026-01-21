@@ -32,8 +32,8 @@ foreach row_values in full_response {
 	foreach reg in $reg_list {
 
 		* set the ster file name and the output CSV
-		local ster_name	"`reg_folder'/interacted_reg_`reg'_2025.ster" // _2025.ster"
-		local rf_name 	"`rf_folder'/interacted_reg_`reg'_`row_values'_2025_gdp.csv"
+		local ster_name	"`reg_folder'/interacted_reg_`reg'_2025_1126.ster" // _2025.ster"
+		local rf_name 	"`rf_folder'/interacted_reg_`reg'_`row_values'_2025_1126.csv"
 		
 		* create the temp list that we want to predict for
 		qui make_temp_dist, list($`row_values') ref($ref_temp)
@@ -42,7 +42,7 @@ foreach row_values in full_response {
 
 		* generate spline terms and collect in macros
 		make_spline_terms 27 37 39
-		collect_spline_terms, splines(0 1) unint(unint) int_gdp(int) //collect_gdp_spline_terms
+		collect_spline_terms, splines(0 1) unint(unint) int(int) //collect_gdp_spline_terms
 
 		* need this blank variable to get standard errors in predictnl
 		gen mins_worked = .

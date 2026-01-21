@@ -14,7 +14,7 @@
 *          add the suffix "_old" or "_sector" to the weight variable.
 *        - For high-risk regressions, use the weight variable
 *          without any suffix.
-*   4. For "sector", change:
+*   4. For "sector", change: (you can also use "uninteracted_reg_comlohi_3sector.do")
 *	*count regression N by risk
 *	gen included = e(sample)
 *	count if included == 1 & risk_level == 1       
@@ -30,6 +30,9 @@
 
 
 
+
+
+
 *****************
 *  INITIALIZE
 *****************
@@ -41,7 +44,7 @@ run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 * log results
 cap log close 
 *--------------------------------------------------------
-log using "${DIR_LOG}/uninteracted_reg_comlohi_high.smcl", replace
+log using "${DIR_LOG}/uninteracted_reg_comlohi_3sector.smcl", replace
 
 * select dataset and output folder
 gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841.dta"
@@ -54,7 +57,7 @@ loc fe fe_adm0_wk
 
 * ---------- CHOOSE WHICH RISK DEFINITION TO USE ----------
 * options: "high_risk" or "high_risk_old"
-global risk_def "high_risk" 
+global risk_def "sector" 
 * ---------------------------------------------------------
 
 ********************
@@ -77,7 +80,7 @@ foreach reg in $reg_list {
     keep if mins_worked > 0
 
     * get rid of some awkward naming
-    rename *27_28_41_* **
+    rename *27_28_41_* ** 
 
     * ---------- DEFINE risk_level FROM CHOSEN SOURCE ----------
     cap drop risk_level 
@@ -108,13 +111,13 @@ foreach reg in $reg_list {
     }
 * -------------------------------------------------------------------------------------------------------
     * set the ster file name and the notes to be included
-    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025_272841_appro.ster"
+    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025_272841_sector.ster"
     local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
     
 * -------------------------------------------------------------------------------------------------------
     * set the regression weight (pop_adj for common, risk_adj for by-risk)
     if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
-    else loc weight "risk_adj_sample_wgt"
+    else loc weight "risk_adj_sample_wgt_sector"
 
     di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
     reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
@@ -122,9 +125,11 @@ foreach reg in $reg_list {
     * count regression N by risk
     gen included = e(sample)
     count if included == 1 & risk_level == 1       
-    estadd scalar high_N = `r(N)'
+    estadd scalar ag_N = `r(N)'
     count if included == 1 & risk_level == 0      
     estadd scalar low_N = `r(N)'
+    count if included == 1 & risk_level == 2
+    estadd scalar nonag_N = `r(N)'
 
     estimates notes: "`spec_desc'"
     estimates save "`ster_name'", replace

@@ -3,8 +3,9 @@
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/2_analysis/0_subroutines/utils.do"
 
 * select dataset and output folder
 loc reg_folder 	"${DIR_STER}/uninteracted_polynomials"
@@ -13,7 +14,7 @@ loc rf_folder 	"${DIR_RF}/uninteracted_polynomials"
 
 * other selections
 gl ref_temp 27 
-gl reg_list nochn wchn
+gl reg_list nochn
 
 * full response function
 numlist "-20(0.1)47"
@@ -33,8 +34,8 @@ foreach reg in $reg_list {
 			clear 
 
 			* set the ster file names and the output CSV
-			local ster			"`reg_folder'/uninteracted_polynomials_`reg'_`N_order'.ster"
-			local rf_name 		"`rf_folder'/uninteracted_polynomials_`reg'_`N_order'_`row_values'.csv"
+			local ster			"`reg_folder'/uninteracted_polynomials_`reg'_`N_order'_2025_oldold.ster"
+			local rf_name 		"`rf_folder'/uninteracted_polynomials_`reg'_`N_order'_`row_values'_2025_oldold.csv"
 
 			* create the temp list that we want to predict for
 			qui make_temp_dist, list($`row_values') ref($ref_temp)

@@ -11,12 +11,12 @@ cap log close
 log using "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/interacted_splines_lr_interaction_and_mixed_weight.smcl", replace
 
 * select dataset and output folder
-gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_1201.dta"
 loc reg_folder 	"${DIR_OUTPUT}/interacted_reg_output/ster"
 
 * other selections
 gl test_code "no"
-gl reg_list 1_factor
+gl reg_list 2_factor
 loc fe fe_adm0_wk
 
 * Note on weights: 
@@ -124,7 +124,7 @@ foreach reg in $reg_list {
 	}
 
 	* set the ster file name and the notes to be included
-	local ster_name "`reg_folder'/interacted_reg_`reg'_2025.ster"
+	local ster_name "`reg_folder'/interacted_reg_`reg'_2025_1201.ster"
 	local spec_desc "rcspline, 3 knots (27 37 39), tmax, differentiated treatment withlr interaction, fe = $fe, reg_type = `reg'"
 
 	* set the regression weight
