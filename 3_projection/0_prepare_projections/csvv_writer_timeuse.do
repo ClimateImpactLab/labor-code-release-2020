@@ -33,10 +33,10 @@ global FE = "fe_week_adm0"
 
 if "${fun_form}" == "splines" {
 
-	global knots_loc  "27_37_39"
+	global knots_loc  "27_28_41"
 	global dataset = "uninteracted_reg_comlohi"
 	global spline_varname = "rcspl"
-	global ster_filename = "uninteracted_reg_by_risk_2025.ster"
+	global ster_filename = "uninteracted_reg_by_risk_agnonag_27_28_41.ster"
 
 } 
 else if "${fun_form}" == "polynomials" {
@@ -346,7 +346,7 @@ program define write_csvv
 
 	calculate_nobs_residvcv
 
-	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_2025.csvv"
+	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_agnonag_27_28_41.csvv"
 	local csvv `csvv_path'
 
 	* cd "$csvv_dir" 

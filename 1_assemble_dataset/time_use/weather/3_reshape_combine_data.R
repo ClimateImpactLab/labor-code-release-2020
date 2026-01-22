@@ -108,7 +108,7 @@ get_transf <- function(t_version){
 
 
   for (i in c(0,1)){
-    splines_nochn <- c(splines_nochn, glue("{t_version}_rcspline_3kn_27_37_39_term{i}"))
+    splines_nochn <- c(splines_nochn, glue("{t_version}_rcspline_3kn_27_28_41_term{i}"))
     splines_wchn <- c(splines_wchn, glue("{t_version}_rcspline_3kn_21_37_41_term{i}"))
 
   }
@@ -474,7 +474,7 @@ rename <- function(ctry, climate_source, admin, t_version='tmax', rename_bins, r
 
 
   for (i in c(0,1)){
-    splines_nochn_new <- c(splines_nochn_new, glue("{t_version}_rcspl_27_37_39_3kn_t{i}"))
+    splines_nochn_new <- c(splines_nochn_new, glue("{t_version}_rcspl_27_28_41_3kn_t{i}"))
     splines_wchn_new <- c(splines_wchn_new, glue("{t_version}_rcspl_21_37_41_3kn_t{i}"))
      
   }

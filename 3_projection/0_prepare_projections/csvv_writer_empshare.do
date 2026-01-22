@@ -193,7 +193,7 @@ program define calculate_nobs_residvcv
 	}
 	else{
 		di "2"
-		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_2025.ster"
+		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_2025_newrisk.ster"
 	}	
 	global nobs = e(N)
 

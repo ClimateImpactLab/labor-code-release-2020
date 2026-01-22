@@ -58,7 +58,9 @@ sector_list = c("low", "high")
 #region_list = read_csv('/project/cil/gcp/regions/hierarchy-flat.csv') %>% rename(region = `region-key`) %>% select(region)
 #region_list = region_list[[1]][1:2] # any range in [1,24378]
 #"CAN.3.54" "ETH.3.15.68" "TUR.40.441" "CHN.5.36.222" "ETH.8.40.336" "ARG.1.89" "YEM.6.84" "PER.13.123.1195" "SAU.1" "YEM.12.156" "IND.2.21.181" "CHN.5.34.213"
-region_list = list('CHN.5.34.213')
+
+# "TCD.1.2" "COL.5.169" "CAN.8.118.2365" 
+region_list = list('AUS.11.1392')
 
 # Set args
 args = list(year=2099, 

@@ -23,8 +23,8 @@ FE = "noFE"
 interaction = "uninteracted"
 weight = "risk_adj_sample_wgt"
 
-csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_2025.csvv")
-csvv_name_empshare = paste0("labor_empshare_", FE, "_2025.csvv")
+csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_agnonag_27_28_41.csvv")
+csvv_name_empshare = paste0("labor_empshare_", FE, "_agnonag.csvv")
 
 
 ##############################################
@@ -124,15 +124,15 @@ if(FE == "continentFE"){
 ##############################################
 
 # Initiate the file
-fileConn<-file(paste0(csvv_dir,"/../uninteracted_main_model_2025.csvv"))
+fileConn<-file(paste0(csvv_dir,"/../uninteracted_main_model_agnonag_27_28_41.csvv"))
 
 # Write the csvv!
 writeLines(
   c(
     "---",
-    paste0("oneline: Labor ", interaction, " regression restricted cubic spline term (3 knots), located at 27_37_39. Empshare with ", FE), 
+    paste0("oneline: Labor ", interaction, " regression restricted cubic spline term (3 knots), located at 27_28_41. Empshare with ", FE), 
      
-    paste0("version: LABOR-", str_to_upper(interaction), "-RCSPLINE-3KNOTS-COMBINED-EMPSHARE-Knots-27_37_39.-",FE),
+    paste0("version: LABOR-", str_to_upper(interaction), "-RCSPLINE-3KNOTS-COMBINED-EMPSHARE-Knots-27_28_41-agnonag-",FE),
       
     paste0( "description: Generated from labor ", interaction, " regression with restricted cubic spline, 3 knots.",
              "The first 2 gammas are for the low-risk sector. The next 2 for the high-risk sector.",
@@ -177,5 +177,5 @@ writeLines(
     fileConn)
 
 close(fileConn)
-print(paste0(csvv_dir,"/../uninteracted_main_model_2025.csvv"))
+print(paste0(csvv_dir,"/../uninteracted_main_model_agnonag_27_28_41.csvv"))
 
