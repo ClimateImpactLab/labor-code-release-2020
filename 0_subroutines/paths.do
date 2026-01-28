@@ -9,7 +9,7 @@
 gl ROOT_INT_DATA = "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data"
 
 * set repo path
-gl ROOT_REPO = "/project/cil/home_dirs/egrenier/repos"
+gl ROOT_REPO = "/project/cil/home_dirs/`c(username)'/repos"
 gl DIR_REPO_LABOR = "${ROOT_REPO}/labor-code-release-2020"
 
 * set logs path
