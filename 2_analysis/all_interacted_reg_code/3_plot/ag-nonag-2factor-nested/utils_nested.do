@@ -1,7 +1,6 @@
 ******************************************************
 * gen_response_surface_spline
 ******************************************************
-/*
 cap program drop gen_response_surface_spline
 program define gen_response_surface_spline
 
@@ -20,25 +19,8 @@ program define gen_response_surface_spline
 	di "`risk' `grid': $response_surface"
 	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
 end
-*/
-cap program drop gen_response_surface_spline
-program define gen_response_surface_spline
 
-	args N_knots risk grid
 
-	local N_new_vars=`N_knots'-2 
-	global response_surface 0
-	
-	forval i=0/`N_new_vars'{
-		gl response_surface ${response_surface}+(${b_T_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')
-		gl response_surface ${response_surface}+(${b_T_x_gdp_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${minc`grid'}
-		gl response_surface ${response_surface}+(${b_T_x_lrtmax_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${lrtmax`grid'}
-	}
-	
-	cap drop yhat *_ci
-	di "`risk' `grid': $response_surface"
-	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
-end
 ******************************************************
 * gen_plot
 ******************************************************
@@ -291,139 +273,164 @@ program define plot_interacted_spline
 end
 
 ******************************************************
-* generate_grids
+* generate_grids (NESTED VERSION: clim first, income within clim)
 ******************************************************
 cap program drop generate_grids
 program define generate_grids
 	
 	args tercile interaction
 
-	if "`tercile'" == "hierid" {
-		use "/project/cil/norgay/CIL_labor/2_regression/time_use/input/lrtmax_grid.dta", clear
-	}
-	else if "`tercile'" == "rep_unit" {
-		use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/xtiles/rep_unit_terciles_grid.dta", clear
-	}
-	else di "!! Incorrect tercile specification. Permitted: rep_unit, hierid."
-
-	sum mean_lrtmax, detail
-
-	local lrtmax_cold=`r(min)'
-	local lrtmax_warm=`r(p50)'
-	local lrtmax_hot=`r(max)'
-	
+	****************************************************
+	* 1) Read GRID (nested) and set lrtmax1..9, minc1..9, tag1..9
+	****************************************************
 	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
 
 		global max_g = 9
 
-		global lrtmax1 `lrtmax_cold'
-		global lrtmax2 `lrtmax_warm'
-		global lrtmax3 `lrtmax_hot'
-		global lrtmax4 `lrtmax_cold'
-		global lrtmax5 `lrtmax_warm'
-		global lrtmax6 `lrtmax_hot'
-		global lrtmax7 `lrtmax_cold'
-		global lrtmax8 `lrtmax_warm'
-		global lrtmax9 `lrtmax_hot'
-	}
+		* ---- read the nested 9-row grid ----
+		if "`tercile'" == "hierid" {
+			* 如果你未来也要 hierid 做 nested，需要你另存一份 hierid_nested grid
+			di as error "!! hierid nested grid not implemented in this script."
+			exit 198
+		}
+		else if "`tercile'" == "rep_unit" {
+			use "${ROOT_INT_DATA}/xtiles/rep_unit_terciles_grid_nested.dta", clear
+		}
+		else {
+			di as error "!! Incorrect tercile specification. Permitted: rep_unit, hierid."
+			exit 198
+		}
 
-	if "`tercile'" == "hierid" {
-		use "/project/cil/norgay/CIL_labor/2_regression/time_use/input/loggdppc_2010_grid.dta", clear
-	}
-	else if "`tercile'" == "rep_unit" {
-		use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/xtiles/rep_unit_terciles_grid.dta", clear
-	}
-	else di "Incorrect tercile specification. Permitted: rep_unit, hierid."
+		* ---- sanity: should be 9 rows with clim_t inc_t cell ----
+		confirm variable clim_t
+		confirm variable inc_t
+		confirm variable mean_lrtmax
+		confirm variable mean_loggdppc
 
-	sum mean_loggdppc, detail
-
-	local inc_poor =`r(min)'
-	local inc_midl =`r(p50)'
-	local inc_rich =`r(max)'
-
-	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
-
-		global minc1 `inc_poor'
-		global minc2 `inc_poor'
-		global minc3 `inc_poor'
-		global minc4 `inc_midl'
-		global minc5 `inc_midl'
-		global minc6 `inc_midl'
-		global minc7 `inc_rich'
-		global minc8 `inc_rich'
-		global minc9 `inc_rich'
-
-		global tag1 cold-poor
-		global tag2 warm-poor
-		global tag3 hot-poor
-		global tag4 cold-midincome
-		global tag5 warm-midincome
-		global tag6 hot-midincome
-		global tag7 cold-rich
-		global tag8 warm-rich
-		global tag9 hot-rich*
-	}
-	else if "`interaction'" == "income" {
-
-		di "INTERACTION `interaction'"
-
-		global max_g = 3
-
-		global minc1 `inc_poor'
-		global minc2 `inc_midl'
-		global minc3 `inc_rich'
-	}
-
-	* Read counts and set global macros
-	di "READING COUNTS FROM FILE..."
-	
-	use "${ROOT_INT_DATA}/xtiles/`tercile'_terciles_count.dta", clear
-	
-	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+		* IMPORTANT:
+		* g index must match your plotting order:
+		* i = 1..9 loops income first (inc=1..3), climate within (clim=1..3)
+		* so plots 1-3 are inc=1, plots 4-6 inc=2, plots 7-9 inc=3.
 		local i = 1
-		forvalues inc = 1(1)3 {
-			forvalues clim = 1(1)3 {
-				sum count_lr if clim_t == `clim' & inc_t == `inc', meanonly
-				global risk_lr_plot`i' = r(sum)
-				
-				sum count_hr if clim_t == `clim' & inc_t == `inc', meanonly
-				global risk_hr_plot`i' = r(sum)
-				global risk_hl_plot`i' = r(sum)
-				
-				sum count_rep_unit if clim_t == `clim' & inc_t == `inc', meanonly
-				global ru_plot`i' = r(sum)
-				
-				sum count_rep_year if clim_t == `clim' & inc_t == `inc', meanonly
-				global ry_plot`i' = r(sum)
-				
-				di "Grid `i': LR=${risk_lr_plot`i'}, HR=${risk_hr_plot`i'}, RU=${ru_plot`i'}, RY=${ry_plot`i'}"
-				
+		forvalues inc = 1/3 {
+			forvalues clim = 1/3 {
+
+				quietly summarize mean_lrtmax if clim_t==`clim' & inc_t==`inc', meanonly
+				global lrtmax`i' = r(mean)
+
+				quietly summarize mean_loggdppc if clim_t==`clim' & inc_t==`inc', meanonly
+				global minc`i' = r(mean)
+
+				* Tag for panel titles (nested income is within clim, so keep explicit)
+				global tag`i' "clim`clim'-inc`inc'"
+
+				di "Grid `i' (clim=`clim', inc=`inc'): lrtmax=${lrtmax`i'}  minc=${minc`i'}  tag=${tag`i'}"
+
 				local ++i
 			}
 		}
 	}
+
+	****************************************************
+	* 2) Income-only case (keep your old logic)
+	****************************************************
 	else if "`interaction'" == "income" {
+
+		di "INTERACTION `interaction'"
+		global max_g = 3
+
+		* Here we still use the non-nested income grid (global income terciles)
+		if "`tercile'" == "hierid" {
+			use "/project/cil/norgay/CIL_labor/2_regression/time_use/input/loggdppc_2010_grid.dta", clear
+		}
+		else if "`tercile'" == "rep_unit" {
+			use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/xtiles/rep_unit_terciles_grid.dta", clear
+		}
+		else {
+			di as error "!! Incorrect tercile specification. Permitted: rep_unit, hierid."
+			exit 198
+		}
+
+		sum mean_loggdppc, detail
+		local inc_poor = r(min)
+		local inc_midl = r(p50)
+		local inc_rich = r(max)
+
+		global minc1 `inc_poor'
+		global minc2 `inc_midl'
+		global minc3 `inc_rich'
+
+		global tag1 poor
+		global tag2 midincome
+		global tag3 rich
+	}
+
+	else {
+		di as error "!! Unsupported interaction: `interaction'"
+		exit 198
+	}
+
+	****************************************************
+	* 3) Read counts file and load subtitle macros
+	*    (must match the SAME g-index ordering)
+	****************************************************
+	di "READING COUNTS FROM FILE..."
+
+	* Your plot_histograms saves counts here:
+	*   "${ROOT_INT_DATA}/xtiles/`tercile'_terciles_count.dta"
+	* For nested interacted, that file has clim_t inc_t (no need cell).
+	use "${ROOT_INT_DATA}/xtiles/`tercile'_terciles_count.dta", clear
+
+	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+
 		local i = 1
-		forvalues inc = 1(1)3 {
-			sum count_lr if inc_t == `inc', meanonly
+		forvalues inc = 1/3 {
+			forvalues clim = 1/3 {
+
+				sum count_lr if clim_t==`clim' & inc_t==`inc', meanonly
+				global risk_lr_plot`i' = r(sum)
+
+				sum count_hr if clim_t==`clim' & inc_t==`inc', meanonly
+				global risk_hr_plot`i' = r(sum)
+				global risk_hl_plot`i' = r(sum)
+
+				sum count_rep_unit if clim_t==`clim' & inc_t==`inc', meanonly
+				global ru_plot`i' = r(sum)
+
+				sum count_rep_year if clim_t==`clim' & inc_t==`inc', meanonly
+				global ry_plot`i' = r(sum)
+
+				di "Counts grid `i' (clim=`clim', inc=`inc'): LR=${risk_lr_plot`i'} HR=${risk_hr_plot`i'} RU=${ru_plot`i'} RY=${ry_plot`i'}"
+
+				local ++i
+			}
+		}
+	}
+
+	else if "`interaction'" == "income" {
+
+		local i = 1
+		forvalues inc = 1/3 {
+
+			sum count_lr if inc_t==`inc', meanonly
 			global risk_lr_plot`i' = r(sum)
-			
-			sum count_hr if inc_t == `inc', meanonly
+
+			sum count_hr if inc_t==`inc', meanonly
 			global risk_hr_plot`i' = r(sum)
 			global risk_hl_plot`i' = r(sum)
-			
-			sum count_rep_unit if inc_t == `inc', meanonly
+
+			sum count_rep_unit if inc_t==`inc', meanonly
 			global ru_plot`i' = r(sum)
-			
-			sum count_rep_year if inc_t == `inc', meanonly
+
+			sum count_rep_year if inc_t==`inc', meanonly
 			global ry_plot`i' = r(sum)
-			
-			di "Grid `i': LR=${risk_lr_plot`i'}, HR=${risk_hr_plot`i'}, RU=${ru_plot`i'}, RY=${ry_plot`i'}"
-			
+
+			di "Counts grid `i' (inc=`inc'): LR=${risk_lr_plot`i'} HR=${risk_hr_plot`i'} RU=${ru_plot`i'} RY=${ry_plot`i'}"
+
 			local ++i
 		}
 	}
-	
+
 	di "COUNTS LOADED INTO GLOBAL MACROS."
 end
 

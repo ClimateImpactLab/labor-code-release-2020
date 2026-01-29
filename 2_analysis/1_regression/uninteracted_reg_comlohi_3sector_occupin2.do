@@ -1,5 +1,6 @@
 ****************************************************
-* This file runs the main regression using a specification with three groups (low, ag, and non-ag by industry), implemented via dummy variables.
+* his file runs the main regression using a specification with two groups (low+nonag, agby occupation), implemented via dummy variables.
+* Modified to create occup_code weights in memory
 *
 * How to use:
 *   1. Log in to a computing node.
@@ -14,15 +15,10 @@
 *          add the suffix "_old" or "_sector" to the weight variable.
 *        - For high-risk regressions, use the weight variable
 *          without any suffix.
-
+*
 * Runtime:
-*   - Approximately 2-3 hours.
+*   - Approximately 2 hours.
 ****************************************************
-
-
-
-
-
 
 *****************
 *  INITIALIZE
@@ -35,10 +31,10 @@ run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 * log results
 cap log close 
 *--------------------------------------------------------
-log using "${DIR_LOG}/uninteracted_reg_comlohi_3sector.smcl", replace
+log using "${DIR_LOG}/uninteracted_reg_comlohi_occup.smcl", replace
 
 * select dataset and output folder
-gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841.dta"
+gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0121.dta"
 loc reg_folder  "${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections
@@ -48,9 +44,71 @@ loc fe fe_adm0_wk
 
 * ---------- CHOOSE WHICH RISK DEFINITION TO USE ----------
 * options: "high_risk" or "high_risk_old"
-global risk_def "sector" 
+global risk_def "occup_code2" 
 * ---------------------------------------------------------
 
+*****************
+*  LOAD DATA AND CREATE WEIGHTS
+*****************
+
+use "$dataset", clear
+
+	capture program drop create_risk_weights
+	program define create_risk_weights
+	
+		syntax varname, base_weight(varname) [suffix(string)]
+    
+		* Store the grouping variable name
+		local group_var `varlist'
+    
+		* Set default suffix to empty if not provided
+		if "`suffix'" == "" {
+			local suffix ""
+		}
+    
+		* Calculate proportions within iso
+		bysort iso `group_var': gen `group_var'_prop = _N 
+		by iso: replace `group_var'_prop = `group_var'_prop/_N 
+    
+		* Adjust weights by proportion
+		gen risk_adj_sample_wgt`suffix' = `base_weight' * `group_var'_prop
+		bysort `group_var': egen `group_var'_sum = total(risk_adj_sample_wgt`suffix')
+		gen total_`group_var'_share = _N 
+		bysort `group_var': replace total_`group_var'_share = _N / total_`group_var'_share
+		replace risk_adj_sample_wgt`suffix' = risk_adj_sample_wgt`suffix' / `group_var'_sum * total_`group_var'_share
+    
+		* clean up
+		drop total_`group_var'_share `group_var'_prop `group_var'_sum
+    
+		* Representative unit sample weights - by rep_unit
+		gegen rep_unit_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit)
+		gen rep_unit_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_tot_wgt`suffix'
+		gegen test_sum`suffix' = total(rep_unit_sample_wgt`suffix'), by(rep_unit)
+    
+		* Representative unit sample weights - by rep_unit and year
+		gegen rep_unit_year_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit year)
+		gen rep_unit_year_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_year_tot_wgt`suffix'
+		gegen test_sum_2`suffix' = total(rep_unit_year_sample_wgt`suffix'), by(rep_unit year)
+    
+		* Test weights
+		count if (round(test_sum`suffix') != 1) | (round(test_sum_2`suffix') != 1)
+		if `r(N)' != 0 {
+			di as error "Whoops, you biffed it! Sample weights for `group_var' don't add to 1."
+		}
+		else {
+			di as result "Great job, sample weights for `group_var' correctly generated."
+			drop rep_unit_tot_wgt`suffix' rep_unit_year_tot_wgt`suffix' test_sum`suffix' test_sum_2`suffix'
+		}
+    
+	end
+
+	* run function to create weights for each of the three variables. Occupations code weights to
+	* be made in regression script for flexibility
+	create_risk_weights occup_code, base_weight(pop_adj_sample_wgt) suffix(_occup)
+	gen occup_code2 = occup_code
+	replace occup_code2 = 0 if occup_code == 2 
+	replace occup_code2 = 0 if occup_code == 3 
+	create_risk_weights occup_code2, base_weight(pop_adj_sample_wgt) suffix(_occup2)
 ********************
 *  RUN REGRESSION
 ********************
@@ -60,7 +118,7 @@ foreach reg in $reg_list {
 
     di "`reg_list'"
 
-    use $dataset, clear
+    preserve
 
     * if test code mode is on, take a random sample
     if "${test_code}"=="yes" {
@@ -80,7 +138,7 @@ foreach reg in $reg_list {
     replace risk_level = high_risk_old if "${risk_def}"=="high_risk_old"
     replace risk_level = sector if "${risk_def}"=="sector"
     replace risk_level = occup_code if "${risk_def}"=="occup_code"
-
+	replace risk_level = occup_code2 if "${risk_def}"=="occup_code2"
     * generate regression variables
     gen_controls_and_FEs
     gen_treatment_splines rcspl 3 tmax this_week 1
@@ -102,13 +160,13 @@ foreach reg in $reg_list {
     }
 * -------------------------------------------------------------------------------------------------------
     * set the ster file name and the notes to be included
-    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025_272841_sector.ster"
+    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2026_272841_occup2.ster"
     local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
     
 * -------------------------------------------------------------------------------------------------------
     * set the regression weight (pop_adj for common, risk_adj for by-risk)
     if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
-    else loc weight "risk_adj_sample_wgt_sector"
+    else loc weight "risk_adj_sample_wgt_occup2"
 
     di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
     reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
@@ -116,16 +174,17 @@ foreach reg in $reg_list {
     * count regression N by risk
     gen included = e(sample)
     count if included == 1 & risk_level == 1       
-    estadd scalar ag_N = `r(N)'
+    estadd scalar high_N = `r(N)'
     count if included == 1 & risk_level == 0      
     estadd scalar low_N = `r(N)'
-    count if included == 1 & risk_level == 2
-    estadd scalar nonag_N = `r(N)'
 
+    
     estimates notes: "`spec_desc'"
     estimates save "`ster_name'", replace
 
     di "COMPLETED: `reg' regression."
+    
+    restore
 
 }
 

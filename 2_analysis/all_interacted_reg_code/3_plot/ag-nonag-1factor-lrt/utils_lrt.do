@@ -1,7 +1,54 @@
 ******************************************************
-* gen_response_surface_spline
+* COMPLETE CODE FOR CLIMATE INTERACTION
 ******************************************************
-/*
+
+******************************************************
+* generate_coef_spline (modified for climate)
+******************************************************
+cap program drop generate_coef_spline
+program define generate_coef_spline
+	args N_knots spl_varname
+
+	local N_new_vars=`N_knots'-2 
+
+	forval k=0/`N_new_vars'{
+
+		global b_T_spline_`k'_lr 0
+		global b_T_x_lrtmax_spline_`k'_lr 0
+
+		global b_T_spline_`k'_hr 0
+		global b_T_x_lrtmax_spline_`k'_hr 0 
+
+		* Low risk: uninteracted
+		global b_T_spline_`k'_lr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_lr]
+		
+		* High risk: base effect
+		global b_T_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr]
+		
+		* High risk: climate interaction (note the _l suffix)
+		global b_T_x_lrtmax_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_l]
+		
+		forval lag=1/6{
+			* Low risk lags
+			global b_T_spline_`k'_lr ${b_T_spline_`k'_lr}+_b[tmax_`spl_varname'_`N_knots'kn_t`k'_lr_v`lag']
+			
+			* High risk base lags
+			global b_T_spline_`k'_hr ${b_T_spline_`k'_hr}+_b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_v`lag']
+			
+			* High risk climate interaction lags
+			global b_T_x_lrtmax_spline_`k'_hr ${b_T_x_lrtmax_spline_`k'_hr}+_b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_l_v`lag']
+		}
+
+		* High risk total = base + interaction
+		global b_T_spline_`k'_hl ${b_T_spline_`k'_hr}
+		global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_hr}
+	}
+end
+
+
+******************************************************
+* gen_response_surface_spline (modified for climate only)
+******************************************************
 cap program drop gen_response_surface_spline
 program define gen_response_surface_spline
 
@@ -11,8 +58,10 @@ program define gen_response_surface_spline
 	global response_surface 0
 	
 	forval i=0/`N_new_vars'{
+		* Base temperature effect
 		gl response_surface ${response_surface}+(${b_T_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')
-		gl response_surface ${response_surface}+(${b_T_x_gdp_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${minc`grid'}
+		
+		* Climate interaction effect
 		gl response_surface ${response_surface}+(${b_T_x_lrtmax_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${lrtmax`grid'}
 	}
 	
@@ -20,27 +69,31 @@ program define gen_response_surface_spline
 	di "`risk' `grid': $response_surface"
 	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
 end
-*/
-cap program drop gen_response_surface_spline
-program define gen_response_surface_spline
 
-	args N_knots risk grid
+
+******************************************************
+* gen_marginal_resp_spline (for climate only)
+******************************************************
+cap program drop gen_marginal_resp_spline
+program define gen_marginal_resp_spline
+
+	args N_knots risk
 
 	local N_new_vars=`N_knots'-2 
-	global response_surface 0
-	
+
+	global response 0
+
 	forval i=0/`N_new_vars'{
-		gl response_surface ${response_surface}+(${b_T_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')
-		gl response_surface ${response_surface}+(${b_T_x_gdp_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${minc`grid'}
-		gl response_surface ${response_surface}+(${b_T_x_lrtmax_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${lrtmax`grid'}
+		global response $response + (${b_T_x_lrtmax_spline_`i'`risk'})*(T_spline`i' - T_ref_spline`i')
 	}
-	
 	cap drop yhat *_ci
-	di "`risk' `grid': $response_surface"
-	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
+	di "$response"
+	predictnl yhat = $response, ci(lower_ci upper_ci)
 end
+
+
 ******************************************************
-* gen_plot
+* gen_plot (with extrema detection and adjusted proportions)
 ******************************************************
 cap program drop gen_plot
 program define gen_plot 
@@ -138,7 +191,7 @@ program define gen_plot
 			   title("`plot_title'") legend(off) ///
 			   ylab(#8,labs(vsmall) ang(vertical)) ///
 			   ytitle("mins worked", size(small)) ///
-			   xlab("",labs(small)) fysize(65) xtitle("") ///
+			   xlab("",labs(small)) fysize(80) xtitle("") ///
 			   name(`plot_name', replace) ///
 			   graphregion(margin(zero) color(white)) ///
 			   subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ///
@@ -152,7 +205,7 @@ program define gen_plot
 			   title("`plot_title'") legend(off) ///
 			   ylab(#8,labs(vsmall) ang(vertical)) ///
 			   ytitle("mins worked", size(small)) ///
-			   xlab("",labs(small)) fysize(65) xtitle("") ///
+			   xlab("",labs(small)) fysize(80) xtitle("") ///
 			   name(`plot_name', replace) ///
 			   graphregion(margin(zero) color(white)) ///
 			   subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ///
@@ -167,7 +220,7 @@ program define gen_plot
 			   title("`plot_title'") legend(off) ///
 			   ylab(#8,labs(vsmall) ang(vertical)) ///
 			   ytitle("mins worked", size(small)) ///
-			   xlab("",labs(small)) fysize(65) xtitle("") ///
+			   xlab("",labs(small)) fysize(80) xtitle("") ///
 			   name(`plot_name', replace) ///
 			   graphregion(margin(zero) color(white)) ///
 			   subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ///
@@ -180,7 +233,7 @@ program define gen_plot
 			   title("`plot_title'") legend(off) ///
 			   ylab(#8,labs(vsmall) ang(vertical)) ///
 			   ytitle("mins worked", size(small)) ///
-			   xlab("",labs(small)) fysize(65) xtitle("") ///
+			   xlab("",labs(small)) fysize(80) xtitle("") ///
 			   name(`plot_name', replace) ///
 			   graphregion(margin(zero) color(white)) ///
 			   subtitle("${risk`risk'_`plot_name'} obs, ${ru_`plot_name'} rep-units, ${ry_`plot_name'} rep-unit-years.", size(small)) ///
@@ -193,7 +246,23 @@ end
 
 
 ******************************************************
-* plot_interacted_spline
+* gen_marg_plot
+******************************************************
+cap program drop gen_marg_plot
+program define gen_marg_plot 
+	args plot_title plot_name plot_style
+	preserve 
+	if "`plot_style'" == "all_data_with_ci"{
+		tw rarea upper_ci lower_ci temp, col(ltbluishgray) || line yhat temp, lc (dknavy) yline(0) title("`plot_title'") legend(off) graphregion(color(white)) ylabel(,angle(horizontal)) ytitle("mins worked") xtitle("Temperature C", height(6)) name(`plot_name', replace)
+	}
+	if "`plot_style'" == "all_data_no_ci"{
+		tw  line yhat temp, lc (dknavy) yline(0) title("`plot_title'") legend(off) graphregion(color(white)) ylabel(,angle(horizontal)) ytitle("mins worked") xtitle("Temperature C", height(6)) name(`plot_name', replace)
+	}
+	restore
+end
+
+******************************************************
+* plot_interacted_spline (modified with unified y-axis)
 ******************************************************
 cap program drop plot_interacted_spline
 program define plot_interacted_spline
@@ -208,34 +277,72 @@ program define plot_interacted_spline
 	generate_temperature -20 50 27
 	spline_temperature_range 3
 
+	******** STEP 1: Generate all predictions to find global y-axis range ********
+	di "========================================="
+	di "STEP 1: CALCULATING GLOBAL Y-AXIS RANGE"
+	di "========================================="
+	
+	tempfile temp_predictions
+	
+	* Initialize global min/max for each risk level
 	foreach risk in _lr _hr _hl {
-		tempname ymin_`risk' ymax_`risk'
-		scalar `ymin_`risk'' = .
-		scalar `ymax_`risk'' = .
-
+		scalar ymin`risk' = .
+		scalar ymax`risk' = .
+	}
+	
+	* Generate predictions for all grids and risk levels to find range
+	foreach risk in _lr _hr _hl {
 		forval g = 1/$max_g {
 			gen_response_surface_spline `N_knots' `risk' `g'
-			quietly summarize yhat
 			
-			if missing(`ymin_`risk'') | r(min) < `ymin_`risk'' {
-				scalar `ymin_`risk'' = r(min)
-			}
-			if missing(`ymax_`risk'') | r(max) > `ymax_`risk'' {
-				scalar `ymax_`risk'' = r(max)
+			* Get min/max including confidence intervals
+			quietly {
+				sum yhat, detail
+				local temp_min = r(min)
+				local temp_max = r(max)
+				
+				* Also check CI bounds
+				cap confirm variable lower_ci
+				if !_rc {
+					sum lower_ci, detail
+					local temp_min = min(`temp_min', r(min))
+				}
+				
+				cap confirm variable upper_ci
+				if !_rc {
+					sum upper_ci, detail
+					local temp_max = max(`temp_max', r(max))
+				}
 			}
 			
-			cap drop yhat lower_ci upper_ci
+			* Update global min/max
+			if missing(ymin`risk') | `temp_min' < ymin`risk' {
+				scalar ymin`risk' = `temp_min'
+			}
+			if missing(ymax`risk') | `temp_max' > ymax`risk' {
+				scalar ymax`risk' = `temp_max'
+			}
+			
+			di "Risk `risk', Grid `g': yhat range [`temp_min', `temp_max']"
 		}
-
-		scalar `ymin_`risk'' = `ymin_`risk'' - 5
-		scalar `ymax_`risk'' = `ymax_`risk'' + 5
-
-		global YMIN`risk' = `ymin_`risk''
-		global YMAX`risk' = `ymax_`risk''
-
-		di "Unified y-axis range for `risk': ${YMIN`risk'} to ${YMAX`risk'}"
+	}
+	
+	* Set unified y-axis ranges with some padding
+	foreach risk in _lr _hr _hl {
+		local range = ymax`risk' - ymin`risk'
+		local padding = `range' * 0.05
+		
+		global YMIN`risk' = floor((ymin`risk' - `padding') / 50) * 50
+		global YMAX`risk' = ceil((ymax`risk' + `padding') / 50) * 50
+		
+		di "Final unified y-axis for `risk': [${YMIN`risk'}, ${YMAX`risk'}]"
 	}
 
+	******** STEP 2: Generate plots with unified y-axis ********
+	di "========================================="
+	di "STEP 2: GENERATING PLOTS"
+	di "========================================="
+	
 	foreach risk in _lr _hr _hl {
 		forval g = 1/$max_g {
 			gen_response_surface_spline `N_knots' `risk' `g'
@@ -250,7 +357,7 @@ program define plot_interacted_spline
 			local h`i' = "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/interacted_reg_output/plots/histograms/$interaction/hist`i'`risk'_`hist_style'.gph"
 		}
 		
-		if "`interaction'" != "income" {
+		if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
 			graph combine ///
 				plot7 plot8 plot9 "`h7'" "`h8'" "`h9'" ///
 				plot4 plot5 plot6 "`h4'" "`h5'" "`h6'" ///
@@ -261,7 +368,7 @@ program define plot_interacted_spline
 				title("`plot_tag'") ///
 				subtitle("`ster_name', hist: `hist_weight' `hist_style'", size(vsmall))
 		}
-		else {
+		else if "`interaction'" == "climate" | "`interaction'" == "income" {
 			graph combine ///
 				plot1 plot2 plot3 "`h1'" "`h2'" "`h3'", ///
 				plotregion(color(white)) ///
@@ -273,10 +380,15 @@ program define plot_interacted_spline
 		graph export "`ster_name'_`plot_tag'_hist`hist_weight'_`hist_style'.pdf", replace
 	}
 
-	foreach marginal_var in gdp lrtmax {
+	******** STEP 3: Marginal response plots ********
+	di "========================================="
+	di "STEP 3: GENERATING MARGINAL PLOTS"
+	di "========================================="
+	
+	if "`interaction'" == "climate" {
 		foreach risk in _lr _hl {
-			gen_marginal_resp_spline `N_knots' `marginal_var' `risk'
-			export delim using "marginal_resp_spline_`risk'_`marginal_var'.csv", replace
+			gen_marginal_resp_spline `N_knots' `risk'
+			export delim using "marginal_resp_spline_`risk'_lrtmax.csv", replace
 			if "`risk'" == "_lr" local plot_tag low_risk
 			if "`risk'" == "_hl" local plot_tag high_risk
 			
@@ -284,14 +396,45 @@ program define plot_interacted_spline
 		}
 		graph combine low_risk high_risk, ///
 			plotregion(color(white)) graphregion(color(white)) ///
-			cols(2) ycommon title("`marginal_var'") subtitle("`ster_name'")
-		graph export "`ster_name'_marginal_`marginal_var'.pdf", replace
+			cols(2) ycommon title("lrtmax") subtitle("`ster_name'")
+		graph export "`ster_name'_marginal_lrtmax.pdf", replace
 	}
+	else if "`interaction'" == "income" {
+		foreach risk in _lr _hl {
+			gen_marginal_resp_spline `N_knots' `risk'
+			export delim using "marginal_resp_spline_`risk'_gdp.csv", replace
+			if "`risk'" == "_lr" local plot_tag low_risk
+			if "`risk'" == "_hl" local plot_tag high_risk
+			
+			gen_marg_plot "`plot_tag'" `plot_tag' `plot_style' 
+		}
+		graph combine low_risk high_risk, ///
+			plotregion(color(white)) graphregion(color(white)) ///
+			cols(2) ycommon title("gdp") subtitle("`ster_name'")
+		graph export "`ster_name'_marginal_gdp.pdf", replace
+	}
+	else if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+		foreach marginal_var in gdp lrtmax {
+			foreach risk in _lr _hl {
+				gen_marginal_resp_spline `N_knots' `risk'
+				export delim using "marginal_resp_spline_`risk'_`marginal_var'.csv", replace
+				if "`risk'" == "_lr" local plot_tag low_risk
+				if "`risk'" == "_hl" local plot_tag high_risk
+				
+				gen_marg_plot "`plot_tag'" `plot_tag' `plot_style' 
+			}
+			graph combine low_risk high_risk, ///
+				plotregion(color(white)) graphregion(color(white)) ///
+				cols(2) ycommon title("`marginal_var'") subtitle("`ster_name'")
+			graph export "`ster_name'_marginal_`marginal_var'.pdf", replace
+		}
+	}
+	
 	cd ..
 end
 
 ******************************************************
-* generate_grids
+* generate_grids (modified for climate)
 ******************************************************
 cap program drop generate_grids
 program define generate_grids
@@ -312,8 +455,18 @@ program define generate_grids
 	local lrtmax_warm=`r(p50)'
 	local lrtmax_hot=`r(max)'
 	
-	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+	if "`interaction'" == "climate" {
+		global max_g = 3
 
+		global lrtmax1 `lrtmax_cold'
+		global lrtmax2 `lrtmax_warm'
+		global lrtmax3 `lrtmax_hot'
+		
+		global tag1 cold
+		global tag2 warm
+		global tag3 hot
+	}
+	else if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
 		global max_g = 9
 
 		global lrtmax1 `lrtmax_cold'
@@ -326,52 +479,54 @@ program define generate_grids
 		global lrtmax8 `lrtmax_warm'
 		global lrtmax9 `lrtmax_hot'
 	}
-
-	if "`tercile'" == "hierid" {
-		use "/project/cil/norgay/CIL_labor/2_regression/time_use/input/loggdppc_2010_grid.dta", clear
-	}
-	else if "`tercile'" == "rep_unit" {
-		use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/xtiles/rep_unit_terciles_grid.dta", clear
-	}
-	else di "Incorrect tercile specification. Permitted: rep_unit, hierid."
-
-	sum mean_loggdppc, detail
-
-	local inc_poor =`r(min)'
-	local inc_midl =`r(p50)'
-	local inc_rich =`r(max)'
-
-	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
-
-		global minc1 `inc_poor'
-		global minc2 `inc_poor'
-		global minc3 `inc_poor'
-		global minc4 `inc_midl'
-		global minc5 `inc_midl'
-		global minc6 `inc_midl'
-		global minc7 `inc_rich'
-		global minc8 `inc_rich'
-		global minc9 `inc_rich'
-
-		global tag1 cold-poor
-		global tag2 warm-poor
-		global tag3 hot-poor
-		global tag4 cold-midincome
-		global tag5 warm-midincome
-		global tag6 hot-midincome
-		global tag7 cold-rich
-		global tag8 warm-rich
-		global tag9 hot-rich*
-	}
 	else if "`interaction'" == "income" {
-
-		di "INTERACTION `interaction'"
-
 		global max_g = 3
+	}
 
-		global minc1 `inc_poor'
-		global minc2 `inc_midl'
-		global minc3 `inc_rich'
+	if "`interaction'" != "climate" {
+		if "`tercile'" == "hierid" {
+			use "/project/cil/norgay/CIL_labor/2_regression/time_use/input/loggdppc_2010_grid.dta", clear
+		}
+		else if "`tercile'" == "rep_unit" {
+			use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/xtiles/rep_unit_terciles_grid.dta", clear
+		}
+
+		sum mean_loggdppc, detail
+
+		local inc_poor =`r(min)'
+		local inc_midl =`r(p50)'
+		local inc_rich =`r(max)'
+
+		if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+			global minc1 `inc_poor'
+			global minc2 `inc_poor'
+			global minc3 `inc_poor'
+			global minc4 `inc_midl'
+			global minc5 `inc_midl'
+			global minc6 `inc_midl'
+			global minc7 `inc_rich'
+			global minc8 `inc_rich'
+			global minc9 `inc_rich'
+
+			global tag1 cold-poor
+			global tag2 warm-poor
+			global tag3 hot-poor
+			global tag4 cold-midincome
+			global tag5 warm-midincome
+			global tag6 hot-midincome
+			global tag7 cold-rich
+			global tag8 warm-rich
+			global tag9 hot-rich*
+		}
+		else if "`interaction'" == "income" {
+			global minc1 `inc_poor'
+			global minc2 `inc_midl'
+			global minc3 `inc_rich'
+			
+			global tag1 poor
+			global tag2 midincome
+			global tag3 rich
+		}
 	}
 
 	* Read counts and set global macros
@@ -379,7 +534,28 @@ program define generate_grids
 	
 	use "${ROOT_INT_DATA}/xtiles/`tercile'_terciles_count.dta", clear
 	
-	if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
+	if "`interaction'" == "climate" {
+		local i = 1
+		forvalues clim = 1(1)3 {
+			sum count_lr if clim_t == `clim', meanonly
+			global risk_lr_plot`i' = r(sum)
+			
+			sum count_hr if clim_t == `clim', meanonly
+			global risk_hr_plot`i' = r(sum)
+			global risk_hl_plot`i' = r(sum)
+			
+			sum count_rep_unit if clim_t == `clim', meanonly
+			global ru_plot`i' = r(sum)
+			
+			sum count_rep_year if clim_t == `clim', meanonly
+			global ry_plot`i' = r(sum)
+			
+			di "Grid `i': LR=${risk_lr_plot`i'}, HR=${risk_hr_plot`i'}, RU=${ru_plot`i'}, RY=${ry_plot`i'}"
+			
+			local ++i
+		}
+	}
+	else if "`interaction'" == "interacted" | "`interaction'" == "triple_int" {
 		local i = 1
 		forvalues inc = 1(1)3 {
 			forvalues clim = 1(1)3 {
@@ -427,50 +603,6 @@ program define generate_grids
 	di "COUNTS LOADED INTO GLOBAL MACROS."
 end
 
-******************************************************
-* generate_coef_spline
-******************************************************
-cap program drop generate_coef_spline
-program define generate_coef_spline
-	args N_knots spl_varname
-
-	local N_new_vars=`N_knots'-2 
-
-	forval k=0/`N_new_vars'{
-
-		global b_T_spline_`k'_lr 0
-		global b_T_x_gdp_spline_`k'_lr 0
-		global b_T_x_lrtmax_spline_`k'_lr 0
-
-		global b_T_spline_`k'_hr 0
-		global b_T_x_gdp_spline_`k'_hr 0
-		global b_T_x_lrtmax_spline_`k'_hr 0 
-
-		global b_T_spline_`k'_lr _b[tmax_`spl_varname'_`N_knots'kn_t`k']
-		global b_T_x_gdp_spline_`k'_lr _b[c.tmax_`spl_varname'_`N_knots'kn_t`k'#c.log_gdp_pc_adm1]
-		global b_T_x_lrtmax_spline_`k'_lr _b[c.tmax_`spl_varname'_`N_knots'kn_t`k'#c.lr_tmax_p1]
-
-		global b_T_spline_`k'_hr _b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k']
-		global b_T_x_gdp_spline_`k'_hr _b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k'#c.log_gdp_pc_adm1]
-		global b_T_x_lrtmax_spline_`k'_hr _b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k'#c.lr_tmax_p1]			
-		
-		forval lag=1/6{
-
-			global b_T_spline_`k'_lr ${b_T_spline_`k'_lr}+_b[tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag']
-			global b_T_x_gdp_spline_`k'_lr ${b_T_x_gdp_spline_`k'_lr}+_b[c.tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag'#c.log_gdp_pc_adm1]
-			global b_T_x_lrtmax_spline_`k'_lr ${b_T_x_lrtmax_spline_`k'_lr}+_b[c.tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag'#c.lr_tmax_p1]
-
-			global b_T_spline_`k'_hr ${b_T_spline_`k'_hr}+_b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag']
-			global b_T_x_gdp_spline_`k'_hr ${b_T_x_gdp_spline_`k'_hr}+_b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag'#c.log_gdp_pc_adm1]
-			global b_T_x_lrtmax_spline_`k'_hr ${b_T_x_lrtmax_spline_`k'_hr}+_b[1.risk_level#c.tmax_`spl_varname'_`N_knots'kn_t`k'_v`lag'#c.lr_tmax_p1]
-
-		}
-
-		global b_T_spline_`k'_hl ${b_T_spline_`k'_lr} + ${b_T_spline_`k'_hr}
-		global b_T_x_gdp_spline_`k'_hl  ${b_T_x_gdp_spline_`k'_lr} + ${b_T_x_gdp_spline_`k'_hr}
-		global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_lr} + ${b_T_x_lrtmax_spline_`k'_hr}	
-	}
-end
 
 ******************************************************
 * generate_temperature
@@ -490,6 +622,7 @@ program define generate_temperature
 	gen ref = `ref'
 	gen mins_worked = 0
 end
+
 
 ******************************************************
 * spline_temperature_range

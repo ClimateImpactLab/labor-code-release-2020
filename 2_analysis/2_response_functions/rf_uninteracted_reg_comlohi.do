@@ -8,7 +8,7 @@
 *        - comm_ster
 *        - by_risk_ster
 *        - rf_name
-*	 - !!!! Here is a function with knots (make_spline_terms). Check it!
+*	 - !!!! Here is a function with hard-coded knots (make_spline_terms). Check it!
 *   3. The response function for the "sector" specification
 *      is generated separately.
 *
@@ -50,9 +50,9 @@ foreach row_values in full_response table_values {
 	clear 
 
 	* set the ster file names and the output CSV
-	local comm_ster		"`reg_folder'/uninteracted_reg_common_2026_272841.ster"
-	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk_2026_272841.ster"
-	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'_2026_272841.csv"
+	local comm_ster		"`reg_folder'/uninteracted_reg_common_2026_272841_oi.ster"
+	local by_risk_ster	"`reg_folder'/uninteracted_reg_by_risk_2026_272841_oi.ster"
+	local rf_name 		"`rf_folder'/uninteracted_reg_comlohi_`row_values'_2026_272841_oi.csv"
 
 	* create the temp list that we want to predict for
 	qui make_temp_dist, list($`row_values') ref($ref_temp)

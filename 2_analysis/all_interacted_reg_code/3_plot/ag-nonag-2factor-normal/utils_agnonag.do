@@ -1,7 +1,6 @@
 ******************************************************
 * gen_response_surface_spline
 ******************************************************
-/*
 cap program drop gen_response_surface_spline
 program define gen_response_surface_spline
 
@@ -20,25 +19,8 @@ program define gen_response_surface_spline
 	di "`risk' `grid': $response_surface"
 	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
 end
-*/
-cap program drop gen_response_surface_spline
-program define gen_response_surface_spline
 
-	args N_knots risk grid
 
-	local N_new_vars=`N_knots'-2 
-	global response_surface 0
-	
-	forval i=0/`N_new_vars'{
-		gl response_surface ${response_surface}+(${b_T_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')
-		gl response_surface ${response_surface}+(${b_T_x_gdp_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${minc`grid'}
-		gl response_surface ${response_surface}+(${b_T_x_lrtmax_spline_`i'`risk'})*(T_spline`i'-T_ref_spline`i')*${lrtmax`grid'}
-	}
-	
-	cap drop yhat *_ci
-	di "`risk' `grid': $response_surface"
-	predictnl yhat = $response_surface, ci(lower_ci upper_ci)
-end
 ******************************************************
 * gen_plot
 ******************************************************

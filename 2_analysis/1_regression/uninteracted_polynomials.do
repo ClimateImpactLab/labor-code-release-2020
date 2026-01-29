@@ -1,3 +1,37 @@
+****************************************************
+* This file runs the main regression with polynomial specification.
+*
+* How to use:
+*   1. Log in to a computing node.
+*   2. Update the following settings in this file:
+*        - logs
+*        - dataset
+*        - risk_def
+*        - ster_name
+*        - weight
+*   3. Weight naming convention:
+*        - For low-risk and sector-specific regressions, 
+*          add the suffix "_old" or "_sector" to the weight variable.
+*        - For high-risk regressions, use the weight variable
+*          without any suffix.
+*   4. For "sector", change:
+*	*count regression N by risk
+*	gen included = e(sample)
+*	count if included == 1 & risk_level == 1       
+*	estadd scalar ag_N = `r(N)'
+*	count if included == 1 & risk_level == 0      
+*	estadd scalar low_N = `r(N)'
+*	count if included == 1 & risk_level == 2
+*	estadd scalar nonag_N = `r(N)'
+*
+* Runtime:
+*   - Approximately 1-2 hours.
+****************************************************
+
+
+
+
+
 *****************
 *	INITIALIZE
 *****************

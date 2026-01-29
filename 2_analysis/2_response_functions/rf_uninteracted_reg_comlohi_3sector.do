@@ -1,5 +1,5 @@
 ****************************************************
-* This file generates the full response table (at 0.1-degree resolution)
+* This file generates the full response table (at 0.1-degree resolution) for regression with 3 groups
 * as well as the table values used in the paper.
 *
 * How to use:

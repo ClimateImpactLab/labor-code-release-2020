@@ -1401,18 +1401,17 @@ program define make_spline_terms
 		ren ref_spline`k' ref_spline`j'
 	}
 end 
-
-
 cap program drop test_interaction_spline
 program define test_interaction_spline
     * args:
-    *   f: not used inside but keep for compatibility
+    *   f: not used
     *   N_knots: number of knots used in spline
-    *   data_subset: not used inside but keep for compatibility
+    *   data_subset: not used
     *   reg: "1_factor" or "2_factor"
     *   ster_name: ster file name WITHOUT ".ster"
     *   wgt: sheet identifier
-    args f N_knots data_subset reg ster_name wgt
+    *   mode: for 1_factor only: "gdp" or "lrt"
+    args f N_knots data_subset reg ster_name wgt mode
     
     estimates use "${ster_dir}/`ster_name'.ster"
     local N_new_vars = `N_knots' - 2
@@ -1422,56 +1421,87 @@ program define test_interaction_spline
     local colnames ""
     local j = 1
     
-    * -----------------------------
-    * 1) 1_factor: climatehigh_only naming system
-    *    interaction exists ONLY for high-risk via *_hr_l*
-    * -----------------------------
+    ****************************************
+    * 1_factor: only ONE of {g,l} exists
+    ****************************************
     if "`reg'" == "1_factor" {
-        * lr block (no LRT interaction in your 1_factor spec)
+
+        * lr block: not applicable
         local colnames "`colnames' lr_GDP_interaction lr_lrtmax_interaction lr_joint_interaction"
-        mat results[1, `j'] = .   // lr GDP
-        mat results[2, `j'] = .
-        local ++j
-        mat results[1, `j'] = .   // lr lrt
-        mat results[2, `j'] = .
-        local ++j
-        mat results[1, `j'] = .   // lr joint
-        mat results[2, `j'] = .
-        local ++j
-        
-        * hl block: test all *_hr_l* terms jointly = 0
-        local test_hl_lrt ""
-        foreach term in ///
-            tmax_rcspl_3kn_t0_hr_l    tmax_rcspl_3kn_t0_hr_l_v1 tmax_rcspl_3kn_t0_hr_l_v2 ///
-            tmax_rcspl_3kn_t0_hr_l_v3 tmax_rcspl_3kn_t0_hr_l_v4 tmax_rcspl_3kn_t0_hr_l_v5 tmax_rcspl_3kn_t0_hr_l_v6 ///
-            tmax_rcspl_3kn_t1_hr_l    tmax_rcspl_3kn_t1_hr_l_v1 tmax_rcspl_3kn_t1_hr_l_v2 ///
-            tmax_rcspl_3kn_t1_hr_l_v3 tmax_rcspl_3kn_t1_hr_l_v4 tmax_rcspl_3kn_t1_hr_l_v5 tmax_rcspl_3kn_t1_hr_l_v6 {
-            local test_hl_lrt `test_hl_lrt' ( _b[`term'] = 0 )
+        forval k = 1/3 {
+            mat results[1, `j'] = .
+            mat results[2, `j'] = .
+            local ++j
         }
+
+        * hl block columns always exist in output, but we fill only the relevant one
         local colnames "`colnames' hl_GDP_interaction hl_lrtmax_interaction hl_joint_interaction"
-        
-        * hl GDP: not in this spec
-        mat results[1, `j'] = .
-        mat results[2, `j'] = .
-        local ++j
-        
-        * hl lrtmax: real test
-        test `test_hl_lrt'
-        mat results[1, `j'] = r(F)
-        mat results[2, `j'] = r(p)
-        local ++j
-        
-        * hl joint: same as hl lrtmax here (since GDP part absent)
-        mat results[1, `j'] = r(F)
-        mat results[2, `j'] = r(p)
-        local ++j
+
+        * sanity
+        if !inlist("`mode'","gdp","lrt") {
+            di as error "ERROR: for reg=1_factor, mode must be 'gdp' or 'lrt'. You set: `mode'"
+            exit 198
+        }
+
+        * build only the active test list
+        local test_hl ""
+
+        if "`mode'" == "lrt" {
+            foreach term in ///
+                tmax_rcspl_3kn_t0_hr_l    tmax_rcspl_3kn_t0_hr_l_v1 tmax_rcspl_3kn_t0_hr_l_v2 ///
+                tmax_rcspl_3kn_t0_hr_l_v3 tmax_rcspl_3kn_t0_hr_l_v4 tmax_rcspl_3kn_t0_hr_l_v5 tmax_rcspl_3kn_t0_hr_l_v6 ///
+                tmax_rcspl_3kn_t1_hr_l    tmax_rcspl_3kn_t1_hr_l_v1 tmax_rcspl_3kn_t1_hr_l_v2 ///
+                tmax_rcspl_3kn_t1_hr_l_v3 tmax_rcspl_3kn_t1_hr_l_v4 tmax_rcspl_3kn_t1_hr_l_v5 tmax_rcspl_3kn_t1_hr_l_v6 {
+                local test_hl `test_hl' ( _b[`term'] = 0 )
+            }
+
+            * hl_GDP_interaction (col 4): missing
+            mat results[1, `j'] = .
+            mat results[2, `j'] = .
+            local ++j
+
+            * hl_lrtmax_interaction (col 5): real test
+            test `test_hl'
+            mat results[1, `j'] = r(F)
+            mat results[2, `j'] = r(p)
+            local ++j
+
+            * hl_joint_interaction (col 6): same as lrt in 1_factor (since only one set exists)
+            mat results[1, `j'] = r(F)
+            mat results[2, `j'] = r(p)
+            local ++j
+        }
+
+        if "`mode'" == "gdp" {
+            foreach term in ///
+                tmax_rcspl_3kn_t0_hr_g    tmax_rcspl_3kn_t0_hr_g_v1 tmax_rcspl_3kn_t0_hr_g_v2 ///
+                tmax_rcspl_3kn_t0_hr_g_v3 tmax_rcspl_3kn_t0_hr_g_v4 tmax_rcspl_3kn_t0_hr_g_v5 tmax_rcspl_3kn_t0_hr_g_v6 ///
+                tmax_rcspl_3kn_t1_hr_g    tmax_rcspl_3kn_t1_hr_g_v1 tmax_rcspl_3kn_t1_hr_g_v2 ///
+                tmax_rcspl_3kn_t1_hr_g_v3 tmax_rcspl_3kn_t1_hr_g_v4 tmax_rcspl_3kn_t1_hr_g_v5 tmax_rcspl_3kn_t1_hr_g_v6 {
+                local test_hl `test_hl' ( _b[`term'] = 0 )
+            }
+
+            * hl_GDP_interaction (col 4): real test
+            test `test_hl'
+            mat results[1, `j'] = r(F)
+            mat results[2, `j'] = r(p)
+            local ++j
+
+            * hl_lrtmax_interaction (col 5): missing
+            mat results[1, `j'] = .
+            mat results[2, `j'] = .
+            local ++j
+
+            * hl_joint_interaction (col 6): same as gdp in 1_factor
+            mat results[1, `j'] = r(F)
+            mat results[2, `j'] = r(p)
+            local ++j
+        }
     }
     
-    * -----------------------------
-    * 2) 2_factor: original macro naming system
-    *    relies on generate_coef_spline creating:
-    *      ${b_T_x_gdp_spline_i_risk}, ${b_T_x_lrtmax_spline_i_risk}
-    * -----------------------------
+    ****************************************
+    * 2_factor: original macro naming system
+    ****************************************
     if "`reg'" == "2_factor" {
         foreach risk in lr hl {
             local test_gdp ""
@@ -1512,6 +1542,8 @@ program define test_interaction_spline
     
     di "Results saved to: ${rf_folder}/test_spline_results_`wgt'_`reg'.xlsx"
 end
+
+
 
 * generate spline temperature
 cap program drop spline_temperature_range
