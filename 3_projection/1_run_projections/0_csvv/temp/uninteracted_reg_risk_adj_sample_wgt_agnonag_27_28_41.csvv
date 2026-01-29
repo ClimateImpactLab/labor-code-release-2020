@@ -1,0 +1,26 @@
+---
+oneline: Labor uninteracted regression  with a restricted cubic spline term (3 knots), located at 27_28_41
+version: LABOR-RCSPLINE-3KNOTS-uninteracted-Knots-27_28_41
+dependencies: /project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/ster/uninteracted_reg_by_risk_agnonag_27_28_41.ster
+description: Generated with csvv_writer_timeuse.do, from labor uninteracted regression with restricted cubic spline, 3 knots. The first 2 gammas are for the low-risk sector. The next 2 for the high-risk sector.
+csvv-version: girdin-2017-01-10
+variables:
+  tasmax: daily maximum temperature [C]
+  tasmax_rcspline1: restricted cubic spline term of daily max temperature [C^3]
+  outcome: labor productivity [minutes worked by individual]
+...
+observations
+6595771
+prednames
+tasmax, tasmax_rcspline1, tasmax, tasmax_rcspline1
+covarnames
+1, 1, 1, 1
+gamma
+.0574303265122028,-.018539409626495,4.716441246633391,-.273863500208779
+gammavcv
+.0505587708036388,-.0022516478474324,-.0048233912806641,.0002157185208938
+-.0022516478474324,.0002267178219042,.0017002151370133,-.0000957840964433
+-.0048233912806641,.0017002151370133,3.249687221082057,-.1092537856905276
+.0002157185208937,-.0000957840964433,-.1092537856905275,.0063063790519171
+residvcv
+317401.9093113386

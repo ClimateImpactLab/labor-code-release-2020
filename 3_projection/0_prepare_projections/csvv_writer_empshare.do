@@ -28,6 +28,7 @@ program define generate_coefs
 	else{
 		global gamma_list "_cons log_inc tavg_1_pop_ma_30yr tavg_2_pop_ma_30yr tavg_3_pop_ma_30yr tavg_4_pop_ma_30yr"
 	}
+
 end
 
 
@@ -41,15 +42,15 @@ program define write_csvv_header
 
 	if "`have_fe'" == "have_fe"{
 		file write csvv "oneline: Employment share regression for labor sector, with continent fixed effects" _n
-		file write csvv "version: empshareFE_2019_10" _n
-		file write csvv "dependencies: LogIncPoly4ContinentFEs_2025.ster" _n
+		file write csvv "version: empshareFE_2026_01" _n
+		file write csvv "dependencies: log_inc_poly4_continent_fes_agnonag.ster" _n
 		file write csvv "description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. " _n
 
 	}
 	else{
 		file write csvv "oneline: Employment share regression for labor sector, without continent fixed effects" _n
-		file write csvv "version: empshare_2019_10" _n
-		file write csvv "dependencies: LogIncPoly4_2025.ster" _n
+		file write csvv "version: empshare_2026_01" _n
+		file write csvv "dependencies: log_inc_poly4_agnonag.ster" _n
 		file write csvv "description: Generated with labor_empshares_csvv_writer.do, from employment share regression without continent fixed effects, for the labor sector. " _n
 
 	}
@@ -85,12 +86,12 @@ program define write_csvv_prednames_covarnames
 
 	if "`have_fe'" == "have_fe"{
 		di "1"
-		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes.ster"
+		estimates use "${ROOT_INT_DATA}/ster/log_inc_poly4_continent_fes_agnonag.ster"
 
 	}
 	else {
 		di "2"
-		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4.ster"
+		estimates use "${ROOT_INT_DATA}/ster/log_inc_poly4_agnonag.ster"
 	}
 
 	file write csvv "prednames" _n
@@ -188,12 +189,12 @@ program define calculate_nobs_residvcv
 
 	if "`have_fe'" == "have_fe"{
 		di "1"
-		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_continent_fes_2025.ster"
+		estimates use "${ROOT_INT_DATA}/ster/log_inc_poly4_continent_fes_2025.ster"
 
 	}
 	else{
 		di "2"
-		estimates use "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/employment_shares/ster/log_inc_poly4_2025_newrisk.ster"
+		estimates use "${ROOT_INT_DATA}/ster/log_inc_poly4_agnonag.ster"
 	}	
 	global nobs = e(N)
 
@@ -214,14 +215,14 @@ program define write_csvv
 	generate_coefs `have_fe'
 
 	if "`have_fe'" == "have_fe"{
-		local csvv_filename "labor_empshare_continentFE_2025.csvv"	
+		local csvv_filename "labor_empshare_continentFE_agnonag.csvv"	
 	}
 	else {
-		local csvv_filename "labor_empshare_noFE_2025.csvv"	
+		local csvv_filename "labor_empshare_noFE_agnonag.csvv"	
 
 	}
 
-	local csvv_path "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/temp"
+	local csvv_path "${DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/temp"
 	local csvv "`csvv_path'/`csvv_filename'"
 
 	cd `csvv_path'

@@ -1,6 +1,5 @@
 * king of all csvv writers
 
-
 clear all
 macro drop _all
 set more off
@@ -9,20 +8,22 @@ set matsize 10000
 
 * get paths
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/utils.do"
+do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
+global ster_dir = "${ROOT_INT_DATA}/ster" 
+global csvv_dir = "${DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/temp"
 
-
-global ster_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/ster"
-global csvv_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/temp"
 *global fun_form = "polynomials"
 global fun_form = "splines"
+
 * N is polynomial order or number of knots
 global N = 3
 
 *global interaction = "interacted"
 global interaction = "uninteracted"
 
-global ster_folder = "uninteracted_reg_comlohi"
+global ster_folder = "uninteracted_reg"
 
 * may need to change interacted weight
 if "${interaction}" == "interacted" global weight = "adm1_adj_sample_wgt"
@@ -31,28 +32,21 @@ else di "wrong specification of interaction"
 
 global FE = "fe_week_adm0"
 
-if "${fun_form}" == "splines" {
+if "${interaction}" == "uninteracted" {
 
 	global knots_loc  "27_28_41"
-	global dataset = "uninteracted_reg_comlohi"
 	global spline_varname = "rcspl"
 	global ster_filename = "uninteracted_reg_by_risk_agnonag_27_28_41.ster"
 
 } 
-else if "${fun_form}" == "polynomials" {
-	global dataset = "polynomials_tmax_chn_prev7days"
-	* the filename for interacted regression is temporary!!!!!! 
+else if "${interaction}" == "interacted" {
+	
+	global knots_loc  "27_28_41"
+	global spline_varname = "rcspl"
 	if "${interaction}" == "interacted" global ster_filename = "fe_week_adm0_poly_4_this_week_no_chn_reg_test_deltabeta.ster"
-	else if "${interaction}" == "uninteracted" global ster_filename = "${FE}_poly_${N}_this_week_no_chn_${weight}_reghdfe.ster"
-
+	
 }
 else di "wrong specification of functional form"
-
-* change this to your repo on ther server, pull from master first
-global repo = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020"
-do "$repo/2_analysis/0_subroutines/utils.do"
-do "$repo/2_analysis/0_subroutines/functions.do"
-
 
 * generate varlists for the gammas
 cap program drop generate_gammas_splines
@@ -340,7 +334,7 @@ cap program drop write_csvv
 program define write_csvv
 
 	di "LOADING ESTIMATES: "
-	local ster_path  "${ster_dir}/${ster_folder}/${ster_filename}"
+	local ster_path  "${ster_dir}/${ster_filename}"
 	di "`ster_path'"
 	estimates use "`ster_path'"
 

@@ -5,9 +5,5 @@
 .RData
 .Ruserdata
 .DS_Store
-output/*
-!output/.gitkeep
-outputs/*
-!outputs/.gitkeep
 .ipynb_checkpoints/
 

@@ -6,15 +6,18 @@
 rm(list = ls())
 library(stringr)
 library(dplyr)
+library(glue)
 
 # set up paths
-REPO = '/project/cil/home_dirs/egrenier/repos'
-lab_repo = paste0(REPO, "/labor-code-release-2020")
-csvv_dir = paste0(lab_repo, "/3_projection/1_run_projections/0_csvv/temp/")
-pp_tools_repo = paste0(REPO, "/post-projection-tools/")
+USER = Sys.getenv("USER")
+source(glue("/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R"))
+
+csvv_dir = glue("{DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/temp")
+PPT = glue("{ROOT_REPO}/post-projection-tools")
 
 # Source dylan's YP package, to get the read.csvv function
-source(paste0(pp_tools_repo, "response_function/yellow_purple_package.R"))
+REPO=ROOT_REPO
+source(glue("{PPT}/response_function/yellow_purple_package.R"))
 
 # Option for type of FE in employment shares - options are "noFE" or "continentFE"
 FE = "noFE"
@@ -23,7 +26,7 @@ FE = "noFE"
 interaction = "uninteracted"
 weight = "risk_adj_sample_wgt"
 
-csvv_name_spline = glue("uninteracted_reg_comlohi_risk_adj_sample_wgt_agnonag_27_28_41.csvv")
+csvv_name_spline = glue("uninteracted_reg_risk_adj_sample_wgt_agnonag_27_28_41.csvv")
 csvv_name_empshare = paste0("labor_empshare_", FE, "_agnonag.csvv")
 
 
@@ -35,7 +38,7 @@ csvv_name_empshare = paste0("labor_empshare_", FE, "_agnonag.csvv")
 # Function for formatting the csvv information, returning a list of the stuff we need for the csvv
 get_csvv =function(dir, name) {
   
-  file = paste0(dir,name)
+  file = paste0(dir,"/",name)
 
   csvv = read.csvv(filepath = file, vars=c('gamma','prednames','covarnames'))
   csvv_vcv = read.csvv(filepath =file, vars=c('gammavcv')) %>% as.data.frame()
