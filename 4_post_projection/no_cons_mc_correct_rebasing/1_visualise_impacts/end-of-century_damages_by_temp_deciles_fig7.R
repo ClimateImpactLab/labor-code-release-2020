@@ -9,29 +9,27 @@ pacman::p_load(ggplot2,
                readr,
                glue,
                parallel)
-
-
 source("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines/paths.R")
 source("/project/cil/home_dirs/maiqi/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
-
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr)
 
+# ========== MODIFIED PATHS ==========
+TEST_DATA_DIR <- "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/test"
+OUTPUT_DIR <- "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/figures/fig7"
+dir.create(OUTPUT_DIR, recursive = TRUE, showWarnings = FALSE)
 
 DB_data = '/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates'
-
 # Take deciles of 2015 income/ clim data distribution of IRs, by getting equal populations in each population
-
 get_deciles_logged <- function(df, year = 2015,
                                value_col = "climtasmax",
                                log_pop_col = "loggdppc",
                                pop_log_base = c("e","10","log1p")) {
   pop_log_base <- match.arg(pop_log_base)
   d <- df %>% dplyr::filter(year == year)
-
   d$pop <- switch(pop_log_base,
                   "e"     = exp(d[[log_pop_col]]),
                   "10"    = 10^(d[[log_pop_col]]),
@@ -44,26 +42,19 @@ get_deciles_logged <- function(df, year = 2015,
                   decile   = pmin(10L, floor(cum_share * 10) + 1L)) %>%
     dplyr::select(region, decile)
 }
-
-
 # Load in pop and income data
 df_covariates = read_csv(paste0(DB_data,  
                                 '/covariates_region_loggdppc_climtasmax_logpopop.csv'))
-
 # Find each Impact region's 2015 decile of income per capita. 
 deciles = get_deciles_logged(df_covariates)
-
 #################################################
 # plot damage in percentage GDP by income decile
-
 # Load in impacts data
-df_pct_gdp_impacts = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/extracted_data_mc_figure/SSP3-rcp85_low_rebased_fulladapt-gdp-levels_2099_map.csv'))%>%
+df_pct_gdp_impacts = read_csv(glue('{TEST_DATA_DIR}/SSP3-rcp85_low_rebased_fulladapt-gdp-levels_2099_map.csv'))%>%
   left_join(deciles, by = "region")
-
 # Join with 2099 population dataSSP3-high-IR_level-gdppc_pop-2099
 df_gdp99= read_csv(paste0(DB_data, '/SSP3-low-IR_level-gdppc-pop-2099.csv')) %>% 
   dplyr::select(region, gdp99)
-
 df_pct_gdp_impacts = df_pct_gdp_impacts %>% 
   left_join(df_gdp99, by = "region")%>% 
   mutate(pct_x_gdp_mean = -mean * gdp99,
@@ -89,7 +80,6 @@ df_pct_gdp_impacts = df_pct_gdp_impacts %>%
                 pct_x_gdp_q99,
                 region, year, gdp99, decile
   )
-
 # Collapse to decile level
 df_plot = df_pct_gdp_impacts %>% 
   group_by(decile) %>% 
@@ -115,9 +105,6 @@ df_plot = df_pct_gdp_impacts %>%
          pct_gdp_q1 = total_pct_x_gdp_2099_q1 / total_gdp_2099 * 100,
          pct_gdp_q99 = total_pct_x_gdp_2099_q99 / total_gdp_2099 * 100,
   )
-
-
-
 # Plot and save 
 p = ggplot(data = df_plot) +
   geom_bar(aes( x=decile, y = pct_gdp_mean ), 
@@ -127,15 +114,9 @@ p = ggplot(data = df_plot) +
   xlab("2015 Income Decile") +
   scale_x_discrete(limits = seq(1,10)) +
   ggtitle("Decile %GDP impact bar chart")
-
-
-ggsave(p, file = paste0(DIR_FIG, 
-                        "/mc_correct_rebasing_for_integration/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
+ggsave(p, file = paste0(OUTPUT_DIR, 
+                        "/SSP3-high_rcp85-pct-gdp_by_inc_decile.pdf"), 
        width = 8, height = 6)
-
-
-
-
 # mortality code
 p = ggplot() + 
   geom_errorbar(
@@ -178,12 +159,6 @@ p = ggplot() +
   ylab("percent gdp")+
   # coord_cartesian(ylim = c(-350, 600)) +
   ggtitle(paste0("Decile %GDP impact bar chart")) 
-
-
-
-ggsave(p, file = paste0(DIR_FIG, 
-                        "/fig7/SSP3-high_rcp85-pct-gdp_by_temp_decile_w_CI.pdf"), 
+ggsave(p, file = paste0(OUTPUT_DIR, 
+                        "/SSP3-high_rcp85-pct-gdp_by_temp_decile_w_CI.pdf"), 
        width = 8, height = 6)
-
-
-

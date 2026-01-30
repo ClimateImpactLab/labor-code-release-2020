@@ -1,0 +1,2 @@
+temp,ref,yhat_low,se_low,lowerci_low,upperci_low,yhat_high,se_high,lowerci_high,upperci_high
+30,27,-.16854893,.53224498,-1.21173,.87463212,-2.896033,2.8548291,-8.491395,2.6993291

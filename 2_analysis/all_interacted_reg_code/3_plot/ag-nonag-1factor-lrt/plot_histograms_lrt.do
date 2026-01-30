@@ -40,7 +40,7 @@ program define plot_histograms
 	}
 	
 	** PULL IN THE ACTUAL DATASET
-	use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0121.dta", clear
+	use "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_noMEXBRA.dta", clear
 	
 	di "ASSIGNING TO TERCILES..."
 	

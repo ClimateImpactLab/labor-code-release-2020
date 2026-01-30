@@ -14,12 +14,12 @@
 
 #clean environment
 rm(list = ls())
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 #load packages
 library(readstata13)
-library(dplyr)
 library(plyr)
+library(dplyr)
 library(foreign)
 library(glue)
 
@@ -45,12 +45,12 @@ ctrylist <- as.list(unique(df$iso))
 df$weight <- 1
 
 #for (ctry in ctrylist) { #modify weights by country if there are repeated individuals
-  # This gets a dataframe with 
+# This gets a dataframe with 
 #  duplicates <- ddply(subset(df, iso==ctry),.(ind_id),nrow) #subset to country & count the number of duplicates for this country
 #  if(length(unique(duplicates$V1))>1){ 
 #    print(paste(ctry, "has repeated persons"))
 #    duplicates$iso <- ctry #add country
- #   df <- left_join(df, duplicates, by = c("iso", "ind_id")) #merge duplicates back into df
+#   df <- left_join(df, duplicates, by = c("iso", "ind_id")) #merge duplicates back into df
 #    df$weight[df$iso==ctry] <- df$weight[df$iso==ctry]/df$V1[df$iso==ctry] #divide person weights by number of repeated instances (i.e. V1)
 #    df <- subset(df, select = -c(V1)) #drop V1
 #  }
@@ -123,4 +123,3 @@ output_file <- glue(
   '{ROOT_INT_DATA}/temp/',
   'all_time_use_pop_merged_reweighted.dta')
 write.dta(df, output_file)
-

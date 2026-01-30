@@ -1,0 +1,438 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/uninteracted_reg_comlohi_high.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}20 Jan 2026, 11:26:38
+
+{com}. 
+. * select dataset and output folder
+
+. gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841.dta"
+
+. loc reg_folder  "${c -(}DIR_STER{c )-}/uninteracted_reg_comlohi"
+
+. 
+. * other selections
+
+. gl test_code "no"
+
+. gl reg_list by_risk common
+
+. loc fe fe_adm0_wk
+
+. 
+. * ---------- CHOOSE WHICH RISK DEFINITION TO USE ----------
+
+. * options: "high_risk" or "high_risk_old"
+
+. global risk_def "high_risk" 
+
+. * ---------------------------------------------------------
+
+. 
+. ********************
+
+. *  RUN REGRESSION
+
+. ********************
+
+. 
+. * cycle through each of the two regressions
+
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+.     di "`reg_list'"
+{txt}  3{com}. 
+.     use $dataset, clear
+{txt}  4{com}. 
+.     * if test code mode is on, take a random sample
+.     if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  5{com}.         sample 0.1
+{txt}  6{com}.     {c )-}
+{txt}  7{com}. 
+.     * only include non-zero observations
+.     keep if mins_worked > 0
+{txt}  8{com}. 
+.     * get rid of some awkward naming
+.     rename *27_28_41_* **
+{txt}  9{com}. 
+.     * ---------- DEFINE risk_level FROM CHOSEN SOURCE ----------
+.     cap drop risk_level 
+{txt} 10{com}.     gen risk_level = .   
+{txt} 11{com}.     replace risk_level = high_risk     if "${c -(}risk_def{c )-}"=="high_risk"
+{txt} 12{com}.     replace risk_level = high_risk_old if "${c -(}risk_def{c )-}"=="high_risk_old"
+{txt} 13{com}.     replace risk_level = sector if "${c -(}risk_def{c )-}"=="sector"
+{txt} 14{com}.     replace risk_level = occup_code if "${c -(}risk_def{c )-}"=="occup_code"
+{txt} 15{com}. 
+.     * generate regression variables
+.     gen_controls_and_FEs
+{txt} 16{com}.     gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 17{com}. 
+.     * differentiate treatment if reg is by risk
+.     if "`reg'" == "by_risk" loc reg_treatment (${c -(}vars_T_splines{c )-})##i.risk_level 
+{txt} 18{com}.     else if "`reg'" == "common" loc reg_treatment (${c -(}vars_T_splines{c )-})
+{txt} 19{com}.     else di in red "bad reg specification -> pick 'common' or 'by_risk'"
+{txt} 20{com}.     di "`reg_treatment'"
+{txt} 21{com}. 
+.     * both regressions have interacted controls
+.     local reg_control (${c -(}usual_controls{c )-})##i.risk_level    
+{txt} 22{com}.     di "`reg_control'"
+{txt} 23{com}.     
+.     * interact each fixed effect with the risk binary
+.     local reg_fe ""                    
+{txt} 24{com}.     foreach f in $`fe' {c -(}
+{txt} 25{com}.         local reg_fe `reg_fe' `f'#risk_level         
+{txt} 26{com}.     {c )-}
+{txt} 27{com}. * -------------------------------------------------------------------------------------------------------
+.     * set the ster file name and the notes to be included
+.     local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025_272841_appro.ster"
+{txt} 28{com}.     local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
+{txt} 29{com}.     
+. * -------------------------------------------------------------------------------------------------------
+.     * set the regression weight (pop_adj for common, risk_adj for by-risk)
+.     if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
+{txt} 30{com}.     else loc weight "risk_adj_sample_wgt"
+{txt} 31{com}. 
+.     di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 32{com}.     reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 33{com}. 
+.     * count regression N by risk
+.     gen included = e(sample)
+{txt} 34{com}.     count if included == 1 & risk_level == 1       
+{txt} 35{com}.     estadd scalar high_N = `r(N)'
+{txt} 36{com}.     count if included == 1 & risk_level == 0      
+{txt} 37{com}.     estadd scalar low_N = `r(N)'
+{txt} 38{com}. 
+.     estimates notes: "`spec_desc'"
+{txt} 39{com}.     estimates save "`ster_name'", replace
+{txt} 40{com}. 
+.     di "COMPLETED: `reg' regression."
+{txt} 41{com}. 
+. {c )-}
+
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}{txt}(6,595,853 missing values generated)
+(6,595,853 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+{res}{txt}(dropped 41 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 52 iterations)
+{res}{txt}note: {res}1bn.risk_level{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res} 6,595,771
+{txt}Absorbing 4 HDFE groups{col 51}F({res}  64{txt},{res}   7419{txt}){col 67}= {res}    204.06
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.5656
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5653
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0644
+{txt}{col 1}Number of clusters ({res}cluster_adm1yymm{txt}) {col 30}= {res}     7,420{txt}{col 51}Root MSE{col 67}= {res}  563.3843
+
+{txt}{ralign 99:(Std. Err. adjusted for {res:7,420} clusters in cluster_adm1yymm)}
+{hline 34}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 35}{c |}{col 47}    Robust
+{col 1}                      mins_worked{col 35}{c |}      Coef.{col 47}   Std. Err.{col 59}      t{col 67}   P>|t|{col 75}     [95% Con{col 88}f. Interval]
+{hline 34}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 16}tmax_rcspl_3kn_t0 {c |}{col 35}{res}{space 2}  .388718{col 47}{space 2} .4633711{col 58}{space 1}    0.84{col 67}{space 3}0.402{col 75}{space 4}-.5196209{col 88}{space 3} 1.297057
+{txt}{space 13}tmax_rcspl_3kn_t0_v1 {c |}{col 35}{res}{space 2} 1.071851{col 47}{space 2} .4875941{col 58}{space 1}    2.20{col 67}{space 3}0.028{col 75}{space 4} .1160279{col 88}{space 3} 2.027674
+{txt}{space 13}tmax_rcspl_3kn_t0_v2 {c |}{col 35}{res}{space 2}-1.089911{col 47}{space 2} .4596085{col 58}{space 1}   -2.37{col 67}{space 3}0.018{col 75}{space 4}-1.990874{col 88}{space 3}-.1889477
+{txt}{space 13}tmax_rcspl_3kn_t0_v3 {c |}{col 35}{res}{space 2} .4140104{col 47}{space 2} .4745085{col 58}{space 1}    0.87{col 67}{space 3}0.383{col 75}{space 4}-.5161609{col 88}{space 3} 1.344182
+{txt}{space 13}tmax_rcspl_3kn_t0_v4 {c |}{col 35}{res}{space 2}-.2836959{col 47}{space 2} .4877486{col 58}{space 1}   -0.58{col 67}{space 3}0.561{col 75}{space 4}-1.239822{col 88}{space 3} .6724299
+{txt}{space 13}tmax_rcspl_3kn_t0_v5 {c |}{col 35}{res}{space 2} -.087489{col 47}{space 2} .4615154{col 58}{space 1}   -0.19{col 67}{space 3}0.850{col 75}{space 4}-.9921901{col 88}{space 3} .8172121
+{txt}{space 13}tmax_rcspl_3kn_t0_v6 {c |}{col 35}{res}{space 2}-.3560532{col 47}{space 2} .4733262{col 58}{space 1}   -0.75{col 67}{space 3}0.452{col 75}{space 4}-1.283907{col 88}{space 3} .5718005
+{txt}{space 16}tmax_rcspl_3kn_t1 {c |}{col 35}{res}{space 2}-.0301034{col 47}{space 2} .0477266{col 58}{space 1}   -0.63{col 67}{space 3}0.528{col 75}{space 4}-.1236611{col 88}{space 3} .0634542
+{txt}{space 13}tmax_rcspl_3kn_t1_v1 {c |}{col 35}{res}{space 2}-.1000097{col 47}{space 2} .0474782{col 58}{space 1}   -2.11{col 67}{space 3}0.035{col 75}{space 4}-.1930804{col 88}{space 3} -.006939
+{txt}{space 13}tmax_rcspl_3kn_t1_v2 {c |}{col 35}{res}{space 2} .0174405{col 47}{space 2} .0449713{col 58}{space 1}    0.39{col 67}{space 3}0.698{col 75}{space 4}-.0707159{col 88}{space 3}  .105597
+{txt}{space 13}tmax_rcspl_3kn_t1_v3 {c |}{col 35}{res}{space 2} -.041568{col 47}{space 2} .0408263{col 58}{space 1}   -1.02{col 67}{space 3}0.309{col 75}{space 4}-.1215992{col 88}{space 3} .0384633
+{txt}{space 13}tmax_rcspl_3kn_t1_v4 {c |}{col 35}{res}{space 2}-.0045374{col 47}{space 2} .0535997{col 58}{space 1}   -0.08{col 67}{space 3}0.933{col 75}{space 4}-.1096081{col 88}{space 3} .1005332
+{txt}{space 13}tmax_rcspl_3kn_t1_v5 {c |}{col 35}{res}{space 2} .0817957{col 47}{space 2} .0443891{col 58}{space 1}    1.84{col 67}{space 3}0.065{col 75}{space 4}-.0052196{col 88}{space 3}  .168811
+{txt}{space 13}tmax_rcspl_3kn_t1_v6 {c |}{col 35}{res}{space 2} .0584429{col 47}{space 2} .0499289{col 58}{space 1}    1.17{col 67}{space 3}0.242{col 75}{space 4}-.0394318{col 88}{space 3} .1563176
+{txt}{space 21}1.risk_level {c |}{col 35}{res}{space 2}        0{col 47}{txt}  (omitted)
+{space 33} {c |}
+{space 3}risk_level#c.tmax_rcspl_3kn_t0 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-3.378437{col 47}{space 2} 2.263019{col 58}{space 1}   -1.49{col 67}{space 3}0.136{col 75}{space 4}-7.814596{col 88}{space 3} 1.057723
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 1.774365{col 47}{space 2} 2.463657{col 58}{space 1}    0.72{col 67}{space 3}0.471{col 75}{space 4}-3.055101{col 88}{space 3} 6.603831
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .9051016{col 47}{space 2} 2.618932{col 58}{space 1}    0.35{col 67}{space 3}0.730{col 75}{space 4}-4.228749{col 88}{space 3} 6.038952
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v3 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 1.234021{col 47}{space 2} 2.201758{col 58}{space 1}    0.56{col 67}{space 3}0.575{col 75}{space 4} -3.08205{col 88}{space 3} 5.550092
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v4 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 3.837085{col 47}{space 2} 2.663491{col 58}{space 1}    1.44{col 67}{space 3}0.150{col 75}{space 4}-1.384113{col 88}{space 3} 9.058282
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v5 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-1.736842{col 47}{space 2} 3.076112{col 58}{space 1}   -0.56{col 67}{space 3}0.572{col 75}{space 4}-7.766894{col 88}{space 3}  4.29321
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t0_v6 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 2.023717{col 47}{space 2}  3.34461{col 58}{space 1}    0.61{col 67}{space 3}0.545{col 75}{space 4}-4.532668{col 88}{space 3} 8.580102
+{txt}{space 33} {c |}
+{space 3}risk_level#c.tmax_rcspl_3kn_t1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}  .080247{col 47}{space 2} .0912482{col 58}{space 1}    0.88{col 67}{space 3}0.379{col 75}{space 4}-.0986254{col 88}{space 3} .2591194
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .0287128{col 47}{space 2} .0906538{col 58}{space 1}    0.32{col 67}{space 3}0.751{col 75}{space 4}-.1489944{col 88}{space 3}   .20642
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0434317{col 47}{space 2} .0954627{col 58}{space 1}   -0.45{col 67}{space 3}0.649{col 75}{space 4}-.2305657{col 88}{space 3} .1437022
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v3 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0500507{col 47}{space 2} .0942392{col 58}{space 1}   -0.53{col 67}{space 3}0.595{col 75}{space 4}-.2347862{col 88}{space 3} .1346849
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v4 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.1255163{col 47}{space 2} .1117962{col 58}{space 1}   -1.12{col 67}{space 3}0.262{col 75}{space 4}-.3446686{col 88}{space 3}  .093636
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v5 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .0024658{col 47}{space 2} .1151152{col 58}{space 1}    0.02{col 67}{space 3}0.983{col 75}{space 4}-.2231926{col 88}{space 3} .2281243
+{txt}{space 33} {c |}
+risk_level#c.tmax_rcspl_3kn_t1_v6 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.1477511{col 47}{space 2} .1203273{col 58}{space 1}   -1.23{col 67}{space 3}0.220{col 75}{space 4}-.3836268{col 88}{space 3} .0881247
+{txt}{space 33} {c |}
+{space 30}age {c |}{col 35}{res}{space 2} 44.93658{col 47}{space 2}  1.13146{col 58}{space 1}   39.72{col 67}{space 3}0.000{col 75}{space 4} 42.71859{col 88}{space 3} 47.15456
+{txt}{space 29}age2 {c |}{col 35}{res}{space 2}-.5587434{col 47}{space 2} .0137738{col 58}{space 1}  -40.57{col 67}{space 3}0.000{col 75}{space 4}-.5857439{col 88}{space 3}-.5317429
+{txt}{space 29}male {c |}{col 35}{res}{space 2} 394.5181{col 47}{space 2} 4.964766{col 58}{space 1}   79.46{col 67}{space 3}0.000{col 75}{space 4} 384.7858{col 88}{space 3} 404.2505
+{txt}{space 27}hhsize {c |}{col 35}{res}{space 2}-.9551713{col 47}{space 2}    .9547{col 58}{space 1}   -1.00{col 67}{space 3}0.317{col 75}{space 4}-2.826654{col 88}{space 3} .9163116
+{txt}{space 24}precip_p1 {c |}{col 35}{res}{space 2} .2999785{col 47}{space 2} .1611212{col 58}{space 1}    1.86{col 67}{space 3}0.063{col 75}{space 4}-.0158648{col 88}{space 3} .6158218
+{txt}{space 21}precip_p1_v1 {c |}{col 35}{res}{space 2}-.0007128{col 47}{space 2} .1462099{col 58}{space 1}   -0.00{col 67}{space 3}0.996{col 75}{space 4}-.2873257{col 88}{space 3}    .2859
+{txt}{space 21}precip_p1_v2 {c |}{col 35}{res}{space 2}-.2507591{col 47}{space 2} .1573758{col 58}{space 1}   -1.59{col 67}{space 3}0.111{col 75}{space 4}-.5592603{col 88}{space 3} .0577422
+{txt}{space 21}precip_p1_v3 {c |}{col 35}{res}{space 2}  .129172{col 47}{space 2} .1640293{col 58}{space 1}    0.79{col 67}{space 3}0.431{col 75}{space 4} -.192372{col 88}{space 3}  .450716
+{txt}{space 21}precip_p1_v4 {c |}{col 35}{res}{space 2} .0166097{col 47}{space 2} .1543244{col 58}{space 1}    0.11{col 67}{space 3}0.914{col 75}{space 4}  -.28591{col 88}{space 3} .3191293
+{txt}{space 21}precip_p1_v5 {c |}{col 35}{res}{space 2}-.0811316{col 47}{space 2} .1474888{col 58}{space 1}   -0.55{col 67}{space 3}0.582{col 75}{space 4}-.3702516{col 88}{space 3} .2079883
+{txt}{space 21}precip_p1_v6 {c |}{col 35}{res}{space 2}-.0244621{col 47}{space 2} .1584503{col 58}{space 1}   -0.15{col 67}{space 3}0.877{col 75}{space 4}-.3350697{col 88}{space 3} .2861456
+{txt}{space 24}precip_p2 {c |}{col 35}{res}{space 2}-.0004078{col 47}{space 2} .0010522{col 58}{space 1}   -0.39{col 67}{space 3}0.698{col 75}{space 4}-.0024704{col 88}{space 3} .0016547
+{txt}{space 21}precip_p2_v1 {c |}{col 35}{res}{space 2}-.0003233{col 47}{space 2} .0005928{col 58}{space 1}   -0.55{col 67}{space 3}0.586{col 75}{space 4}-.0014854{col 88}{space 3} .0008388
+{txt}{space 21}precip_p2_v2 {c |}{col 35}{res}{space 2} .0001646{col 47}{space 2}  .001138{col 58}{space 1}    0.14{col 67}{space 3}0.885{col 75}{space 4}-.0020663{col 88}{space 3} .0023955
+{txt}{space 21}precip_p2_v3 {c |}{col 35}{res}{space 2}-.0002667{col 47}{space 2} .0008982{col 58}{space 1}   -0.30{col 67}{space 3}0.767{col 75}{space 4}-.0020274{col 88}{space 3}  .001494
+{txt}{space 21}precip_p2_v4 {c |}{col 35}{res}{space 2}-.0009167{col 47}{space 2} .0007617{col 58}{space 1}   -1.20{col 67}{space 3}0.229{col 75}{space 4}-.0024098{col 88}{space 3} .0005764
+{txt}{space 21}precip_p2_v5 {c |}{col 35}{res}{space 2}-.0003381{col 47}{space 2} .0006876{col 58}{space 1}   -0.49{col 67}{space 3}0.623{col 75}{space 4} -.001686{col 88}{space 3} .0010099
+{txt}{space 21}precip_p2_v6 {c |}{col 35}{res}{space 2}-.0005687{col 47}{space 2} .0010178{col 58}{space 1}   -0.56{col 67}{space 3}0.576{col 75}{space 4} -.002564{col 88}{space 3} .0014266
+{txt}{space 33} {c |}
+{space 17}risk_level#c.age {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 34.43275{col 47}{space 2} 4.326162{col 58}{space 1}    7.96{col 67}{space 3}0.000{col 75}{space 4} 25.95225{col 88}{space 3} 42.91326
+{txt}{space 33} {c |}
+{space 16}risk_level#c.age2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.3736805{col 47}{space 2} .0558683{col 58}{space 1}   -6.69{col 67}{space 3}0.000{col 75}{space 4}-.4831983{col 88}{space 3}-.2641628
+{txt}{space 33} {c |}
+{space 16}risk_level#c.male {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} 1039.292{col 47}{space 2} 41.03245{col 58}{space 1}   25.33{col 67}{space 3}0.000{col 75}{space 4} 958.8571{col 88}{space 3} 1119.728
+{txt}{space 33} {c |}
+{space 14}risk_level#c.hhsize {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} -7.91834{col 47}{space 2} 5.961669{col 58}{space 1}   -1.33{col 67}{space 3}0.184{col 75}{space 4} -19.6049{col 88}{space 3} 3.768222
+{txt}{space 33} {c |}
+{space 11}risk_level#c.precip_p1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.1428522{col 47}{space 2} .2978252{col 58}{space 1}   -0.48{col 67}{space 3}0.631{col 75}{space 4}-.7266742{col 88}{space 3} .4409697
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .1317091{col 47}{space 2} .2330027{col 58}{space 1}    0.57{col 67}{space 3}0.572{col 75}{space 4}-.3250422{col 88}{space 3} .5884605
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .1870797{col 47}{space 2} .3251638{col 58}{space 1}    0.58{col 67}{space 3}0.565{col 75}{space 4}-.4503337{col 88}{space 3} .8244931
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v3 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.1708304{col 47}{space 2} .3212987{col 58}{space 1}   -0.53{col 67}{space 3}0.595{col 75}{space 4}-.8006671{col 88}{space 3} .4590063
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v4 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.2111269{col 47}{space 2} .2265775{col 58}{space 1}   -0.93{col 67}{space 3}0.351{col 75}{space 4} -.655283{col 88}{space 3} .2330293
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v5 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .0365931{col 47}{space 2} .2580833{col 58}{space 1}    0.14{col 67}{space 3}0.887{col 75}{space 4}-.4693235{col 88}{space 3} .5425096
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p1_v6 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .5142026{col 47}{space 2} .3184177{col 58}{space 1}    1.61{col 67}{space 3}0.106{col 75}{space 4}-.1099864{col 88}{space 3} 1.138392
+{txt}{space 33} {c |}
+{space 11}risk_level#c.precip_p2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} -.001395{col 47}{space 2} .0013332{col 58}{space 1}   -1.05{col 67}{space 3}0.295{col 75}{space 4}-.0040084{col 88}{space 3} .0012184
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v1 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0004889{col 47}{space 2} .0010103{col 58}{space 1}   -0.48{col 67}{space 3}0.628{col 75}{space 4}-.0024694{col 88}{space 3} .0014916
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v2 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0003867{col 47}{space 2} .0017528{col 58}{space 1}   -0.22{col 67}{space 3}0.825{col 75}{space 4}-.0038228{col 88}{space 3} .0030493
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v3 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .0010077{col 47}{space 2} .0013883{col 58}{space 1}    0.73{col 67}{space 3}0.468{col 75}{space 4}-.0017138{col 88}{space 3} .0037292
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v4 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2} .0011533{col 47}{space 2} .0009096{col 58}{space 1}    1.27{col 67}{space 3}0.205{col 75}{space 4}-.0006299{col 88}{space 3} .0029364
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v5 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0001655{col 47}{space 2} .0010779{col 58}{space 1}   -0.15{col 67}{space 3}0.878{col 75}{space 4}-.0022785{col 88}{space 3} .0019476
+{txt}{space 33} {c |}
+{space 8}risk_level#c.precip_p2_v6 {c |}
+{space 31}1  {c |}{col 35}{res}{space 2}-.0021991{col 47}{space 2} .0018277{col 58}{space 1}   -1.20{col 67}{space 3}0.229{col 75}{space 4}-.0057819{col 88}{space 3} .0013836
+{txt}{space 33} {c |}
+{space 28}_cons {c |}{col 35}{res}{space 2} 948.2637{col 47}{space 2} 24.47895{col 58}{space 1}   38.74{col 67}{space 3}0.000{col 75}{space 4}  900.278{col 88}{space 3} 996.2494
+{txt}{hline 34}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 32}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text}                    Absorbed FE{col 33}{c |} Categories{col 46} - Redundant{col 58}  = Num. Coefs{col 73}{c |}
+{res}{col 1}{text}{hline 32}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text}             adm3_id#risk_level{col 33}{c |}{space 1}     3153{col 46}{space 1}        0{col 58}{result}{space 1}     3153{col 72}{text} {col 73}{c |}
+{res}{col 1}{text}            dow_week#risk_level{col 33}{c |}{space 1}       16{col 46}{space 1}        4{col 58}{result}{space 1}       12{col 72}{text} {col 73}{c |}
+{res}{col 1}{text}        adm0_id#year#risk_level{col 33}{c |}{space 1}       66{col 46}{space 1}       14{col 58}{result}{space 1}       52{col 72}{text}?{col 73}{c |}
+{res}{col 1}{text}     adm0_id#week_fe#risk_level{col 33}{c |}{space 1}      684{col 46}{space 1}       17{col 58}{result}{space 1}      667{col 72}{text}?{col 73}{c |}
+{res}{col 1}{text}{hline 32}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+? = number of redundant parameters may be higher
+{res}  380,226
+
+{txt}added scalar:
+             e(high_N) =  {res}380226
+  6,215,545
+
+{txt}added scalar:
+              e(low_N) =  {res}6215545
+{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/ster/uninteracted_reg_comlohi/uninteracted_reg_by_risk_2025_272841_appro.ster saved
+COMPLETED: by_risk regression.
+
+(Written by R.              )
+(0 observations deleted)
+{res}{txt}(6,595,853 missing values generated)
+(6,595,853 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6) (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = pop_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+{res}{txt}(dropped 41 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 59 iterations)
+{res}{txt}note: {res}1bn.risk_level{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res} 6,595,771
+{txt}Absorbing 4 HDFE groups{col 51}F({res}  50{txt},{res}   7419{txt}){col 67}= {res}    194.84
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.5780
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5777
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.1414
+{txt}{col 1}Number of clusters ({res}cluster_adm1yymm{txt}) {col 30}= {res}     7,420{txt}{col 51}Root MSE{col 67}= {res}  509.7527
+
+{txt}{ralign 91:(Std. Err. adjusted for {res:7,420} clusters in cluster_adm1yymm)}
+{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}{col 39}    Robust
+{col 1}              mins_worked{col 27}{c |}      Coef.{col 39}   Std. Err.{col 51}      t{col 59}   P>|t|{col 67}     [95% Con{col 80}f. Interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}tmax_rcspl_3kn_t0 {c |}{col 27}{res}{space 2} .2390923{col 39}{space 2} .4675061{col 50}{space 1}    0.51{col 59}{space 3}0.609{col 67}{space 4}-.6773523{col 80}{space 3} 1.155537
+{txt}{space 5}tmax_rcspl_3kn_t0_v1 {c |}{col 27}{res}{space 2} 1.030391{col 39}{space 2} .4963397{col 50}{space 1}    2.08{col 59}{space 3}0.038{col 67}{space 4} .0574245{col 80}{space 3} 2.003358
+{txt}{space 5}tmax_rcspl_3kn_t0_v2 {c |}{col 27}{res}{space 2}-.8719152{col 39}{space 2} .4746676{col 50}{space 1}   -1.84{col 59}{space 3}0.066{col 67}{space 4}-1.802398{col 80}{space 3}  .058568
+{txt}{space 5}tmax_rcspl_3kn_t0_v3 {c |}{col 27}{res}{space 2} .2588067{col 39}{space 2} .4889189{col 50}{space 1}    0.53{col 59}{space 3}0.597{col 67}{space 4}-.6996131{col 80}{space 3} 1.217227
+{txt}{space 5}tmax_rcspl_3kn_t0_v4 {c |}{col 27}{res}{space 2} .2734348{col 39}{space 2} .5330219{col 50}{space 1}    0.51{col 59}{space 3}0.608{col 67}{space 4}-.7714394{col 80}{space 3} 1.318309
+{txt}{space 5}tmax_rcspl_3kn_t0_v5 {c |}{col 27}{res}{space 2}-.3100548{col 39}{space 2}  .478312{col 50}{space 1}   -0.65{col 59}{space 3}0.517{col 67}{space 4}-1.247682{col 80}{space 3} .6275724
+{txt}{space 5}tmax_rcspl_3kn_t0_v6 {c |}{col 27}{res}{space 2}-.2168291{col 39}{space 2} .4989024{col 50}{space 1}   -0.43{col 59}{space 3}0.664{col 67}{space 4}-1.194819{col 80}{space 3} .7611612
+{txt}{space 8}tmax_rcspl_3kn_t1 {c |}{col 27}{res}{space 2}-.0433186{col 39}{space 2} .0394184{col 50}{space 1}   -1.10{col 59}{space 3}0.272{col 67}{space 4}-.1205898{col 80}{space 3} .0339526
+{txt}{space 5}tmax_rcspl_3kn_t1_v1 {c |}{col 27}{res}{space 2}-.0494249{col 39}{space 2} .0387127{col 50}{space 1}   -1.28{col 59}{space 3}0.202{col 67}{space 4}-.1253127{col 80}{space 3}  .026463
+{txt}{space 5}tmax_rcspl_3kn_t1_v2 {c |}{col 27}{res}{space 2} .0148871{col 39}{space 2} .0365108{col 50}{space 1}    0.41{col 59}{space 3}0.683{col 67}{space 4}-.0566844{col 80}{space 3} .0864587
+{txt}{space 5}tmax_rcspl_3kn_t1_v3 {c |}{col 27}{res}{space 2}-.0395953{col 39}{space 2} .0265064{col 50}{space 1}   -1.49{col 59}{space 3}0.135{col 67}{space 4}-.0915555{col 80}{space 3} .0123649
+{txt}{space 5}tmax_rcspl_3kn_t1_v4 {c |}{col 27}{res}{space 2}  -.02277{col 39}{space 2} .0439625{col 50}{space 1}   -0.52{col 59}{space 3}0.605{col 67}{space 4}-.1089491{col 80}{space 3}  .063409
+{txt}{space 5}tmax_rcspl_3kn_t1_v5 {c |}{col 27}{res}{space 2} .0478666{col 39}{space 2} .0386966{col 50}{space 1}    1.24{col 59}{space 3}0.216{col 67}{space 4}-.0279897{col 80}{space 3} .1237229
+{txt}{space 5}tmax_rcspl_3kn_t1_v6 {c |}{col 27}{res}{space 2} .0134056{col 39}{space 2} .0387615{col 50}{space 1}    0.35{col 59}{space 3}0.729{col 67}{space 4}-.0625779{col 80}{space 3} .0893891
+{txt}{space 22}age {c |}{col 27}{res}{space 2} 43.98357{col 39}{space 2} 2.119655{col 50}{space 1}   20.75{col 59}{space 3}0.000{col 67}{space 4} 39.82845{col 80}{space 3}  48.1387
+{txt}{space 21}age2 {c |}{col 27}{res}{space 2}-.5490417{col 39}{space 2} .0238282{col 50}{space 1}  -23.04{col 59}{space 3}0.000{col 67}{space 4}-.5957517{col 80}{space 3}-.5023317
+{txt}{space 21}male {c |}{col 27}{res}{space 2} 422.3983{col 39}{space 2} 7.488261{col 50}{space 1}   56.41{col 59}{space 3}0.000{col 67}{space 4} 407.7192{col 80}{space 3} 437.0774
+{txt}{space 19}hhsize {c |}{col 27}{res}{space 2} .6619022{col 39}{space 2} 1.274009{col 50}{space 1}    0.52{col 59}{space 3}0.603{col 67}{space 4}-1.835517{col 80}{space 3} 3.159321
+{txt}{space 16}precip_p1 {c |}{col 27}{res}{space 2}   .25417{col 39}{space 2} .1580398{col 50}{space 1}    1.61{col 59}{space 3}0.108{col 67}{space 4}-.0556328{col 80}{space 3} .5639729
+{txt}{space 13}precip_p1_v1 {c |}{col 27}{res}{space 2} .0293306{col 39}{space 2} .1471752{col 50}{space 1}    0.20{col 59}{space 3}0.842{col 67}{space 4}-.2591745{col 80}{space 3} .3178357
+{txt}{space 13}precip_p1_v2 {c |}{col 27}{res}{space 2}-.1604624{col 39}{space 2} .1779053{col 50}{space 1}   -0.90{col 59}{space 3}0.367{col 67}{space 4}-.5092074{col 80}{space 3} .1882825
+{txt}{space 13}precip_p1_v3 {c |}{col 27}{res}{space 2}-.0556391{col 39}{space 2} .1681997{col 50}{space 1}   -0.33{col 59}{space 3}0.741{col 67}{space 4}-.3853583{col 80}{space 3} .2740801
+{txt}{space 13}precip_p1_v4 {c |}{col 27}{res}{space 2} .1350569{col 39}{space 2} .1667929{col 50}{space 1}    0.81{col 59}{space 3}0.418{col 67}{space 4}-.1919046{col 80}{space 3} .4620184
+{txt}{space 13}precip_p1_v5 {c |}{col 27}{res}{space 2}  .023127{col 39}{space 2} .1495487{col 50}{space 1}    0.15{col 59}{space 3}0.877{col 67}{space 4} -.270031{col 80}{space 3} .3162849
+{txt}{space 13}precip_p1_v6 {c |}{col 27}{res}{space 2}-.0547087{col 39}{space 2} .1500877{col 50}{space 1}   -0.36{col 59}{space 3}0.715{col 67}{space 4}-.3489231{col 80}{space 3} .2395058
+{txt}{space 16}precip_p2 {c |}{col 27}{res}{space 2} -.000689{col 39}{space 2} .0009049{col 50}{space 1}   -0.76{col 59}{space 3}0.446{col 67}{space 4}-.0024627{col 80}{space 3} .0010848
+{txt}{space 13}precip_p2_v1 {c |}{col 27}{res}{space 2}-.0005147{col 39}{space 2} .0004786{col 50}{space 1}   -1.08{col 59}{space 3}0.282{col 67}{space 4}-.0014529{col 80}{space 3} .0004235
+{txt}{space 13}precip_p2_v2 {c |}{col 27}{res}{space 2}-.0002953{col 39}{space 2} .0011951{col 50}{space 1}   -0.25{col 59}{space 3}0.805{col 67}{space 4}-.0026379{col 80}{space 3} .0020473
+{txt}{space 13}precip_p2_v3 {c |}{col 27}{res}{space 2} .0002566{col 39}{space 2} .0008812{col 50}{space 1}    0.29{col 59}{space 3}0.771{col 67}{space 4}-.0014708{col 80}{space 3}  .001984
+{txt}{space 13}precip_p2_v4 {c |}{col 27}{res}{space 2}-.0014713{col 39}{space 2} .0007526{col 50}{space 1}   -1.95{col 59}{space 3}0.051{col 67}{space 4}-.0029466{col 80}{space 3} 4.03e-06
+{txt}{space 13}precip_p2_v5 {c |}{col 27}{res}{space 2} -.000884{col 39}{space 2} .0006402{col 50}{space 1}   -1.38{col 59}{space 3}0.167{col 67}{space 4}-.0021391{col 80}{space 3} .0003711
+{txt}{space 13}precip_p2_v6 {c |}{col 27}{res}{space 2} -.000572{col 39}{space 2} .0009494{col 50}{space 1}   -0.60{col 59}{space 3}0.547{col 67}{space 4} -.002433{col 80}{space 3} .0012891
+{txt}{space 13}1.risk_level {c |}{col 27}{res}{space 2}        0{col 39}{txt}  (omitted)
+{space 25} {c |}
+{space 9}risk_level#c.age {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} 32.52084{col 39}{space 2} 4.173004{col 50}{space 1}    7.79{col 59}{space 3}0.000{col 67}{space 4} 24.34057{col 80}{space 3} 40.70111
+{txt}{space 25} {c |}
+{space 8}risk_level#c.age2 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.3473299{col 39}{space 2}   .05231{col 50}{space 1}   -6.64{col 59}{space 3}0.000{col 67}{space 4}-.4498723{col 80}{space 3}-.2447875
+{txt}{space 25} {c |}
+{space 8}risk_level#c.male {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} 963.0572{col 39}{space 2} 38.27936{col 50}{space 1}   25.16{col 59}{space 3}0.000{col 67}{space 4} 888.0188{col 80}{space 3} 1038.096
+{txt}{space 25} {c |}
+{space 6}risk_level#c.hhsize {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-6.417611{col 39}{space 2} 5.233404{col 50}{space 1}   -1.23{col 59}{space 3}0.220{col 67}{space 4}-16.67657{col 80}{space 3} 3.841346
+{txt}{space 25} {c |}
+{space 3}risk_level#c.precip_p1 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.0969439{col 39}{space 2} .2763255{col 50}{space 1}   -0.35{col 59}{space 3}0.726{col 67}{space 4}-.6386203{col 80}{space 3} .4447324
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v1 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .1302963{col 39}{space 2} .2335167{col 50}{space 1}    0.56{col 59}{space 3}0.577{col 67}{space 4}-.3274626{col 80}{space 3} .5880553
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v2 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .1094992{col 39}{space 2} .3233035{col 50}{space 1}    0.34{col 59}{space 3}0.735{col 67}{space 4}-.5242675{col 80}{space 3} .7432659
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v3 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}  .017649{col 39}{space 2} .2946254{col 50}{space 1}    0.06{col 59}{space 3}0.952{col 67}{space 4}-.5599003{col 80}{space 3} .5951983
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v4 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.3402572{col 39}{space 2} .2167897{col 50}{space 1}   -1.57{col 59}{space 3}0.117{col 67}{space 4}-.7652266{col 80}{space 3} .0847122
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v5 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.0799314{col 39}{space 2} .2597107{col 50}{space 1}   -0.31{col 59}{space 3}0.758{col 67}{space 4}-.5890382{col 80}{space 3} .4291753
+{txt}{space 25} {c |}
+risk_level#c.precip_p1_v6 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .5036318{col 39}{space 2} .2676874{col 50}{space 1}    1.88{col 59}{space 3}0.060{col 67}{space 4}-.0211115{col 80}{space 3} 1.028375
+{txt}{space 25} {c |}
+{space 3}risk_level#c.precip_p2 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.0011053{col 39}{space 2} .0011918{col 50}{space 1}   -0.93{col 59}{space 3}0.354{col 67}{space 4}-.0034416{col 80}{space 3} .0012311
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v1 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.0003368{col 39}{space 2} .0009548{col 50}{space 1}   -0.35{col 59}{space 3}0.724{col 67}{space 4}-.0022085{col 80}{space 3} .0015349
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v2 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .0000529{col 39}{space 2} .0017443{col 50}{space 1}    0.03{col 59}{space 3}0.976{col 67}{space 4}-.0033665{col 80}{space 3} .0034722
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v3 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .0004744{col 39}{space 2} .0012849{col 50}{space 1}    0.37{col 59}{space 3}0.712{col 67}{space 4}-.0020444{col 80}{space 3} .0029931
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v4 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2} .0017279{col 39}{space 2} .0008383{col 50}{space 1}    2.06{col 59}{space 3}0.039{col 67}{space 4} .0000846{col 80}{space 3} .0033713
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v5 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}  .000462{col 39}{space 2} .0010684{col 50}{space 1}    0.43{col 59}{space 3}0.665{col 67}{space 4}-.0016323{col 80}{space 3} .0025563
+{txt}{space 25} {c |}
+risk_level#c.precip_p2_v6 {c |}
+{space 23}1  {c |}{col 27}{res}{space 2}-.0019517{col 39}{space 2}  .001592{col 50}{space 1}   -1.23{col 59}{space 3}0.220{col 67}{space 4}-.0050725{col 80}{space 3} .0011691
+{txt}{space 25} {c |}
+{space 20}_cons {c |}{col 27}{res}{space 2} 594.8195{col 39}{space 2} 27.17711{col 50}{space 1}   21.89{col 59}{space 3}0.000{col 67}{space 4} 541.5447{col 80}{space 3} 648.0944
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 32}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text}                    Absorbed FE{col 33}{c |} Categories{col 46} - Redundant{col 58}  = Num. Coefs{col 73}{c |}
+{res}{col 1}{text}{hline 32}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text}             adm3_id#risk_level{col 33}{c |}{space 1}     3153{col 46}{space 1}        0{col 58}{result}{space 1}     3153{col 72}{text} {col 73}{c |}
+{res}{col 1}{text}            dow_week#risk_level{col 33}{c |}{space 1}       16{col 46}{space 1}        4{col 58}{result}{space 1}       12{col 72}{text} {col 73}{c |}
+{res}{col 1}{text}        adm0_id#year#risk_level{col 33}{c |}{space 1}       66{col 46}{space 1}       14{col 58}{result}{space 1}       52{col 72}{text}?{col 73}{c |}
+{res}{col 1}{text}     adm0_id#week_fe#risk_level{col 33}{c |}{space 1}      684{col 46}{space 1}       17{col 58}{result}{space 1}      667{col 72}{text}?{col 73}{c |}
+{res}{col 1}{text}{hline 32}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+? = number of redundant parameters may be higher
+{res}  380,226
+
+{txt}added scalar:
+             e(high_N) =  {res}380226
+  6,215,545
+
+{txt}added scalar:
+              e(low_N) =  {res}6215545
+{txt}file /project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/ster/uninteracted_reg_comlohi/uninteracted_reg_common_2025_272841_appro.ster saved
+COMPLETED: common regression.
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}

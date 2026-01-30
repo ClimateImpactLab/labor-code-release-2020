@@ -63,4 +63,3 @@ foreach dataset in $dataset_list {
 		export delim "`output_folder'/`dataset'_temp_dist.csv", replace
 
 }
-

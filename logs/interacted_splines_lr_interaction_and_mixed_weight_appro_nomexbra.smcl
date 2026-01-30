@@ -1,0 +1,284 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/interacted_splines_lr_interaction_and_mixed_weight_appro_nomexbra.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}30 Jan 2026, 10:54:47
+
+{com}. 
+. * Select dataset and output folder
+
+. gl dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_noMEXBRA.dta"
+
+. loc reg_folder "${c -(}DIR_OUTPUT{c )-}/interacted_reg_output/ster"
+
+. 
+. * Other selections
+
+. gl test_code "no"
+
+. gl reg_list 1_factor
+
+. gl the_factor climate 
+
+. *  if reg_list = 2_factor, the_factor will not enter the regression
+
+. *  if reg_list = 1_factor, set the_factor = income or climate
+
+. 
+. loc fe fe_adm0_wk
+
+. 
+. * Note on weights (slready coded):
+
+. * run regression 1_factor with mixed weights
+
+. * run regression 2_factor with rep_unit_year_sample_wgt
+
+. 
+. * ---------- CHOOSE WHICH RISK DEFINITION TO USE ----------
+
+. global risk_def "high_risk"
+
+. * --------------------------------------------------------
+
+. 
+. 
+. ********************
+
+. * RUN REGRESSION
+
+. ********************
+
+. 
+. * Cycle through each of the two regressions
+
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}.     local the_factor "${c -(}the_factor{c )-}"
+{txt}  3{com}.     di "`reg_list'"
+{txt}  4{com}.     
+.     use $dataset, clear
+{txt}  5{com}.     drop if iso == "GBR" & year == 1984 & month == 1 & day == 2
+{txt}  6{com}.     drop if inlist(iso, "MEX", "BRA")
+{txt}  7{com}.     * If test code mode is on, take a random sample
+.     if "${c -(}test_code{c )-}" == "yes" {c -(}
+{txt}  8{com}.         sample 0.1
+{txt}  9{com}.     {c )-}
+{txt} 10{com}.     
+.     * Only include non-zero observations
+.     keep if mins_worked > 0
+{txt} 11{com}.     
+.     * Get rid of some awkward naming
+.     rename *27_28_41_* **
+{txt} 12{com}.     
+.     * Generate regression variables
+.     gen_controls_and_FEs
+{txt} 13{com}.     gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 14{com}.     
+.     * ---------- DEFINE risk_level FROM CHOSEN SOURCE ----------
+.     cap drop risk_level
+{txt} 15{com}.     gen risk_level = .
+{txt} 16{com}.     replace risk_level = high_risk_old if "${c -(}risk_def{c )-}" == "high_risk_old"
+{txt} 17{com}.     replace risk_level = high_risk if "${c -(}risk_def{c )-}" == "high_risk"
+{txt} 18{com}.     replace risk_level = sector if "${c -(}risk_def{c )-}" == "sector"
+{txt} 19{com}.     replace risk_level = occup_code if "${c -(}risk_def{c )-}" == "occup_code"
+{txt} 20{com}.     * ----------------------------------------------------------
+.     
+.     * Generate variables for the pooled regression to get the correct coeffs for LR group
+.     gen low_risk = 1 - risk_level
+{txt} 21{com}.     
+.     * Define treatment variables based on model type
+.     if "`reg'" == "1_factor" {c -(}
+{txt} 22{com}. if "${c -(}the_factor{c )-}" == "income" {c -(}
+{txt} 23{com}. * Low risk spline terms
+. gen tmax_rcspl_3kn_t0_lr = tmax_rcspl_3kn_t0 * low_risk
+{txt} 24{com}. gen tmax_rcspl_3kn_t0_lr_v1 = tmax_rcspl_3kn_t0_v1 * low_risk
+{txt} 25{com}. gen tmax_rcspl_3kn_t0_lr_v2 = tmax_rcspl_3kn_t0_v2 * low_risk
+{txt} 26{com}. gen tmax_rcspl_3kn_t0_lr_v3 = tmax_rcspl_3kn_t0_v3 * low_risk
+{txt} 27{com}. gen tmax_rcspl_3kn_t0_lr_v4 = tmax_rcspl_3kn_t0_v4 * low_risk
+{txt} 28{com}. gen tmax_rcspl_3kn_t0_lr_v5 = tmax_rcspl_3kn_t0_v5 * low_risk
+{txt} 29{com}. gen tmax_rcspl_3kn_t0_lr_v6 = tmax_rcspl_3kn_t0_v6 * low_risk
+{txt} 30{com}. 
+. gen tmax_rcspl_3kn_t1_lr = tmax_rcspl_3kn_t1 * low_risk
+{txt} 31{com}. gen tmax_rcspl_3kn_t1_lr_v1 = tmax_rcspl_3kn_t1_v1 * low_risk
+{txt} 32{com}. gen tmax_rcspl_3kn_t1_lr_v2 = tmax_rcspl_3kn_t1_v2 * low_risk
+{txt} 33{com}. gen tmax_rcspl_3kn_t1_lr_v3 = tmax_rcspl_3kn_t1_v3 * low_risk
+{txt} 34{com}. gen tmax_rcspl_3kn_t1_lr_v4 = tmax_rcspl_3kn_t1_v4 * low_risk
+{txt} 35{com}. gen tmax_rcspl_3kn_t1_lr_v5 = tmax_rcspl_3kn_t1_v5 * low_risk
+{txt} 36{com}. gen tmax_rcspl_3kn_t1_lr_v6 = tmax_rcspl_3kn_t1_v6 * low_risk
+{txt} 37{com}. 
+. * High risk spline terms
+. gen tmax_rcspl_3kn_t0_hr = tmax_rcspl_3kn_t0 * risk_level
+{txt} 38{com}. gen tmax_rcspl_3kn_t0_hr_v1 = tmax_rcspl_3kn_t0_v1 * risk_level
+{txt} 39{com}. gen tmax_rcspl_3kn_t0_hr_v2 = tmax_rcspl_3kn_t0_v2 * risk_level
+{txt} 40{com}. gen tmax_rcspl_3kn_t0_hr_v3 = tmax_rcspl_3kn_t0_v3 * risk_level
+{txt} 41{com}. gen tmax_rcspl_3kn_t0_hr_v4 = tmax_rcspl_3kn_t0_v4 * risk_level
+{txt} 42{com}. gen tmax_rcspl_3kn_t0_hr_v5 = tmax_rcspl_3kn_t0_v5 * risk_level
+{txt} 43{com}. gen tmax_rcspl_3kn_t0_hr_v6 = tmax_rcspl_3kn_t0_v6 * risk_level
+{txt} 44{com}. 
+. gen tmax_rcspl_3kn_t1_hr = tmax_rcspl_3kn_t1 * risk_level
+{txt} 45{com}. gen tmax_rcspl_3kn_t1_hr_v1 = tmax_rcspl_3kn_t1_v1 * risk_level
+{txt} 46{com}. gen tmax_rcspl_3kn_t1_hr_v2 = tmax_rcspl_3kn_t1_v2 * risk_level
+{txt} 47{com}. gen tmax_rcspl_3kn_t1_hr_v3 = tmax_rcspl_3kn_t1_v3 * risk_level
+{txt} 48{com}. gen tmax_rcspl_3kn_t1_hr_v4 = tmax_rcspl_3kn_t1_v4 * risk_level
+{txt} 49{com}. gen tmax_rcspl_3kn_t1_hr_v5 = tmax_rcspl_3kn_t1_v5 * risk_level
+{txt} 50{com}. gen tmax_rcspl_3kn_t1_hr_v6 = tmax_rcspl_3kn_t1_v6 * risk_level
+{txt} 51{com}. 
+. * High risk × GDP interaction terms
+. gen tmax_rcspl_3kn_t0_hr_g = tmax_rcspl_3kn_t0 * risk_level * log_gdp_pc_adm1
+{txt} 52{com}. gen tmax_rcspl_3kn_t0_hr_g_v1 = tmax_rcspl_3kn_t0_v1 * risk_level * log_gdp_pc_adm1
+{txt} 53{com}. gen tmax_rcspl_3kn_t0_hr_g_v2 = tmax_rcspl_3kn_t0_v2 * risk_level * log_gdp_pc_adm1
+{txt} 54{com}. gen tmax_rcspl_3kn_t0_hr_g_v3 = tmax_rcspl_3kn_t0_v3 * risk_level * log_gdp_pc_adm1
+{txt} 55{com}. gen tmax_rcspl_3kn_t0_hr_g_v4 = tmax_rcspl_3kn_t0_v4 * risk_level * log_gdp_pc_adm1
+{txt} 56{com}. gen tmax_rcspl_3kn_t0_hr_g_v5 = tmax_rcspl_3kn_t0_v5 * risk_level * log_gdp_pc_adm1
+{txt} 57{com}. gen tmax_rcspl_3kn_t0_hr_g_v6 = tmax_rcspl_3kn_t0_v6 * risk_level * log_gdp_pc_adm1
+{txt} 58{com}. 
+. gen tmax_rcspl_3kn_t1_hr_g = tmax_rcspl_3kn_t1 * risk_level * log_gdp_pc_adm1
+{txt} 59{com}. gen tmax_rcspl_3kn_t1_hr_g_v1 = tmax_rcspl_3kn_t1_v1 * risk_level * log_gdp_pc_adm1
+{txt} 60{com}. gen tmax_rcspl_3kn_t1_hr_g_v2 = tmax_rcspl_3kn_t1_v2 * risk_level * log_gdp_pc_adm1
+{txt} 61{com}. gen tmax_rcspl_3kn_t1_hr_g_v3 = tmax_rcspl_3kn_t1_v3 * risk_level * log_gdp_pc_adm1
+{txt} 62{com}. gen tmax_rcspl_3kn_t1_hr_g_v4 = tmax_rcspl_3kn_t1_v4 * risk_level * log_gdp_pc_adm1
+{txt} 63{com}. gen tmax_rcspl_3kn_t1_hr_g_v5 = tmax_rcspl_3kn_t1_v5 * risk_level * log_gdp_pc_adm1
+{txt} 64{com}. gen tmax_rcspl_3kn_t1_hr_g_v6 = tmax_rcspl_3kn_t1_v6 * risk_level * log_gdp_pc_adm1
+{txt} 65{com}. {c )-}
+{txt} 66{com}. 
+. else if "`the_factor'" == "climate" {c -(}
+{txt} 67{com}. gen tmax_rcspl_3kn_t0_lr    = tmax_rcspl_3kn_t0    * low_risk
+{txt} 68{com}. gen tmax_rcspl_3kn_t0_lr_v1 = tmax_rcspl_3kn_t0_v1 * low_risk
+{txt} 69{com}. gen tmax_rcspl_3kn_t0_lr_v2 = tmax_rcspl_3kn_t0_v2 * low_risk
+{txt} 70{com}. gen tmax_rcspl_3kn_t0_lr_v3 = tmax_rcspl_3kn_t0_v3 * low_risk
+{txt} 71{com}. gen tmax_rcspl_3kn_t0_lr_v4 = tmax_rcspl_3kn_t0_v4 * low_risk
+{txt} 72{com}. gen tmax_rcspl_3kn_t0_lr_v5 = tmax_rcspl_3kn_t0_v5 * low_risk
+{txt} 73{com}. gen tmax_rcspl_3kn_t0_lr_v6 = tmax_rcspl_3kn_t0_v6 * low_risk
+{txt} 74{com}. 
+. gen tmax_rcspl_3kn_t1_lr    = tmax_rcspl_3kn_t1    * low_risk
+{txt} 75{com}. gen tmax_rcspl_3kn_t1_lr_v1 = tmax_rcspl_3kn_t1_v1 * low_risk
+{txt} 76{com}. gen tmax_rcspl_3kn_t1_lr_v2 = tmax_rcspl_3kn_t1_v2 * low_risk
+{txt} 77{com}. gen tmax_rcspl_3kn_t1_lr_v3 = tmax_rcspl_3kn_t1_v3 * low_risk
+{txt} 78{com}. gen tmax_rcspl_3kn_t1_lr_v4 = tmax_rcspl_3kn_t1_v4 * low_risk
+{txt} 79{com}. gen tmax_rcspl_3kn_t1_lr_v5 = tmax_rcspl_3kn_t1_v5 * low_risk
+{txt} 80{com}. gen tmax_rcspl_3kn_t1_lr_v6 = tmax_rcspl_3kn_t1_v6 * low_risk
+{txt} 81{com}. 
+. gen tmax_rcspl_3kn_t0_hr    = tmax_rcspl_3kn_t0    * risk_level
+{txt} 82{com}. gen tmax_rcspl_3kn_t0_hr_v1 = tmax_rcspl_3kn_t0_v1 * risk_level
+{txt} 83{com}. gen tmax_rcspl_3kn_t0_hr_v2 = tmax_rcspl_3kn_t0_v2 * risk_level
+{txt} 84{com}. gen tmax_rcspl_3kn_t0_hr_v3 = tmax_rcspl_3kn_t0_v3 * risk_level
+{txt} 85{com}. gen tmax_rcspl_3kn_t0_hr_v4 = tmax_rcspl_3kn_t0_v4 * risk_level
+{txt} 86{com}. gen tmax_rcspl_3kn_t0_hr_v5 = tmax_rcspl_3kn_t0_v5 * risk_level
+{txt} 87{com}. gen tmax_rcspl_3kn_t0_hr_v6 = tmax_rcspl_3kn_t0_v6 * risk_level
+{txt} 88{com}. 
+. gen tmax_rcspl_3kn_t1_hr    = tmax_rcspl_3kn_t1    * risk_level
+{txt} 89{com}. gen tmax_rcspl_3kn_t1_hr_v1 = tmax_rcspl_3kn_t1_v1 * risk_level
+{txt} 90{com}. gen tmax_rcspl_3kn_t1_hr_v2 = tmax_rcspl_3kn_t1_v2 * risk_level
+{txt} 91{com}. gen tmax_rcspl_3kn_t1_hr_v3 = tmax_rcspl_3kn_t1_v3 * risk_level
+{txt} 92{com}. gen tmax_rcspl_3kn_t1_hr_v4 = tmax_rcspl_3kn_t1_v4 * risk_level
+{txt} 93{com}. gen tmax_rcspl_3kn_t1_hr_v5 = tmax_rcspl_3kn_t1_v5 * risk_level
+{txt} 94{com}. gen tmax_rcspl_3kn_t1_hr_v6 = tmax_rcspl_3kn_t1_v6 * risk_level
+{txt} 95{com}. 
+. gen tmax_rcspl_3kn_t0_hr_l    = tmax_rcspl_3kn_t0    * risk_level * lr_tmax_p1
+{txt} 96{com}. gen tmax_rcspl_3kn_t0_hr_l_v1 = tmax_rcspl_3kn_t0_v1 * risk_level * lr_tmax_p1
+{txt} 97{com}. gen tmax_rcspl_3kn_t0_hr_l_v2 = tmax_rcspl_3kn_t0_v2 * risk_level * lr_tmax_p1
+{txt} 98{com}. gen tmax_rcspl_3kn_t0_hr_l_v3 = tmax_rcspl_3kn_t0_v3 * risk_level * lr_tmax_p1
+{txt} 99{com}. gen tmax_rcspl_3kn_t0_hr_l_v4 = tmax_rcspl_3kn_t0_v4 * risk_level * lr_tmax_p1
+{txt}100{com}. gen tmax_rcspl_3kn_t0_hr_l_v5 = tmax_rcspl_3kn_t0_v5 * risk_level * lr_tmax_p1
+{txt}101{com}. gen tmax_rcspl_3kn_t0_hr_l_v6 = tmax_rcspl_3kn_t0_v6 * risk_level * lr_tmax_p1
+{txt}102{com}. 
+. gen tmax_rcspl_3kn_t1_hr_l    = tmax_rcspl_3kn_t1    * risk_level * lr_tmax_p1
+{txt}103{com}. gen tmax_rcspl_3kn_t1_hr_l_v1 = tmax_rcspl_3kn_t1_v1 * risk_level * lr_tmax_p1
+{txt}104{com}. gen tmax_rcspl_3kn_t1_hr_l_v2 = tmax_rcspl_3kn_t1_v2 * risk_level * lr_tmax_p1
+{txt}105{com}. gen tmax_rcspl_3kn_t1_hr_l_v3 = tmax_rcspl_3kn_t1_v3 * risk_level * lr_tmax_p1
+{txt}106{com}. gen tmax_rcspl_3kn_t1_hr_l_v4 = tmax_rcspl_3kn_t1_v4 * risk_level * lr_tmax_p1
+{txt}107{com}. gen tmax_rcspl_3kn_t1_hr_l_v5 = tmax_rcspl_3kn_t1_v5 * risk_level * lr_tmax_p1
+{txt}108{com}. gen tmax_rcspl_3kn_t1_hr_l_v6 = tmax_rcspl_3kn_t1_v6 * risk_level * lr_tmax_p1
+{txt}109{com}. {c )-}
+{txt}110{com}. 
+. local reg_treatment tmax_rcspl_3kn_t0_lr* tmax_rcspl_3kn_t1_lr* ///
+{txt}111{com}.             tmax_rcspl_3kn_t0_hr* tmax_rcspl_3kn_t1_hr*
+{txt}112{com}.         * Set the regression weight
+.         replace rep_unit_year_sample_wgt = risk_adj_sample_wgt if high_risk == 0
+{txt}113{com}. loc weight "rep_unit_year_sample_wgt"
+{txt}114{com}. local ster_name "`reg_folder'/interacted_reg_`reg'_`the_factor'_2026_noMEXBRA.ster"
+{txt}115{com}.     {c )-}
+{txt}116{com}.     else if "`reg'" == "2_factor" {c -(}
+{txt}117{com}.         local reg_treatment (${c -(}vars_T_splines{c )-} ${c -(}vars_T_x_gdp_splines{c )-} ///
+{txt}118{com}.             ${c -(}vars_T_x_lr_tmax_splines{c )-})##i.risk_level
+{txt}119{com}. * Set the regression weight
+. loc weight "rep_unit_year_sample_wgt"
+{txt}120{com}. local ster_name "`reg_folder'/interacted_reg_`reg'_2026_noMEXBRA.ster"
+{txt}121{com}.     {c )-}
+{txt}122{com}.     else {c -(}
+{txt}123{com}.         di in red "bad reg specification -> pick '1_factor' or '2_factor'"
+{txt}124{com}.     {c )-}
+{txt}125{com}.     
+.     di "`reg_treatment'"
+{txt}126{com}.     
+.     * Both regressions have interacted controls
+.     local reg_control (${c -(}usual_controls{c )-})##i.risk_level
+{txt}127{com}.     di "`reg_control'"
+{txt}128{com}.     
+.     * Interact each fixed effect with the risk binary
+.     local reg_fe ""
+{txt}129{com}.     foreach f in ${c -(}`fe'{c )-} {c -(}
+{txt}130{com}.         local reg_fe `reg_fe' `f'#risk_level
+{txt}131{com}.     {c )-}
+{txt}132{com}.     
+.     local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment with lr interaction, fe = `fe', reg_type = `reg'"
+{txt}133{com}.     di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt}134{com}.     
+.     reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], ///
+{txt}135{com}.         absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt}136{com}.     
+.     * Count regression N by risk
+.     gen included = e(sample)
+{txt}137{com}.     
+.     count if included == 1 & risk_level == 0
+{txt}138{com}.     estadd scalar low_N = `r(N)'
+{txt}139{com}.     count if included == 1 & risk_level == 1
+{txt}140{com}.     estadd scalar high_N = `r(N)'
+{txt}141{com}.     
+.     estimates notes: "`spec_desc' representative unit-year weights"
+{txt}142{com}.     estimates save "`ster_name'", replace
+{txt}143{com}.     
+.     di "COMPLETED: `reg' regression."
+{txt}144{com}. {c )-}
+
+{txt}(Written by R.              )
+(0 observations deleted)
+(0 observations deleted)
+(0 observations deleted)
+{res}{txt}(128,887 missing values generated)
+(0 real changes made)
+(128,887 real changes made)
+(0 real changes made)
+(0 real changes made)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+(18 missing values generated)
+(8 missing values generated)
+(9 missing values generated)
+(6 missing values generated)
+{err}command {bf}tmax_rcspl_3kn_t0_hr{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}

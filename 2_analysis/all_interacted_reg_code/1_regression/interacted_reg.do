@@ -31,12 +31,12 @@ cap log close
 log using "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/interacted_splines_lr_interaction_and_mixed_weight_appro_nomexbra.smcl", replace
 
 * Select dataset and output folder
-gl dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/\labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_noMEXBRA.dta"
+gl dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_noMEXBRA.dta"
 loc reg_folder "${DIR_OUTPUT}/interacted_reg_output/ster"
 
 * Other selections
 gl test_code "no"
-gl reg_list 2_factor
+gl reg_list 1_factor
 gl the_factor climate 
 *  if reg_list = 2_factor, the_factor will not enter the regression
 *  if reg_list = 1_factor, set the_factor = income or climate
@@ -201,7 +201,7 @@ foreach reg in $reg_list {
 	        * Set the regression weight
 	        replace rep_unit_year_sample_wgt = risk_adj_sample_wgt if high_risk == 0
 		loc weight "rep_unit_year_sample_wgt"
-		local ster_name "`reg_folder'/interacted_reg_`reg'_`the_factor'_2026_272841_appro.ster"
+		local ster_name "`reg_folder'/interacted_reg_`reg'_`the_factor'_2026_noMEXBRA.ster"
     }
     else if "`reg'" == "2_factor" {
         local reg_treatment (${vars_T_splines} ${vars_T_x_gdp_splines} ///

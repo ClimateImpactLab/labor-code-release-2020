@@ -1,7 +1,7 @@
 
 
 import sys
-sys.path.insert(0, '/home/liruixue/repos/labor-code-release-2020/0_subroutines') 
+sys.path.insert(0, '/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/0_subroutines') 
 import paths
 
 import pandas
@@ -26,7 +26,7 @@ yearly = pandas.read_csv(r"parameters_transforms_collapse_yearly.csv", skipiniti
 
 
 # create the folder to store configs
-path_config = paths.DIR_EXT_DATA + "/climate/config"
+path_config = paths.DIR_EXT_DATA + "/climate/config_new"
 
 
 if os.path.exists(path_config):
@@ -66,7 +66,7 @@ for i in range(0, len(lines_agg),1):
 			file = open(name_config, "w")
 			file.write("{")
 			file.write("\n")
-			file.write("'run_location': 'sacagawea',")
+			file.write("'run_location': 'midway',")
 			file.write("\n")
 			file.write("'input_file': '" + input_file + "',")
 			file.write("\n")
@@ -104,7 +104,7 @@ for i in range(0, len(lines_agg),1):
 			file = open(name_config, "w")
 			file.write("{")
 			file.write("\n")
-			file.write("'run_location': 'sacagawea',")
+			file.write("'run_location': 'midway',")
 			file.write("\n")
 			file.write("'input_file': '" + input_file + "',")
 			file.write("\n")
@@ -162,7 +162,7 @@ for i in range(0, len(lines_gis),1):
 	file = open(name_config, "w")
 	file.write("{")
 	file.write("\n")
-	file.write("'run_location': 'sacagawea',")
+	file.write("'run_location': 'midway',")
 	file.write("\n")
 	file.write("'n_jobs': 12,")
 	file.write("\n")

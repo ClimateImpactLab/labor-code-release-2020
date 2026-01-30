@@ -1,7 +1,7 @@
 * liruixue@uchicago.edu
 clear all
 
-do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 set more off
 set trace off
@@ -29,16 +29,15 @@ global combine_surveys "YES"
 global include_chn "NO" 
 
 * set the following global to lcl or no_ll
-global leadlag "lcl"
+global leadlag "no_ll"
 * number of weeks we want for the lead/lag weeks
 * global n_ll 1 * for 1 week of lead and lag
-global n_ll 1
+global n_ll 0
 
 ******* parameters that need to be modified *******
 
 * no need to modify this string, we drop china in later part of the code
 local countries_all CHN USA MEX BRA GBR FRA ESP IND 
-
 
 if "${clean_raw_surveys}" == "YES"{
 	* clean surveys of individual countries 
@@ -56,7 +55,7 @@ if "${combine_surveys}" == "YES" {
 	* shell python "$DIR_REPO_LABOR/time_use/surveys/generate_crosswalks.py"
 	* combine the surveys into all_time_use.csv
 	*shell python "$DIR_REPO_LABOR/time_use/merge/combine_surveys.py"
-	import delimited using "$temp_path/all_time_use_SE.csv", clear
+	import delimited using "$temp_path/all_time_use.csv", clear
 
 	count
 
@@ -85,7 +84,7 @@ if "${combine_surveys}" == "YES" {
 	drop if missing(hhsize)
 	drop if missing(date)
 
-	save "$temp_path/all_time_use_clean_SE.dta", replace
+	save "$temp_path/all_time_use_clean.dta", replace
 
 	****** merge in income and population ***********
 	* do  "$/1_preparation/income/map_names.do"
@@ -120,60 +119,84 @@ if "${combine_surveys}" == "YES" {
 	drop year
 
 	* all merged
-	merge 1:n adm1_id using "$temp_path/all_time_use_clean_SE.dta", nogen keep(3)
+	merge 1:n adm1_id using "$temp_path/all_time_use_clean.dta", nogen keep(3)
 	*cap drop dow
 	*drop adm1_id_old
-	save "$temp_path/all_time_use_pop_merged_SE.dta", replace
+	save "$temp_path/all_time_use_pop_merged.dta", replace
 
 	*****************************
 	****** adjust weight ********
 	*****************************
 	
-	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	* Important here that you use R/4.2.1 (`module load R/4.2.1`)
 	
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
 	
-	use "$temp_path/all_time_use_pop_merged_reweighted_SE.dta", clear
+	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
 
 	* generate new weights: population weights separated by high and low risk
 	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
 		cap drop `v'
 	}
+	
+	capture program drop create_risk_weights
+	program define create_risk_weights
+	
+		syntax varname, base_weight(varname) [suffix(string)]
+    
+		* Store the grouping variable name
+		local group_var `varlist'
+    
+		* Set default suffix to empty if not provided
+		if "`suffix'" == "" {
+			local suffix ""
+		}
+    
+		* Calculate proportions within iso
+		bysort iso `group_var': gen `group_var'_prop = _N 
+		by iso: replace `group_var'_prop = `group_var'_prop/_N 
+    
+		* Adjust weights by proportion
+		gen risk_adj_sample_wgt`suffix' = `base_weight' * `group_var'_prop
+		bysort `group_var': egen `group_var'_sum = total(risk_adj_sample_wgt`suffix')
+		gen total_`group_var'_share = _N 
+		bysort `group_var': replace total_`group_var'_share = _N / total_`group_var'_share
+		replace risk_adj_sample_wgt`suffix' = risk_adj_sample_wgt`suffix' / `group_var'_sum * total_`group_var'_share
+    
+		* clean up
+		drop total_`group_var'_share `group_var'_prop `group_var'_sum
+    
+		* Representative unit sample weights - by rep_unit
+		gegen rep_unit_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit)
+		gen rep_unit_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_tot_wgt`suffix'
+		gegen test_sum`suffix' = total(rep_unit_sample_wgt`suffix'), by(rep_unit)
+    
+		* Representative unit sample weights - by rep_unit and year
+		gegen rep_unit_year_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit year)
+		gen rep_unit_year_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_year_tot_wgt`suffix'
+		gegen test_sum_2`suffix' = total(rep_unit_year_sample_wgt`suffix'), by(rep_unit year)
+    
+		* Test weights
+		count if (round(test_sum`suffix') != 1) | (round(test_sum_2`suffix') != 1)
+		if `r(N)' != 0 {
+			di as error "Whoops, you biffed it! Sample weights for `group_var' don't add to 1."
+		}
+		else {
+			di as result "Great job, sample weights for `group_var' correctly generated."
+			drop rep_unit_tot_wgt`suffix' rep_unit_year_tot_wgt`suffix' test_sum`suffix' test_sum_2`suffix'
+		}
+    
+	end
 
-	bysort iso high_risk: gen risk_prop = _N 
-	by iso: replace risk_prop = risk_prop/_N 
-	gen risk_adj_sample_wgt = pop_adj_sample_wgt * risk_prop
-	bysort high_risk: egen risk_sum = total(risk_adj_sample_wgt)
-	gen total_risk_share = _N 
-	bysort high_risk: replace total_risk_share = _N / total_risk_share
-	replace risk_adj_sample_wgt = risk_adj_sample_wgt / risk_sum * total_risk_share
-	drop total_risk_share risk_prop risk_sum sample_wgt
-
-	* Sample weights by ADM2-by-year
-	gegen adm2_year_tot_wgt = total(adm2_adj_sample_wgt), by(adm2_id year)
-	gen adm2_year_adj_sample_wgt = adm2_adj_sample_wgt/adm2_year_tot_wgt
-	drop adm2_year_tot_wgt
-
-	* Representative unit sample weights - by rep_unit and year
+	* Create rep_unit variable (only needs to be done once)
 	gen rep_unit = adm1_id
 	replace rep_unit = adm0_id if inlist(iso, "USA", "GBR", "FRA")
 
-	gegen rep_unit_tot_wgt = total(risk_adj_sample_wgt), by(rep_unit)
-	gen rep_unit_sample_wgt = risk_adj_sample_wgt/rep_unit_tot_wgt
-	gegen test_sum = total(rep_unit_sample_wgt), by(rep_unit)
-
-	gegen rep_unit_year_tot_wgt = total(risk_adj_sample_wgt), by(rep_unit year)
-	gen rep_unit_year_sample_wgt = risk_adj_sample_wgt/rep_unit_year_tot_wgt
-	gegen test_sum_2 = total(rep_unit_year_sample_wgt), by(rep_unit year)
-
-	* test new weights - remove once successfully run!
-	count if (round(test_sum) != 1) | (round(test_sum_2) != 1)
-	if `r(N)' != 0 {
-		di "Whoops, you biffed it! Sample weights don't add to 1."
-		}
-	else {
-		di "Great job, sample weights correctly generated."
-		drop rep_unit_tot_wgt rep_unit_year_tot_wgt test_sum test_sum_2
-		}
+	* run function to create weights for each of the three variables. Occupations code weights to
+	* be made in regression script for flexibility
+	create_risk_weights high_risk, base_weight(pop_adj_sample_wgt)
+	create_risk_weights high_risk_old, base_weight(pop_adj_sample_wgt) suffix(_old)
+	create_risk_weights sector, base_weight(pop_adj_sample_wgt) suffix(_sector)
 
 	* redefine clusters so that all the regressions generate standard errors
 	egen cluster_adm0yymm = group(iso month year)
@@ -181,7 +204,7 @@ if "${combine_surveys}" == "YES" {
 
 	drop *sum_sample
 
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_SE.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered.dta", replace
 
 
 	*****************************
@@ -189,14 +212,14 @@ if "${combine_surveys}" == "YES" {
 	*****************************
 
 	* filter out remaining holidays
-	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
-	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked_SE.dta", clear
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta", clear
 	
 	* drop holidays if we want
 	if "${drop_holidays}" == "YES" {
 		drop if is_holiday == 1		
 	}
-	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_SE.dta", replace
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
 	
 }
 
@@ -219,7 +242,33 @@ program define merge_climate_data_file
 		local adm_level adm2
 	}
 
-	use "${ROOT_INT_DATA}/climate/final/`iso'/`adm_level'/GMFD_`iso'_`filename'_`adm_level'.dta", clear
+	use "${ROOT_INT_DATA}/climate/final_27_28_41/`iso'/`adm_level'/GMFD_`iso'_`filename'_`adm_level'.dta", clear
+	* --- rename term0 -> t0 (only if exists) ---
+	cap ds *term0*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "term0", "t0", .)
+		cap rename `x' `new'
+	    }
+	}
+
+	* --- rename term1 -> t1 (only if exists) ---
+	cap ds *term1*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "term1", "t1", .)
+		cap rename `x' `new'
+	    }
+	}
+
+	* --- rename rcspline -> rcspl (only if exists) ---
+	cap ds *rcspline*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "rcspline", "rcspl", .)
+		cap rename `x' `new'
+	    }
+	}
 
 	* generate date and dow in climate data for merging
 	gen date = mdy(month, day, year)
@@ -285,12 +334,12 @@ program define merge_long_run
 	args iso 
 	di "`iso'"
 	if "`iso'" == "USA" | "`iso'" == "GBR" | "`iso'" == "FRA" {
-		use "${shares_path}/gcp/estimation/labor/climate_data/final/WORLD/adm0/GMFD_WORLD_long_run_adm0.dta", clear
-		rename adm0_id iso
+		use "${ROOT_INT_DATA}/climate/final_27_28_41/WORLD/adm0/GMFD_WORLD_long_run_adm0.dta", clear
+		rename ISO iso
 		merge 1:n iso using `iso'_dt, nogen keep(3)
 	}
 	else {
-		use "${shares_path}/gcp/estimation/labor/climate_data/final/`iso'/adm1/GMFD_`iso'_long_run_adm1.dta", clear	
+		use "${ROOT_INT_DATA}/climate/final_27_28_41/`iso'/adm1/GMFD_`iso'_long_run_adm1.dta", clear	
 		merge 1:n adm1_id using `iso'_dt, nogen keep(3)
 	}
 	save `iso'_dt, replace
@@ -306,7 +355,7 @@ foreach t_version in $t_version_list {
 
 			* this is the cleaned and merged time use data file
 			* with weights generated, income merged, and holidays labeled
-			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped_SE.dta", clear
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", clear
 			cap drop adm1_id_old
 
 			cap restore, not
@@ -378,21 +427,24 @@ foreach t_version in $t_version_list {
 				append using `iso'_dt.dta
 				erase `iso'_dt.dta
 			}
-			cap rename *27_37_39*3kn* *3kn*27_37_39*
-			cap rename *21_37_41*3kn* *3kn*21_37_41*
+			cap rename *27_28_41*3kn* *3kn*27_28_41*
+			*ds `t_version'_rcspl_3kn*27_28_41*
+			*ds `t_version'_rcspl*27_28_41*t0*
+
+			    *cap rename *21_37_41*3kn* *3kn*21_37_41*
 			* generate the actual human readable temperature
-			if "`variables'" == "splines" {
-				gen real_temperature = `t_version'_rcspl_3kn_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
-				replace real_temperature = `t_version'_rcspl_3kn_t0/7 if inlist(iso, "BRA","CHN","MEX")
-			}
+			*if "`variables'" == "splines" {
+			*	gen real_temperature = `t_version'_rcspl_3kn_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+			*	replace real_temperature = `t_version'_rcspl_3kn_t0/7 if inlist(iso, "BRA","CHN","MEX")
+			*}
 			if "`variables'" == "splines_nochn" {
-				gen real_temperature = `t_version'_rcspl_3kn_27_37_39_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
-				replace real_temperature = `t_version'_rcspl_3kn_27_37_39_t0/7 if inlist(iso, "BRA","CHN","MEX")
+				gen real_temperature = `t_version'_rcspl_3kn_27_28_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+				replace real_temperature = `t_version'_rcspl_3kn_27_28_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
 			}
-			if "`variables'" == "splines_wchn" {
-				gen real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
-				replace real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
-			}
+			*if "`variables'" == "splines_wchn" {
+			*	gen real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+			*	replace real_temperature = `t_version'_rcspl_3kn_21_37_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
+			*}
 			else if (strpos("`variables'", "polynomials") > 0) {
 				gen real_temperature = `t_version'_p1/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
 				replace real_temperature = `t_version'_p1/7 if inlist(iso, "BRA","CHN","MEX")
@@ -401,8 +453,9 @@ foreach t_version in $t_version_list {
 			* generate week of year fixed effect using stata's built in function
 			gen week_fe = date
 			replace week_fe = week(week_fe)
-			
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_SE.dta", replace
+			drop if (iso == "MEX" & ind_id == 361587 & year == 2007 & month == 7 & day == 1)
+			drop if (iso == "GBR" & ind_id == 22798  & year == 2001 & month == 2 & day == 14)
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_agnonag_272841_0121.dta", replace
 		}
 	}
 }

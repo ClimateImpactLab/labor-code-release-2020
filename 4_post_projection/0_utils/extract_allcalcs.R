@@ -4,9 +4,8 @@ suppressWarnings({
   library(dplyr)
   library(janitor)  # for clean_names()
 })
-
 # Input file
-infile <- "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates/single-allcalcs-uninteracted_main_model.csv"
+infile <- "/project/cil/gcp/outputs/labor/impacts-woodwork/single/uninteracted_main_model/single/rcp85/CCSM4/low/SSP3/single-allcalcs-uninteracted_main_model.csv"
 
 # 1) Read CSV, skipping the first 31 non-data lines
 dat <- read_csv(

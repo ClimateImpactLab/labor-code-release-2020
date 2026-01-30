@@ -50,20 +50,20 @@ for (rcp in rcplist){
       
       # Recommended solution: Build the plot step by step
       
-      # Step 1: Create base plot with RCP8.5 using ggtimeseries
+      # Step 1: Create base plot with RCP4.5 using ggtimeseries
       p.plume <- ggtimeseries(
         df.list = list(ubcosts.b[,c("year", "mean")]),
         df.u = ubcosts.b,
         df.x = "year",
         ub = "q95", lb = "q5",
-        uncertainty.color = green_col,         # RCP8.5 confidence interval
+        uncertainty.color = green_col,         # RCP4.5 confidence interval
         uncertainty.alphas = 0.2,
         
         legend.breaks = NULL,
-        legend.values = green_col,              # RCP8.5 mean line
+        legend.values = green_col,              # RCP4.5 mean line
         y.label = "Climate change-induced worker disutility (% of global GDP)",
         y.limits = c(0.0, 5.0),
-        rcp.value = "RCP8.5",
+        rcp.value = "RCP4.5",
         ssp.value = ssp,
         iam.value = i
       )
@@ -76,17 +76,17 @@ for (rcp in rcplist){
                     alpha = 0.2, show.legend = FALSE) +
         # Add RCP4.5 mean line
         geom_line(data = ubcosts.b.45,
-                  aes(x = year, y = mean, linetype = "interacted_model_8.5"),
+                  aes(x = year, y = mean, linetype = "interacted_model_4.5"),
                   color = orange_col, size = 1) +
-        # Add RCP8.5 linetype identifier
+        # Add RCP4.5 linetype identifier
         geom_line(data = ubcosts.b,
-                  aes(x = year, y = mean, linetype = "uninteracted_main_model_8.5"),
+                  aes(x = year, y = mean, linetype = "uninteracted_main_model_4.5"),
                   color = green_col, size = 1) +
         # Set line types
         scale_linetype_manual(
           name = "Scenario",
-          values = c("uninteracted_main_model_8.5" = "solid", "interacted_model_8.5" = "solid"),
-          breaks = c("uninteracted_main_model_8.5", "interacted_model_8.5")
+          values = c("uninteracted_main_model_4.5" = "solid", "interacted_model_4.5" = "solid"),
+          breaks = c("uninteracted_main_model_4.5", "interacted_model_4.5")
         ) +
         # Adjust legend
         guides(
@@ -103,7 +103,7 @@ for (rcp in rcplist){
         )
       
       # Step 4: Save the plot
-      ggsave(p.plume, file = paste0(outputwd, "labor_inte_", ssp, "_", i, "_RCP85_with_CI.pdf"),
+      ggsave(p.plume, file = paste0(outputwd, "labor_inte_", ssp, "_", i, "_RCP45_with_CI.pdf"),
              width = 10, height = 6)
     }
   }

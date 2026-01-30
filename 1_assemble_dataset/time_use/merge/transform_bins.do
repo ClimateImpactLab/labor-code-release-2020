@@ -105,5 +105,3 @@ foreach variables in $variables_list {
 		}
 	}
 }
-
-

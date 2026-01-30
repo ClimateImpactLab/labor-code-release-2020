@@ -1,0 +1,361 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/interacted_splines_3risk_groups.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}24 Nov 2025, 22:27:02
+
+{com}. 
+. * select dataset and output folder
+
+. gl dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_3sector_agcoma.dta"
+
+. loc reg_folder "${c -(}DIR_OUTPUT{c )-}/interacted_reg_output/ster"
+
+. 
+. * other selections
+
+. gl test_code "no"
+
+. gl reg_list 2_factor
+
+. loc fe fe_adm0_wk
+
+. 
+. ********************
+
+. *RUN REGRESSION
+
+. ********************
+
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}. 
+. di "`reg_list'"
+{txt}  3{com}. 
+. use $dataset, clear
+{txt}  4{com}. drop if iso == "GBR" & year == 1984 & month == 1 & day == 2
+{txt}  5{com}. 
+. *** ===================================================
+. *** Define 3 risk groups
+. *** ===================================================
+. gen byte risk3 = .
+{txt}  6{com}. replace risk3 = 1 if high_risk == 0
+{txt}  7{com}. replace risk3 = 2 if high_risk3 == 1
+{txt}  8{com}. replace risk3 = 3 if high_risk == 1 & high_risk3 != 1
+{txt}  9{com}. label define risk3 1 "low" 2 "hr_ag" 3 "hr_noag"
+{txt} 10{com}. label values risk3 risk3
+{txt} 11{com}. drop if missing(risk3)
+{txt} 12{com}. 
+. * if test code mode is on, take a random sample
+. if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt} 13{com}. sample 0.1
+{txt} 14{com}. {c )-}
+{txt} 15{com}. 
+. * only include non-zero observations
+. keep if mins_worked > 0
+{txt} 16{com}. 
+. * get rid of some awkward naming
+. rename *27_37_39_* **
+{txt} 17{com}. 
+. * generate regression variables
+. gen_controls_and_FEs
+{txt} 18{com}. gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 19{com}. 
+. *** ===================================================
+. *** Drop ONLY critical missing values (NOT precipitation)
+. *** ===================================================
+. * Drop observations with missing lr_tmax_p1
+. count if missing(lr_tmax_p1)
+{txt} 20{com}. local n_missing_lr = r(N)
+{txt} 21{com}. if `n_missing_lr' > 0 {c -(}
+{txt} 22{com}. di in yellow "Dropping `n_missing_lr' observations with missing lr_tmax_p1"
+{txt} 23{com}. drop if missing(lr_tmax_p1)
+{txt} 24{com}. {c )-}
+{txt} 25{com}. 
+. * Drop observations with missing log_gdp_pc_adm1
+. count if missing(log_gdp_pc_adm1)
+{txt} 26{com}. local n_missing_gdp = r(N)
+{txt} 27{com}. if `n_missing_gdp' > 0 {c -(}
+{txt} 28{com}. di in yellow "Dropping `n_missing_gdp' observations with missing log_gdp_pc_adm1"
+{txt} 29{com}. drop if missing(log_gdp_pc_adm1)
+{txt} 30{com}. {c )-}
+{txt} 31{com}. 
+. * DO NOT drop precipitation missing values - they are natural (no rain)
+. 
+. *** ===================================================
+. *** Create three dummy variables
+. *** ===================================================
+. gen byte low_risk = (risk3 == 1)
+{txt} 32{com}. gen byte hr_ag = (risk3 == 2)
+{txt} 33{com}. gen byte hr_noag = (risk3 == 3)
+{txt} 34{com}. 
+. *** ===================================================
+. *** TREATMENT INTERACTIONS - LOW RISK
+. *** ===================================================
+. quietly {c -(}
+{txt} 35{com}. * T splines × low_risk (t0)
+. gen tmax_rcspl_3kn_t0_low = tmax_rcspl_3kn_t0 * low_risk
+{txt} 36{com}. gen tmax_rcspl_3kn_t0_low_v1 = tmax_rcspl_3kn_t0_v1 * low_risk
+{txt} 37{com}. gen tmax_rcspl_3kn_t0_low_v2 = tmax_rcspl_3kn_t0_v2 * low_risk
+{txt} 38{com}. gen tmax_rcspl_3kn_t0_low_v3 = tmax_rcspl_3kn_t0_v3 * low_risk
+{txt} 39{com}. gen tmax_rcspl_3kn_t0_low_v4 = tmax_rcspl_3kn_t0_v4 * low_risk
+{txt} 40{com}. gen tmax_rcspl_3kn_t0_low_v5 = tmax_rcspl_3kn_t0_v5 * low_risk
+{txt} 41{com}. gen tmax_rcspl_3kn_t0_low_v6 = tmax_rcspl_3kn_t0_v6 * low_risk
+{txt} 42{com}. 
+. * T splines × low_risk (t1)
+. gen tmax_rcspl_3kn_t1_low = tmax_rcspl_3kn_t1 * low_risk
+{txt} 43{com}. gen tmax_rcspl_3kn_t1_low_v1 = tmax_rcspl_3kn_t1_v1 * low_risk
+{txt} 44{com}. gen tmax_rcspl_3kn_t1_low_v2 = tmax_rcspl_3kn_t1_v2 * low_risk
+{txt} 45{com}. gen tmax_rcspl_3kn_t1_low_v3 = tmax_rcspl_3kn_t1_v3 * low_risk
+{txt} 46{com}. gen tmax_rcspl_3kn_t1_low_v4 = tmax_rcspl_3kn_t1_v4 * low_risk
+{txt} 47{com}. gen tmax_rcspl_3kn_t1_low_v5 = tmax_rcspl_3kn_t1_v5 * low_risk
+{txt} 48{com}. gen tmax_rcspl_3kn_t1_low_v6 = tmax_rcspl_3kn_t1_v6 * low_risk
+{txt} 49{com}. 
+. * T × GDP × low_risk (t0)
+. gen tmax_rcspl_3kn_t0_low_g = tmax_rcspl_3kn_t0 * low_risk * log_gdp_pc_adm1
+{txt} 50{com}. gen tmax_rcspl_3kn_t0_low_g_v1 = tmax_rcspl_3kn_t0_v1 * low_risk * log_gdp_pc_adm1
+{txt} 51{com}. gen tmax_rcspl_3kn_t0_low_g_v2 = tmax_rcspl_3kn_t0_v2 * low_risk * log_gdp_pc_adm1
+{txt} 52{com}. gen tmax_rcspl_3kn_t0_low_g_v3 = tmax_rcspl_3kn_t0_v3 * low_risk * log_gdp_pc_adm1
+{txt} 53{com}. gen tmax_rcspl_3kn_t0_low_g_v4 = tmax_rcspl_3kn_t0_v4 * low_risk * log_gdp_pc_adm1
+{txt} 54{com}. gen tmax_rcspl_3kn_t0_low_g_v5 = tmax_rcspl_3kn_t0_v5 * low_risk * log_gdp_pc_adm1
+{txt} 55{com}. gen tmax_rcspl_3kn_t0_low_g_v6 = tmax_rcspl_3kn_t0_v6 * low_risk * log_gdp_pc_adm1
+{txt} 56{com}. 
+. * T × GDP × low_risk (t1)
+. gen tmax_rcspl_3kn_t1_low_g = tmax_rcspl_3kn_t1 * low_risk * log_gdp_pc_adm1
+{txt} 57{com}. gen tmax_rcspl_3kn_t1_low_g_v1 = tmax_rcspl_3kn_t1_v1 * low_risk * log_gdp_pc_adm1
+{txt} 58{com}. gen tmax_rcspl_3kn_t1_low_g_v2 = tmax_rcspl_3kn_t1_v2 * low_risk * log_gdp_pc_adm1
+{txt} 59{com}. gen tmax_rcspl_3kn_t1_low_g_v3 = tmax_rcspl_3kn_t1_v3 * low_risk * log_gdp_pc_adm1
+{txt} 60{com}. gen tmax_rcspl_3kn_t1_low_g_v4 = tmax_rcspl_3kn_t1_v4 * low_risk * log_gdp_pc_adm1
+{txt} 61{com}. gen tmax_rcspl_3kn_t1_low_g_v5 = tmax_rcspl_3kn_t1_v5 * low_risk * log_gdp_pc_adm1
+{txt} 62{com}. gen tmax_rcspl_3kn_t1_low_g_v6 = tmax_rcspl_3kn_t1_v6 * low_risk * log_gdp_pc_adm1
+{txt} 63{com}. 
+. * T × LR_tmax × low_risk (t0)
+. gen tmax_rcspl_3kn_t0_low_lr = tmax_rcspl_3kn_t0 * low_risk * lr_tmax_p1
+{txt} 64{com}. gen tmax_rcspl_3kn_t0_low_lr_v1 = tmax_rcspl_3kn_t0_v1 * low_risk * lr_tmax_p1
+{txt} 65{com}. gen tmax_rcspl_3kn_t0_low_lr_v2 = tmax_rcspl_3kn_t0_v2 * low_risk * lr_tmax_p1
+{txt} 66{com}. gen tmax_rcspl_3kn_t0_low_lr_v3 = tmax_rcspl_3kn_t0_v3 * low_risk * lr_tmax_p1
+{txt} 67{com}. gen tmax_rcspl_3kn_t0_low_lr_v4 = tmax_rcspl_3kn_t0_v4 * low_risk * lr_tmax_p1
+{txt} 68{com}. gen tmax_rcspl_3kn_t0_low_lr_v5 = tmax_rcspl_3kn_t0_v5 * low_risk * lr_tmax_p1
+{txt} 69{com}. gen tmax_rcspl_3kn_t0_low_lr_v6 = tmax_rcspl_3kn_t0_v6 * low_risk * lr_tmax_p1
+{txt} 70{com}. 
+. * T × LR_tmax × low_risk (t1)
+. gen tmax_rcspl_3kn_t1_low_lr = tmax_rcspl_3kn_t1 * low_risk * lr_tmax_p1
+{txt} 71{com}. gen tmax_rcspl_3kn_t1_low_lr_v1 = tmax_rcspl_3kn_t1_v1 * low_risk * lr_tmax_p1
+{txt} 72{com}. gen tmax_rcspl_3kn_t1_low_lr_v2 = tmax_rcspl_3kn_t1_v2 * low_risk * lr_tmax_p1
+{txt} 73{com}. gen tmax_rcspl_3kn_t1_low_lr_v3 = tmax_rcspl_3kn_t1_v3 * low_risk * lr_tmax_p1
+{txt} 74{com}. gen tmax_rcspl_3kn_t1_low_lr_v4 = tmax_rcspl_3kn_t1_v4 * low_risk * lr_tmax_p1
+{txt} 75{com}. gen tmax_rcspl_3kn_t1_low_lr_v5 = tmax_rcspl_3kn_t1_v5 * low_risk * lr_tmax_p1
+{txt} 76{com}. gen tmax_rcspl_3kn_t1_low_lr_v6 = tmax_rcspl_3kn_t1_v6 * low_risk * lr_tmax_p1
+{txt} 77{com}. {c )-}
+{txt} 78{com}. di "Created LOW_RISK interactions"
+{txt} 79{com}. 
+. *** ===================================================
+. *** TREATMENT INTERACTIONS - HR_AG
+. *** ===================================================
+. quietly {c -(}
+{txt} 80{com}. * T splines × hr_ag (t0)
+. gen tmax_rcspl_3kn_t0_hrag = tmax_rcspl_3kn_t0 * hr_ag
+{txt} 81{com}. gen tmax_rcspl_3kn_t0_hrag_v1 = tmax_rcspl_3kn_t0_v1 * hr_ag
+{txt} 82{com}. gen tmax_rcspl_3kn_t0_hrag_v2 = tmax_rcspl_3kn_t0_v2 * hr_ag
+{txt} 83{com}. gen tmax_rcspl_3kn_t0_hrag_v3 = tmax_rcspl_3kn_t0_v3 * hr_ag
+{txt} 84{com}. gen tmax_rcspl_3kn_t0_hrag_v4 = tmax_rcspl_3kn_t0_v4 * hr_ag
+{txt} 85{com}. gen tmax_rcspl_3kn_t0_hrag_v5 = tmax_rcspl_3kn_t0_v5 * hr_ag
+{txt} 86{com}. gen tmax_rcspl_3kn_t0_hrag_v6 = tmax_rcspl_3kn_t0_v6 * hr_ag
+{txt} 87{com}. 
+. * T splines × hr_ag (t1)
+. gen tmax_rcspl_3kn_t1_hrag = tmax_rcspl_3kn_t1 * hr_ag
+{txt} 88{com}. gen tmax_rcspl_3kn_t1_hrag_v1 = tmax_rcspl_3kn_t1_v1 * hr_ag
+{txt} 89{com}. gen tmax_rcspl_3kn_t1_hrag_v2 = tmax_rcspl_3kn_t1_v2 * hr_ag
+{txt} 90{com}. gen tmax_rcspl_3kn_t1_hrag_v3 = tmax_rcspl_3kn_t1_v3 * hr_ag
+{txt} 91{com}. gen tmax_rcspl_3kn_t1_hrag_v4 = tmax_rcspl_3kn_t1_v4 * hr_ag
+{txt} 92{com}. gen tmax_rcspl_3kn_t1_hrag_v5 = tmax_rcspl_3kn_t1_v5 * hr_ag
+{txt} 93{com}. gen tmax_rcspl_3kn_t1_hrag_v6 = tmax_rcspl_3kn_t1_v6 * hr_ag
+{txt} 94{com}. 
+. * T × GDP × hr_ag (t0)
+. gen tmax_rcspl_3kn_t0_hrag_g = tmax_rcspl_3kn_t0 * hr_ag * log_gdp_pc_adm1
+{txt} 95{com}. gen tmax_rcspl_3kn_t0_hrag_g_v1 = tmax_rcspl_3kn_t0_v1 * hr_ag * log_gdp_pc_adm1
+{txt} 96{com}. gen tmax_rcspl_3kn_t0_hrag_g_v2 = tmax_rcspl_3kn_t0_v2 * hr_ag * log_gdp_pc_adm1
+{txt} 97{com}. gen tmax_rcspl_3kn_t0_hrag_g_v3 = tmax_rcspl_3kn_t0_v3 * hr_ag * log_gdp_pc_adm1
+{txt} 98{com}. gen tmax_rcspl_3kn_t0_hrag_g_v4 = tmax_rcspl_3kn_t0_v4 * hr_ag * log_gdp_pc_adm1
+{txt} 99{com}. gen tmax_rcspl_3kn_t0_hrag_g_v5 = tmax_rcspl_3kn_t0_v5 * hr_ag * log_gdp_pc_adm1
+{txt}100{com}. gen tmax_rcspl_3kn_t0_hrag_g_v6 = tmax_rcspl_3kn_t0_v6 * hr_ag * log_gdp_pc_adm1
+{txt}101{com}. 
+. * T × GDP × hr_ag (t1)
+. gen tmax_rcspl_3kn_t1_hrag_g = tmax_rcspl_3kn_t1 * hr_ag * log_gdp_pc_adm1
+{txt}102{com}. gen tmax_rcspl_3kn_t1_hrag_g_v1 = tmax_rcspl_3kn_t1_v1 * hr_ag * log_gdp_pc_adm1
+{txt}103{com}. gen tmax_rcspl_3kn_t1_hrag_g_v2 = tmax_rcspl_3kn_t1_v2 * hr_ag * log_gdp_pc_adm1
+{txt}104{com}. gen tmax_rcspl_3kn_t1_hrag_g_v3 = tmax_rcspl_3kn_t1_v3 * hr_ag * log_gdp_pc_adm1
+{txt}105{com}. gen tmax_rcspl_3kn_t1_hrag_g_v4 = tmax_rcspl_3kn_t1_v4 * hr_ag * log_gdp_pc_adm1
+{txt}106{com}. gen tmax_rcspl_3kn_t1_hrag_g_v5 = tmax_rcspl_3kn_t1_v5 * hr_ag * log_gdp_pc_adm1
+{txt}107{com}. gen tmax_rcspl_3kn_t1_hrag_g_v6 = tmax_rcspl_3kn_t1_v6 * hr_ag * log_gdp_pc_adm1
+{txt}108{com}. 
+. * T × LR_tmax × hr_ag (t0)
+. gen tmax_rcspl_3kn_t0_hrag_lr = tmax_rcspl_3kn_t0 * hr_ag * lr_tmax_p1
+{txt}109{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v1 = tmax_rcspl_3kn_t0_v1 * hr_ag * lr_tmax_p1
+{txt}110{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v2 = tmax_rcspl_3kn_t0_v2 * hr_ag * lr_tmax_p1
+{txt}111{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v3 = tmax_rcspl_3kn_t0_v3 * hr_ag * lr_tmax_p1
+{txt}112{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v4 = tmax_rcspl_3kn_t0_v4 * hr_ag * lr_tmax_p1
+{txt}113{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v5 = tmax_rcspl_3kn_t0_v5 * hr_ag * lr_tmax_p1
+{txt}114{com}. gen tmax_rcspl_3kn_t0_hrag_lr_v6 = tmax_rcspl_3kn_t0_v6 * hr_ag * lr_tmax_p1
+{txt}115{com}. 
+. * T × LR_tmax × hr_ag (t1)
+. gen tmax_rcspl_3kn_t1_hrag_lr = tmax_rcspl_3kn_t1 * hr_ag * lr_tmax_p1
+{txt}116{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v1 = tmax_rcspl_3kn_t1_v1 * hr_ag * lr_tmax_p1
+{txt}117{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v2 = tmax_rcspl_3kn_t1_v2 * hr_ag * lr_tmax_p1
+{txt}118{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v3 = tmax_rcspl_3kn_t1_v3 * hr_ag * lr_tmax_p1
+{txt}119{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v4 = tmax_rcspl_3kn_t1_v4 * hr_ag * lr_tmax_p1
+{txt}120{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v5 = tmax_rcspl_3kn_t1_v5 * hr_ag * lr_tmax_p1
+{txt}121{com}. gen tmax_rcspl_3kn_t1_hrag_lr_v6 = tmax_rcspl_3kn_t1_v6 * hr_ag * lr_tmax_p1
+{txt}122{com}. {c )-}
+{txt}123{com}. di "Created HR_AG interactions"
+{txt}124{com}. 
+. *** ===================================================
+. *** TREATMENT INTERACTIONS - HR_NOAG
+. *** ===================================================
+. quietly {c -(}
+{txt}125{com}. * T splines × hr_noag (t0)
+. gen tmax_rcspl_3kn_t0_hrnoag = tmax_rcspl_3kn_t0 * hr_noag
+{txt}126{com}. gen tmax_rcspl_3kn_t0_hrnoag_v1 = tmax_rcspl_3kn_t0_v1 * hr_noag
+{txt}127{com}. gen tmax_rcspl_3kn_t0_hrnoag_v2 = tmax_rcspl_3kn_t0_v2 * hr_noag
+{txt}128{com}. gen tmax_rcspl_3kn_t0_hrnoag_v3 = tmax_rcspl_3kn_t0_v3 * hr_noag
+{txt}129{com}. gen tmax_rcspl_3kn_t0_hrnoag_v4 = tmax_rcspl_3kn_t0_v4 * hr_noag
+{txt}130{com}. gen tmax_rcspl_3kn_t0_hrnoag_v5 = tmax_rcspl_3kn_t0_v5 * hr_noag
+{txt}131{com}. gen tmax_rcspl_3kn_t0_hrnoag_v6 = tmax_rcspl_3kn_t0_v6 * hr_noag
+{txt}132{com}. 
+. * T splines × hr_noag (t1)
+. gen tmax_rcspl_3kn_t1_hrnoag = tmax_rcspl_3kn_t1 * hr_noag
+{txt}133{com}. gen tmax_rcspl_3kn_t1_hrnoag_v1 = tmax_rcspl_3kn_t1_v1 * hr_noag
+{txt}134{com}. gen tmax_rcspl_3kn_t1_hrnoag_v2 = tmax_rcspl_3kn_t1_v2 * hr_noag
+{txt}135{com}. gen tmax_rcspl_3kn_t1_hrnoag_v3 = tmax_rcspl_3kn_t1_v3 * hr_noag
+{txt}136{com}. gen tmax_rcspl_3kn_t1_hrnoag_v4 = tmax_rcspl_3kn_t1_v4 * hr_noag
+{txt}137{com}. gen tmax_rcspl_3kn_t1_hrnoag_v5 = tmax_rcspl_3kn_t1_v5 * hr_noag
+{txt}138{com}. gen tmax_rcspl_3kn_t1_hrnoag_v6 = tmax_rcspl_3kn_t1_v6 * hr_noag
+{txt}139{com}. 
+. * T × GDP × hr_noag (t0)
+. gen tmax_rcspl_3kn_t0_hrnoag_g = tmax_rcspl_3kn_t0 * hr_noag * log_gdp_pc_adm1
+{txt}140{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v1 = tmax_rcspl_3kn_t0_v1 * hr_noag * log_gdp_pc_adm1
+{txt}141{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v2 = tmax_rcspl_3kn_t0_v2 * hr_noag * log_gdp_pc_adm1
+{txt}142{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v3 = tmax_rcspl_3kn_t0_v3 * hr_noag * log_gdp_pc_adm1
+{txt}143{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v4 = tmax_rcspl_3kn_t0_v4 * hr_noag * log_gdp_pc_adm1
+{txt}144{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v5 = tmax_rcspl_3kn_t0_v5 * hr_noag * log_gdp_pc_adm1
+{txt}145{com}. gen tmax_rcspl_3kn_t0_hrnoag_g_v6 = tmax_rcspl_3kn_t0_v6 * hr_noag * log_gdp_pc_adm1
+{txt}146{com}. 
+. * T × GDP × hr_noag (t1)
+. gen tmax_rcspl_3kn_t1_hrnoag_g = tmax_rcspl_3kn_t1 * hr_noag * log_gdp_pc_adm1
+{txt}147{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v1 = tmax_rcspl_3kn_t1_v1 * hr_noag * log_gdp_pc_adm1
+{txt}148{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v2 = tmax_rcspl_3kn_t1_v2 * hr_noag * log_gdp_pc_adm1
+{txt}149{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v3 = tmax_rcspl_3kn_t1_v3 * hr_noag * log_gdp_pc_adm1
+{txt}150{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v4 = tmax_rcspl_3kn_t1_v4 * hr_noag * log_gdp_pc_adm1
+{txt}151{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v5 = tmax_rcspl_3kn_t1_v5 * hr_noag * log_gdp_pc_adm1
+{txt}152{com}. gen tmax_rcspl_3kn_t1_hrnoag_g_v6 = tmax_rcspl_3kn_t1_v6 * hr_noag * log_gdp_pc_adm1
+{txt}153{com}. 
+. * T × LR_tmax × hr_noag (t0)
+. gen tmax_rcspl_3kn_t0_hrnoag_lr = tmax_rcspl_3kn_t0 * hr_noag * lr_tmax_p1
+{txt}154{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v1 = tmax_rcspl_3kn_t0_v1 * hr_noag * lr_tmax_p1
+{txt}155{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v2 = tmax_rcspl_3kn_t0_v2 * hr_noag * lr_tmax_p1
+{txt}156{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v3 = tmax_rcspl_3kn_t0_v3 * hr_noag * lr_tmax_p1
+{txt}157{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v4 = tmax_rcspl_3kn_t0_v4 * hr_noag * lr_tmax_p1
+{txt}158{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v5 = tmax_rcspl_3kn_t0_v5 * hr_noag * lr_tmax_p1
+{txt}159{com}. gen tmax_rcspl_3kn_t0_hrnoag_lr_v6 = tmax_rcspl_3kn_t0_v6 * hr_noag * lr_tmax_p1
+{txt}160{com}. 
+. * T × LR_tmax × hr_noag (t1)
+. gen tmax_rcspl_3kn_t1_hrnoag_lr = tmax_rcspl_3kn_t1 * hr_noag * lr_tmax_p1
+{txt}161{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v1 = tmax_rcspl_3kn_t1_v1 * hr_noag * lr_tmax_p1
+{txt}162{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v2 = tmax_rcspl_3kn_t1_v2 * hr_noag * lr_tmax_p1
+{txt}163{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v3 = tmax_rcspl_3kn_t1_v3 * hr_noag * lr_tmax_p1
+{txt}164{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v4 = tmax_rcspl_3kn_t1_v4 * hr_noag * lr_tmax_p1
+{txt}165{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v5 = tmax_rcspl_3kn_t1_v5 * hr_noag * lr_tmax_p1
+{txt}166{com}. gen tmax_rcspl_3kn_t1_hrnoag_lr_v6 = tmax_rcspl_3kn_t1_v6 * hr_noag * lr_tmax_p1
+{txt}167{com}. {c )-}
+{txt}168{com}. di "Created HR_NOAG interactions"
+{txt}169{com}. 
+. *** ===================================================
+. *** CONTROLS: Extract and interact (keep missing precip values)
+. *** ===================================================
+. local control_list "${c -(}usual_controls{c )-}"
+{txt}170{com}. local control_list : subinstr local control_list "c." "", all
+{txt}171{com}. 
+. di "Creating control interactions (keeping precipitation missing values)..."
+{txt}172{com}. quietly {c -(}
+{txt}173{com}. foreach var in `control_list' {c -(}
+{txt}174{com}. capture confirm variable `var'
+{txt}175{com}. if _rc == 0 {c -(}
+{txt}176{com}. * Create interactions - missing values will naturally propagate
+. gen `var'_low = `var' * low_risk
+{txt}177{com}. gen `var'_hrag = `var' * hr_ag  
+{txt}178{com}. gen `var'_hrnoag = `var' * hr_noag
+{txt}179{com}. {c )-}
+{txt}180{com}. {c )-}
+{txt}181{com}. {c )-}
+{txt}182{com}. di "Created control interactions"
+{txt}183{com}. 
+. *** ===================================================
+. *** Define regression components
+. *** ===================================================
+. local reg_treatment tmax_rcspl_3kn_t0_low* tmax_rcspl_3kn_t1_low* tmax_rcspl_3kn_t0_hrag* tmax_rcspl_3kn_t1_hrag* tmax_rcspl_3kn_t0_hrnoag* tmax_rcspl_3kn_t1_hrnoag*
+{txt}184{com}. 
+. local reg_control ""
+{txt}185{com}. foreach var in `control_list' {c -(}
+{txt}186{com}. local reg_control `reg_control' `var'_low `var'_hrag `var'_hrnoag
+{txt}187{com}. {c )-}
+{txt}188{com}. 
+. local reg_fe ""
+{txt}189{com}. foreach f in $`fe' {c -(}
+{txt}190{com}. local reg_fe `reg_fe' `f'#low_risk `f'#hr_ag `f'#hr_noag
+{txt}191{com}. {c )-}
+{txt}192{com}. 
+. *** ===================================================
+. *** Set file names and RUN
+. *** ===================================================
+. local ster_name "`reg_folder'/interacted_reg_`reg'_3risk_groups.ster"
+{txt}193{com}. local spec_desc "rcspline, 3 knots (27 37 39), tmax, 3 risk groups (low, hr_ag, hr_noag), fe = $fe, reg_type = `reg'"
+{txt}194{com}. loc weight "rep_unit_year_sample_wgt"
+{txt}195{com}. 
+. di "===================================================="
+{txt}196{com}. di "Running regression..."
+{txt}197{com}. di "===================================================="
+{txt}198{com}. 
+. reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt}199{com}. 
+. *** ===================================================
+. *** Save results
+. *** ===================================================
+. gen included = e(sample)
+{txt}200{com}. count if included == 1 & risk3 == 1
+{txt}201{com}. estadd scalar N_low = r(N)
+{txt}202{com}. count if included == 1 & risk3 == 2
+{txt}203{com}. estadd scalar N_hr_ag = r(N)
+{txt}204{com}. count if included == 1 & risk3 == 3
+{txt}205{com}. estadd scalar N_hr_noag = r(N)
+{txt}206{com}. 
+. estimates notes: "`spec_desc' representative unit-year weights"
+{txt}207{com}. estimates save "`ster_name'", replace
+{txt}208{com}. 
+. di "===================================================="
+{txt}209{com}. di "COMPLETED: `reg' regression with 3 risk groups."
+{txt}210{com}. di "N_low_risk = " e(N_low)
+{txt}211{com}. di "N_hr_ag = " e(N_hr_ag)
+{txt}212{com}. di "N_hr_noag = " e(N_hr_noag)
+{txt}213{com}. di "===================================================="
+{txt}214{com}. {c )-}
+
+{txt}(Written by R.              )
+(0 observations deleted)
+(6,569,275 missing values generated)
+(4,153,282 real changes made)
+(379,137 real changes made)
+(2,036,856 real changes made)
+(0 observations deleted)
+(0 observations deleted)
+{res}  0
+  0
+Created LOW_RISK interactions
+Created HR_AG interactions
+Created HR_NOAG interactions
+Creating control interactions (keeping precipitation missing values)...
+Created control interactions
+====================================================
+Running regression...
+====================================================
+{txt}(dropped 45 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}

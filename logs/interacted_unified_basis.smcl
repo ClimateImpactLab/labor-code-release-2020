@@ -1,0 +1,249 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/logs/interacted_unified_basis.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}27 Jan 2026, 10:23:26
+
+{com}. 
+. * dataset
+
+. global dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0121.dta"
+
+. 
+. * output folder
+
+. cap mkdir "${c -(}DIR_STER{c )-}/interacted_unified"
+
+. local reg_folder "${c -(}DIR_STER{c )-}/interacted_unified"
+
+. 
+. * test mode
+
+. global test_code "no"
+
+. 
+. * choose regression spec(s)
+
+. global reg_list "2_factor"
+
+. * global reg_list "1_factor"
+
+. * global reg_list "1_factor 2_factor"
+
+. 
+. * FE preset
+
+. local fe fe_adm0_wk
+
+. 
+. * choose risk definition
+
+. global risk_def "high_risk"
+
+. 
+. * choose basis: "spline" or "poly"
+
+. local basis "spline"
+
+. * local basis "spline"
+
+. 
+. * for 1_factor only: choose interaction type
+
+. local onefactor_mode "gdp"
+
+. * local onefactor_mode "lrt"
+
+. 
+. * for poly only: polynomial order loop
+
+. local poly_min 2
+
+. local poly_max 4
+
+. 
+. * treatment temperature variable name used in macro vars_T_x_lr_`t_version'_...
+
+. local t_version "tmax"
+
+. 
+. * weights
+
+. local weight_mode "rep_unit_year"   // or "mixed"
+
+. 
+. ****************************************************
+
+. * MAIN LOOP
+
+. ****************************************************
+
+. 
+. * if spline: run once with a dummy N_order = .
+
+. * if poly: loop N_order = poly_min..poly_max
+
+. local orderlist ""
+
+. if "`basis'" == "poly" {c -(}
+.     forvalues k = `poly_min'(1)`poly_max' {c -(}
+{txt}  2{com}.         local orderlist "`orderlist' `k'"
+{txt}  3{com}.     {c )-}
+. {c )-}
+
+. else if "`basis'" == "spline" {c -(}
+.     local orderlist "."
+. {c )-}
+
+. else {c -(}
+.     di as error "ERROR: basis must be poly or spline"
+.     exit 198
+. {c )-}
+
+. 
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}.     foreach N_order of local orderlist {c -(}
+{txt}  3{com}. 
+.         di as text "=================================================="
+{txt}  4{com}.         di as text "Running: basis=`basis' | reg=`reg' | N_order=`N_order' | onefactor_mode=`onefactor_mode'"
+{txt}  5{com}.         di as text "=================================================="
+{txt}  6{com}. 
+.         use $dataset, clear
+{txt}  7{com}.         drop if iso == "GBR" & year == 1984 & month == 1 & day == 2
+{txt}  8{com}. 
+.         if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  9{com}.             sample 0.1
+{txt} 10{com}.         {c )-}
+{txt} 11{com}. 
+.         keep if mins_worked > 0
+{txt} 12{com}. 
+.         * generate regression variables
+.         gen_controls_and_FEs
+{txt} 13{com}. 
+.         if "`basis'" == "poly" {c -(}
+{txt} 14{com}.             gen_treatment_polynomials `N_order' tmax this_week 1
+{txt} 15{com}.         {c )-}
+{txt} 16{com}.         else if "`basis'" == "spline" {c -(}
+{txt} 17{com}.             gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 18{com}.         {c )-}
+{txt} 19{com}. 
+.         * ---------- DEFINE risk_level ----------
+.         cap drop risk_level
+{txt} 20{com}.         gen risk_level = .
+{txt} 21{com}.         replace risk_level = high_risk_old if "${c -(}risk_def{c )-}"=="high_risk_old"
+{txt} 22{com}.         replace risk_level = high_risk     if "${c -(}risk_def{c )-}"=="high_risk"
+{txt} 23{com}.         replace risk_level = sector        if "${c -(}risk_def{c )-}"=="sector"
+{txt} 24{com}.         replace risk_level = occup_code    if "${c -(}risk_def{c )-}"=="occup_code"
+{txt} 25{com}. 
+.         * assume binary {c -(}0,1{c )-} for low/high
+.         gen low_risk = 1 - risk_level
+{txt} 26{com}. 
+.         ****************************************************
+.         * reg_treatment
+.         ****************************************************
+.         local reg_treatment ""
+{txt} 27{com}. 
+.         * ---- 1_factor: pooled construction (works the same idea for spline/poly)
+.         if "`reg'" == "1_factor" {c -(}
+{txt} 28{com}. 
+.             if "`basis'" == "poly" {c -(}
+{txt} 29{com}.                 di as error "ERROR: 1_factor + poly requires creating LR/HR polynomial variables (not implemented here)."
+{txt} 30{com}.                 di as error "       Use reg=2_factor for poly, or tell me your polynomial var names and I'll wire it."
+{txt} 31{com}.                 exit 459
+{txt} 32{com}.             {c )-}
+{txt} 33{com}. 
+.             * spline 1_factor case (same as before)
+.             if "`onefactor_mode'" == "gdp" {c -(}
+{txt} 34{com}.                 * assumes you already created *_hr_g* in your spline workflow (or add creation like before)
+.                 local reg_treatment ///
+{txt} 35{com}.                     tmax_rcspl_3kn_t0_lr* tmax_rcspl_3kn_t1_lr* ///
+{txt} 36{com}.                     tmax_rcspl_3kn_t0_hr* tmax_rcspl_3kn_t1_hr* ///
+{txt} 37{com}.                     tmax_rcspl_3kn_t0_hr_g* tmax_rcspl_3kn_t1_hr_g*
+{txt} 38{com}.             {c )-}
+{txt} 39{com}.             else if "`onefactor_mode'" == "lrt" {c -(}
+{txt} 40{com}.                 local reg_treatment ///
+{txt} 41{com}.                     tmax_rcspl_3kn_t0_lr* tmax_rcspl_3kn_t1_lr* ///
+{txt} 42{com}.                     tmax_rcspl_3kn_t0_hr* tmax_rcspl_3kn_t1_hr* ///
+{txt} 43{com}.                     tmax_rcspl_3kn_t0_hr_l* tmax_rcspl_3kn_t1_hr_l*
+{txt} 44{com}.             {c )-}
+{txt} 45{com}.             else {c -(}
+{txt} 46{com}.                 di as error "ERROR: onefactor_mode must be gdp or lrt"
+{txt} 47{com}.                 exit 198
+{txt} 48{com}.             {c )-}
+{txt} 49{com}.         {c )-}
+{txt} 50{com}. 
+.         * ---- 2_factor: macro-based specification
+.         else if "`reg'" == "2_factor" {c -(}
+{txt} 51{com}.             if "`basis'" == "poly" {c -(}
+{txt} 52{com}.                 local reg_treatment (${c -(}vars_T_polynomials{c )-} ${c -(}vars_T_x_gdp_polynomials{c )-} ${c -(}vars_T_x_lr_`t_version'_polynomials{c )-})##i.risk_level
+{txt} 53{com}.             {c )-}
+{txt} 54{com}.             else if "`basis'" == "spline" {c -(}
+{txt} 55{com}.                 local reg_treatment (${c -(}vars_T_splines{c )-} ${c -(}vars_T_x_gdp_splines{c )-} ${c -(}vars_T_x_lr_tmax_splines{c )-})##i.risk_level
+{txt} 56{com}.             {c )-}
+{txt} 57{com}.         {c )-}
+{txt} 58{com}.         else {c -(}
+{txt} 59{com}.             di as error "ERROR: reg must be 1_factor or 2_factor"
+{txt} 60{com}.             exit 198
+{txt} 61{com}.         {c )-}
+{txt} 62{com}. 
+.         di as text "reg_treatment: `reg_treatment'"
+{txt} 63{com}. 
+.         * controls and fixed effects
+.         local reg_control (${c -(}usual_controls{c )-})##i.risk_level
+{txt} 64{com}. 
+.         local reg_fe ""
+{txt} 65{com}.         foreach f in $`fe' {c -(}
+{txt} 66{com}.             local reg_fe `reg_fe' `f'#risk_level
+{txt} 67{com}.         {c )-}
+{txt} 68{com}. 
+.         * weights
+.         local weight "rep_unit_year_sample_wgt"
+{txt} 69{com}.         if "`weight_mode'" == "mixed" {c -(}
+{txt} 70{com}.             replace rep_unit_year_sample_wgt = risk_adj_sample_wgt if high_risk == 0
+{txt} 71{com}.         {c )-}
+{txt} 72{com}. 
+.         * ster name
+.         local tag "`basis'_`reg'"
+{txt} 73{com}.         if "`basis'" == "poly" local tag "`tag'_order`N_order'"
+{txt} 74{com}. 
+.         local ster_name "`reg_folder'/interacted_`tag'_2026_272841.ster"
+{txt} 75{com}.         local spec_desc "basis=`basis', reg=`reg', order=`N_order', fe=`fe', weight_mode=`weight_mode'"
+{txt} 76{com}. 
+.         * run
+.         di as text "reghdfe mins_worked `reg_treatment' `reg_control' [pweight=`weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 77{com}.         reghdfe mins_worked `reg_treatment' `reg_control' [pweight=`weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 78{com}. 
+.         * N by risk
+.         cap drop included
+{txt} 79{com}.         gen included = e(sample)
+{txt} 80{com}.         count if included == 1 & risk_level == 0
+{txt} 81{com}.         estadd scalar low_N = r(N)
+{txt} 82{com}.         count if included == 1 & risk_level == 1
+{txt} 83{com}.         estadd scalar high_N = r(N)
+{txt} 84{com}. 
+.         estimates notes: "`spec_desc'"
+{txt} 85{com}.         estimates save "`ster_name'", replace
+{txt} 86{com}. 
+.         di as result "COMPLETED -> `ster_name'"
+{txt} 87{com}.     {c )-}
+{txt} 88{com}. {c )-}
+{txt}==================================================
+Running: basis=spline | reg=2_factor | N_order=. | onefactor_mode=gdp
+==================================================
+(Written by R.              )
+(0 observations deleted)
+(0 observations deleted)
+(6,595,853 missing values generated)
+(0 real changes made)
+(6,595,853 real changes made)
+(0 real changes made)
+(0 real changes made)
+reg_treatment: (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6 c.tmax_rcspl_3kn_t0#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0_v6#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v1#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v2#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v3#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v4#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v5#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t1_v6#c.log_gdp_pc_adm1 c.tmax_rcspl_3kn_t0#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v1#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v2#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v3#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v4#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v5#c.lr_tmax_p1 c.tmax_rcspl_3kn_t0_v6#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v1#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v2#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v3#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v4#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v5#c.lr_tmax_p1 c.tmax_rcspl_3kn_t1_v6#c.lr_tmax_p1)##i.risk_level
+{err}or not found
+{txt}{search r(111), local:r(111);}
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}

@@ -2,8 +2,8 @@
 import getpass
 username = getpass.getuser()
 
-ROOT_REPO = f"/home/{username}/repos"
-ROOT_INT_DATA = "/shares/gcp/estimation/labor/code_release_int_data"
+ROOT_REPO = "/project/cil/home_dirs/maiqi/repos"
+ROOT_INT_DATA = "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data"               
 
 DIR_OUTPUT = ROOT_REPO + "/output"
 DIR_EXT_DATA = ROOT_REPO + "/data"
