@@ -1,27 +1,26 @@
 
 *****************
-*	INITIALIZE
+*    INITIALIZE
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
-gl input_dir = "${DIR_RF}/subsampled_splines"
-gl output_dir = "${DIR_FIG}/subsampled_splines"
-cap mkdir $output_dir
+gl rf_folder "${DIR_OUTPUT}/subsampled_reg/rf"
+gl fig_folder "${DIR_OUTPUT}/subsampled_reg/plot/1-99"
 
-gl inc_t = "inc_t1 inc_t2 inc_t3"
-gl clim_t = "clim_t1 clim_t2 clim_t3"
-gl inc_clim_q = "inc_q2_clim_q1 inc_q2_clim_q2 inc_q1_clim_q1 inc_q1_clim_q2"
+* gl inc_t = "inc_t1 inc_t2 inc_t3"
+gl clim_t clim_t1 clim_t2 clim_t3
+gl inc_q_clim_q inc_q2_clim_q1 inc_q2_clim_q2 inc_q1_clim_q1 inc_q1_clim_q2
 
-gl interaction_list 1_factor 2_factor
+* gl interaction_list 1_factor 2_factor
 
 **************************
-*		GET COUNTS
+*	     GET COUNTS
 **************************
 
-use "${ROOT_INT_DATA}/xtiles/rep_unit_terciles_uncollapsed.dta"
+use "${ROOT_INT_DATA}/xtiles/rep_unit_terciles_uncollapsed.dta", clear
 
 * Climate and income terciles
 foreach var in clim inc {
@@ -38,8 +37,10 @@ foreach var in clim inc {
 * Climate-income quantiles
 forval i=1(1)2 {
 	forval c=1(1)2 {
+		* get number of rep units in each tercile
 		count if inc_q == `i' & clim_q == `c'
 		gl ru_inc_q`i'_clim_q`c' = `r(N)'
+		* get number of rep_unit_years
 		sum rep_unit_year if inc_q == `i' & clim_q == `c'
 		gl ruy_inc_q`i'_clim_q`c' = `r(sum)'
 	}
@@ -54,7 +55,7 @@ prog def plot_rfs
 	
 	args input_dir output_dir subsample percent type interaction
 
-	foreach weight in no_wgt risk_adj_sample_wgt {
+	foreach weight in risk_adj_sample_wgt {
 
 		foreach risk in high low {
 
@@ -62,12 +63,12 @@ prog def plot_rfs
 
 				loc subsample_hist = "`subsample_hist' `plot'_hist"
 
-				import delim "${DIR_OUTPUT}/temp_dist/`plot'_temp_dist.csv", clear
+				import delim "${DIR_OUTPUT}/subsampled_reg/temp_dist/`plot'_temp_dist.csv", clear
 				tempfile temp_dist
 				save `temp_dist'
 
-				di "IMPORTING ... `input_dir'/subsampled_splines_`plot'_full_response.csv"
-				import delimited "`input_dir'/subsampled_splines_`plot'_full_response.csv", clear
+				di "IMPORTING ... `input_dir'/subsampled_splines_by_risk_`plot'_full_response_260129.csv"
+				import delimited "`input_dir'/subsampled_splines_by_risk_`plot'_full_response_260129.csv", clear
 				
 				merge 1:1 temp using `temp_dist', keepus(no_wgt_`risk' risk_adj_sample_wgt_`risk') keep(1 3) nogen
 				tempfile subsample_data
@@ -101,30 +102,27 @@ prog def plot_rfs
 				else loc percent_range = "0 5"
 
 				#delimit ;
-				tw 	rarea upperci_`risk' lowerci_`risk' temp, col(ltbluishgray%60) || 
-					line yhat_`risk' temp, lc (dknavy) 
+				tw 	rarea upperci_`risk' lowerci_`risk' temp if temp>=`p1' & temp<=`p99', col(ltbluishgray%60) || 
+					line yhat_`risk' temp if temp>=`p1' & temp<=`p99', lc (dknavy) 
 					`overlay'
-					yline(0)
-					xline(`p1', lcolor(gold) lpattern(-)) xline(`p99', lcolor(gold) lpattern(-))
-					xline(`p5', lcolor(orange) lpattern(_)) xline(`p95', lcolor(orange) lpattern(_))	
-					ylab(#7,labs(vsmall)) ytitle("") ysc(range(-40 80))
-					xlab(#5,labs(vsmall)) xtitle("") xsc(range(-20 60))
+					yline(0)	
+					ylab(#7,labs(vsmall)) ytitle("") //ysc(range(-40 80))
+					xlab(#5,labs(vsmall)) xtitle("") //xsc(range(-5 45))
 					graphregion(margin(zero) color(white)) 
 					title(`plot', size(small)) legend(off) 
-					subtitle("`obs' obs, ${ru_`plot'} rep units, ${ruy_`plot'} rep-unit-years", size(vsmall))
+					subtitle("${ru_`plot'} rep units, ${ruy_`plot'} rep-unit-years", size(vsmall))
 					name(`plot', replace) 
 					;
 				#delimit cr
 
 				if "`percent'" == "percent" {
-
 					gegen tot = total(`weight'_`risk') 
 					gen pct = `weight'_`risk'/tot * 100
 
 				#delimit ;
-					tw bar pct temp, color(mint%10) barw(0.1)
+					tw bar pct temp if temp>=`p1' & temp<=`p99', color(mint%10) barw(0.1)
 						ylab(#3,labs(vsmall)) ytitle("") ysc(range(`percent_range'))
-						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) xsc(range(-20 60))
+						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) 
 						graphregion(margin(zero) color(white)) 	
 						title("") legend(off)
 						name(`plot'_hist, replace) 
@@ -135,18 +133,15 @@ prog def plot_rfs
 				if "`percent'" == "abs" {
 
 				#delimit ;
-					tw bar `weight'_`risk' temp, color(mint%10) barw(0.1)
+					tw bar `weight'_`risk' temp, color(mint%25) barw(0.1)
 						ylab(#3,labs(vsmall)) ytitle("") ysc(range(`hist_range'))
-						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) xsc(range(-20 60))
+						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) 
 						graphregion(margin(zero) color(white)) 	
 						title("") legend(off)
 						name(`plot'_hist, replace) 
 						;
 				#delimit cr
 					}
-
-				
-
 			}
 
 				* titles
@@ -157,14 +152,15 @@ prog def plot_rfs
 				else loc ytitle "obs"
 
 				* 4-graph version
-				if "`subsample'" == "inc_clim_q" {
+				if "`subsample'" == "inc_q_clim_q" {
 					graph combine inc_q2_clim_q1 inc_q2_clim_q2, l1("Minutes worked", size(small)) xcomm ycomm rows(1) graphregion(margin(zero) color(white)) name(subsample1, replace)
 					graph combine inc_q2_clim_q1_hist inc_q2_clim_q2_hist, fysize(20) l1("`ytitle'", size(small)) xcomm rows(1) graphregion(margin(zero) color(white)) name(hists1, replace)
 					graph combine inc_q1_clim_q1 inc_q1_clim_q2, l1("Minutes worked", size(small)) xcomm ycomm rows(1) graphregion(margin(zero) color(white)) name(subsample2, replace)
 					graph combine inc_q1_clim_q1_hist inc_q1_clim_q2_hist, fysize(20) l1("`ytitle'", size(small)) xcomm  rows(1) graphregion(margin(zero) color(white)) name(hists2, replace)
 					
-					graph combine subsample1 hists1 subsample2 hists2, xcomm graphregion(margin(zero) color(white)) rows(4) title("`title': `risk' risk") ///
-					note("Vertical lines show 5th/95th percentile (orange) and 1st/99th percentile (yellow) of temperature.  Histogram weighting: `weight'.", size(vsmall))
+					graph combine subsample2 hists2 subsample1 hists1, xcomm graphregion(margin(zero) color(white)) rows(4) title("`title': `risk' risk") ///
+					note("Histogram weighting: `weight'.", size(vsmall))
+					//note("Vertical lines show 5th/95th percentile (orange) and 1st/99th percentile (yellow) of temperature.  Histogram weighting: `weight'.", size(vsmall))
 				}
 
 				* 3-graph version
@@ -172,12 +168,11 @@ prog def plot_rfs
 					graph combine ${`subsample'}, l1("Minutes worked", size(small)) xcomm ycomm rows(1) graphregion(margin(zero) color(white)) name(subsample, replace)
 					graph combine `subsample_hist', l1("`ytitle'", size(small)) fysize(20) xcomm ycomm rows(1) graphregion(margin(zero) color(white)) name(hists, replace)
 					graph combine subsample hists, xcomm graphregion(margin(zero) color(white)) rows(2) title("`title': `risk' risk") ///
-						note("Vertical lines show 5th/95th percentile (orange) and 1st/99th percentile (yellow) of temperature.  Histogram weighting: `weight'.", size(vsmall))
+					note("Histogram weighting: `weight'.", size(vsmall))
+// 					note("Vertical lines show 5th/95th percentile (orange) and 1st/99th percentile (yellow) of temperature.  Histogram weighting: `weight'.", size(vsmall))
 				}
-				cap mkdir "`output_dir'/`interaction'"
-				cap mkdir "`output_dir'/`interaction'/`weight'"
-				cap mkdir "`output_dir'/`interaction'/`weight'/`percent'"
-				graph export "$output_dir/`interaction'/`weight'/`percent'/`type'`subsample'_`risk'_`weight'_`percent'.pdf", replace
+
+				graph export "`output_dir'/`type'`subsample'_`risk'_`weight'_`percent'.pdf", replace
 
 				loc subsample_hist = ""
 	 
@@ -188,14 +183,18 @@ prog def plot_rfs
 end
 
 
-foreach int in $interaction_list {
+// foreach int in $interaction_list {
+//
+// 	di "plotting `int' ..."
+//
+// 	plot_rfs $input_dir $output_dir inc_clim_q abs overlay `int'
+// 	plot_rfs $input_dir $output_dir inc_clim_q percent overlay `int'
+//
+// }
 
-	di "plotting `int' ..."
+plot_rfs $rf_folder $fig_folder inc_q_clim_q percent
+// plot_rfs $rf_folder $fig_folder inc_q_clim_q abs
 
-	plot_rfs $input_dir $output_dir inc_clim_q abs overlay `int'
-	plot_rfs $input_dir $output_dir inc_clim_q percent overlay `int'
+plot_rfs $rf_folder $fig_folder clim_t percent
+// plot_rfs $rf_folder $fig_folder clim_t abs
 
-}
-
-plot_rfs $input_dir $output_dir inc_t percent
-* plot_rfs $input_dir $output_dir clim_t percent

@@ -1,0 +1,311 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/logs/subsampled_splines_260129.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 2 Feb 2026, 10:56:13
+{txt}
+{com}. 
+. 
+. * Select dataset and output folder
+. gl dataset "${c -(}ROOT_INT_DATA{c )-}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0129.dta"
+{txt}
+{com}. loc xtiles "${c -(}ROOT_INT_DATA{c )-}/xtiles/rep_unit_quantiles_uncollapsed.dta"
+{txt}
+{com}. 
+. loc reg_folder "${c -(}DIR_OUTPUT{c )-}/subsampled_reg/ster"
+{txt}
+{com}. 
+. * Other selections
+. gl test_code "no"
+{txt}
+{com}. gl reg_list by_risk // options: by risk, common
+{txt}
+{com}. gl sample_list inc_q1_clim_q1 inc_q1_clim_q2 inc_q2_clim_q1 inc_q2_clim_q2 clim_t1 clim_t2 clim_t3 //inc_t1 inc_t2 inc_t3
+{txt}
+{com}. loc fe fe_adm0_wk
+{txt}
+{com}. 
+. * ---------- CHOOSE WHICH RISK DEFINITION TO USE ----------
+. global risk_def "high_risk"
+{txt}
+{com}. * --------------------------------------------------------
+. 
+. ********************
+. *       RUN REGRESSION
+. ********************
+. 
+. * cycle through each of the regression and sample pairs
+. foreach reg in $reg_list {c -(}
+{txt}  2{com}.         
+.         foreach sample in $sample_list{c -(}
+{txt}  3{com}.         
+.                 use $dataset, clear
+{txt}  4{com}.                 
+.                 * if test code mode is on, take a random sample
+.                 if "${c -(}test_code{c )-}"=="yes" {c -(}
+{txt}  5{com}.                         sample 0.1
+{txt}  6{com}.                 {c )-}
+{txt}  7{com}. 
+.                 * only include non-zero observations
+.                 keep if mins_worked > 0
+{txt}  8{com}. 
+.                 ********************
+.                 *       SUBSET THE DATA
+.                 ********************
+. 
+.                 * categorize into terciles and quantiles
+.                 merge m:1 rep_unit using `xtiles', keepusing(clim_t inc_t clim_q inc_q) nogen assert(3)
+{txt}  9{com}. 
+.                 subsample_data `sample'
+{txt} 10{com}.                 
+.                 * get rid of some awkward naming
+.                 rename *27_28_41_* **
+{txt} 11{com}.                 
+.                 * ---------- DEFINE risk_level FROM CHOSEN SOURCE ----------
+.                 cap drop risk_level 
+{txt} 12{com}.                 gen risk_level = .   
+{txt} 13{com}.                 replace risk_level = high_risk     if "${c -(}risk_def{c )-}"=="high_risk"
+{txt} 14{com}.                 replace risk_level = high_risk_old if "${c -(}risk_def{c )-}"=="high_risk_old"
+{txt} 15{com}.                 replace risk_level = sector if "${c -(}risk_def{c )-}"=="sector"
+{txt} 16{com}.                 replace risk_level = occup_code if "${c -(}risk_def{c )-}"=="occup_code"
+{txt} 17{com}.                 
+.                 * generate regression variables
+.                 gen_controls_and_FEs
+{txt} 18{com}.                 gen_treatment_splines rcspl 3 tmax this_week 1
+{txt} 19{com}. 
+.                 * differentiate treatment if reg is by risk
+.                 if "`reg'" == "by_risk" loc reg_treatment (${c -(}vars_T_splines{c )-})##i.risk_level 
+{txt} 20{com}.                 else if "`reg'" == "common" loc reg_treatment (${c -(}vars_T_splines{c )-})
+{txt} 21{com}.                 else di in red "bad reg specification -> pick 'common' or 'by_risk'"
+{txt} 22{com}.                 di "`reg_treatment'"
+{txt} 23{com}. 
+.                 * both regressions have interacted controls
+.                 local reg_control (${c -(}usual_controls{c )-})##i.risk_level    
+{txt} 24{com}.                 di "`reg_control'"
+{txt} 25{com}.                     
+.                 * interact each fixed effect with the risk binary
+.                 local reg_fe ""                    
+{txt} 26{com}.                 foreach f in $`fe' {c -(}
+{txt} 27{com}.                         local reg_fe `reg_fe' `f'#risk_level
+{txt} 28{com}.                         {c )-}
+{txt} 29{com}. 
+.                 * set the regression weight (pop_adj for common, risk_adj for by-risk)
+.                 if "`reg'" == "common" loc weight "pop_adj_sample_wgt"
+{txt} 30{com}.                 else loc weight "risk_adj_sample_wgt"
+{txt} 31{com}. 
+.                 * set the ster file name and the notes to be included
+.                 local ster_name "`reg_folder'/subsampled_splines_`reg'_`sample'_260129.ster"
+{txt} 32{com}.                 local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment, fe = $fe, reg_type = `reg', weight = `weight'"
+{txt} 33{com}. 
+.                 di "reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)"
+{txt} 34{com}.                 qui reghdfe mins_worked `reg_treatment' `reg_control' [pweight = `weight'], absorb(`reg_fe') vce(cl cluster_adm1yymm)
+{txt} 35{com}. 
+.                 * count regression N by risk
+.                 gen included = e(sample)
+{txt} 36{com}.                 count if included == 1 & high_risk == 1
+{txt} 37{com}.                 estadd scalar high_N = `r(N)'
+{txt} 38{com}.                 count if included == 1 & high_risk == 0
+{txt} 39{com}.                 estadd scalar low_N = `r(N)'
+{txt} 40{com}. 
+.                 estimates notes: "`spec_desc'"
+{txt} 41{com}.                 estimates save "`ster_name'", replace
+{txt} 42{com}. 
+.                 di "COMPLETED: `reg' `sample' regression."
+{txt} 43{com}.         {c )-}
+{txt} 44{com}. 
+. {c )-}
+{txt}(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(5,460,312 observations deleted)
+{res}{txt}(1,135,541 missing values generated)
+(1,135,541 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}71,922
+
+{txt}added scalar:
+             e(high_N) =  {res}71922
+  1,063,605
+
+{txt}added scalar:
+              e(low_N) =  {res}1063605
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_inc_q1_clim_q1_260129.ster saved
+COMPLETED: by_risk inc_q1_clim_q1 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(2,877,837 observations deleted)
+{res}{txt}(3,718,016 missing values generated)
+(3,718,016 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}231,873
+
+{txt}added scalar:
+             e(high_N) =  {res}231873
+  3,486,138
+
+{txt}added scalar:
+              e(low_N) =  {res}3486138
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_inc_q1_clim_q2_260129.ster saved
+COMPLETED: by_risk inc_q1_clim_q2 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(5,460,411 observations deleted)
+{res}{txt}(1,135,442 missing values generated)
+(1,135,442 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}21,128
+
+{txt}added scalar:
+             e(high_N) =  {res}21128
+  1,114,243
+
+{txt}added scalar:
+              e(low_N) =  {res}1114243
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_inc_q2_clim_q1_260129.ster saved
+COMPLETED: by_risk inc_q2_clim_q1 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(5,988,999 observations deleted)
+{res}{txt}(606,854 missing values generated)
+(606,854 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}55,300
+
+{txt}added scalar:
+             e(high_N) =  {res}55300
+  551,553
+
+{txt}added scalar:
+              e(low_N) =  {res}551553
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_inc_q2_clim_q2_260129.ster saved
+COMPLETED: by_risk inc_q2_clim_q2 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(6,431,358 observations deleted)
+{res}{txt}(164,495 missing values generated)
+(164,495 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}13,919
+
+{txt}added scalar:
+             e(high_N) =  {res}13919
+  150,507
+
+{txt}added scalar:
+              e(low_N) =  {res}150507
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_clim_t1_260129.ster saved
+COMPLETED: by_risk clim_t1 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(2,295,092 observations deleted)
+{res}{txt}(4,300,761 missing values generated)
+(4,300,761 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}177,694
+
+{txt}added scalar:
+             e(high_N) =  {res}177694
+  4,123,047
+
+{txt}added scalar:
+              e(low_N) =  {res}4123047
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_clim_t2_260129.ster saved
+COMPLETED: by_risk clim_t2 regression.
+(Written by R.              )
+(0 observations deleted)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}       6,595,853{txt}  
+{col 5}{hline 41}
+(4,465,256 observations deleted)
+{res}{txt}(2,130,597 missing values generated)
+(2,130,597 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level
+(c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level
+reghdfe mins_worked (c.tmax_rcspl_3kn_t0 c.tmax_rcspl_3kn_t0_v1 c.tmax_rcspl_3kn_t0_v2 c.tmax_rcspl_3kn_t0_v3 c.tmax_rcspl_3kn_t0_v4 c.tmax_rcspl_3kn_t0_v5 c.tmax_rcspl_3kn_t0_v6 c.tmax_rcspl_3kn_t1 c.tmax_rcspl_3kn_t1_v1 c.tmax_rcspl_3kn_t1_v2 c.tmax_rcspl_3kn_t1_v3 c.tmax_rcspl_3kn_t1_v4 c.tmax_rcspl_3kn_t1_v5 c.tmax_rcspl_3kn_t1_v6)##i.risk_level (c.age c.age2 c.male c.hhsize c.precip_p1 c.precip_p1_v1 c.precip_p1_v2 c.precip_p1_v3 c.precip_p1_v4 c.precip_p1_v5 c.precip_p1_v6 c.precip_p2 c.precip_p2_v1 c.precip_p2_v2 c.precip_p2_v3 c.precip_p2_v4 c.precip_p2_v5 c.precip_p2_v6)##i.risk_level [pweight = risk_adj_sample_wgt], absorb(adm3_id#risk_level dow_week#risk_level adm0_id#year#risk_level adm0_id#week_fe#risk_level) vce(cl cluster_adm1yymm)
+  {res}188,610
+
+{txt}added scalar:
+             e(high_N) =  {res}188610
+  1,941,985
+
+{txt}added scalar:
+              e(low_N) =  {res}1941985
+{txt}file /project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/output/subsampled_reg/ster/subsampled_splines_by_risk_clim_t3_260129.ster saved
+COMPLETED: by_risk clim_t3 regression.
+
+{com}. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
