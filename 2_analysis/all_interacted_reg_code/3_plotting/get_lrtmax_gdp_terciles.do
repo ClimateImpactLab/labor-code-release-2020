@@ -18,7 +18,7 @@ Date: 28/07/2020
 *****************
 
 * get functions and paths
-run "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 local savepath = "${ROOT_INT_DATA}/xtiles"
@@ -30,7 +30,7 @@ cap mkdir `savepath'
 
 ** BY REP-UNIT: GET UNIQUE LR CLIMATE/INCOME VALUES, GET COUNTS
 
-use "${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta", clear
+use "${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0129.dta", clear
 
 gegen rep_unit_year = tag(rep_unit year)
 gcollapse (first) lr_tmax_p1 log_gdp_pc_adm1 (sum) rep_unit_year, by(rep_unit)
