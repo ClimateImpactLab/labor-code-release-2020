@@ -120,7 +120,7 @@ prog def plot_rfs
 					gen pct = `weight'_`risk'/tot * 100
 
 				#delimit ;
-					tw bar pct temp if temp>=`p1' & temp<=`p99', color(mint%10) barw(0.1)
+					tw bar pct temp if temp>=`p1' & temp<=`p99', color(purple) barw(0.1)
 						ylab(#3,labs(vsmall)) ytitle("") ysc(range(`percent_range'))
 						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) 
 						graphregion(margin(zero) color(white)) 	
@@ -133,7 +133,7 @@ prog def plot_rfs
 				if "`percent'" == "abs" {
 
 				#delimit ;
-					tw bar `weight'_`risk' temp, color(mint%25) barw(0.1)
+					tw bar `weight'_`risk' temp, color(purple) barw(0.1)
 						ylab(#3,labs(vsmall)) ytitle("") ysc(range(`hist_range'))
 						xlab(#5,labs(vsmall)) xtitle("Temp (C)", size(small)) 
 						graphregion(margin(zero) color(white)) 	
