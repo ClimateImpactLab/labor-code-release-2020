@@ -7,3 +7,20 @@
 .DS_Store
 .ipynb_checkpoints/
 
+# -----------------------
+# Logs
+# -----------------------
+*.log
+slurm-*.out
+
+# -----------------------
+# Large raw data (never version control)
+# -----------------------
+*.dta
+
+# -----------------------
+# Temporary folders
+# -----------------------
+temp/
+
+

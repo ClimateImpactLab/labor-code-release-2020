@@ -1,9 +1,8 @@
 * Ruixue Li, liruixue@uchicago.edu
 * convert raw bins to 3c bins with below 0 and above 42 bins
 
-cilpath
 
-do "/home/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 
 global final_path "${ROOT_INT_DATA}/regression_ready_data"
 
@@ -11,13 +10,15 @@ global t_version_list tmax
 global chn_week_list  chn_prev_week
 
 global variables_list bins_wchn
-global data_ll_version_list no_ll_0 
+global data_ll_version_list no_ll_0_agnonag_272841_0129 
 
 foreach variables in $variables_list {
 	foreach t_version in $t_version_list {
 		foreach chn_week in $chn_week_list {	
 			foreach data_ver in $data_ll_version_list {
-				use "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_`data_ver'.dta", clear
+				*use "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_`data_ver'.dta", clear
+			    use "$final_path/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0129.dta", clear
+
 
 				* rename negative temp bins
 				rename `t_version'_bins_nInf_n40C* b1C_0*
@@ -100,7 +101,7 @@ foreach variables in $variables_list {
 
 				*drop `t_version'*
 			
-				save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_`data_ver'_0Cto42C_3Cbins.dta", replace
+				save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_`data_ver'_0Cto42C_3Cbins_ag.dta", replace
 			}
 		}
 	}
