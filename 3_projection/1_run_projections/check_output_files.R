@@ -144,11 +144,10 @@ nc_adapt_to_suf <- function(adapt){
 	
 # batch <- glue("batch{batch_n}")
 # print(glue("batch{batch_n}"))
-impacts.folder <- glue("/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/interacted_model/batch13")
+impacts.folder <- glue("/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41")
 impacts.var <- "rebased"
-output_dir <- "/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/checks"
-# output_title <- batch
-results = ApplyReadAndCheck(impacts.folder, adapt='interacted_model.nc4', impacts.var, years_search=seq(1981,2099), threads=19, output_dir, "interacted-montecarlo-2025-rebased-batch13")
+output_dir <- "/project/cil/gcp/outputs/labor/impacts-woodwork/median/checks"
+results = ApplyReadAndCheck(impacts.folder, adapt='uninteracted_main_model_agnonag_27_28_41.nc4', impacts.var, years_search=seq(1981,2099), threads=19, output_dir, "uninteracted_main_model_agnonag_27_28_41-median")
 print(results %>% dplyr::filter(obs > 0))
                   # }
 

@@ -25,21 +25,7 @@
 #'      This super roughly approximates the rebasing procedure in the actual projection system.
 #------------------------------------------------------------------------------------------
 
-# Load packages ------------------------------
-if(!require("pacman")){install.packages(("pacman"))}
-pacman::p_load(ggplot2, 
-               dplyr,
-               readr)
-library(glue)
-
-# Load in yellow purple and labor curve function 
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
-REPO=ROOT_REPO # this is to make yp package paths consistent with labor repo. 
-source(glue("{DIR_REPO_POST_PROJ}/response_function/yellow_purple_package.R"))
-source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/get_curve_labor.R"))
-
 # Delta beta functions -----------------------
-
 
 # Function for getting the delta beta table! Note - this is for an uninteracted model, as it doesn't subtract a histclim
 # this is a decent approximation in the uninteracted case, where there isn't an effect of the changing covariates in the 2001-2010 period.

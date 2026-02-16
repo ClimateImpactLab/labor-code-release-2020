@@ -165,7 +165,7 @@ get_curve_poly4_interacted_labor <- function(covars, base_year,
 
 
 get_curve_rcspline_labor <- function(covars, interacted = FALSE, base_year=2010,TT_lower_bound=-23, 
-  TT_upper_bound=45, year, region, sector, csvv, adapt="full", knots=c(27, 37, 39), ...){
+  TT_upper_bound=45, year, region, sector, csvv, adapt="full", knots=c(27, 28, 41), ...){
 
   # old knots... 
   # kn <- c(11.6, 26.8, 35.2)

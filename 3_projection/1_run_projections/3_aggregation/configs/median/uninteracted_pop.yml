@@ -1,5 +1,0 @@
-outputdir: /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model
-weighting: population 
-aggregated-unit: "mins/worker/day"
-levels-unit: "mins/day"
-infix: pop

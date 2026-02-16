@@ -18,9 +18,8 @@
 
 # Load packages ------------------------------
 if(!require("pacman")){install.packages(("pacman"))}
-pacman::p_load(ggplot2, 
-               dplyr,
-               readr,
+pacman::p_load(data.table,
+               tidyverse,
                cowplot,
                glue,
                grid,
@@ -32,11 +31,11 @@ pacman::p_load(ggplot2,
 start_time = Sys.time()
 
 # Source repo paths and yellow purple functions
-source('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R')
-REPO=ROOT_REPO # this is to make yp package paths consistent with labor repo. 
-
+USER = Sys.getenv("USER")
+source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
 source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/labor_db_wrapper.R"))
 source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/get_curve_labor.R"))
+source(glue("{DIR_REPO_POST_PROJ}/response_function/yellow_purple_package.R"))
 
 #===================================#
 # 1. Set globals ----
@@ -50,17 +49,16 @@ gcm = "CCSM4"
 
 # Need covars for interacted sector. Not used in the labor paper's main spec (see csvv)
 csvv.dir = glue("{DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/") # trailing slash
-csvv.name = "uninteracted_main_model.csvv"
+csvv.name = "uninteracted_main_model_agnonag_27_28_41.csvv"
 output.dir = glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/output")
 sector_list = c("low", "high")
+proj_in = "/project/cil/gcp/outputs/labor/impacts-woodwork/median/extracted/uninteracted_main_model_27_28_41"
 
 # Test with subsets or specific region(s)
 #region_list = read_csv('/project/cil/gcp/regions/hierarchy-flat.csv') %>% rename(region = `region-key`) %>% select(region)
 #region_list = region_list[[1]][1:2] # any range in [1,24378]
-#"CAN.3.54" "ETH.3.15.68" "TUR.40.441" "CHN.5.36.222" "ETH.8.40.336" "ARG.1.89" "YEM.6.84" "PER.13.123.1195" "SAU.1" "YEM.12.156" "IND.2.21.181" "CHN.5.34.213"
 
-# "TCD.1.2" "COL.5.169" "CAN.8.118.2365" 
-region_list = list('AUS.11.1392')
+region_list = list('TCD.2.4.16') #NER.1.3.4, AGO.5.36, USA.10.366, TCD.2.4.16
 
 # Set args
 args = list(year=2099, 
@@ -127,23 +125,23 @@ high = high %>%
 
 df = low %>% left_join(high) %>% select(-hierid)
 
-risk_share_fa = read_csv('/project/cil/home_dirs/egrenier/misc/labor/extracted_single/uninteracted_main_model-highriskshare-dec2025.csv')
+risk_share_fa = read_csv(glue('{proj_in}/SSP3-rcp85_low_clip_fulladapt.csv'))
 risk_share_fa = risk_share_fa %>% 
   filter(region == region_list[1],
          year == args$year) %>%
-  select(value) %>% pull(1)
+  select(mean) %>% pull(1)
 
-risk_share_ia = read_csv('/project/cil/home_dirs/egrenier/misc/labor/extracted_single/uninteracted_main_model-incadapt-highriskshare-dec2025.csv')
+risk_share_ia = read_csv(glue('{proj_in}/SSP3-rcp85_low_clip_incadapt.csv'))
 risk_share_ia = risk_share_ia %>% 
   filter(region == region_list[1],
          year == args$year) %>%
-  select(value) %>% pull(1)
+  select(mean) %>% pull(1)
 
-risk_share_na = read_csv('/project/cil/home_dirs/egrenier/misc/labor/extracted_single/uninteracted_main_model-noadapt-highriskshare-dec2025.csv')
+risk_share_na = read_csv(glue('{proj_in}/SSP3-rcp85_low_clip_noadapt.csv'))
 risk_share_na = risk_share_na %>% 
   filter(region == region_list[1],
          year == args$year) %>%
-  select(value) %>% pull(1)
+  select(mean) %>% pull(1)
 
 # Plot over-under 20 Table
 plot_df = df %>% 
@@ -162,10 +160,14 @@ plot_df = plot_df %>%
   tail(3)
 table = tableGrob(plot_df, rows = NULL)
 
-proj = fread("/project/cil/home_dirs/egrenier/misc/labor/extracted_single/combined_impacts.csv") %>% 
+impacts_fa = read_csv(glue('{proj_in}/SSP3-rcp85_low_rebased_fulladapt.csv')) %>% select(region, year, mean) %>% filter(year == args$year) %>% dplyr::rename(fa = mean)
+impacts_ia = read_csv(glue('{proj_in}/SSP3-rcp85_low_rebased_incadapt.csv')) %>% select(region, year, mean) %>% filter(year == args$year) %>% dplyr::rename(ia = mean)
+impacts_na = read_csv(glue('{proj_in}/SSP3-rcp85_low_rebased_noadapt.csv')) %>% select(region, year, mean) %>% filter(year == args$year) %>% dplyr::rename(na = mean)
+
+proj = impacts_fa %>% left_join(impacts_ia) %>% left_join(impacts_na) %>% 
   filter(region == region_list[1],
          year == args$year) %>% 
-  mutate(`Results from` = "Projection system single")
+  mutate(`Results from` = "Median")
 
 proj_table = tableGrob(proj, rows = NULL)
 

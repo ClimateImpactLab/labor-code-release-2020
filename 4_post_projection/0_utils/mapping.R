@@ -182,10 +182,10 @@ join.plot.map = function(
   
   if (is.null(avgval)) {
     avgval = round(mean(shp_plot$mainvar, na.rm = T), digits = round.minmax)
-    varval = round(var(shp_plot$mainvar, na.rm = T), digits = round.minmax)}
+    sdval = round(sd(shp_plot$mainvar, na.rm = T), digits = round.minmax)}
   
   caption_val = if (!is.null(avgval)) {
-    glue("Min: {minval}   Avg: {avgval}   Var: {varval}   Max: {maxval}")} else {
+    glue("Min: {minval}   Avg: {avgval}   SD: {sdval}   Max: {maxval}")} else {
       glue("Min: {minval}   Max: {maxval}")
     }
   

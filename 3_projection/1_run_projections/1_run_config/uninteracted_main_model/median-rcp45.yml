@@ -1,6 +1,6 @@
 import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/uninteracted_main_model.yml"
 mode: median
-outputdir: "/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model"
+outputdir: "/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41"
 timeout: 12
 do_historical: true
 do_farmers: true

@@ -18,10 +18,10 @@ rm(packages)
 USER = Sys.getenv("USER")
 source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
 
-spec = ""
+spec = "hot"
 cutoff_temp = 29
 
-# Dictionary to map city names to hierid
+# Dictionary to map city names to hierid, and pick cities to include in the table
 city_map = c(
   "BRA.25.5212.R3fd4ed07b36dfd9c" = "Sao Paulo",
   "IND.10.121.371" = "Delhi",
@@ -30,7 +30,8 @@ city_map = c(
   "IRQ.10.55" = "Baghdad"
 )
 
-dfa = fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year_approx.csv") 
+# GMFD climate data averaged across years in step 0
+dfa = fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year.csv") 
 
 #==============================================================================#
 # 1. Data cleaning and analysis ----
@@ -146,7 +147,7 @@ dfb$SE = (dfb$Var)^(0.5)
 # 2. Formt table ----
 
 # take subset of rows for result
-regs = dfa %>% select(hierid, diff_dis_p, pop) %>% left_join(dfb %>% select(hierid, SE))
+regs = dfa %>% dplyr::select(hierid, diff_dis_p, pop) %>% left_join(dfb %>% dplyr::select(hierid, SE))
 
 # ===== Get global pop weighted mean and standard deviation ===== #
 mean_val = round(weighted.mean(regs$diff_dis_p, regs$pop, na.rm = TRUE),1)
@@ -175,7 +176,7 @@ summary_stats = data.frame(label = c("Global average", paste0(pw_quants$percs, "
                                      paste0(round(as.numeric(pw_quants$V2), 1), "%")))
   
 # selected cities
-city_data = key_irs %>% mutate(value = paste0(round(diff_dis_p, 1), "% (", round(SE, 1), "%)")) %>% select(label = city, value)
+city_data = key_irs %>% mutate(value = paste0(round(diff_dis_p, 1), "% (", round(SE, 1), "%)")) %>% dplyr::select(label = city, value)
 
 #==============================================================================#
 # 3. PRINT ----

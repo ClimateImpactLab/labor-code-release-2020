@@ -9,11 +9,11 @@ climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
 models:
   - csvvs: /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/interacted_model.csvv
     covariates: [ loggdppc, climtasmax, climtas, climtas-poly-2, climtas-poly-3, climtas-poly-4 ]
-    knots: [ 27, 37, 39 ]
+    knots: [ 27, 28, 41 ]
     description: labor productivity
     specifications:
         minlost_lo:
-            csvv-subset: [0, 2]  # Which columns in CSVV? (0-indexing!)
+            csvv-subset: [0, 2]
             csvv-reunit:
                 - variable: outcome
                   new-unit: minutes worked by individual
@@ -35,6 +35,11 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
+            clipping: corpsepose
+            clip-mintemp: 27
+            clip-maxtemp: 41
+            clip-model: minlost_hi
+            grounding: max
         riskshare_hi:
             csvv-subset: [6, 12]
             csvv-reunit:

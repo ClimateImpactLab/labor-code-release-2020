@@ -890,6 +890,7 @@ program define generate_coef_spline_sector
         global b_T_x_lrtmax_spline_`k'_nonag = ${b_T_x_lrtmax_spline_`k'_base} + ${b_T_x_lrtmax_spline_`k'_nonag_dev}
     }
 
+    
 end
 
 
@@ -900,7 +901,6 @@ program define generate_coef_spline
 	args N_knots spl_varname
 
 	local N_new_vars=`N_knots'-2 
-	di "new var"
 	di "`N_new_vars'"
 
 	forval k=0/`N_new_vars'{
@@ -936,14 +936,42 @@ program define generate_coef_spline
 		}
 
 		global b_T_spline_`k'_hl ${b_T_spline_`k'_lr} + ${b_T_spline_`k'_hr}
+		
 		global b_T_x_gdp_spline_`k'_hl  ${b_T_x_gdp_spline_`k'_lr} + ${b_T_x_gdp_spline_`k'_hr}
 		global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_lr} + ${b_T_x_lrtmax_spline_`k'_hr}	
 	}
+	
+	* Print all outputs
+	di _n "==============================================================================="
+	di "ALL OUTPUTS FOR k = 0 to `N_new_vars'"
+	di "==============================================================================="
+	
+	forval k = 0/`N_new_vars' {
+		di _n "--- k = `k' ---"
+		di ""
+		di "Low Risk (lr) terms:"
+		di "  b_T_spline_`k'_lr           = " ${b_T_spline_`k'_lr}
+		di "  b_T_x_gdp_spline_`k'_lr     = " ${b_T_x_gdp_spline_`k'_lr}
+		*di "  b_T_x_lrtmax_spline_`k'_lr  = " ${b_T_x_lrtmax_spline_`k'_lr}
+		di ""
+		di "High Risk (hr) terms:"
+		di "  b_T_spline_`k'_hr           = " ${b_T_spline_`k'_hr}
+		di "  b_T_x_gdp_spline_`k'_hr     = " ${b_T_x_gdp_spline_`k'_hr}
+		*di "  b_T_x_lrtmax_spline_`k'_hr  = " ${b_T_x_lrtmax_spline_`k'_hr}
+		di ""
+		di "Combined High-Low (hl) terms:"
+		di "  b_T_spline_`k'_hl           = " ${b_T_spline_`k'_hl}
+		di "  b_T_x_gdp_spline_`k'_hl     = " ${b_T_x_gdp_spline_`k'_hl}
+		*di "  b_T_x_lrtmax_spline_`k'_hl  = " ${b_T_x_lrtmax_spline_`k'_hl}
+	}
+	
+	di _n "==============================================================================="
 end   
 
-cap program drop generate_coef_spline_1factor
-program define generate_coef_spline_1factor
-    args N_knots spl_varname
+cap program drop generate_coef_spline_interacted
+program define generate_coef_spline_interacted
+
+    args N_knots spl_varname int_type
 
     local N_new_vars = `N_knots' - 2
 
@@ -953,13 +981,14 @@ program define generate_coef_spline_1factor
         global b_T_spline_`k'_hr 0
         global b_T_x_gdp_spline_`k'_lr 0
         global b_T_x_gdp_spline_`k'_hr 0
-*        global b_T_x_lrtmax_spline_`k'_lr 0
- *       global b_T_x_lrtmax_spline_`k'_hr 0
+	global b_T_x_lrtmax_spline_`k'_lr 0
+        global b_T_x_lrtmax_spline_`k'_hr 0
 
         global b_T_spline_`k'_lr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_lr]
         global b_T_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr]
 
         global b_T_x_gdp_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_g]
+	
 
         forval lag = 1/6 {
             global b_T_spline_`k'_lr ${b_T_spline_`k'_lr}   + ///

@@ -1,4 +1,8 @@
+*************************************** 
+
 * king of all csvv writers
+
+*************************************** 
 
 clear all
 macro drop _all
@@ -6,6 +10,21 @@ set more off
 cap log close
 set matsize 10000
 
+*************************************** 
+* get paths
+*************************************** 
+
+* king of all csvv writers
+
+*************************************** 
+
+clear all
+macro drop _all
+set more off
+cap log close
+set matsize 10000
+
+*************************************** 
 * get paths
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/utils.do"
@@ -14,48 +33,73 @@ do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 global ster_dir = "${ROOT_INT_DATA}/ster" 
 global csvv_dir = "${DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/temp"
 
-*global fun_form = "polynomials"
-global fun_form = "splines"
-
 * N is polynomial order or number of knots
 global N = 3
-
-*global interaction = "interacted"
-global interaction = "uninteracted"
-
-global ster_folder = "uninteracted_reg"
-
-* may need to change interacted weight
-if "${interaction}" == "interacted" global weight = "adm1_adj_sample_wgt"
-else if "${interaction}" == "uninteracted" global weight = "risk_adj_sample_wgt"
-else di "wrong specification of interaction"
-
+global interaction = "interacted" // interacted
+global interaction_type = "1_factor_inc" // "1_factor_clim" "2_factor"
+global fun_form = "splines" // polynomials
 global FE = "fe_week_adm0"
 
 if "${interaction}" == "uninteracted" {
 
-	global knots_loc  "27_28_41"
-	global spline_varname = "rcspl"
+	global csvv_name = "uninteracted_reg"
+	global weight = "risk_adj_sample_wgt"
 	global ster_filename = "uninteracted_reg_by_risk_agnonag_27_28_41.ster"
 
 } 
 else if "${interaction}" == "interacted" {
 	
+	if "${interaction_type}" == "1_factor_inc" {
+		
+		global csvv_name = "interacted_reg_1_factor_inc_agnonag_27_28_41"
+		global weight = "mixed_wgt"
+		global ster_filename = "interacted_reg_1_factor_inc_agnonag_27_28_41.ster"
+		
+	}
+	else if "${interaction_type}" == "1_factor_clim" {
+		
+		global csvv_name = "interacted_reg_1_factor_clim_agnonag_27_28_41"
+		global weight = "mixed_wgt"
+		global ster_filename = "interacted_reg_1_factor_clim_agnonag_27_28_41.ster"
+		
+	}
+	else if "${interaction_type}" == "2_factor" {
+		
+		global csvv_name = "interacted_reg_2_factor_agnonag_27_28_41"
+		global weight = "rep_unit_year_sample_wgt"
+		global ster_filename = "interacted_reg_2_factor_agnonag_27_28_41.ster"
+		
+	}
+	
+}
+else di "wrong specification of interaction type"
+
+if "${fun_form}" == "splines" {
+
 	global knots_loc  "27_28_41"
 	global spline_varname = "rcspl"
-	if "${interaction}" == "interacted" global ster_filename = "fe_week_adm0_poly_4_this_week_no_chn_reg_test_deltabeta.ster"
+
+} 
+else if "${fun_form}" == "polynomials" {
+	
+	global dataset = "polynomials_tmax_chn_prev7days"
 	
 }
 else di "wrong specification of functional form"
 
-* generate varlists for the gammas
+
+*************************************** 
+*
+*   generate varlists for the gammas
+*
+*************************************** 
 cap program drop generate_gammas_splines
 program define generate_gammas_splines
-	args N spline_varname interaction
+	args N spline_varname 
 
-	* call this function in the common_functions.do to generate the globals 
+	* calls function in 2_analysis/0_subroutines/utils.do to generate the globals 
 	generate_coef_spline `N' "`spline_varname'"
-
+	
 	local N_new_terms = `N' - 2
 	local gcount = 0
 	foreach risk in lr hl {
@@ -64,6 +108,8 @@ program define generate_gammas_splines
 		 	global gamma`gcount' ${b_T_spline_`i'_`risk'}
 		 	* if interacted, add the interaction terms
 		}
+		
+		* EDIT HERE
 	 	if "`interaction'" == "interacted" {
 	 		forval i = 0/`N_new_terms' {
 				local gcount = `gcount' + 1
@@ -74,6 +120,7 @@ program define generate_gammas_splines
 	 			global gamma`gcount' ${b_T_x_gdp_spline_`i'_`risk'}
  			}
 		}
+		* ========== ^ WIP ^ ==========
 	}
  	
  	* Get rid of the plus signs, and stata _b[] so we can evaluate when we want later!
@@ -89,7 +136,11 @@ end
 * testing command:
 * generate_gammas_spline 3 "rcspl_best" "interacted"
 
+*************************************** 
+*
 * generate varlists for the gammas
+*
+*************************************** 
 cap program drop generate_gammas_polynomials
 program define generate_gammas_polynomials
 	args N interaction
@@ -124,10 +175,15 @@ program define generate_gammas_polynomials
 
 	global N_gamma = `gcount'
 end
+
 * for testing
 * generate_gammas_polynomials 2 interacted
 
-* write csvv header 
+*************************************** 
+*
+* write csvv header for splines
+*
+*************************************** 
 cap drop program write_csvv_header_splines
 program define write_csvv_header_splines
 	args N interaction knots_loc ster_path
@@ -163,7 +219,11 @@ end
 * for testing:
 * write_csvv_header_spline 3 uninteracted 27_37_39 "${ster_filename}"
 
-* write csvv header 
+*************************************** 
+*
+* write csvv header for polynomials
+*
+*************************************** 
 cap drop program write_csvv_header_polynomials
 program define write_csvv_header_polynomials
 	args N interaction ster_path
@@ -255,8 +315,12 @@ program define write_csvv_prednames_covarnames
 end
 
 
+*************************************** 
+*
 * calculate coefficient for each gamma and write to csvv
 * sum coefficients for lags
+*
+*************************************** 
 cap program drop write_csvv_gammas
 program define write_csvv_gammas
 	args N_gamma
@@ -279,8 +343,12 @@ program define write_csvv_gammas
 	end
 
 
+*************************************** 
+*
 * calculate and write vcv matrix
 * sum covariance for all variables in the varlist
+*
+*************************************** 
 cap program drop write_csvv_vcv
 program define write_csvv_vcv
 	args N_gamma
@@ -320,7 +388,11 @@ program define write_csvv_vcv
 
 end
 
+*************************************** 
+*
 * calculate residvcv
+*
+*************************************** 
 cap program drop calculate_nobs_residvcv
 program define calculate_nobs_residvcv
 	
@@ -329,7 +401,11 @@ program define calculate_nobs_residvcv
 
 end
 
+*************************************** 
+*
 * assemble
+*
+*************************************** 
 cap program drop write_csvv
 program define write_csvv
 
@@ -340,7 +416,7 @@ program define write_csvv
 
 	calculate_nobs_residvcv
 
-	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_agnonag_27_28_41.csvv"
+	local csvv_path  "${csvv_dir}/${}_agnonag_27_28_41.csvv"
 	local csvv `csvv_path'
 
 	* cd "$csvv_dir" 
@@ -352,7 +428,7 @@ program define write_csvv
 		write_csvv_header_polynomials ${N} "${interaction}" "`ster_path'"
 	}
 	else if "${fun_form}" == "splines" {
-		generate_gammas_splines ${N} "${spline_varname}" "${interaction}"
+		generate_gammas_splines ${N} "${spline_varname}"
 		write_csvv_header_splines ${N} "${interaction}" "${knots_loc}" "`ster_path'"
 	}
 
@@ -372,7 +448,4 @@ program define write_csvv
 
 end
 
-* note that interacted polynomials is run with adm2 weights right now, so need to manually change filename
 write_csvv
-
-

@@ -20,14 +20,13 @@ source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subro
 source(glue('{DIR_REPO_LABOR}/4_post_projection/0_utils/mapping.R'))
 
 # Define spec (cold/hot splits dmgs at 29C)
-spec = "main" # takes "cold", "hot", "main"
+spec = "hot" # takes "cold", "hot", "main"
 cutoff_temp = 29
 output = glue("{DIR_REPO_LABOR}/disutility_ext/outputs") # maybe change this
 filename = "value_LR_job_map_agnonag"
 
 # read in data
-dfb = fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year_approx.csv") 
-#dfa = fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year.csv") 
+dfb = fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year.csv") 
 
 #==============================================================================#
 # 1. Data Cleaning ----
@@ -134,7 +133,7 @@ print(p)
 ggsave(glue("{output}/{filename}{suffix}.pdf"), p, bg = "white", width = 8, height = 6)
 
 #==============================================================================#
-# Histogram + descriptive stats ----
+# Histogram (prob deprecated) ----
 
 # hist = ggplot(effects, aes(x = diff_dis_p)) +
 #   geom_hline(yintercept = 0, linetype = 1, linewidth = 0.5) +

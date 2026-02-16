@@ -1,56 +1,53 @@
 #!/bin/bash
-# this is a piece of code that helps us check the completeness of projection output
-# can be run from anywhere, just set the correct paths
 
-# set some paths and parameters
-output_root="/project/cil/gcp/outputs/labor/impacts-woodwork/"
-output_dir="median-uninteracted_main_model" 
+# Usage: ./countfiles.sh /path/to/parent_directory
 
-# the size of files above which we consider complete
-# look at the completed output files to determine this size
-output_file_size_above=30
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 parent_directory"
+  exit 1
+fi
 
-# 130 for one SSP
-n_folders_total=520
+parent_dir="$1"
 
-cd "${output_root}/${output_dir}"
+if [ ! -d "$parent_dir" ]; then
+  echo "Error: '$parent_dir' is not a valid directory."
+  exit 1
+fi
 
-filename_stem="uninteracted_main_model"
+# Initialize aggregate counters
+total_std=0
+total_pop=0
+total_gdp=0
+total_wage=0
 
-# check number of status-*.txt files
-for type in global generate; 
-do
-	n=$(find . -name "status-${type}.txt" | wc -l)
-	echo "Number of status-${type}.txt files: ${n}"
-done
+# Use process substitution so the while-loop runs in the current shell (not a subshell)
+while IFS= read -r dir; do
+  # Only consider terminal directories (no subdirectories)
+  if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)" ]; then
+    # Count "standard" by exact filenames
+    std_count=0
+    for fname in \
+      "uninteracted_main_model_agnonag_27_28_41.nc4" \
+      "uninteracted_main_model_agnonag_27_28_41-noadapt.nc4" \
+      "uninteracted_main_model_agnonag_27_28_41-incadapt.nc4" \
+      "uninteracted_main_model_agnonag_27_28_41-histclim.nc4"
+    do
+      [ -f "$dir/$fname" ] && std_count=$((std_count + 1))
+    done
 
-# check the files for each adaptation scenario
-# if the file size is large enough, consider it complete
-# otherwise consider it incomplete
-for scenario in fulladapt incadapt noadapt histclim; 
-do 
-	if [ ${scenario} = "fulladapt" ];
-	then 
-		filename_suffix="" 
-	else
-		filename_suffix="-${scenario}"
-	fi
-	n_complete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
-	echo "find . -name ${filename_stem}${filename_suffix}.nc4 -size +${output_file_size_above}M| wc -l"
-	n_incomplete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-	n_total=$(find . -name "${filename_stem}${filename_suffix}.nc4" | wc -l)
-	
-	printf "${scenario}: \n"
-	echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"
-done
+    # Count matches for "pop", "gdp", "wage"
+    pop_count=$(find "$dir" -maxdepth 1 -type f -iname "*pop*.nc4" 2>/dev/null | wc -l)
+    gdp_count=$(find "$dir" -maxdepth 1 -type f -iname "*gdp*.nc4" 2>/dev/null | wc -l)
+    wage_count=$(find "$dir" -maxdepth 1 -type f -iname "*wage*.nc4" 2>/dev/null | wc -l)
 
-# uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+    total_std=$((total_std + std_count))
+    total_pop=$((total_pop + pop_count))
+    total_gdp=$((total_gdp + gdp_count))
+    total_wage=$((total_wage + wage_count))
+  fi
+done < <(find "$parent_dir" -type d)
 
-# if needed, modify the following command to find folders that doesn't contain a certain file
-# find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
-
-# use the following command to view the folders and their sizes
-# du --separate-dirs -h . |sort -h
+echo "standard: $total_std"
+echo "pop:      $total_pop"
+echo "gdp:      $total_gdp"
+echo "wage:     $total_wage"
