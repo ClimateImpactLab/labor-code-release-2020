@@ -1,7 +1,0 @@
-outputdir: /project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/interacted_model
-weighting: population 
-aggregated-unit: "mins/worker/day"
-levels-unit: "mins/day"
-infix: pop
-ssp: SSP3
-batch: batch6
