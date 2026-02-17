@@ -1,3 +1,4 @@
+only-batch-number: 0
 climcovar:
     class: mean
     length: 30
@@ -61,8 +62,8 @@ models:
             - Clip:
                 - YearlyAverageDay:  # YearlySumDaily triggers RecursionError starting at openest/generate/daily.py", line 308
                     model: riskshare_hi
-                - 0.046444122  # Historical clip min value
-                - 0.99408281   # Historical clip max value
+                - 0.00000000   # Historical clip min value
+                - 0.98816568   # Historical clip max value
             - Reword:
                 - SpanInstabase:
                     calculation:
