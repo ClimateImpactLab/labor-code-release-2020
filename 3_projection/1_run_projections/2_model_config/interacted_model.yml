@@ -38,7 +38,7 @@ models:
             clipping: corpsepose
             clip-mintemp: 27
             clip-maxtemp: 41
-            clip-model: minlost_hi
+            clip-model: minlost_lo
             grounding: max
         riskshare_hi:
             csvv-subset: [6, 12]
