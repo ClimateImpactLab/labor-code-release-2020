@@ -7,7 +7,7 @@ econcovar:
 timerate: day
 climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
 models:
-  - csvvs: /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/interacted_model.csvv
+  - csvvs: /project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/clim_interacted_model_agnonag_27_28_41.csvv
     covariates: [ loggdppc, climtasmax, climtas, climtas-poly-2, climtas-poly-3, climtas-poly-4 ]
     knots: [ 27, 28, 41 ]
     description: labor productivity
@@ -66,8 +66,8 @@ models:
             - Clip:
                 - YearlyAverageDay:  # YearlySumDaily triggers RecursionError starting at openest/generate/daily.py", line 308
                     model: riskshare_hi
-                - 0.046444122  # Historical clip min value
-                - 0.99408281   # Historical clip max value
+                - 0.00000000   # Historical clip min value
+                - 0.98816568   # Historical clip max value
             - Reword:
                 - SpanInstabase:
                     calculation:

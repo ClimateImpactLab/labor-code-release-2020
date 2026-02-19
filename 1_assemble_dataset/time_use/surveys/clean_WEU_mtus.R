@@ -150,7 +150,7 @@ final = comb_all %>%
 		mins_not_worked = total_mins - mins_worked,
 		high_risk = ifelse(occup %in% c(12), 1, 0), # ag/forestry/fishing
 		sector = ifelse(occup %in% c(13), 1, 0), # manuf/construction/mining/transportation (for 3-sector regression)
-    high_risk_old = ifelse(occup %in% c(12, 13), 1, 0), # old definition of high_risk
+        high_risk_old = ifelse(occup %in% c(12, 13), 1, 0), # old definition of high_risk
 		occup_code = case_when(
 		  occup %in% c(12) ~ 1, # ag etc.
 		  occup %in% c(10, 13) ~ 2, # manuf

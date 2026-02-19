@@ -1,4 +1,4 @@
-only-batch-number: 0
+only-batch-number: 2
 climcovar:
     class: mean
     length: 30

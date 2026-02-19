@@ -8,13 +8,13 @@
 
 show_output="FALSE" # if FALSE parallelizes using run_bg below
 aggregated="FALSE" # For aggregated files
-levels="TRUE" # for IR-level valuation outputs (from aggregation)
+levels="FALSE" # for IR-level valuation outputs (from aggregation)
 
 varlist=( rebased ) # rebased highriskimpacts lowriskimpacts clip 
 ssplist=( SSP3 ) # SSP2 SSP3 SSP4
 rcplist=( rcp45 rcp85 ) # rcp45 rcp85
 iamlist=( low high ) # low high
-scnlist=( noadapt incadapt fulladapt ) # noadapt incadapt fulladapt
+scnlist=( noadapt ) # noadapt incadapt fulladapt
 processes=12 #set number of processes so that extraction will not use more than this 
 
 # quantiles.py, extraction config and output locations 
@@ -62,7 +62,7 @@ for rcp in ${rcplist[@]} ;do
     					if [ "${scn}" != "noadapt" ] && [ "${scn}" != "histclim" ] && [ "${v}" != "clip" ];then
     						file="${basename}${ADAPTS[${scn}]}${suffix_aggregated} -${basename}-histclim${suffix_aggregated}" # this is to subtract hisctlim if not noadapt!
     					else
-    						file="${basename}${ADAPTS[${scn}]}${suffix_aggregated}" # otherwise we just take the raw impacts (if histclim or noadapt)
+    						file="${basename}${ADAPTS[${scn}]}${suffix_aggregated} -${basename}-histclim-noadapt${suffix_aggregated}" # otherwise we just take the raw impacts (if histclim or noadapt)
                         fi 
 
     					if [ $show_output == "FALSE" ];then 

@@ -7,27 +7,38 @@ set more off
 cap log close
 set matsize 10000
 
+*************************************** 
 * get paths
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/utils.do"
+do "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
-* !!choose the model type
-*global interaction = "interacted"
-global interaction = "uninteracted"
+global ster_dir = "${ROOT_INT_DATA}/ster" 
+global csvv_dir = "${DIR_REPO_LABOR}/3_projection/1_run_projections/0_csvv/temp"
 
+* N is polynomial order or number of knots
+global N = 3
+global interaction = "interacted" // uninteracted
+global interaction_type = "1_factor_inc" // "1_factor_clim" "2_factor"
+global fun_form = "splines" // polynomials
+global FE = "fe_week_adm0"
+
+if "${interaction}" == "uninteracted" {
+
+	global csvv_name = "uninteracted_reg"
+	global weight = "risk_adj_sample_wgt"
+	global ster_filename = "uninteracted_reg_by_risk_agnonag_27_28_41.ster"
+	global csvv_name = "uninteracted_main_model"
+
+} 
 if "${interaction}" == "interacted" {
-	global ster_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/interacted_reg_output/ster"
+	
 	global ster_folder = "interacted_reg_1_factor"
-	global csvv_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
 	global weight = "mixed_weight_1_factor"
-	global ster_filename = "interacted_reg_1_factor_2025.ster"
+	global ster_filename = "interacted_reg_1_factor_clim_agnonag_27_28_41.ster"
+	global csvv_name = "interacted_1_factor_clim"
 }
-else if "${interaction}" == "uninteracted" {
-	global ster_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/output/ster"
-	global ster_folder = "uninteracted_reg_comlohi"
-	global csvv_dir = "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/3_projection/1_run_projections/single_test_correct_rebasing"
-	global weight = "pure_weight_uninteracted"
-	global ster_filename = "uninteracted_reg_by_risk_2025.ster"
-}
+
 else di "wrong specification of interaction"
 
 * !!choose the function type
@@ -40,7 +51,7 @@ global FE = "fe_week_adm0"
 
 if "${fun_form}" == "splines" {
 
-	global knots_loc  "27_37_39"
+	global knots_loc  "27_27_41"
 	global dataset = "interacted_reg_1_factor"
 	global spline_varname = "rcspl"
 
@@ -84,7 +95,7 @@ program define generate_gammas_splines
  			forval i = 0/`N_new_terms' {
 				if "`risk'" == "hl" {
 					local gcount = `gcount' + 1
-					global gamma`gcount' ${b_T_x_gdp_spline_`i'_`risk'}
+					global gamma`gcount' ${b_T_x_lrtmax_spline_`i'_`risk'}
 				}
  			}
 		}
@@ -128,7 +139,7 @@ program define generate_gammas_polynomials
 
  			forval i = 1/`N' {
 				local gcount = `gcount' + 1
-	 			global gamma`gcount' ${b_temp_gdp_`i'_`risk'}
+	 			global gamma`gcount' ${b_temp_lrtmax_`i'_`risk'}
  			}
 		}
 	}
@@ -252,7 +263,7 @@ program define write_csvv_prednames_covarnames
     }
     if "`interaction'" == "interacted" {
         forval i = 1/`N_clim_terms' {
-            local covarnames_supplement "`covarnames_supplement' loggdppc,"
+            local covarnames_supplement "`covarnames_supplement' climtasmax,"
         }
     }
     local covarnames_supplement = substr("`covarnames_supplement'", 2, length("`covarnames_supplement'") - 2)
@@ -339,13 +350,13 @@ cap program drop write_csvv
 program define write_csvv
 
 	di "LOADING ESTIMATES: "
-	local ster_path  "${ster_dir}/${ster_folder}/${ster_filename}"
+	local ster_path  "${ster_dir}/${ster_filename}"
 	di "`ster_path'"
 	estimates use "`ster_path'"
 
 	calculate_nobs_residvcv
 
-	local csvv_path  "${csvv_dir}/${ster_folder}_${weight}_2025.csvv"
+	local csvv_path  "${csvv_dir}/${csvv_name}_agnonag_27_28_41.csvv"
 	local csvv `csvv_path'
 
 	* cd "$csvv_dir" 

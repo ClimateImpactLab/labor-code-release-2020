@@ -1002,7 +1002,7 @@ program define generate_coef_spline_interacted
 
         global b_T_spline_`k'_hl       ${b_T_spline_`k'_lr} + ${b_T_spline_`k'_hr}
         global b_T_x_gdp_spline_`k'_hl ${b_T_x_gdp_spline_`k'_lr} + ${b_T_x_gdp_spline_`k'_hr}
-*        global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_lr} + ${b_T_x_lrtmax_spline_`k'_hr}
+        global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_lr} + ${b_T_x_lrtmax_spline_`k'_hr}
     }
 end
 
@@ -1086,6 +1086,45 @@ program define select_data_subset
 	else if "`data_subset'" == "inc_q2_clim_q2" keep if  iso!= "CHN" & inc_q == 2 & clim_q == 2
 	else if "`data_subset'" != "all_data" di "wrong specification of data scope!"
 end // note that "wrong specification of scope" keeps showing up incorrectly
+
+
+cap program drop generate_coef_spline_1factor
+program define generate_coef_spline_1factor
+    args N_knots spl_varname
+
+    local N_new_vars = `N_knots' - 2
+
+    forval k = 0/`N_new_vars' {
+
+        global b_T_spline_`k'_lr 0
+        global b_T_spline_`k'_hr 0
+        *global b_T_x_gdp_spline_`k'_lr 0
+        *global b_T_x_gdp_spline_`k'_hr 0
+        *global b_T_x_lrtmax_spline_`k'_lr 0
+        global b_T_x_lrtmax_spline_`k'_hr 0
+
+        global b_T_spline_`k'_lr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_lr]
+        global b_T_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr]
+
+        *global b_T_x_gdp_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_g]
+	global b_T_x_lrtmax_spline_`k'_hr _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_l]
+
+        forval lag = 1/6 {
+            global b_T_spline_`k'_lr ${b_T_spline_`k'_lr}   + ///
+                _b[tmax_`spl_varname'_`N_knots'kn_t`k'_lr_v`lag']
+            global b_T_spline_`k'_hr ${b_T_spline_`k'_hr}   + ///
+                _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_v`lag']
+
+            global b_T_x_lrtmax_spline_`k'_hr ${b_T_x_lrtmax_spline_`k'_hr} + ///
+                _b[tmax_`spl_varname'_`N_knots'kn_t`k'_hr_l_v`lag']
+        }
+
+        global b_T_spline_`k'_hl       ${b_T_spline_`k'_lr} + ${b_T_spline_`k'_hr}
+        *global b_T_x_gdp_spline_`k'_hl ${b_T_x_gdp_spline_`k'_lr} + ${b_T_x_gdp_spline_`k'_hr}
+        global b_T_x_lrtmax_spline_`k'_hl ${b_T_x_lrtmax_spline_`k'_lr} + ${b_T_x_lrtmax_spline_`k'_hr}
+    }
+end
+
 
 
 cap program drop get_RF_uninteracted_splines

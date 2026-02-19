@@ -1,6 +1,6 @@
-import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/interacted_model.yml"
+import: "/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/1_run_projections/2_model_config/clim_interacted_model.yml"
 mode: writecalcs
-outputdir: "/project/cil/gcp/outputs/labor/impacts-corpsepose/test"
-singledir: single-interacted-test
+outputdir: "/project/cil/gcp/outputs/labor/impacts-corpsepose/single"
+singledir: single-clim-interacted
 do_farmers: true
 do_historical: true
