@@ -1,6 +1,9 @@
+
+
 *****************
 *	INITIALIZE
 *****************
+
 
 * get functions and paths
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
@@ -11,13 +14,52 @@ cap log close
 log using "${DIR_LOG}/uninteracted_reg_FEs.smcl", replace
 
 * select dataset and output folder
-gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0.dta"
+gl dataset 		"${ROOT_INT_DATA}/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841.dta"
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
 
 * other selections
 global test_code "no"
+
+* listing FE specifications: 
 global fe_list fe_adm0_m_y fe_adm0_my fe_adm1_y_adm0_w fe_adm0_wk
-* fe_adm0_y fe_adm0_my fe_adm0_wk fe_adm3_my fe_adm0_m_y fe_adm1_y_adm0_w
+
+
+/*
+ 4 Fixed Effects Specifications: 
+
+1. 	fe_adm0_m_y 	"adm3_id dow_week adm0_id#year adm0_id#month" 
+	
+	fe_adm0_m_y: 
+	- Subnational Location FE
+	- FE Day-of-Week FE
+	- Country x Year FE
+	- Country x Month-of-Year FE
+	
+	
+2.  fe_adm0_my 		 "adm3_id dow_week adm0_id#month#year" 
+	
+	fe_adm0_my: 
+	- Subnational Location FE
+	- FE Day-of-Week FE
+	- Country x Month x Year FE 
+	
+3.  fe_adm1_y_adm0_w "adm3_id dow_week adm1_id#year adm0_id#week_fe"
+	
+	fe_adm1_y_adm0_w:
+	- Subnational Location FE
+	- FE Day-of-Week FE
+	- ADM1 x Year FE 
+	- Country x Week-of-Year FE 
+	
+4.  fe_adm0_wk 		"adm3_id dow_week adm0_id#year adm0_id#week_fe" (chosen FE spec)
+	
+	fe_adm0_wk: 
+	- Subnational Location FE
+	- FE Day-of-Week FE
+	- Country x Year FE
+	- Country x Week-of-Year FE
+*/ 
+
 
 ********************
 *	RUN REGRESSION
@@ -37,7 +79,7 @@ foreach fe in $fe_list {
 	keep if mins_worked > 0
 
 	* get rid of some awkward naming
-	rename *27_37_39_* **
+	rename *27_28_41_* **
 
 	* generate regression variables
 	gen_controls_and_FEs

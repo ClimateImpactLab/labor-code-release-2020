@@ -8,7 +8,7 @@ run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
 * log results
 cap log close 
-log using "${DIR_LOG}/rf_uninteracted_reg_FEs_fe_adm1_y_adm0_w.smcl", replace
+log using "${DIR_LOG}/rf_uninteracted_reg_FEs.smcl", replace
 
 * select dataset and output folder
 loc reg_folder 	"${DIR_STER}/uninteracted_reg_FEs"
@@ -46,7 +46,7 @@ foreach row_values in full_response table_values {
 		est use `ster_name'
 
 		* generate spline terms and collect in macros
-		make_spline_terms 27 37 39
+		make_spline_terms 27 28 41
 		collect_spline_terms, splines(0 1) unint(unint) int(int)
 
 		* need this blank variable to get standard errors in predictnl
