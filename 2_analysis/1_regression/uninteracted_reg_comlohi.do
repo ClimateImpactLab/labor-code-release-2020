@@ -26,6 +26,9 @@
 *
 * Runtime:
 *   - Approximately 2 hours.
+*
+* Reorganized by: 
+* Maiqi Yu (maiqi@uchicago.edu)
 ****************************************************
 
 
@@ -35,16 +38,19 @@
 *****************
 
 * get functions and paths
-run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020_OLD/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
+
 
 * log results
 cap log close 
+log using "${DIR_REPO_LABOR}/2_analysis/1_regression/new_final/uninteracted_reg_comlohi.smcl", replace
 *--------------------------------------------------------
-log using "${DIR_LOG}/uninteracted_reg_comlohi_high.smcl", replace
+
 
 * select dataset and output folder
-gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841.dta"
+gl dataset      "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0218.dta"
+
 loc reg_folder  "${DIR_STER}/uninteracted_reg_comlohi"
 
 * other selections
@@ -108,7 +114,7 @@ foreach reg in $reg_list {
     }
 * -------------------------------------------------------------------------------------------------------
     * set the ster file name and the notes to be included
-    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2025_272841_appro.ster"
+    local ster_name "`reg_folder'/uninteracted_reg_`reg'_2026_272841.ster"
     local spec_desc "rcspline, 3 knots (27 28 41), tmax, differentiated treatment, fe = $fe, reg_type = `reg'"
     
 * -------------------------------------------------------------------------------------------------------
