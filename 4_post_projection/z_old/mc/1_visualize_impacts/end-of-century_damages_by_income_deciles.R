@@ -1,25 +1,16 @@
 # Impacts by income deciles bar chart
 # 
 rm(list = ls())
-library(RColorBrewer)
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr,
                glue,
-               parallel)
+               parallel,
+               RColorBrewer)
 
-
-source("~/repos/labor-code-release-2020/0_subroutines/paths.R")
-source("~/repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
-
-# Load in the required packages, installing them if necessary 
-if(!require("pacman")){install.packages(("pacman"))}
-pacman::p_load(ggplot2, 
-               dplyr,
-               readr)
-
+source("/project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 DB_data = '/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/covariates/'
 
@@ -28,7 +19,8 @@ DB_data = '/shares/gcp/estimation/labor/code_release_int_data/projection_outputs
 get_deciles = function(df){
   
   deciles = df %>% 
-    filter(year == 2012)
+    select(region, `year...2`, loggdppc, climtas) %>%
+    filter(year == 2015)
   
   # Get cut-off population levels for each quantile
   total_pop = sum(deciles$pop)
@@ -49,9 +41,8 @@ get_deciles = function(df){
   return(deciles)
 }
 
-# Load in pop and income data
-df_covariates = read_csv(paste0(DB_data,  
-                        '/SSP3-high-IR_level-gdppc-pop-2012.csv'))
+# Load in temperature and income data
+df_covariates = read_csv(paste0(DB_data, '/single-allcalcs-uninteracted_main_model.csv'))
 
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)

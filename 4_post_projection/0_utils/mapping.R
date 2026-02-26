@@ -1,13 +1,13 @@
 #==============================================================================#
-# Mapping function for labor
+# Mapping functions for labor
 #
-# Original function by Trinetta Chong circa 2019, updated by Kate Champion for inequality, 
-# last edits from Elliot Grenier in 2025 (egrenier@uchicago.edu)
+# Original join.plot.map function by Trinetta Chong circa 2019, plot.impact.map 
+# by Ruixue Li in 2020, updated by Kate Champion for inequality, last edits from 
+# Elliot Grenier in 2025, and Nishka Sharma in 2026
 #
 # Description:
 #
-#   Call this function using some IR level input data funcion, configure
-#   following documentation below
+#   These functions together plots the maps in the labor paper.
 #
 #==============================================================================#
 
@@ -62,7 +62,33 @@
 #==============================================================================#
 
 #==============================================================================#
-packages = c("ggplot2", "dplyr", "magrittr", "raster", "rnaturalearth", "RColorBrewer")
+# plot.impact.map() documentation ----
+
+# Input:
+#   - model.name: the model being plotted the base map to use, it should be a shape file of IR level polygons
+#   - rcp: rcp the map is being made for. valid values are "rcp45" and "rcp85." 
+#          used to read the file and assign title of the map. 
+#   - ssp: ssp the map is being made for. valid values are "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
+#          used to read the file and assign title of the map
+#   - iam: iam the map is being made for. valid values are "high" and "low". 
+#          used to read the file and assign title of the map
+#   - adapt: adaptation scenario the map is being made for. valid values are "fulladapt", "incadapt", "noadapt". 
+#            used to read the file and assign title of the map
+#   - impact: type of impact the map is being made for. used to read the file. 
+#             valid values are: "clip" - this variable stores projected share of high risk workers
+#                               "rebased" - this variable stores projected impacts in time spent working
+#   - aggregation: applicable only if impact is "rebased". default values is "" 
+#                  "" - impacts in minutes worked
+#                  "-gdp-levels" - impacts as % of GDP
+#                  "-pop-levels" - impacts in population weighted minutes
+#                  "-wage-levels" - impacts in million dollars
+#   - year: the year for which map is being made. used to filter the data and assign title of the map
+#   - output.folder: location of the maps
+#==============================================================================#
+
+#==============================================================================#
+packages = c("ggplot2", "dplyr", "magrittr", "raster", "rnaturalearth", "RColorBrewer", 
+             "glue", "scales")
 
 message(" ---- loading packages ---- ")
 invisible(lapply(packages, function(pkg) {
@@ -72,6 +98,7 @@ invisible(lapply(packages, function(pkg) {
 rm(packages)
 
 #==============================================================================#
+
 # The CRS needed for the shape files we use
 DEFAULT_CRS = glue("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84",
                    " +datum=WGS84 +units=m +no_defs")
@@ -300,8 +327,107 @@ join.plot.map = function(
     
   } 
   
-  
   rm(shp_plot)
   return(p.map)
+  
+}
+
+# map of overall impact in a year
+plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation="", year, output.folder){
+  
+  if ((ssp=="SSP1" & rcp=="rcp85") | (ssp=="SSP5" & rcp=="rcp45")) {
+    print("invalid ssp and rcp combination")
+    return()
+  }
+  
+  # browser()
+  df= read_csv(glue('{input_path}/{model.name}/{rcp}/{iam}/{ssp}/{ssp}-{rcp}_{iam}_{impact}_{adapt}{aggregation}.csv')) %>%
+    filter(year == !!year)
+  
+  # load shapefile
+  mymap = st_read(glue("{ROOT_INT_DATA}/shapefiles/world-combo-new-nytimes/new_shapefile.shp"))
+  
+  # set rcp for color bar title
+  if (rcp == "rcp85"){
+    rcp_t <- "RCP8.5"
+    
+  } else if (rcp == "rcp45") {
+    rcp_t <- "RCP4.5"
+    
+  } else {
+    print("enter correct rcp value")
+    return()
+    
+  }
+  
+  
+  if (aggregation == "-pop-levels") {
+    plot_title <- "Pop Weighted Impacts - Mins Worked"
+    
+  } else if (aggregation == "-gdp-levels") {
+    plot_title <- glue("Worker disutility costs of climate change ({rcp_t}, % of {year} GDP)")
+    df_plot <- df %>% dplyr::mutate(mean = -mean * 100)     
+    
+    bound = ceiling(max(abs(df_plot$mean), na.rm=TRUE))
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- scale_v*bound
+    ub = max(rescale_value,na.rm = TRUE)
+    lb = -ub
+    # browser()
+    breaks_labels = seq(-bound, bound, bound/4)
+    color_scheme = "div"
+    
+  } else if (aggregation == "-wage-levels") {
+    plot_title <- glue("Worker disutility costs of climate change in million dollars ({rcp_t}, {year}")
+    df_plot <- df %>% dplyr::mutate(mean = -mean/1000000) 
+    
+    bound = ceiling(max(abs(df_plot$mean)))
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- scale_v*bound
+    ub = max(rescale_value,na.rm = TRUE)
+    lb = -ub
+    breaks_labels = seq(-bound, bound, bound/4)
+    color_scheme = "div"
+    
+  } else if (aggregation == "") {
+    plot_title <- glue("Change in minutes worked per worker per day due to climate change ({rcp_t}, {year})")
+    bound = 30
+    df_plot <- df 
+    scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+    rescale_value <- -scale_v*bound
+    ub = max(rescale_value)
+    lb = -ub
+    breaks_labels = seq(-bound, bound, bound/3)
+    color_scheme = "div"
+    
+  } else {
+    print("wrong aggregation!")
+    return()
+    
+  }
+  
+  if (impact == "clip") {
+    plot_title <- "Share of High Risk Workers"
+    rescale_value <- seq(0,1,0.2)
+    ub = 1
+    lb = 0
+    breaks_labels = rescale_value
+    color_scheme = "seq"
+  }
+  
+  p = join.plot.map(map.df = mymap, 
+                    df = df_plot, 
+                    df.key = "region", 
+                    plot.var = "mean", 
+                    topcode = T, 
+                    topcode.lb = lb,
+                    topcode.ub = ub,
+                    breaks_labels_val = breaks_labels,
+                    color.scheme = color_scheme, 
+                    rescale_val = rescale_value,
+                    colorbar.title = plot_title, 
+                    map.title = glue("{ssp}-{rcp}-{iam}-{adapt}-{year}"))
+  
+  ggsave(glue("{output.folder}/{ssp}-{rcp}_{iam}_{impact}_{adapt}{aggregation}_{year}_map.png"), p, dpi = 300)
   
 }
