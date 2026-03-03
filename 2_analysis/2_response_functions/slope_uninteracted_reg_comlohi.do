@@ -1,0 +1,134 @@
+****************************************************
+* This file generates the full response table (at 0.1-degree resolution)
+* as well as the table values used in the paper.
+*
+* ADD-ON:
+*   - Computes slopes (dy/dT) for each response function
+*     using numerical derivatives on the 0.1C grid.
+*
+* How to use:
+*   1. Log in to a computing node.
+*   2. Update the following settings in this file:
+*        - comm_ster
+*        - by_risk_ster
+*        - rf_name
+*        - !!!! There is a function with hard-coded knots (make_spline_terms). Check it!
+*
+* Runtime:
+*   - Runs immediately.
+****************************************************
+
+
+*****************
+*   INITIALIZE
+*****************
+
+* get functions and paths
+run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
+
+* select dataset and output folder
+loc reg_folder  "${DIR_STER}/uninteracted_reg_comlohi"
+loc rf_folder   "${DIR_RF}/uninteracted_reg_comlohi"
+
+* reference temperature
+global ref_temp 27 
+
+* full response function (0.1C grid)
+numlist "-20(0.1)47"
+gl full_response `r(numlist)'
+
+* table values (discrete temps)
+numlist "45 40 35 30 10 5 0 -5 -10"
+gl table_values `r(numlist)'
+
+
+***********************************
+*   GENERATE RESPONSE FUNCTION CSV
+***********************************
+
+foreach row_values in full_response table_values {
+
+    clear
+
+    * set the ster file names and the output CSV
+    local comm_ster     "`reg_folder'/uninteracted_reg_common_2026_272841.ster"
+    local by_risk_ster  "`reg_folder'/uninteracted_reg_by_risk_2026_272841.ster"
+    local rf_name       "`rf_folder'/uninteracted_reg_comlohi_`row_values'_2026_272841.csv"
+
+    * create the temp list that we want to predict for
+    qui make_temp_dist, list($`row_values') ref($ref_temp)
+
+    * need this blank variable to get standard errors in predictnl
+    gen mins_worked = .
+
+    ********************** COMMON RESPONSE **********************
+
+    est use `comm_ster'
+
+    * generate spline terms and collect in macros
+    make_spline_terms 27 28 41
+    collect_spline_terms, splines(0 1) unint(common) int(unused)
+
+    * predict common response
+    predictnl yhat_comm = (T_spline0 - ref_spline0) * (${common0}) + ///
+                          (T_spline1 - ref_spline1) * (${common1}),  ///
+                          ci(lowerci_comm upperci_comm) se(se_comm)
+
+    ********************** BY-RISK RESPONSE **********************
+
+    est use `by_risk_ster'
+    cap drop T_spline* ref_spline*
+    * generate spline terms and collect in macros
+    make_spline_terms 27 28 41
+    collect_spline_terms, splines(0 1) unint(unint) int(int)
+
+    * predict response function by risk
+    predictnl yhat_low  = (T_spline0 - ref_spline0) * (${unint0}) + ///
+                          (T_spline1 - ref_spline1) * (${unint1}),  ///
+                          ci(lowerci_low upperci_low) se(se_low)
+
+    predictnl yhat_high = (T_spline0 - ref_spline0) * (${unint0} + ${int0}) + ///
+                          (T_spline1 - ref_spline1) * (${unint1} + ${int1}),  ///
+                          ci(lowerci_high upperci_high) se(se_high)
+
+    predictnl yhat_marg = (T_spline0 - ref_spline0) * (${int0}) + ///
+                          (T_spline1 - ref_spline1) * (${int1}),  ///
+                          ci(lowerci_marg upperci_marg) se(se_marg)
+
+    *************************************************************
+    *   SLOPES: numerical derivative dy/dT on the temp grid
+    *************************************************************
+
+    * Make sure we are sorted by temperature
+    sort temp
+
+    foreach v in comm low high marg {
+
+        gen slope_`v' = .
+
+        * central difference for interior points
+        replace slope_`v' = (yhat_`v'[_n+1] - yhat_`v'[_n-1]) / ///
+                            (temp[_n+1]     - temp[_n-1])     ///
+            if _n > 1 & _n < _N
+
+        * forward difference for first point
+        replace slope_`v' = (yhat_`v'[_n+1] - yhat_`v'[_n]) / ///
+                            (temp[_n+1]     - temp[_n])     ///
+            if _n == 1
+
+        * backward difference for last point
+        replace slope_`v' = (yhat_`v'[_n] - yhat_`v'[_n-1]) / ///
+                            (temp[_n]     - temp[_n-1])     ///
+            if _n == _N
+    }
+
+    *************************************************************
+    *   CLEAN + EXPORT
+    *************************************************************
+
+    * drop spline construction vars etc. (keep temp + yhat + slope + CI/SE)
+    drop T* ref_* min*
+
+    export delim `rf_name', replace
+}

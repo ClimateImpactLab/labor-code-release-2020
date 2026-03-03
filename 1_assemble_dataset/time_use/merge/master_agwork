@@ -1,0 +1,402 @@
+* liruixue@uchicago.edu
+clear all
+
+do "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
+
+set more off
+set trace off
+
+cap ssc install rsource
+
+global temp_path ${ROOT_INT_DATA}/temp
+global final_path ${ROOT_INT_DATA}/regression_ready_data
+
+******* parameters that need to be modified *******
+global t_version_list tmax
+global chn_week_list chn_prev_week
+global variables_list splines_nochn
+
+global drop_holidays "YES"
+global clean_raw_surveys "NO"
+global combine_surveys "YES"
+global include_chn "NO" 
+
+global leadlag "no_ll"
+global n_ll 0
+******* parameters that need to be modified *******
+
+local countries_all CHN USA MEX BRA GBR FRA ESP IND 
+
+if "${clean_raw_surveys}" == "YES"{
+	shell python "$DIR_REPO_LABOR/time_use/surveys/clean_CHN_chns.py"
+	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_WEU_mtus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_IND_itus.R", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_MEX_enoe.py", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	rsource using "$DIR_REPO_LABOR/time_use/surveys/clean_USA_atus.py", rpath("/usr/bin/R") roptions(`"--vanilla"')
+	do "$DIR_REPO_LABOR/time_use/surveys/clean_BRA_pme.do"
+}
+
+if "${combine_surveys}" == "YES" {
+
+	import delimited using "$temp_path/all_time_use.csv", clear
+
+	count
+
+	drop if year == 1974 | year == 1975
+
+	gen date = mdy(month, day, year)
+	gen age2 = age^2
+
+	gen dow_week = dow(date)
+	replace dow_week = 8 if inlist(iso, "CHN","BRA","MEX")
+
+	replace mins_worked = mins_worked * sqrt(7) if !inlist(iso, "CHN","BRA","MEX")
+	foreach v of varlist age age2 hhsize male {
+		di "`v'"
+		replace `v' = `v' / sqrt(7) if !inlist(iso, "CHN","BRA","MEX")
+	}
+
+	* --------------------------------------------------
+	* Scale mins_agwork the same way as mins_worked
+	* IND is a daily diary so no scaling needed (same as mins_worked for IND)
+	* Non-IND daily countries: multiply by sqrt(7)
+	* BRA/MEX: already weekly, no scaling (will be filled in after this block)
+	* --------------------------------------------------
+	cap confirm variable mins_agwork
+	if _rc == 0 {
+		* variable exists (from IND), scale non-IND daily countries
+		replace mins_agwork = mins_agwork * sqrt(7) if !inlist(iso, "CHN","BRA","MEX") & iso != "IND"
+	}
+
+	* --------------------------------------------------
+	* Handle mins_agwork:
+	* - IND: already has mins_agwork from cleaning script, scale it like mins_worked
+	* - Other countries: mins_agwork = mins_worked if high_risk == 1, missing if high_risk == 0
+	* --------------------------------------------------
+	cap confirm variable mins_agwork
+	if _rc != 0 {
+		* mins_agwork not in data at all (IND data was not included or column missing)
+		* generate for all observations
+		gen mins_agwork = mins_worked if high_risk == 1
+		replace mins_agwork = . if high_risk == 0
+	}
+	else {
+		* mins_agwork exists from IND cleaning script
+		* scale IND mins_agwork the same way as mins_worked (already weekly diary, no scaling needed)
+		* for non-IND: fill in based on high_risk
+		replace mins_agwork = mins_worked if high_risk == 1 & iso != "IND"
+		replace mins_agwork = .           if high_risk == 0 & iso != "IND"
+	}
+
+	drop if missing(hhsize)
+	drop if missing(date)
+
+	save "$temp_path/all_time_use_clean.dta", replace
+
+	****** merge in income and population ***********
+	import delimited using "${DIR_EXT_DATA}/misc/income_downscaled.csv", clear
+	ds
+	keep year iso adm1_id adm0_pop gdppc_adm1_pwt_downscaled gdppc_adm0_pwt
+
+	rename gdppc_adm1_pwt_downscaled log_gdp_pc_adm1
+	replace log_gdp_pc_adm1 = log(log_gdp_pc_adm1)
+	
+	duplicates drop
+	drop if iso == "CHN" & year != 2002
+	drop if iso == "GBR" & year != 1993
+	drop if inlist(iso, "FRA", "IND") & year != 1999
+	drop if iso == "BRA" & year != 2006
+	drop if iso == "ESP" & year != 2003
+	drop if iso == "IND" & year != 1999
+	drop if iso == "MEX" & year != 2008
+	drop if iso == "USA" & year != 2007
+
+	replace log_gdp_pc_adm1 = log(gdppc_adm0_pwt) if inlist(iso, "USA", "GBR", "FRA")
+
+	drop year
+
+	merge 1:n adm1_id using "$temp_path/all_time_use_clean.dta", nogen keep(3)
+	save "$temp_path/all_time_use_pop_merged.dta", replace
+
+	*****************************
+	****** adjust weight ********
+	*****************************
+	
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/reweight.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
+	
+	use "$temp_path/all_time_use_pop_merged_reweighted.dta", clear
+
+	foreach v in risk_prop risk_sum risk_adj_sample_wgt total_risk_share risk_adj_sample_wgt_equal {
+		cap drop `v'
+	}
+	
+	capture program drop create_risk_weights
+	program define create_risk_weights
+	
+		syntax varname, base_weight(varname) [suffix(string)]
+    
+		local group_var `varlist'
+    
+		if "`suffix'" == "" {
+			local suffix ""
+		}
+    
+		bysort iso `group_var': gen `group_var'_prop = _N 
+		by iso: replace `group_var'_prop = `group_var'_prop/_N 
+    
+		gen risk_adj_sample_wgt`suffix' = `base_weight' * `group_var'_prop
+		bysort `group_var': egen `group_var'_sum = total(risk_adj_sample_wgt`suffix')
+		gen total_`group_var'_share = _N 
+		bysort `group_var': replace total_`group_var'_share = _N / total_`group_var'_share
+		replace risk_adj_sample_wgt`suffix' = risk_adj_sample_wgt`suffix' / `group_var'_sum * total_`group_var'_share
+    
+		drop total_`group_var'_share `group_var'_prop `group_var'_sum
+    
+		gegen rep_unit_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit)
+		gen rep_unit_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_tot_wgt`suffix'
+		gegen test_sum`suffix' = total(rep_unit_sample_wgt`suffix'), by(rep_unit)
+    
+		gegen rep_unit_year_tot_wgt`suffix' = total(risk_adj_sample_wgt`suffix'), by(rep_unit year)
+		gen rep_unit_year_sample_wgt`suffix' = risk_adj_sample_wgt`suffix'/rep_unit_year_tot_wgt`suffix'
+		gegen test_sum_2`suffix' = total(rep_unit_year_sample_wgt`suffix'), by(rep_unit year)
+    
+		count if (round(test_sum`suffix') != 1) | (round(test_sum_2`suffix') != 1)
+		if `r(N)' != 0 {
+			di as error "Whoops, you biffed it! Sample weights for `group_var' don't add to 1."
+		}
+		else {
+			di as result "Great job, sample weights for `group_var' correctly generated."
+			drop rep_unit_tot_wgt`suffix' rep_unit_year_tot_wgt`suffix' test_sum`suffix' test_sum_2`suffix'
+		}
+    
+	end
+
+	gen rep_unit = adm1_id
+	replace rep_unit = adm0_id if inlist(iso, "USA", "GBR", "FRA")
+
+	create_risk_weights high_risk, base_weight(pop_adj_sample_wgt)
+	create_risk_weights high_risk_old, base_weight(pop_adj_sample_wgt) suffix(_old)
+	create_risk_weights sector, base_weight(pop_adj_sample_wgt) suffix(_sector)
+
+	egen cluster_adm0yymm = group(iso month year)
+	egen cluster_adm1yymm = group(adm1_id month year)
+
+	drop *sum_sample
+
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered.dta", replace
+
+	*****************************
+	****** filter holidays ********
+	*****************************
+
+	rsource using "$DIR_REPO_LABOR/1_assemble_dataset/time_use/merge/mark_holidays.R", rpath("/software/R-4.2.1-el8-x86_64/bin/R") roptions(`"--vanilla"')
+	use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta", clear
+	
+	if "${drop_holidays}" == "YES" {
+		drop if is_holiday == 1		
+	}
+	save "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", replace
+	
+}
+
+
+cap program drop merge_climate_data_file
+program define merge_climate_data_file
+	args iso filename leadlag n_ll
+	di "`iso'"
+	
+	if "`iso'" == "CHN" {
+		local adm_level adm3
+	}
+	if "`iso'" == "FRA" | "`iso'" ==  "GBR" | "`iso'" == "ESP" {
+		local adm_level adm1
+	}
+	if "`iso'" == "USA" | "`iso'" ==  "MEX" | "`iso'" == "IND" | "`iso'" == "BRA" {
+		local adm_level adm2
+	}
+
+	use "${ROOT_INT_DATA}/climate/final_27_28_41/`iso'/`adm_level'/GMFD_`iso'_`filename'_`adm_level'.dta", clear
+	cap ds *term0*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "term0", "t0", .)
+		cap rename `x' `new'
+	    }
+	}
+
+	cap ds *term1*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "term1", "t1", .)
+		cap rename `x' `new'
+	    }
+	}
+
+	cap ds *rcspline*
+	if !_rc {
+	    foreach x of varlist `r(varlist)' {
+		local new = subinstr("`x'", "rcspline", "rcspl", .)
+		cap rename `x' `new'
+	    }
+	}
+
+	gen date = mdy(month, day, year)
+	gen dow = dow(date)
+
+	tsset `adm_level'_id date 
+	cap rename *nochn_best* *best*
+
+	quietly{
+		foreach v of varlist _all {
+			di "`v'"
+			if "`v'" == "adm1_id" | "`v'" == "adm2_id" |  "`v'" == "adm3_id" | "`v'" == "date" | "`v'" == "dow" | "`v'" == "year" | "`v'" == "month" | "`v'" == "day" continue
+			if "`iso'" == "MEX" | "`iso'" == "BRA" | "`iso'" == "CHN" {
+				gen w_`v' = `v'
+				forval i = 1/6{
+					gen `v'_l`i' = L`i'.`v'
+					replace w_`v' = w_`v' + `v'_l`i'
+				}
+				replace `v' = w_`v' 
+				forval i = 1/6{
+					gen `v'_v`i' = `v'
+				}
+				drop w_`v' `v'_l?
+			} 
+			else {
+				replace `v' = `v' * sqrt(7)
+				forval i = 1/6{
+					local j = 7-`i'
+					gen `v'_v`i' = F`j'.`v'
+					replace `v'_v`i' = L`i'.`v' if dow >=`i'
+				}
+			}
+
+			if "`leadlag'" == "lcl" & `n_ll' > 0{
+				forval n_wk = 1/`n_ll' {
+					local n_days = `n_wk' * 7
+					gen `v'_wkn`n_wk' = L`n_days'.`v'
+					gen `v'_wk`n_wk' = F`n_days'.`v'
+					forval i = 1/6{
+						gen `v'_wkn`n_wk'_v`i' = L`n_days'.`v'_v`i'
+						gen `v'_wk`n_wk'_v`i' = F`n_days'.`v'_v`i'
+					}				
+				}
+			}
+		}
+	}
+
+	merge 1:n `adm_level'_id date using `iso'_dt, nogen keep(3)
+	save `iso'_dt, replace
+end
+
+
+cap program drop merge_long_run
+program define merge_long_run
+	args iso 
+	di "`iso'"
+	if "`iso'" == "USA" | "`iso'" == "GBR" | "`iso'" == "FRA" {
+		use "${ROOT_INT_DATA}/climate/final_27_28_41/WORLD/adm0/GMFD_WORLD_long_run_adm0.dta", clear
+		rename ISO iso
+		merge 1:n iso using `iso'_dt, nogen keep(3)
+	}
+	else {
+		use "${ROOT_INT_DATA}/climate/final_27_28_41/`iso'/adm1/GMFD_`iso'_long_run_adm1.dta", clear	
+		merge 1:n adm1_id using `iso'_dt, nogen keep(3)
+	}
+	save `iso'_dt, replace
+end
+
+
+foreach t_version in $t_version_list {
+	foreach chn_week in $chn_week_list {	
+		foreach variables in $variables_list {
+
+			use "$temp_path/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta", clear
+			cap drop adm1_id_old
+
+			cap restore, not
+
+			if "${include_chn}" == "YES" {
+				global countries `countries_all'
+			}
+			else {
+				local chn CHN
+				global countries: list countries_all - chn
+			}
+
+			di "countries are ${countries}"
+
+			foreach iso in $countries  {
+				preserve
+				count if iso == "`iso'"
+				di "`r(N)' obs for `iso'"
+				keep if iso == "`iso'"
+
+				if "`iso'" == "CHN" {
+					gen dow = dow(date)
+					replace dow = 7 if dow == 0
+					if "`chn_week'" == "chn_prev7days" {
+						replace date = date - 1
+					}
+					if "`chn_week'" == "chn_prev_week" {
+						replace date = date - dow
+					}
+					if "`chn_week'" == "chn_next_week" {
+						replace date = date - dow + 7
+					}
+					drop dow
+				}
+				cd
+				save `iso'_dt, replace
+
+				if strpos("`variables'","polynomials") > 0 {
+					merge_climate_data_file `iso' `t_version'_polynomials ${leadlag} ${n_ll}
+				}
+				else if strpos("`variables'","bins") > 0 {
+					merge_climate_data_file `iso' `t_version'_bins ${leadlag} ${n_ll}
+				}
+				else {
+					merge_climate_data_file `iso' `t_version'_`variables' ${leadlag} ${n_ll}
+				}
+				merge_climate_data_file `iso' prcp ${leadlag} ${n_ll}
+				merge_long_run `iso'
+
+				restore
+			}
+
+			drop if _n >= 0
+			foreach iso in $countries {
+				di "`iso'"
+				append using `iso'_dt.dta
+				erase `iso'_dt.dta
+			}
+			cap rename *27_28_41*3kn* *3kn*27_28_41*
+
+			if "`variables'" == "splines_nochn" {
+				gen real_temperature = `t_version'_rcspl_3kn_27_28_41_t0/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+				replace real_temperature = `t_version'_rcspl_3kn_27_28_41_t0/7 if inlist(iso, "BRA","CHN","MEX")
+			}
+			else if (strpos("`variables'", "polynomials") > 0) {
+				gen real_temperature = `t_version'_p1/(7^0.5) if !inlist(iso, "BRA","CHN","MEX")
+				replace real_temperature = `t_version'_p1/7 if inlist(iso, "BRA","CHN","MEX")
+			}
+			
+			gen week_fe = date
+			replace week_fe = week(week_fe)
+			drop if (iso == "MEX" & ind_id == 361587 & year == 2007 & month == 7 & day == 1)
+			drop if (iso == "GBR" & ind_id == 22798  & year == 2001 & month == 2 & day == 14)
+
+			* confirm mins_agwork is in the final dataset
+			cap confirm variable mins_agwork
+			if _rc != 0 {
+				di as error "WARNING: mins_agwork not found in final dataset, generating now"
+				gen mins_agwork = mins_worked if high_risk == 1
+				replace mins_agwork = . if high_risk == 0
+			}
+
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_agnonag_272841_0121.dta", replace
+		}
+	}
+}
+
+cap log close

@@ -455,7 +455,7 @@ foreach t_version in $t_version_list {
 			replace week_fe = week(week_fe)
 			drop if (iso == "MEX" & ind_id == 361587 & year == 2007 & month == 7 & day == 1)
 			drop if (iso == "GBR" & ind_id == 22798  & year == 2001 & month == 2 & day == 14)
-			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_agnonag_272841_0121.dta", replace
+			save "$final_path/labor_dataset_`variables'_`t_version'_`chn_week'_${leadlag}_${n_ll}_agnonag_272841_agwork.dta", replace
 		}
 	}
 }
