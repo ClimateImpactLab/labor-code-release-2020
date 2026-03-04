@@ -1,5 +1,6 @@
 #!/bin/bash
-# This bash script is a wrapper that calls quantiles.py.
+# This bash script is a wrapper that calls quantiles.py. 
+# First, check that extract config is correctly specified.
 # Allocate ~6 GB of memory per process if running in parallel, otherwise OOM errors will kill processes
 # In command line, run:
 #   1. module load python
@@ -19,7 +20,7 @@ processes=12 #set number of processes so that extraction will not use more than 
 
 # quantiles.py, extraction config and output locations 
 script=/project/cil/home_dirs/egrenier/repos/prospectus-tools/gcp/extract/quantiles.py
-config=/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/2_extract_projections/extraction_configs/extract_median.yml
+config=/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/3_projection/2_extract_projections/extraction_configs/extract_median.yml # <- check before running
 output=/project/cil/gcp/outputs/labor/impacts-woodwork/median/extracted/
 
 # define basename (no quotes)
