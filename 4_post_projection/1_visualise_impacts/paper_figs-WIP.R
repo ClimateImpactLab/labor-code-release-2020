@@ -18,14 +18,8 @@
 #'   - Figure G.2A | Time Series w/ multicolor CI (% GDP, rcp85/high/SSP3, 2000-2099)
 #'   - Figure G.2B | Time Series w/ multicolor CI (% GDP, rcp45/high/SSP3, 2000-2099)
 #'   
-#'  Outline:
-#'    - Pull in functions for each plot type
-#'    - Will need 1 impact map func, 1 kernel desnity func, 1 decile func, 3 TS funcs
-#'    - One run function for each plot type
-#'    - One call for each of the above
-#'   
 #' How To Run:
-#'   - The toggles below control which portions of the analysis are run.
+#'   - Items under "change this section to customise plots" control what is plotted 
 #=========================================================================================#
 
 #==============================================================================#
@@ -40,33 +34,45 @@ invisible(lapply(packages, function(pkg) {
 rm(packages)
 
 #==============================================================================#
+# get user and source paths
+USER = Sys.getenv("USER")
+source(glue("/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R"))
 
-source("/project/cil/home_dirs/nishkasharma/repos/labor-code-release-2020/0_subroutines/paths.R")
-# Source labor utils/functions.
+# source labor utils/functions.
 Rfiles = Sys.glob(glue("{DIR_REPO_LABOR}", "/4_post_projection/0_utils/*.R"))
 Rfiles = Rfiles[!mapply(x=Rfiles, grepl, MoreArgs=list(pattern='load_utils'))]
 null = lapply(Rfiles, source)
 
-# TOGGLES
+#==================change this section to customise plots======================#
+# toggles
 Part1 = TRUE # Impact Map
 Part2 = TRUE # Decile Plot
-Part3 = FALSE # Time Series
+Part3 = TRUE # Time Series
 Appendix = TRUE # Appendix F, G figures.
 
 # RCP scenario ('rcp85', 'rcp45')
-rcp='rcp85' 
+rcp_in = 'rcp85' 
 
-# Economic modeling scenario:
-#  'low': "IIASA GDP"
+# Economic modeling scenario
+#   'low': "IIASA GDP"
 #  'high': "OECD Econ Growth"
-iam='high'
+iam_in = 'high'
 
 # SSP ('SSP2', 'SSP3', 'SSP4')
-ssp='SSP3'
+ssp_in = 'SSP3'
+
+# impact
+# 'rebased': minutes worked 
+#   'clip' : share of high risk workers
+impact_in = 'rebased'
+
+# adaptation scenario ('fulladapt', 'incadapt', 'noadapt')
+adapt_in = 'fulladapt'
 
 # input path to single/median/mc
 input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/median/extracted"
 
+#==============================================================================#
 # Part 1: End of century mortality risk of climate change maps and density
 # plots.
 # 
@@ -88,11 +94,11 @@ input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/median/extracted"
 if (Part1) {
   
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
-                  rcp="rcp85",
-                  ssp="SSP3",
-                  iam="high", 
-                  adapt="fulladapt",
-                  impact="rebased",
+                  rcp=rcp_in,
+                  ssp=ssp_in,
+                  iam=iam_in, 
+                  adapt=adapt_in,
+                  impact=impact_in,
                   aggregation="-gdp-levels", 
                   year=2099,
                   output.folder = glue("{DIR_FIG}/median/maps"))
@@ -103,11 +109,11 @@ if (Part1) {
   
   # IR density plots without accounting for adaptation costs (Figure 7)
   impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41", 
-                       ssp="SSP3", 
-                       rcp="rcp85", 
-                       iam="high", 
-                       impact="rebased", 
-                       adapt="fulladapt", 
+                       ssp=ssp_in, 
+                       rcp=rcp_in, 
+                       iam=iam_in, 
+                       impact=impact_in, 
+                       adapt=adapt_in, 
                        aggregation="-gdp-levels", 
                        regions=regions, 
                        year=2099, 
@@ -122,10 +128,10 @@ if (Part2) {
   
   lapply(c("loggdppc", "climtas"), function(covar) {
     deciles.plot(model.name = "uninteracted_main_model_agnonag_27_28_41", 
-                 ssp = "SSP3", 
-                 iam = "high", 
-                 rcp = "rcp85", 
-                 adapt = "fulladapt", 
+                 ssp = ssp_in, 
+                 iam = iam_in, 
+                 rcp = rcp_in, 
+                 adapt = adapt_in, 
                  aggregation = "-gdp-levels", 
                  covar = covar,
                  output.dir = glue("{DIR_FIG}/median"))
@@ -147,13 +153,37 @@ if (Part2) {
 
 if (Part3) {
   
-  # Time series comparison of adaptation scenarios without accounting for adaptation costs (Figure 8 Panel A)
-  timeseries_compare_adaptation(rcp=rcp, iam=iam, ssp=ssp, with_costs=FALSE)
+  # Time series comparison of adaptation scenarios (Figure 8 Panel A)
+  plot.ts(model.name = "uninteracted_main_model_agnonag_27_28_41",
+          rcp = rcp_in,
+          ssp=ssp_in,
+          iam=iam_in,
+          impact=impact_in,
+          aggregation="-gdp-aggregated",
+          color_var = "adapt_scen",
+          ir = "global",
+          x_title = "Year",
+          labs_color = "Worker disutility costs of climate change",
+          output.folder = glue("{DIR_FIG}/median/timeseries")
+  )
   
-  # Time series with uncertainty and comparison of RCPs without accounting for adaptation costs (Figure 8 Panel B)
-  timeseries_compare_rcp(rcp=rcp, iam=iam, ssp=ssp, with_costs=FALSE)
+  # Time series with uncertainty and comparison of RCPs (Figure 8 Panel B)
+  plot.ts.ci.rcp(model.name = "uninteracted_main_model_agnonag_27_28_41",
+                 ssp = ssp_in,
+                 iam = iam_in,
+                 adapt = adapt_in,
+                 impact = impact_in,
+                 aggregation = "-gdp-aggregated",
+                 fill_var = "rcp",
+                 linetype_var = "rcp",
+                 ir = "global",
+                 x_title = "Year",
+                 labs_linetype = "Worker disutility costs of climate change, \nwith changing workforce composition due to \neconomic development and climate adaptation",
+                 boxplot = TRUE,
+                 yr = 2099,
+                 output.folder = glue("{DIR_FIG}/median/timeseries")
+  )
   
-  # To account for adaptation costs, pass with_costs=TRUE. 
 }
 
 
@@ -164,31 +194,31 @@ if (Appendix) {
   # Figure F.1 A, B, C, D: Projected impact in labor supply and disutility costs 
   # by RCPs
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
-                  rcp="rcp85",
-                  ssp="SSP3",
-                  iam="high", 
-                  adapt="fulladapt",
-                  impact="rebased",
+                  rcp=rcp_in,
+                  ssp=ssp_in,
+                  iam=iam_in, 
+                  adapt=adapt_in,
+                  impact=impact_in,
                   aggregation="", 
                   year=2099,
                   output.folder = glue("{DIR_FIG}/median/maps"))
   
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
-                  ssp="SSP3",
-                  iam="high", 
-                  adapt="fulladapt",
-                  impact="rebased",
+                  ssp=ssp_in,
+                  iam=iam_in, 
+                  adapt=adapt_in,
+                  impact=impact_in,
                   aggregation="", 
                   year=2099,
                   output.folder = glue("{DIR_FIG}/median/maps"))
   
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
-                  ssp="SSP3",
-                  iam="high", 
-                  adapt="fulladapt",
-                  impact="rebased",
+                  ssp=ssp_in,
+                  iam=iam_in, 
+                  adapt=adapt_in,
+                  impact=impact_in,
                   aggregation="-gdp-levels", 
                   year=2099,
                   output.folder = glue("{DIR_FIG}/median/maps"))
@@ -196,7 +226,19 @@ if (Appendix) {
   # Figure G.2 A, B: Projected disutility costs by RCPs under the benefits of   
   # income growth and adaptation while additionally accounting for the 
   # temperature sensitivity of high-risk labor supply
-  timeseries_compare_age_groups()
+  plot.ts.ci.model(model.name = "uninteracted_main_model_agnonag_27_28_41",
+                   ssp = ssp_in,
+                   iam = iam_in,
+                   adapt = adapt_in,
+                   impact = impact_in,
+                   aggregation = "-gdp-aggregated",
+                   fill_var = "adapt_scen",
+                   color_var = "adapt_scen",
+                   ir = "global",
+                   x_title = "Year",
+                   labs_color = "Worker disutility costs of climate change",
+                   output.folder = glue("{DIR_FIG}/median/timeseries")
+  )
   
 }
 

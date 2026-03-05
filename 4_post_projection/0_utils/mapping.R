@@ -86,23 +86,11 @@
 #   - output.folder: location of the maps
 #==============================================================================#
 
-#==============================================================================#
-packages = c("ggplot2", "dplyr", "magrittr", "raster", "rnaturalearth", "RColorBrewer", 
-             "glue", "scales")
-
-message(" ---- loading packages ---- ")
-invisible(lapply(packages, function(pkg) {
-  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
-}))
-
-rm(packages)
-
-#==============================================================================#
-
 # The CRS needed for the shape files we use
 DEFAULT_CRS = glue("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84",
                    " +datum=WGS84 +units=m +no_defs")
 
+# create plot data
 join.plot.map = function(
   map.df = NULL, df = NULL, df.key = "region", map.key = 'hierid',  
   plot.var = NULL, topcode = F, topcode.ub = NULL, topcode.lb = NULL, 
@@ -365,7 +353,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
     plot_title <- "Pop Weighted Impacts - Mins Worked"
     
   } else if (aggregation == "-gdp-levels") {
-    plot_title <- glue("Worker disutility costs of climate change ({rcp_t}, % of {year} GDP)")
+    plot_title <- glue("Worker disutility costs of climate change (% of {year} GDP, {ssp}-{rcp_t})")
     df_plot <- df %>% dplyr::mutate(mean = -mean * 100)     
     
     bound = ceiling(max(abs(df_plot$mean), na.rm=TRUE))
@@ -378,7 +366,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
     color_scheme = "div"
     
   } else if (aggregation == "-wage-levels") {
-    plot_title <- glue("Worker disutility costs of climate change in million dollars ({rcp_t}, {year}")
+    plot_title <- glue("Worker disutility costs of climate change in million dollars ({year}, {ssp}-{rcp_t}")
     df_plot <- df %>% dplyr::mutate(mean = -mean/1000000) 
     
     bound = ceiling(max(abs(df_plot$mean)))
@@ -390,7 +378,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
     color_scheme = "div"
     
   } else if (aggregation == "") {
-    plot_title <- glue("Change in minutes worked per worker per day due to climate change ({rcp_t}, {year})")
+    plot_title <- glue("Change in minutes worked per worker per day due to climate change ({year}, {ssp}-{rcp_t})")
     bound = 30
     df_plot <- df 
     scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
@@ -426,7 +414,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
                     color.scheme = color_scheme, 
                     rescale_val = rescale_value,
                     colorbar.title = plot_title, 
-                    map.title = glue("{ssp}-{rcp}-{iam}-{adapt}-{year}"))
+                    map.title = glue("{model.name} \n{ssp}-{rcp}-{iam}-{adapt}-{year}"))
   
   ggsave(glue("{output.folder}/{ssp}-{rcp}_{iam}_{impact}_{adapt}{aggregation}_{year}_map.png"), p, dpi = 300)
   

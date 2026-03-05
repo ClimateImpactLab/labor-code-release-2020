@@ -23,23 +23,10 @@
 #   - output.dir: location of the maps
 #==============================================================================#
 
-#==============================================================================#
-packages = c("ggplot2", "dplyr", "readr", "parallel", "glue", "RColorBrewer")
-
-message(" ---- loading packages ---- ")
-invisible(lapply(packages, function(pkg) {
-  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
-}))
-
-rm(packages)
-
-#==============================================================================#
-
-
 # Produces box-and-whisker plots of future impacts at deciles of today's income
 # and climate distributions (Figures 7)
 deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar, 
-                        year_fin = 2100, baseline = 2015, output.dir){
+                        year_fin = 2099, baseline = 2015, output.dir){
   
   # read end of century impacts
   impacts_fin = read_csv(glue('{input_path}/{model.name}/{rcp}/{iam}/{ssp}/{ssp}-{rcp}_{iam}_rebased_{adapt}{aggregation}.csv')) %>%
@@ -47,23 +34,23 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
   
   # loggdppc, climtas and population 
   cov_path = glue('{ROOT_INT_DATA}/projection_outputs/covariates',
-                  '/single-allcalcs-uninteracted_main_model.csv')
+                  '/{ssp}-{rcp}_{iam}_covariates_decile_plots.csv')
   
   # read population data in baseline year
-  pop.baseline = read_csv(cov_path, skip = 31) %>% # first 31 lines of this allcalcs files are descriptive
-    dplyr::filter(`year...2` == !!baseline) %>% 
+  pop.baseline = read_csv(cov_path) %>% 
+    dplyr::filter(year == !!baseline) %>% 
     dplyr::select(region, population)
   
   # read population data in final year
-  pop.EOC = read_csv(cov_path, skip = 31) %>%
-    dplyr::filter(`year...2` == !!year_fin) %>% 
+  pop.EOC = read_csv(cov_path) %>%
+    dplyr::filter(year == !!year_fin) %>% 
     dplyr::select(region, population)
   
   stopifnot(covar == 'loggdppc' | covar == 'climtas')
   
   # 2015 income and climate
-  covariates = read_csv(cov_path, skip = 31) %>%
-    dplyr::filter(`year...2` == !!baseline) %>% 
+  covariates = read_csv(cov_path) %>%
+    dplyr::filter(year == !!baseline) %>% 
     dplyr::select(region, loggdppc, climtas)
   
   # merge in baseline population
@@ -81,7 +68,7 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
   covariates$quantile = cut(covariates[[covar]], breaks = quantiles_cov, 
                             labels = c("1","2","3","4","5","6","7","8","9","10"), include.lowest=TRUE)
   
-  # merge deciles into main df
+  # merge deciles into impacts df
   impacts_fin = left_join(impacts_fin, covariates, by = "region")
   
   # count the number of impact regions in each quantile
@@ -94,9 +81,36 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
   
   # assign x label based on decile covariate
   if (covar == 'loggdppc'){
-    xlabel = "2015 Income Decile"
+    x_title = "2015 Income Decile"
+    cities = data.frame(
+      decile = factor(c(1, 4, 7, 10)),
+      label = c("Mogadishu,\nSomalia", "Kolkata,\nIndia", "Kyiv,\nUkraine", "Chicago,\nUSA")
+    )
   } else { #share
-    xlabel = "2015 Annual Average Temperature Decile"
+    x_title = "2015 Annual Average Temperature Decile"
+    cities = data.frame(
+      decile = factor(c(1, 4, 7, 10)),
+      label = c("Oslo,\nNorway", "Buenos Aires,\nArgentina", "Orlando,\nUSA", "Khartoum,\nSudan")
+    )
+  }
+  
+  # assign y label based on adaptation scenario
+  if (aggregation == "-pop-levels") {
+    y_title <- "Pop Weighted Impacts - Mins Worked"
+    
+  } else if (aggregation == "-gdp-levels") {
+    y_title <- glue("Climate change-induced worker disutility \n(percent of {year_fin} GDP)")
+    
+  } else if (aggregation == "-wage-levels") {
+    y_title <- glue("Climate change-induced worker disutility \n(million dollars)")
+    
+  } else if (aggregation == "") {
+    y_title <- glue("Climate change-induced change in minutes worked per worker per day")
+    
+  } else {
+    print("wrong aggregation!")
+    return()
+    
   }
   
   # create a blank quantiles df
@@ -136,7 +150,7 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
       box_lower = -100*quantiles['25%'], 
       box_upper = -100*quantiles['75%'],
       middle.median = -100*quantiles['50%'],
-      middle.mean = -100*weighted.mean(impacts_quantile_year$value, impacts_quantile_year$pop)) #popweighted-mean
+      middle.mean = -100*weighted.mean(impacts_quantile_year$value, impacts_quantile_year$pop)) # population weighted-mean
     
     # bind rows to combine into one df
     quantiles.df = rbind(quantiles.df, whisker) 
@@ -171,18 +185,27 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
     scale_color_gradientn(
       colors = rev(brewer.pal(9, "RdGy"))) + 
     scale_x_discrete(limits=factor(seq(1,10)), breaks=factor(seq(1,10))) +
+    geom_segment(
+      data = cities,
+      aes(x = decile, xend = decile, y = -4.2, yend = -4.7),
+      arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+      color = "black",
+      lwd = 0.3) +
+    geom_text(
+      data = cities,
+      aes(x = decile, y = -3.95, label = label),
+      size = 2.5,
+      lineheight = 0.8) +
     theme_bw() +
-    theme() +
     theme(
       panel.grid.major = element_blank(), 
       panel.grid.minor = element_blank(),
       panel.background = element_blank(),
       legend.position="none",
       axis.line = element_line(colour = "black")) +
-    xlab(xlabel) +
-    ylab("Climate change-induced worker disutility \n(percent of 2099 GDP)")+
-    ylim(-4, 12) # change this according to the widest y-axis range
-    ggtitle(paste0("Decile %GDP impact bar chart")) 
+    xlab(x_title) +
+    ylab(y_title) +
+    coord_cartesian(ylim = c(-4, 10), clip = "off") # change this according to the widest y-axis range
   
   # save the plot
   ggsave(p, file = glue("{output.dir}/deciles_{adapt}_{ssp}_{rcp}_{iam}_{covar}.png"), width = 6, height = 7)
