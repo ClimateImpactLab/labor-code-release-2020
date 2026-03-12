@@ -70,7 +70,7 @@ impact_in = 'rebased'
 adapt_in = 'fulladapt'
 
 # input path to single/median/mc
-input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/median/extracted"
+input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted"
 
 #==============================================================================#
 # Part 1: End of century mortality risk of climate change maps and density
@@ -101,23 +101,36 @@ if (Part1) {
                   impact=impact_in,
                   aggregation="-gdp-levels", 
                   year=2099,
-                  output.folder = glue("{DIR_FIG}/median/maps"))
+                  output.folder = glue("{DIR_FIG}/mc/maps"))
   
   # Regions - Lagos, Delhi, Beijing, Sao Paulo, Chicago, Oslo
-  regions = c("NGA.25.510", "IND.10.121.371", "CHN.2.18.78", 
-              "BRA.25.5212.R3fd4ed07b36dfd9c", "USA.14.608", "NOR.12.288")
-  
+  regions_right = c("NGA.25.510", "IND.10.121.371", "CHN.2.18.78")
   # IR density plots without accounting for adaptation costs (Figure 7)
-  impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41", 
-                       ssp=ssp_in, 
-                       rcp=rcp_in, 
-                       iam=iam_in, 
-                       impact=impact_in, 
-                       adapt=adapt_in, 
-                       aggregation="-gdp-levels", 
-                       regions=regions, 
-                       year=2099, 
-                       output.folder = glue("{DIR_FIG}/median/density_plots"))
+  impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41",
+                       ssp=ssp_in,
+                       rcp=rcp_in,
+                       iam=iam_in,
+                       impact=impact_in,
+                       adapt=adapt_in,
+                       aggregation="-gdp-levels",
+                       regions=regions_right,
+                       year=2099,
+                       left.panel=FALSE,
+                       output.folder = glue("{DIR_FIG}/mc/density_plots"))
+  
+  regions_left =  c("BRA.25.5212.R3fd4ed07b36dfd9c", "USA.14.608", "NOR.12.288")
+  # IR density plots without accounting for adaptation costs (Figure 7)
+  impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41",
+                       ssp=ssp_in,
+                       rcp=rcp_in,
+                       iam=iam_in,
+                       impact=impact_in,
+                       adapt=adapt_in,
+                       aggregation="-gdp-levels",
+                       regions=regions_left,
+                       year=2099,
+                       left.panel=TRUE,
+                       output.folder = glue("{DIR_FIG}/mc/density_plots"))
   
 }
 
@@ -134,7 +147,7 @@ if (Part2) {
                  adapt = adapt_in, 
                  aggregation = "-gdp-levels", 
                  covar = covar,
-                 output.dir = glue("{DIR_FIG}/median"))
+                 output.dir = glue("{DIR_FIG}/mc"))
   })
   
 }
@@ -164,7 +177,7 @@ if (Part3) {
           ir = "global",
           x_title = "Year",
           labs_color = "Worker disutility costs of climate change",
-          output.folder = glue("{DIR_FIG}/median/timeseries")
+          output.folder = glue("{DIR_FIG}/mc/timeseries")
   )
   
   # Time series with uncertainty and comparison of RCPs (Figure 8 Panel B)
@@ -181,7 +194,7 @@ if (Part3) {
                  labs_linetype = "Worker disutility costs of climate change, \nwith changing workforce composition due to \neconomic development and climate adaptation",
                  boxplot = TRUE,
                  yr = 2099,
-                 output.folder = glue("{DIR_FIG}/median/timeseries")
+                 output.folder = glue("{DIR_FIG}/mc/timeseries")
   )
   
 }
@@ -201,7 +214,7 @@ if (Appendix) {
                   impact=impact_in,
                   aggregation="", 
                   year=2099,
-                  output.folder = glue("{DIR_FIG}/median/maps"))
+                  output.folder = glue("{DIR_FIG}/mc/maps"))
   
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
@@ -211,7 +224,7 @@ if (Appendix) {
                   impact=impact_in,
                   aggregation="", 
                   year=2099,
-                  output.folder = glue("{DIR_FIG}/median/maps"))
+                  output.folder = glue("{DIR_FIG}/mc/maps"))
   
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
@@ -221,10 +234,10 @@ if (Appendix) {
                   impact=impact_in,
                   aggregation="-gdp-levels", 
                   year=2099,
-                  output.folder = glue("{DIR_FIG}/median/maps"))
+                  output.folder = glue("{DIR_FIG}/mc/maps"))
   
-  # Figure G.2 A, B: Projected disutility costs by RCPs under the benefits of   
-  # income growth and adaptation while additionally accounting for the 
+  # Figure G.2 A, B: Projected disutility costs by RCPs under the benefits of
+  # income growth and adaptation while additionally accounting for the
   # temperature sensitivity of high-risk labor supply
   plot.ts.ci.model(model.name = "uninteracted_main_model_agnonag_27_28_41",
                    ssp = ssp_in,
@@ -237,8 +250,7 @@ if (Appendix) {
                    ir = "global",
                    x_title = "Year",
                    labs_color = "Worker disutility costs of climate change",
-                   output.folder = glue("{DIR_FIG}/median/timeseries")
+                   output.folder = glue("{DIR_FIG}/mc/timeseries")
   )
-  
 }
 

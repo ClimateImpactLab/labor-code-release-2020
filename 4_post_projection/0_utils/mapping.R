@@ -354,7 +354,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
     
   } else if (aggregation == "-gdp-levels") {
     plot_title <- glue("Worker disutility costs of climate change (% of {year} GDP, {ssp}-{rcp_t})")
-    df_plot <- df %>% dplyr::mutate(mean = -mean * 100)     
+    df_plot <- df %>% dplyr::mutate(mean = -mean * 100) # multiplying by 100 to show impacts as damages in percent of global GDP     
     
     bound = ceiling(max(abs(df_plot$mean), na.rm=TRUE))
     scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
@@ -367,7 +367,7 @@ plot.impact.map = function(model.name, rcp, ssp, iam, adapt, impact, aggregation
     
   } else if (aggregation == "-wage-levels") {
     plot_title <- glue("Worker disutility costs of climate change in million dollars ({year}, {ssp}-{rcp_t}")
-    df_plot <- df %>% dplyr::mutate(mean = -mean/1000000) 
+    df_plot <- df %>% dplyr::mutate(mean = -mean/1000000) # multiplying by -1/1000000 to show impacts as damages in million dollars 
     
     bound = ceiling(max(abs(df_plot$mean)))
     scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
