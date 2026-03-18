@@ -122,7 +122,9 @@ ggkd <- function(df.kd = NULL,
           plot.title = element_text(hjust=0.5, size = 10), 
           plot.caption = element_text(hjust=0.5, size = 7),
           axis.text.x = element_text(size=7, hjust=.5, vjust=.5, face="plain")) +
-    xlab(x.label) + ylab(y.label) #+
+    xlab(x.label) + ylab(y.label) +
+    coord_cartesian(xlim = c(-5, 30), ylim = c(0, 1.25)) +
+    scale_x_continuous(breaks = seq(-5, 30, by = 5)) #+
   # labs(title = paste0("Kernel Density Plot ", yr, " ", ir.name), 
   #      caption = paste0("GCM-weighted mean = ", round(ir_mean, 6)))  
   
@@ -132,8 +134,7 @@ ggkd <- function(df.kd = NULL,
 
 # run ggkd for all IRs
 impacts.density.plot <- function(model.name, ssp, rcp, iam, impact, adapt, 
-                                 aggregation, regions, year, left.panel, 
-                                 output.folder){
+                                 aggregation, regions, year, output.folder){
   for (ir in regions) {
     
     # clean the data
@@ -151,17 +152,7 @@ impacts.density.plot <- function(model.name, ssp, rcp, iam, impact, adapt,
              y.label = "", 
              x.label = "Worker disutility costs of climate change \n(% of 2099 GDP)")
     
-    # fix x-axis differently for density plots on different sides of the map
-    if (left.panel) {
-      p <- p +
-        coord_cartesian(xlim = c(-5, 15), ylim = c(0, 1.25))
-    } else {
-      p <- p +
-        coord_cartesian(xlim = c(-5, 30), ylim = c(0, 1.25))
-    }
-    
-    ggsave(glue("{output.folder}/{ir}-{ssp}-{rcp}_{iam}_{impact}_{adapt}{aggregation}_{year}_density.png"), p, dpi = 300, width = 9, height = 5)
-    
+    ggsave(glue("{output.folder}/{ir}-{ssp}-{rcp}_{iam}_{impact}_{adapt}{aggregation}_{year}_density.png"), p, dpi = 300, width = 15.75, height = 5)
   }
 }
 

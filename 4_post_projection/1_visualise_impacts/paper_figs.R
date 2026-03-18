@@ -104,8 +104,9 @@ if (Part1) {
                   output.folder = glue("{DIR_FIG}/mc/maps"))
   
   # Regions - Lagos, Delhi, Beijing, Sao Paulo, Chicago, Oslo
-  regions_right = c("NGA.25.510", "IND.10.121.371", "CHN.2.18.78")
-  # IR density plots without accounting for adaptation costs (Figure 7)
+  regions = c("NGA.25.510", "IND.10.121.371", "CHN.2.18.78",
+                    "BRA.25.5212.R3fd4ed07b36dfd9c", "USA.14.608", "NOR.12.288")
+  # IR density plots without accounting for adaptation costs (Figure 6B)
   impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41",
                        ssp=ssp_in,
                        rcp=rcp_in,
@@ -113,23 +114,8 @@ if (Part1) {
                        impact=impact_in,
                        adapt=adapt_in,
                        aggregation="-gdp-levels",
-                       regions=regions_right,
+                       regions=regions,
                        year=2099,
-                       left.panel=FALSE,
-                       output.folder = glue("{DIR_FIG}/mc/density_plots"))
-  
-  regions_left =  c("BRA.25.5212.R3fd4ed07b36dfd9c", "USA.14.608", "NOR.12.288")
-  # IR density plots without accounting for adaptation costs (Figure 7)
-  impacts.density.plot(model.name = "uninteracted_main_model_agnonag_27_28_41",
-                       ssp=ssp_in,
-                       rcp=rcp_in,
-                       iam=iam_in,
-                       impact=impact_in,
-                       adapt=adapt_in,
-                       aggregation="-gdp-levels",
-                       regions=regions_left,
-                       year=2099,
-                       left.panel=TRUE,
                        output.folder = glue("{DIR_FIG}/mc/density_plots"))
   
 }
