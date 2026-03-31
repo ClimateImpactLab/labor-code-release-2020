@@ -146,9 +146,15 @@ plot.ts = function(model.name, rcp, ssp, iam, impact, ir, aggregation="",
           legend.position.inside = c(0.10, 0.95),
           legend.justification = c("left", "top"),
           legend.key.spacing.y = unit(0.3, "cm") ,
-          axis.line = element_line(color = "black", linewidth = 1)) +
+          legend.key.width = unit(1.5, "cm"),
+          axis.line = element_line(color = "black", linewidth = 1),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 14)) +
     scale_color_manual(values = c("#C5612D", "#DA9731", "#309B72")) +
-    coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, 2100), expand = FALSE)
+    coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, 2110), 
+                    expand = FALSE, clip = "off") +
+    scale_x_continuous(breaks = c(2025, 2050, 2075, 2100)) +
+    scale_y_continuous(breaks = seq(0, 5, by = 1))
   
   # save plot
   ggsave(glue("{output.folder}/{ssp}-{rcp}_{iam}_{impact}_{aggregation}_ts.png"), p, dpi = 300, width = 6)
@@ -200,7 +206,10 @@ plot.ts.ci.rcp = function(model.name, ssp, iam, impact, adapt, ir, aggregation="
           legend.position.inside = c(0.10, 0.95),
           legend.justification = c("left", "top"),
           legend.key.spacing.y = unit(0.3, "cm") ,
-          axis.line = element_line(color = "black", linewidth = 1))
+          legend.key.width = unit(1.5, "cm"),
+          axis.line = element_line(color = "black", linewidth = 1),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 14))
   
   # if boxplot parameter is TRUE, the output will contain boxplots to the right of
   # the timeseries plots
@@ -221,25 +230,23 @@ plot.ts.ci.rcp = function(model.name, ssp, iam, impact, adapt, ir, aggregation="
                        upper = q75, ymax = q90, 
                        group = rcp, fill = rcp, color = rcp),
                    width = 2, linewidth = 0.5, stat = "identity", alpha = 1) +
-      geom_text(data = df_box,
-                aes(x = x_pos + 1.8, y = q90, label = rcp, color = rcp),
-                angle = 270,
-                hjust = 1,       
-                vjust = 0.5,
-                size = 3) +
       scale_color_manual(values = c("RCP 4.5" = "steelblue4", "RCP 8.5" = "tomato4")) +
       scale_fill_manual(values = c("RCP 4.5" = "steelblue2", "RCP 8.5" = "tomato2")) +
       scale_x_continuous(expand = c(0, 0), 
                          limits = c(2010, yr + 10),
                          breaks = c(2025, 2050, 2075, 2100)) +
-      coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, yr + 10), clip = "off") +
+      coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, yr + 10), 
+                      expand = FALSE, clip = "off") +
+      scale_y_continuous(breaks = seq(0, 5, by = 1)) +
       theme(plot.margin = margin(t = 5, r = 30, b = 5, l = 5)) +
       guides(fill = "none", color = "none")
   }
   else {
     p = p + 
       scale_fill_manual(values = c("RCP 4.5" = "steelblue2", "RCP 8.5" = "tomato2")) +
-      coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, 2100)) +
+      coord_cartesian(ylim = c(-0.5, 5), xlim = c(2010, yr + 10), 
+                      expand = FALSE, clip = "off") +
+      scale_y_continuous(breaks = seq(0, 5, by = 1)) +
       guides(fill = "none")
   }
   
@@ -308,11 +315,14 @@ plot.ts.ci.model = function(model.name, ssp, iam, impact, adapt, ir,
             legend.position.inside = c(0.10, 0.95),
             legend.justification = c("left", "top"),
             legend.key.spacing.y = unit(0.3, "cm") ,
+            legend.key.width = unit(1.5, "cm"),
             axis.line = element_line(color = "black", linewidth = 1),
+            axis.text = element_text(size = 14),
+            axis.title = element_text(size = 14),
             plot.margin = margin(t = 5, r = 20, b = 5, l = 5)) + # to ensure nothing gets cut off in plot_grid
       scale_color_manual(values = c("#C5612D", "#309B72")) +
       scale_fill_manual(values = c("#C5612D", "#309B72")) +
-      coord_cartesian(ylim = c(-0.5, 15), xlim = c(2010, 2100), 
+      coord_cartesian(ylim = c(-0.75, 15), xlim = c(2010, 2100), 
                       expand = FALSE, clip = "off") +
       guides(fill = "none")
   })
