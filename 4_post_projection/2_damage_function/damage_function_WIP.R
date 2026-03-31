@@ -65,12 +65,13 @@ rho = '0.0'
 # input path to temperature anomalies and damage functions
 root = "/project/cil"
 points_dir = "/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/cloud"
-damages_dir = "/battuta_shares/gcp/integration_replication/results/AR6_ssp/labor/2020"
+damages_dir = "/home_dirs/scadavidsanchez/projects/dscim-labor-2025-update2026/results"
 temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/climate"
+output_dir = "/home_dirs/nishkasharma/repos/labor-code-release-2020/output/figures/mc/damage_function"
 
 #==============================================================================#
 # read csv files
-gmst_anomaly <- read_csv(glue(root, temp_anom_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
+temp_anomaly_2100 <- read_csv(glue(root, temp_anom_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
 # process scatter plot data
 # RCP8.5
@@ -84,10 +85,10 @@ df_scatter_85 <- df_scatter_85 %>%
   filter(region == "global")
 
 df_scatter_85 <- df_scatter_85 %>%
-  inner_join(gmst_anomaly, by = c("gcm", "year", "rcp"))
+  inner_join(temp_anomaly_2100, by = c("gcm", "year", "rcp"))
 
 # RCP4.5
-df_scatter_45 <- read_csv(glue(root, points_dir, "/SSP3-rcp85_high_rebased_fulladapt-wage-aggregated.csv"))
+df_scatter_45 <- read_csv(glue(root, points_dir, "/SSP3-rcp45_high_rebased_fulladapt-wage-aggregated.csv"))
 
 df_scatter_45 <- df_scatter_45 %>%
   mutate(region = ifelse(is.na(region), "global", region),
@@ -97,52 +98,94 @@ df_scatter_45 <- df_scatter_45 %>%
   filter(region == "global")
 
 df_scatter_45 <- df_scatter_45 %>%
-  inner_join(gmst_anomaly, by = c("gcm", "year", "rcp"))
+  inner_join(temp_anomaly_2100, by = c("gcm", "year", "rcp"))
 
-# process damage_fit netcdf file
-nc <- nc_open(glue(root, damages_dir, "/{damage_type}_{discount}_eta{eta}_rho{rho}_damage_function_fit.nc4"))
+# process netcdf files
+nc_fair <- nc_open(glue(root, "/gcp/integration/gmst_94k_2025p.nc4"))
+
+# pull the full variables
+fair_years <- ncvar_get(nc_fair, "year")
+fair_rcps  <- ncvar_get(nc_fair, "rcp")
+fair_temps <- ncvar_get(nc_fair, "control_temperature")
+
+nc_close(nc_fair)
+
+# select which years to keep
+year_idx <- which(fair_years %in% c(2180:2200))
+rcp45_idx <- which(fair_rcps == "rcp45")
+rcp85_idx <- which(fair_rcps == "rcp85")
+# years_keep <- year[year_idx]
+
+fair_2200_rcp45 <- as.vector(fair_temps[year_idx, rcp45_idx, ])
+fair_2200_rcp85 <- as.vector(fair_temps[year_idx, rcp85_idx, ])
+fair_2200_rcp45 <- fair_2200_rcp45[is.finite(fair_2200_rcp45)]
+fair_2200_rcp85 <- fair_2200_rcp85[is.finite(fair_2200_rcp85)]
+
+temp_anomaly_2200 <- bind_rows(
+  tibble(temp = fair_2200_rcp45, rcp = "RCP4.5"),
+  tibble(temp = fair_2200_rcp85, rcp = "RCP8.5")
+)
+
+# fit data
+nc_mean <- nc_open(glue(root, damages_dir, "/scc_output/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
 
 # check dimensions order
-nc$var$y_hat$dim # array is shaped [year=281, anomaly=100, model=2, ssp=3, discount_type=1]
+nc_mean$var$y_hat$dim # array is shaped [year=281, anomaly=100, model=1, ssp=3, discount_type=1]
 
-# extract dimension values
-year <- ncvar_get(nc, "year")      # length 281
-anomaly <- ncvar_get(nc, "anomaly")   # length 100
-model <- ncvar_get(nc, "model")     # "IIASA GDP" (low), "OECD Env-Growth" (high)
-ssp <- ncvar_get(nc, "ssp")       # "SSP2", "SSP3", "SSP4"
-discount_type <- ncvar_get(nc, "discount_type")  # "constant"
+# pull the full variables
+y_hat_raw <- ncvar_get(nc_mean, "y_hat")
+year <- ncvar_get(nc_mean, "year")
+anomaly <- ncvar_get(nc_mean, "anomaly")
+ssp <- ncvar_get(nc_mean, "ssp")
 
-# find indices for .sel({'model': 'IIASA GDP', 'ssp': 'SSP3'})
-model_idx <- which(model == "OECD Env-Growth")  # 1
-ssp_idx <- which(ssp == "SSP3")        # 2
+nc_close(nc_mean)
 
-# pull the full variables then subset
-# dim order in R: [year, anomaly, model, ssp, discount_type]
-y_hat_raw <- ncvar_get(nc, "y_hat")
-y_hat_sub <- y_hat_raw[, , model_idx, ssp_idx]  # shape: [281 x 100]
+# select SSP
+ssp_idx <- which(ssp == "SSP3")
 
-# y_hat_q05_raw <- ncvar_get(nc, "y_hat_q05")
-# y_hat_q05_sub <- y_hat_q05_raw[, , model_idx, ssp_idx]
-# 
-# y_hat_q95_raw <- ncvar_get(nc, "y_hat_q95")
-# y_hat_q95_sub <- y_hat_q95_raw[, , model_idx, ssp_idx]
-
-nc_close(nc)
+# now subset
+y_hat_sub <- y_hat_raw[, , ssp_idx]  # shape: [281 x 100]
 
 # build tidy dataframe 
 df_fit <- expand.grid(year = year, anomaly = anomaly) %>%
+  mutate(y_hat = as.vector(y_hat_sub)/1e12) # convert damages to trillion USD
+
+# confidence interval data
+nc_ci <- nc_open(glue(root, damages_dir, "/scc_output_full_uncertainty/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
+
+# check dimensions order
+nc_ci$var$y_hat$dim # array is shaped [year=281, q=19, anomaly=100, model=1, ssp=3, discount_type=1]
+
+# pull the full variables
+y_hat_raw <- ncvar_get(nc_ci, "y_hat")
+year <- ncvar_get(nc_ci, "year")
+anomaly <- ncvar_get(nc_ci, "anomaly")
+q <- ncvar_get(nc_ci, "q")
+ssp <- ncvar_get(nc_ci, "ssp")
+
+nc_close(nc_ci)
+
+# select SPP and confidence interval quantiles
+ssp_idx <- which(ssp == "SSP3")
+q05_idx <- which(q == 0.05)
+q95_idx <- which(q == 0.95) 
+
+# now subset
+y_hat_q05_sub <- y_hat_raw[, q05_idx, , ssp_idx]
+y_hat_q95_sub <- y_hat_raw[, q95_idx, , ssp_idx]
+
+# build tidy dataframe 
+df_ci <- expand.grid(year = year, anomaly = anomaly) %>%
   # convert damages to trillion USD
-  mutate(y_hat = as.vector(y_hat_sub)/1e12,
-         # ,
-         # y_hat_q05 = as.vector(y_hat_q05_sub)/1e12,
-         # y_hat_q95 = as.vector(y_hat_q95_sub)/1e12
-         )
+  mutate(y_hat_q05 = as.vector(y_hat_q05_sub)/1e12,
+         y_hat_q95 = as.vector(y_hat_q95_sub)/1e12)
+
 
 # --- Plot ---
 # panel A
 p_top <- ggplot() +
   # quantile band
-  geom_ribbon(data = df_fit %>%
+  geom_ribbon(data = df_ci %>%
                 filter(year == 2099,
                        anomaly <= 10),
               aes(x = anomaly, ymin = y_hat_q05, ymax = y_hat_q95,
@@ -152,12 +195,12 @@ p_top <- ggplot() +
   geom_point(data = df_scatter_85 ,
              aes(x = temp, y = damages), 
              color = "tomato2", fill = "tomato2",
-             alpha = 0.8, size = 1.2, shape = 16) +
+             alpha = 0.5, size = 0.6, shape = 16) +
   # scatter: RCP 4.5
   geom_point(data = df_scatter_45,
              aes(x = temp, y = damages),
              color = "#4472C4", fill = "#4472C4",
-             alpha = 0.8, size = 1.2, shape = 21) +
+             alpha = 0.5, size = 0.6, shape = 21) +
   # fit line
   geom_line(data = df_fit %>% 
               filter(year == 2099, 
@@ -170,20 +213,25 @@ p_top <- ggplot() +
                      values = c("End of century damage function" = "black")) +
   scale_fill_manual(name = NULL,
                     values = c("5th - 95th percentile range" = "gray50")) +
-  coord_cartesian(xlim = c(0, 10), ylim = c(0,100)) +
+  coord_cartesian(xlim = c(0, 10), ylim = c(0,50)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(0, 50, by = 10)) +
   labs(x = NULL,
        y = "Global damages (trillion USD)") +                                                                                  
   theme_classic() +
   theme(legend.position = "inside",
         legend.position.inside = c(0.10, 0.95),
         legend.justification = c("left", "top"),
+        legend.text = element_text(size = 12),
+        legend.key.width = unit(1.5, "cm"),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        plot.margin = margin(5.5, 5.5, 0, 5.5)) 
+        axis.text.y = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        plot.margin = margin(5.5, 0, 0, 5.5)) # set right and bottom margin to zero
+       
 
-p_bottom <- gmst_anomaly %>%
+p_bottom <- temp_anomaly_2100 %>%
   filter(year >= 2080, year <= 2100, temp <= 10) %>%
   ggplot(aes(x = temp, color = rcp)) +
   geom_density(bw = 0.4, trim = TRUE) +
@@ -191,6 +239,7 @@ p_bottom <- gmst_anomaly %>%
                       labels = c("rcp45" = "RCP 4.5", "rcp85" = "RCP 8.5")) +
   coord_cartesian(xlim = c(0, 10)) +
   scale_x_continuous(breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) +
   labs(x = "Global mean temperature rise \n(degrees above 2000-2010 levels)",
        y = NULL,
        color = NULL) +
@@ -198,13 +247,16 @@ p_bottom <- gmst_anomaly %>%
   theme(panel.background = element_rect(fill = "gray90"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
-        plot.margin = margin(0, 5.5, 5.5, 5.5))
+        axis.text.x = element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        plot.margin = margin(0, 0, 5.5, 5.5)) + # set top and right margin to zero
+  guides(color = "none")
 
 panel_A <- p_top / p_bottom + plot_layout(heights = c(3, 1))
 
 # panel B
 # remove unsupported observations
-ref_anom <- gmst_anomaly %>%
+ref_anom <- temp_anomaly_2100 %>%
   group_by(year) %>%
   summarise(min_anom = round(min(temp, na.rm = TRUE), 0.1),
             max_anom = round(max(temp, na.rm = TRUE), 0.1))
@@ -234,24 +286,27 @@ p_top <- ggplot() +
             color = "black", linewidth = 1) +
   # reference line
   geom_hline(yintercept = 0, linewidth = 0.2) +
-  coord_cartesian(xlim = c(0, 10), ylim = c(0,100)) +
+  coord_cartesian(xlim = c(0, 10), ylim = c(0,50)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(0, 50, by = 10)) +
   labs(x = NULL,
        y = "Global damages (trillion USD)") +                                                                                  
   theme_classic() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        plot.margin = margin(5.5, 5.5, 0, 5.5)) 
+        axis.text.y = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        plot.margin = margin(5.5, 5.5, 0, 5.5)) # set bottom margin to zero
 
-p_bottom <- gmst_anomaly %>%
-  filter(year >= 2180, year <= 2200, temp <= 10) %>%
+p_bottom <- temp_anomaly_2200 %>%
+  # filter(year >= 2080, year <= 2100, temp <= 10) %>%
   ggplot(aes(x = temp, color = rcp)) +
   geom_density(bw = 0.4, trim = TRUE) +
-  scale_color_manual( values = c("rcp45" = "#4472C4", "rcp85" = "red"),
-                      labels = c("rcp45" = "RCP 4.5", "rcp85" = "RCP 8.5")) +
+  scale_color_manual( values = c("RCP4.5" = "#4472C4", "RCP8.5" = "red"),
+                      labels = c("RCP4.5" = "RCP 4.5", "RCP8.5" = "RCP 8.5")) +
   coord_cartesian(xlim = c(0, 10)) +
   scale_x_continuous(breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) +
   labs(x = "Global mean temperature rise \n(degrees above 2000-2010 levels)",
        y = NULL,
        color = NULL) +
@@ -259,6 +314,13 @@ p_bottom <- gmst_anomaly %>%
   theme(panel.background = element_rect(fill = "gray90"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
-        plot.margin = margin(0, 5.5, 5.5, 5.5))
+        axis.text.x = element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        plot.margin = margin(0, 5.5, 5.5, 5.5)) + # set top margin to zero
+  guides(color = "none")
 
 panel_B <- p_top / p_bottom + plot_layout(heights = c(3, 1))
+
+figH1 <- wrap_elements(panel_A) + wrap_elements(panel_B)
+
+ggsave(glue(root, output_dir, "/damage_functions.png"), figH1, width = 12, height = 6, dpi = 300)
