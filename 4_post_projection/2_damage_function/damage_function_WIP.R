@@ -67,7 +67,7 @@ root = "/project/cil"
 points_dir = "/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/cloud"
 damages_dir = "/home_dirs/scadavidsanchez/projects/dscim-labor-2025-update2026/results"
 temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/climate"
-output_dir = "/home_dirs/nishkasharma/repos/labor-code-release-2020/output/figures/mc/damage_function"
+output_dir = "/home_dirs/nishkasharma/repos/labor-code-release-2020/output/figures/scc"
 
 #==============================================================================#
 # read csv files
@@ -106,7 +106,7 @@ nc_fair <- nc_open(glue(root, "/gcp/integration/gmst_94k_2025p.nc4"))
 # pull the full variables
 fair_years <- ncvar_get(nc_fair, "year")
 fair_rcps  <- ncvar_get(nc_fair, "rcp")
-fair_temps <- ncvar_get(nc_fair, "control_temperature")
+fair_temps_raw <- ncvar_get(nc_fair, "control_temperature")
 
 nc_close(nc_fair)
 
@@ -115,6 +115,21 @@ year_idx <- which(fair_years %in% c(2180:2200))
 rcp45_idx <- which(fair_rcps == "rcp45")
 rcp85_idx <- which(fair_rcps == "rcp85")
 # years_keep <- year[year_idx]
+
+# FAIR temperatures are relative to preindustrial - convert to 2001-2010 baseline
+# fair_temps_raw dimensions: [year, rcp, simulation]
+# Compute mean over 2001-2010 for each simulation and RCP
+baseline_year_idx <- which(fair_years >= 2001 & fair_years <= 2010)
+cat("Baseline years (2001-2010): indices", min(baseline_year_idx), "-", max(baseline_year_idx), "\n")
+
+# Compute baseline mean for each [rcp, simulation] combination
+# Result: [rcp, simulation]
+fair_baseline <- apply(fair_temps_raw[baseline_year_idx, , , drop = FALSE], c(2, 3), mean, na.rm = TRUE)
+cat("Baseline shape: [", paste(dim(fair_baseline), collapse = ", "), "]\n")
+
+# Subtract baseline from all years (broadcast over year dimension)
+# fair_temps_raw is [year, rcp, simulation], fair_baseline is [rcp, simulation]
+fair_temps <- sweep(fair_temps_raw, c(2, 3), fair_baseline, "-")
 
 fair_2200_rcp45 <- as.vector(fair_temps[year_idx, rcp45_idx, ])
 fair_2200_rcp85 <- as.vector(fair_temps[year_idx, rcp85_idx, ])
@@ -194,25 +209,25 @@ p_top <- ggplot() +
   # scatter: rcp85
   geom_point(data = df_scatter_85 ,
              aes(x = temp, y = damages), 
-             color = "tomato2", fill = "tomato2",
+             color = "#F30B0B", fill = "#F30B0B",
              alpha = 0.5, size = 0.6, shape = 16) +
   # scatter: RCP 4.5
   geom_point(data = df_scatter_45,
              aes(x = temp, y = damages),
-             color = "#4472C4", fill = "#4472C4",
+             color = "#0587B5", fill = "#0587B5",
              alpha = 0.5, size = 0.6, shape = 21) +
   # fit line
   geom_line(data = df_fit %>% 
               filter(year == 2099, 
                      anomaly <= 10),
             aes(x = anomaly, y = y_hat, color = "End of century damage function"),
-            linewidth = 0.8) +
+            linewidth = 1) +
   # reference line
   geom_hline(yintercept = 0, linewidth = 0.2) +
   scale_color_manual(name = NULL,
                      values = c("End of century damage function" = "black")) +
   scale_fill_manual(name = NULL,
-                    values = c("5th - 95th percentile range" = "gray50")) +
+                    values = c("5th - 95th percentile range" = "gray75")) +
   coord_cartesian(xlim = c(0, 10), ylim = c(0,50)) +
   scale_x_continuous(breaks = 0:10) +
   scale_y_continuous(breaks = seq(0, 50, by = 10)) +
@@ -220,7 +235,7 @@ p_top <- ggplot() +
        y = "Global damages (trillion USD)") +                                                                                  
   theme_classic() +
   theme(legend.position = "inside",
-        legend.position.inside = c(0.10, 0.95),
+        legend.position.inside = c(0.20, 0.95),
         legend.justification = c("left", "top"),
         legend.text = element_text(size = 12),
         legend.key.width = unit(1.5, "cm"),
@@ -233,18 +248,19 @@ p_top <- ggplot() +
 
 p_bottom <- temp_anomaly_2100 %>%
   filter(year >= 2080, year <= 2100, temp <= 10) %>%
-  ggplot(aes(x = temp, color = rcp)) +
-  geom_density(bw = 0.4, trim = TRUE) +
-  scale_color_manual( values = c("rcp45" = "#4472C4", "rcp85" = "red"),
+  ggplot(aes(x = temp, color = rcp)) + 
+  geom_density(bw = 0.4, trim = TRUE, kernel = "epanechnikov") + # add kernel = "epanechnikov" to replicate old plot exactly
+  scale_color_manual( values = c("rcp45" = "#0587B5", "rcp85" = "#F30B0B"),
                       labels = c("rcp45" = "RCP 4.5", "rcp85" = "RCP 8.5")) +
   coord_cartesian(xlim = c(0, 10)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) +
+  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) + 
+  # geom_hline(yintercept = 0, linewidth = 0.2) +
   labs(x = "Global mean temperature rise \n(degrees above 2000-2010 levels)",
        y = NULL,
        color = NULL) +
   theme_classic() +
-  theme(panel.background = element_rect(fill = "gray90"),
+  theme(panel.background = element_rect(fill = "gray93"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.x = element_text(size = 12),
@@ -252,7 +268,7 @@ p_bottom <- temp_anomaly_2100 %>%
         plot.margin = margin(0, 0, 5.5, 5.5)) + # set top and right margin to zero
   guides(color = "none")
 
-panel_A <- p_top / p_bottom + plot_layout(heights = c(3, 1))
+panel_A <- p_top / p_bottom + plot_layout(heights = c(5, 1))
 
 # panel B
 # remove unsupported observations
@@ -273,12 +289,12 @@ p_top <- ggplot() +
               filter(year %in% seq(2015, 2099, by = 10),
                      anomaly <= 10),
             aes(x = anomaly, y = y_hat, group = year),
-            color = "#e69138", linewidth = 1) +
+            color = "#e69138", linewidth = 0.8) +
   # ppst 2100 extrapolated fit line
   geom_line(data = df_fit %>% filter(year %in% c(2150, 2200, 2250, 2300),
                                      anomaly <= 10),
             aes(x = anomaly, y = y_hat, group = year),
-            color = "gray70", linewidth = 1) +
+            color = "gray70", linewidth = 0.8) +
   # 2100 line
   geom_line(data = df_fit %>% filter(year == 2100,
                                      anomaly <= 10),
@@ -301,17 +317,18 @@ p_top <- ggplot() +
 p_bottom <- temp_anomaly_2200 %>%
   # filter(year >= 2080, year <= 2100, temp <= 10) %>%
   ggplot(aes(x = temp, color = rcp)) +
-  geom_density(bw = 0.4, trim = TRUE) +
-  scale_color_manual( values = c("RCP4.5" = "#4472C4", "RCP8.5" = "red"),
+  geom_density(bw = 0.4, trim = TRUE, kernel = "epanechnikov") + # add kernel = "epanechnikov" to replicate old plot exactly
+  scale_color_manual( values = c("RCP4.5" = "#0587B5", "RCP8.5" = "#F30B0B"),
                       labels = c("RCP4.5" = "RCP 4.5", "RCP8.5" = "RCP 8.5")) +
   coord_cartesian(xlim = c(0, 10)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) +
+  scale_y_continuous(expand = expansion(mult = c(0.3, 0.1))) + 
+  # geom_hline(yintercept = 0, linewidth = 0.2) +
   labs(x = "Global mean temperature rise \n(degrees above 2000-2010 levels)",
        y = NULL,
        color = NULL) +
   theme_classic() +
-  theme(panel.background = element_rect(fill = "gray90"),
+  theme(panel.background = element_rect(fill = "gray93"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.x = element_text(size = 12),
@@ -319,7 +336,7 @@ p_bottom <- temp_anomaly_2200 %>%
         plot.margin = margin(0, 5.5, 5.5, 5.5)) + # set top margin to zero
   guides(color = "none")
 
-panel_B <- p_top / p_bottom + plot_layout(heights = c(3, 1))
+panel_B <- p_top / p_bottom + plot_layout(heights = c(5, 1))
 
 figH1 <- wrap_elements(panel_A) + wrap_elements(panel_B)
 
