@@ -287,7 +287,7 @@ plot.ts.ci.model = function(model.name, ssp, iam, impact, adapt, ir,
       mutate(model_name = model.name)
     
     # load data for interacted model
-    df_int = load_df(input.path = "/project/cil/gcp/outputs/labor/impacts-corpsepose/median/extracted/",
+    df_int = load_df(input.path = "/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/extracted/",
                      rcp = rcp, adapt = adapt, 
                      model.name = "clim_interacted_model_agnonag_27_28_41", 
                      ssp = ssp, iam = iam, impact = impact, 
@@ -316,13 +316,15 @@ plot.ts.ci.model = function(model.name, ssp, iam, impact, adapt, ir,
             legend.justification = c("left", "top"),
             legend.key.spacing.y = unit(0.3, "cm") ,
             legend.key.width = unit(1.5, "cm"),
+            legend.text = element_text(size = 11),
+            legend.title = element_text(size = 11),
             axis.line = element_line(color = "black", linewidth = 1),
-            axis.text = element_text(size = 14),
-            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 15),
+            axis.title = element_text(size = 15),
             plot.margin = margin(t = 5, r = 20, b = 5, l = 5)) + # to ensure nothing gets cut off in plot_grid
       scale_color_manual(values = c("#C5612D", "#309B72")) +
       scale_fill_manual(values = c("#C5612D", "#309B72")) +
-      coord_cartesian(ylim = c(-0.75, 15), xlim = c(2010, 2100), 
+      coord_cartesian(ylim = c(-0.75, 10), xlim = c(2010, 2100), 
                       expand = FALSE, clip = "off") +
       guides(fill = "none")
   })
