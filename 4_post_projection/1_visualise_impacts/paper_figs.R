@@ -236,7 +236,6 @@ if (Appendix) {
                    ir = "global",
                    x_title = "Year",
                    labs_color = "Worker disutility costs of climate change",
-                   output.folder = glue("{DIR_FIG}/mc/timeseries")
-  )
+                   output.folder = glue("{DIR_FIG}/mc/timeseries"))
 }
 

@@ -322,8 +322,8 @@ plot.ts.ci.model = function(model.name, ssp, iam, impact, adapt, ir,
             axis.text = element_text(size = 15),
             axis.title = element_text(size = 15),
             plot.margin = margin(t = 5, r = 20, b = 5, l = 5)) + # to ensure nothing gets cut off in plot_grid
-      scale_color_manual(values = c("#C5612D", "#309B72")) +
-      scale_fill_manual(values = c("#C5612D", "#309B72")) +
+      scale_color_manual(values = c("#309B72", "#C5612D")) +
+      scale_fill_manual(values = c("#309B72", "#C5612D")) +
       coord_cartesian(ylim = c(-0.75, 10), xlim = c(2010, 2100), 
                       expand = FALSE, clip = "off") +
       guides(fill = "none")
