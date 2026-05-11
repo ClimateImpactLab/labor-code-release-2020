@@ -93,6 +93,18 @@ input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extract
 
 if (Part1) {
   
+  # figure 6A
+  plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
+                  rcp=rcp_in,
+                  ssp=ssp_in,
+                  iam=iam_in, 
+                  adapt=adapt_in,
+                  impact=impact_in,
+                  aggregation="", 
+                  year=2099,
+                  output.folder = glue("{DIR_FIG}/mc/maps"))
+  
+  # figure 6B
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp=rcp_in,
                   ssp=ssp_in,
@@ -192,16 +204,6 @@ if (Appendix) {
   
   # Figure F.1 A, B, C, D: Projected impact in labor supply and disutility costs 
   # by RCPs
-  plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
-                  rcp=rcp_in,
-                  ssp=ssp_in,
-                  iam=iam_in, 
-                  adapt=adapt_in,
-                  impact=impact_in,
-                  aggregation="", 
-                  year=2099,
-                  output.folder = glue("{DIR_FIG}/mc/maps"))
-  
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
                   ssp=ssp_in,

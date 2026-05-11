@@ -84,7 +84,7 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
     x_title = "2015 Income Decile"
     cities = data.frame(
       decile = factor(c(1, 4, 7, 10)),
-      label = c("Mogadishu,\nSomalia", "Kolkata,\nIndia", "Kyiv,\nUkraine", "Chicago,\nUSA")
+      label = c("Mogadishu,\nSomalia", "Kolkata,\nIndia", "Chongqing,\nChina", "Chicago,\nUSA")
     )
   } else { #share
     x_title = "2015 Annual Average Temperature Decile"
