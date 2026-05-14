@@ -145,7 +145,7 @@ if (Part2) {
                  adapt = adapt_in, 
                  aggregation = "-gdp-levels", 
                  covar = covar,
-                 output.dir = glue("{DIR_FIG}/mc"))
+                 output.dir = glue("{DIR_FIG}/mc/decile_plots"))
   })
   
 }

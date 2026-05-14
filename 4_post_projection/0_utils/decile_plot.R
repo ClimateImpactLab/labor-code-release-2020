@@ -196,19 +196,15 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
       aes(x = decile, y = -3.95, label = label),
       size = 3,
       lineheight = 0.8) +
-    theme_bw() +
-    theme(
-      panel.grid.major = element_blank(), 
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      legend.position="none",
-      axis.line = element_line(colour = "black"),
-      axis.text = element_text(size = 14),
-      axis.title = element_text(size = 14)) +
+    theme_classic() +
+    theme(legend.position="none",
+          axis.line = element_line(color = "black", linewidth = 1),
+          axis.text = element_text(size = 15),
+          axis.title = element_text(size = 15)) +
     xlab(x_title) +
     ylab(y_title) +
     coord_cartesian(ylim = c(-4, 10), clip = "off") # change this according to the widest y-axis range
   
   # save the plot
-  ggsave(p, file = glue("{output.dir}/deciles_{adapt}_{ssp}_{rcp}_{iam}_{covar}.png"), width = 6, height = 7)
+  ggsave(p, file = glue("{output.dir}/deciles_{adapt}_{ssp}_{rcp}_{iam}_{covar}.png"), width = 9, height = 7)
 }

@@ -114,11 +114,8 @@ ggkd <- function(df.kd = NULL,
     geom_hline(yintercept=0, lwd=.2, alpha = 0.5) + #zeroline
     geom_vline(xintercept = ir_mean, lwd=.9, alpha = 1, lty = "solid", color = "white") + #mean line
     #scale_x_continuous(expand=c(0, 0)) +
-    theme_bw() +
-    theme(panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(), 
-          axis.line = element_line(colour = "grey80", size = 0.2),
+    theme_classic() +
+    theme(axis.line = element_line(colour = "grey80", size = 0.2),
           plot.title = element_text(hjust=0.5, size = 10), 
           plot.caption = element_text(hjust=0.5, size = 7),
           axis.text.x = element_text(size=7, hjust=.5, vjust=.5, face="plain")) +
