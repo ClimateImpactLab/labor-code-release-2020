@@ -12,6 +12,8 @@
 # -----------------------
 *.log
 slurm-*.out
+*.out
+*.err
 
 # -----------------------
 # Large raw data (never version control)
@@ -22,5 +24,4 @@ slurm-*.out
 # Temporary folders
 # -----------------------
 temp/
-
 
