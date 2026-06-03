@@ -1,0 +1,3 @@
+Task 4 sleeping for 60s
+/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py:471: RuntimeWarning: invalid value encountered in true_divide
+  dstvalues[:len(numers), ii] = numers / denoms

@@ -1,0 +1,6 @@
+results-root: /project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/uninteracted_main_model_agnonag_27_28_41
+file-organize: [ssp, rcp]
+do-montecarlo: yes
+output-format: valuescsv
+ignore-missing: no
+years: [2099]

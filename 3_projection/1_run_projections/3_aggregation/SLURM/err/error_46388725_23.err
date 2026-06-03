@@ -1,0 +1,203 @@
+Task 23 sleeping for 345s
+/project/cil/home_dirs/egrenier/repos/impact-calculations/datastore/weights.py:104: RuntimeWarning: invalid value encountered in true_divide
+  combiner = lambda x, y: np.array(x, dtype=float) / np.array(y, dtype=float)
+/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py:471: RuntimeWarning: invalid value encountered in true_divide
+  dstvalues[:len(numers), ii] = numers / denoms
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 629, in make_levels
+    regions = dimreader.variables['regions'][:].tolist()
+KeyError: 'regions'

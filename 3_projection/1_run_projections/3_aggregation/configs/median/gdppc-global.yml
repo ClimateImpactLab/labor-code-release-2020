@@ -1,0 +1,8 @@
+outputdir: /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_agnonag_27_28_41-global
+# Levels are impacts in mins/worker/day * population * income (365 * (labor_share = 0.6) / (250 days * 60 mins * 6 hours * elasticity = 0.5 )
+levels-weighting: income * 0.00487
+aggregate-weighting-numerator: income * 0.00487
+aggregate-weighting-denominator: sum-to-1
+aggregated-unit: "% GDP Per Capita"
+levels-unit: "% GDP Per Capita"
+infix: gdppc

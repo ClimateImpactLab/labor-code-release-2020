@@ -73,20 +73,26 @@ There are two options for running a projection on the RCC:
 
 # Post-Projection
 
+## 2. Create noadapt histclim
+
+***IMPORTANT:*** This must be completed BEFORE aggregation.
+
+This is a new step we added to projections during revisions in winter 2026. We create a new histclim product using the share of high risk workers (variable `clip`) from the noadapt projections (instead of incadapt like the default histclim output), and the low and high risk impacts from the default histclim, then recombine them to create a new `rebased` variable. We use this to subtract from noadapt. 
+
 ## 3. Aggregation
 
 There are four types of aggregation. Each type aggregates to ADM levels higher than IRs and to global values allowing us to make time series and transform minutes/worker/day to either minutes/day or some version of valued ($) results.
 
-    - Population: This will give you two outputs per adapations scenario. `pop-levels` and `pop-aggregated`. Levels will give you impacts in minutes/day. Aggregated gives you damages in minutes/worker/day but spatially aggregated.
-    - Wage: Converts minutes to 2005 USD$PPP. These are used as inputs into dscim (so they get used in integration/inequality/local scc). The paper and the config have the actual conversion formula. The formula is also used for gdp and gdppc
-    - GDP: Monetized damages in % GDP impacts 
-    - GDPPC: Monetized damages in % GDP PC
+    - Population: This will give you two outputs per adapation scenario. `pop-levels` and `pop-aggregated`. Levels will give you impacts in minutes/day. Aggregated gives you damages in minutes/worker/day but spatially aggregated.
+    - Wage: Converts minutes to 2005 USD$PPP. These are used as inputs into dscim (so they get used in integration/inequality/local scc). The paper and the config display the conversion formula (also used for gdp and gdppc). Two output files per adaptation scenario: `wage-levels` and `wage-aggregated`.
+    - GDP: Monetized damages in % GDP impacts. Two output files per adaptation scenario: `gdp-levels` and `gdp-aggregated`. 
+    - GDPPC: Monetized damages in % GDP PC. Two output files per adaptation scenario: `gdppc-levels` and `gdppc-aggregated`. This aggregation type isn't used in the paper.
 
 Use the SLURM jobs to run these. They take a while so for montecarlos we parallelize across 990 CPUS at a time.
 
 ## 4. Extraction
 
-For singles, use single.py. For medians and montecarlos, use quantiles.py.
+Scripts to extract projections are in `2_extract_projections/extraction_shells`. For singles, use single.py. For medians and montecarlos, use bash scripts that call quantiles.py.
 
 
 

@@ -1,0 +1,5 @@
+Task 37 sleeping for 555s
+/project/cil/home_dirs/egrenier/repos/impact-calculations/datastore/weights.py:104: RuntimeWarning: invalid value encountered in true_divide
+  combiner = lambda x, y: np.array(x, dtype=float) / np.array(y, dtype=float)
+/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py:471: RuntimeWarning: invalid value encountered in true_divide
+  dstvalues[:len(numers), ii] = numers / denoms

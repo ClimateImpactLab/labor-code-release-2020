@@ -1,0 +1,400 @@
+[Running:  ] Make noadapt histclim scenario
+  Total jobs: 32
+[Processing:  ]
+histclim : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/MIROC-ESM/high/SSP3/uninteracted_main_model_agnonag_27_28_41-histclim.nc4
+noadapt  : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/MIROC-ESM/high/SSP3/uninteracted_main_model_agnonag_27_28_41-noadapt.nc4
+histclim coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+noadapt coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+=== HISTCLIM ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with interpolation and adaptation thro...
+    version:       uninteracted_main_model_agnonag_27_28_41-histclim.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== NOADAPT ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with no adaptation.
+    version:       uninteracted_main_model_agnonag_27_28_41-noadapt.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== COORDINATE COMPARISON ===
+  year: exact match = True
+
+
+=== REBASED COMPARISON (histclim vs noadapt) ===
+  max abs diff : 25.757020950317383
+  mean abs diff: 1.3470953702926636
+[Processing:  ]
+histclim : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/CSIRO-Mk3-6-0/high/SSP3/uninteracted_main_model_agnonag_27_28_41-histclim.nc4
+noadapt  : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/CSIRO-Mk3-6-0/high/SSP3/uninteracted_main_model_agnonag_27_28_41-noadapt.nc4
+histclim coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+noadapt coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+=== HISTCLIM ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with interpolation and adaptation thro...
+    version:       uninteracted_main_model_agnonag_27_28_41-histclim.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== NOADAPT ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with no adaptation.
+    version:       uninteracted_main_model_agnonag_27_28_41-noadapt.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== COORDINATE COMPARISON ===
+  year: exact match = True
+
+
+=== REBASED COMPARISON (histclim vs noadapt) ===
+  max abs diff : 27.568632125854492
+  mean abs diff: 1.3645275831222534
+[Processing:  ]
+histclim : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/surrogate_CanESM2_94/high/SSP3/uninteracted_main_model_agnonag_27_28_41-histclim.nc4
+noadapt  : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/surrogate_CanESM2_94/high/SSP3/uninteracted_main_model_agnonag_27_28_41-noadapt.nc4
+histclim coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099], dtype=int32)}
+noadapt coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099], dtype=int32)}
+=== HISTCLIM ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 119, operation: 4)
+Coordinates:
+  * year               (year) int32 476B 1981 1982 1983 1984 ... 2097 2098 2099
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with interpolation and adaptation thro...
+    version:       uninteracted_main_model_agnonag_27_28_41-histclim.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=119, first=np.int32(1981), last=np.int32(2099)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+
+
+=== NOADAPT ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 119, operation: 4)
+Coordinates:
+  * year               (year) int32 476B 1981 1982 1983 1984 ... 2097 2098 2099
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with no adaptation.
+    version:       uninteracted_main_model_agnonag_27_28_41-noadapt.2026-01-30
+    dependencies:  1.7, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=119, first=np.int32(1981), last=np.int32(2099)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(119, 24378), dtype=float32
+       NaN count: 0
+
+
+=== COORDINATE COMPARISON ===
+  year: exact match = True
+
+
+=== REBASED COMPARISON (histclim vs noadapt) ===
+  max abs diff : 29.216716766357422
+  mean abs diff: 1.5763580799102783
+[Processing:  ]
+histclim : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/CESM1-BGC/high/SSP3/uninteracted_main_model_agnonag_27_28_41-histclim.nc4
+noadapt  : /project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_27_28_41/median/rcp45/CESM1-BGC/high/SSP3/uninteracted_main_model_agnonag_27_28_41-noadapt.nc4
+histclim coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+noadapt coords: {'year': array([1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
+       1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+       2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
+       2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+       2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035,
+       2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046,
+       2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057,
+       2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068,
+       2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079,
+       2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090,
+       2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100],
+      dtype=int32)}
+=== HISTCLIM ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with interpolation and adaptation thro...
+    version:       uninteracted_main_model_agnonag_27_28_41-histclim.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== NOADAPT ===
+<xarray.Dataset> Size: 50MB
+Dimensions:            (region: 24378, year: 120, operation: 4)
+Coordinates:
+  * year               (year) int32 480B 1981 1982 1983 1984 ... 2098 2099 2100
+Dimensions without coordinates: region, operation
+Data variables:
+    regions            (region) <U35 3MB ...
+    rebased            (year, region) float32 12MB ...
+    highriskimpacts    (year, region) float32 12MB ...
+    clip               (year, region) float32 12MB ...
+    lowriskimpacts     (year, region) float32 12MB ...
+    orderofoperations  (operation) <U15 240B ...
+Attributes:
+    description:   labor productivity, with no adaptation.
+    version:       uninteracted_main_model_agnonag_27_28_41-noadapt.2026-01-30
+    dependencies:  1.1, Hierarchy.2016-02-03, Hierarchy.2016-02-03, GCP-GDPPC...
+    author:        James Rising
+
+--- Coordinate values ---
+  year: dtype=int32, n=120, first=np.int32(1981), last=np.int32(2100)
+
+--- Variable shapes/dims ---
+  rebased: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  highriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  lowriskimpacts: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+  clip: dims=('year', 'region'), shape=(120, 24378), dtype=float32
+       NaN count: 0
+
+
+=== COORDINATE COMPARISON ===
+  year: exact match = True
+
+
+=== REBASED COMPARISON (histclim vs noadapt) ===
+  max abs diff : 17.38627052307129
+  mean abs diff: 0.9586980938911438

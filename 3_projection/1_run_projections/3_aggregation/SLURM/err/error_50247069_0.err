@@ -1,0 +1,13 @@
+Task 0 sleeping for 0s
+Traceback (most recent call last):
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 204, in main
+    make_levels(targetdir, filename, outfilename, halfweight_levels, weight_args_levels, config=config, writetargetdir=writetargetdir)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py", line 623, in make_levels
+    writer = nc4writer.create(outdir, outfilename)
+  File "/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/nc4writer.py", line 25, in create
+    return Dataset(os.path.join(targetdir, basename), 'w', format='NETCDF4')
+  File "src/netCDF4/_netCDF4.pyx", line 2463, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2026, in netCDF4._netCDF4._ensure_nc_success
+PermissionError: [Errno 13] Permission denied: b'/project/cil/gcp/outputs/labor/impacts-woodwork/median/uninteracted_main_model_agnonag_27_28_41-global/median/rcp85/MIROC-ESM/high/SSP2/uninteracted_main_model_agnonag_27_28_41-histclim-pop-levels.nc4'
+/project/cil/home_dirs/egrenier/repos/impact-calculations/generate/aggregate.py:471: RuntimeWarning: invalid value encountered in true_divide
+  dstvalues[:len(numers), ii] = numers / denoms

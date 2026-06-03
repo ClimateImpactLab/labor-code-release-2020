@@ -8,3 +8,5 @@ levels-unit: "% GDP"
 infix: gdp
 ssp: SSP3
 batch: batch4
+
+(highriskimpacts * 0.5 / 0.34 ) * clip + lowriskimpacts * (1 - clip)

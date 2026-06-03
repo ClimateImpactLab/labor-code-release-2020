@@ -115,15 +115,15 @@ if (heckman == "heckman") {
     ################################
 #<<<<<<< HEAD
     dfb_original <- dfb
-    coefs <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
+    coefs <- fread('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/disutility_ext/z_old/interacted_coefs.csv')
 #=======
-    dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
+    dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
     
     dfb <- rename(dfb, temp = value.x)
     dfb <- rename(dfb, temp_s = value.y)
     
     #soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-    soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+    soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
     soc_ec <- subset(soc_ec, year == 2010)
     soc_ec <- subset(soc_ec, ssp == "SSP3")
     soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
@@ -133,18 +133,14 @@ if (heckman == "heckman") {
     dfb <- merge(dfb, soc_ec, by.x = "hierid", by.y = "region", all.x = FALSE, all.y = TRUE, allow.cartesian=TRUE)
     
     
-    coefs <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_coefs.csv')
-#>>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
+    coefs <- fread('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/disutility_ext/z_old/interacted_coefs.csv')
     mu <- as.matrix(coefs$V2)
-    vcv <- fread('~/repos/labor-code-release-2020/disutility_ext/interacted_vars_covars.csv')
-    #vcv <- fread('/Users/rfrost/BFI\ Dropbox/Rebecca\ Frost/labor-code-release-2020/disutility_ext/interacted_vcv.csv')
+    vcv <- fread('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/disutility_ext/z_old/interacted_vars_covars.csv')
     vcv <- as.matrix(vcv[c(1:42),c(1:42)])
     
-#<<<<<<< HEAD
     n <- 10000
-#=======
     n <- 100
-#>>>>>>> a801922d6bb77ae5625cacafdecf65087dcac76a
+
     set.seed(12346) 
     resampled <- mvtnorm::rmvnorm(n = n, mu, vcv)
     
@@ -167,13 +163,12 @@ if (heckman == "heckman") {
     
     for (i in 1:n){
       
-      dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
+      dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
       
       dfb <- rename(dfb, temp = value.x)
       dfb <- rename(dfb, temp_s = value.y)
       
-      #soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-      soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+      soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
       soc_ec <- subset(soc_ec, year == 2010)
       soc_ec <- subset(soc_ec, ssp == "SSP3")
       soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
@@ -246,7 +241,6 @@ if (heckman == "heckman") {
       dfb <- aggregate(cbind(diff, d_h, d_l) ~ hierid, data = dfb, FUN = sum)
       
       soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-      #soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
       soc_ec <- subset(soc_ec, year == 2010)
       soc_ec <- subset(soc_ec, ssp == "SSP3")
       soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")
@@ -294,19 +288,17 @@ if (heckman == "heckman") {
     SE_diss <- (Var_diss)^0.5
   }
 }
-<<<<<<< HEAD
 
 mean(results)
 
 sd(results)
-=======
-dfb <- fread("/Users/rfrost/Documents/Labour/GMDF_tmax_temp_and_spline_avg_year.csv")
+
+dfb <- fread("/project/cil/sacagawea_shares/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_avg_year.csv")
 
 dfb <- rename(dfb, temp = value.x)
 dfb <- rename(dfb, temp_s = value.y)
 
-#soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
-soc_ec <- fread("/Users/rfrost/Documents/Labour/integration-econ-bc39.csv")
+soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
 soc_ec <- subset(soc_ec, year == 2010)
 soc_ec <- subset(soc_ec, ssp == "SSP3")
 soc_ec <- aggregate(cbind(gdp, pop, gdppc)~ region, data = soc_ec, FUN = "mean")

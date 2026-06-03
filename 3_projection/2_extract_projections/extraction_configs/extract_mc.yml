@@ -1,0 +1,7 @@
+results-root: /project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/uninteracted_main_model_agnonag_27_28_41
+file-organize: [ssp, rcp]
+do-montecarlo: yes
+evalqvals: ['mean', 0.01, 0.05, 0.10, 0.17, 0.25, 0.50, 0.75, 0.83, 0.90, 0.95, 0.99]
+output-format: valuescsv # edfcsv or valuescsv
+years: [2095, 2096, 2097, 2098, 2099]
+ignore-missing: no
