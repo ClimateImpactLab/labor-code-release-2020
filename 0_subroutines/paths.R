@@ -15,10 +15,8 @@ DIR_EXT_DATA = paste0(DIR_REPO_LABOR,"/data")
 DIR_FIG = paste0(DIR_REPO_LABOR,"/figures")
 DIR_OUTPUT = paste0(DIR_REPO_LABOR, "/output")
 
-DIR_STER = paste0(DIR_EXT_DATA,"/sters")
-
 DIR_FIG = paste0(DIR_OUTPUT, "/figures")
 DIR_STER = paste0(DIR_OUTPUT, "/ster")
 DIR_RF = paste0(DIR_OUTPUT, "/rf")
-DIR_TABLE = paste0(DIR_OUTPUT, "/table")
+DIR_TABLE = paste0(DIR_OUTPUT, "/tables")
 
