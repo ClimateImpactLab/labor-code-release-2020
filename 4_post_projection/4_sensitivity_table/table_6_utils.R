@@ -41,8 +41,15 @@ invisible(lapply(packages, function(pkg) {
 }))
 rm(packages)
 
-USER <- Sys.getenv("USER")
-source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020-mq-latest/0_subroutines/paths.R'))
+DIR_GCP_CLIMATE   <- "/project/cil/gcp/climate"
+DIR_WEATHER_DAILY <- file.path(DIR_GCP_CLIMATE, "_spatial_data/impactregions/weather_data/csv_daily")
+DIR_SMME_WEIGHTS  <- file.path(DIR_GCP_CLIMATE, "SMME-weights")
+DIR_ECON_BC39     <- "/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs"
+DIR_IMPACT_SENS   <- paste0(
+  "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/",
+  "uninteracted_main_model_agnonag_27_28_41/sensitivity_table"
+)
+DIR_USER_TMP      <- file.path("/project/cil/home_dirs", USER, "tmp")
 
 #==============================================================================#
 # 1. read_hedonic_tex: parse baseline hedonic value from table4 tex file ----
@@ -87,9 +94,9 @@ read_disutility_gdp_csv <- function(path, year_val = 2099) {
 
 run_hedonic <- function(frisch_HR, frisch_LR) {
 
-  dfa <- fread("/project/cil/gcp/climate/_spatial_data/impactregions/weather_data/csv_daily/GMDF_tmax_temp_and_spline_27_28_41_avg_year.csv")
+  dfa <- fread(file.path(DIR_WEATHER_DAILY, "GMDF_tmax_temp_and_spline_27_28_41_avg_year.csv"))
 
-  soc_ec <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+  soc_ec <- fread(file.path(DIR_ECON_BC39, "integration-econ-bc39.csv"))
   soc_ec <- soc_ec[year == 2010 & model == "IIASA GDP" & ssp == "SSP3"]
   soc_ec[, wage := (gdppc * 0.6) / (250 * 6 * 60)]
   soc_ec <- soc_ec[, .(region, wage, gdppc, pop)]
@@ -135,7 +142,7 @@ run_hedonic <- function(frisch_HR, frisch_LR) {
 #==============================================================================#
 
 .get_model_weights <- function(rcp) {
-  weight_file <- glue("/project/cil/gcp/climate/SMME-weights/{rcp}_2090_SMME_edited_for_April_2016.tsv")
+  weight_file <- file.path(DIR_SMME_WEIGHTS, glue("{rcp}_2090_SMME_edited_for_April_2016.tsv"))
   weights <- fread(weight_file, select = c("model", "weight"))
 
   pattern_map <- list(
@@ -203,7 +210,7 @@ run_hedonic <- function(frisch_HR, frisch_LR) {
 run_disutility <- function(rcp, frisch_HR, frisch_LR,
                            iam = "high", ssp_scen = "SSP3") {
 
-  base_path <- glue("/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/sensitivity_table/")
+  base_path <- DIR_IMPACT_SENS
 
   file_names <- list(
     clip_fa   = glue("{ssp_scen}-{rcp}_{iam}_clip_fulladapt.csv"),
@@ -244,7 +251,7 @@ run_disutility <- function(rcp, frisch_HR, frisch_LR,
   df[, disutility   := high_fa  * clip_fa   * (0.5 / frisch_HR) +
       low_fa   * (1 - clip_fa) * (0.5 / frisch_LR) - histclim_adj]
 
-  cov_bc39 <- fread("/project/cil/sacagawea_shares/gcp/integration/float32/dscim_input_data/econvars/zarrs/integration-econ-bc39.csv")
+  cov_bc39 <- fread(file.path(DIR_ECON_BC39, "integration-econ-bc39.csv"))
   cov_use  <- cov_bc39[year == 2099 & ssp == ssp_scen & model == "OECD Env-Growth", .(region, gdp, gdppc, pop)]
   cov_use  <- cov_use[, .SD[1], by = region]
 
@@ -300,7 +307,7 @@ run_disutility_scc_prep <- function(rcp,
                                     frisch_LR,
                                     iam        = "high",
                                     ssp_scen   = "SSP3",
-                                    output_dir = "/project/cil/home_dirs/maiqi/tmp") {
+                                    output_dir = DIR_USER_TMP) {
 
   base_path <- glue(
     "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/",

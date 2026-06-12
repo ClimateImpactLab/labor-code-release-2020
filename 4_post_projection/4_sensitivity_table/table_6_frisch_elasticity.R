@@ -38,7 +38,8 @@
 #==============================================================================#
 
 USER <- Sys.getenv("USER")
-source(glue::glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020-mq-latest/disutility_ext/3_table_6_utils.R'))
+source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
+source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/disutility_ext/3_table_6_utils.R'))
 
 #==============================================================================#
 # 1. Define Frisch elasticity combinations ----
@@ -59,7 +60,7 @@ frisch_cols <- list(
 message("Reading Row 1, col 1: baseline hedonic value from table4 tex ...")
 message("Computing Row 1, cols 2-5: hedonic value ...")
 row1 <- c(
-  list(col1 = read_hedonic_tex("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/tables/table4_hedonic_value.tex")),
+  list(col1 = read_hedonic_tex(file.path(DIR_TABLE, "table4_hedonic_value.tex"))),
   lapply(frisch_cols[-1], function(f) {
     if (any(is.na(f))) return(list(mean = NA, p5 = NA, p95 = NA))
     run_hedonic(f[1], f[2])
@@ -243,4 +244,4 @@ latex_table <- paste0(
 )
 
 cat(latex_table)
-writeLines(latex_table, "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/tables/table6_sensitivity_e.tex")
+writeLines(latex_table, file.path(DIR_TABLE, "table6_sensitivity_e.tex"))

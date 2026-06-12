@@ -49,7 +49,14 @@ invisible(lapply(packages, function(pkg) {
 rm(packages)
 
 USER <- Sys.getenv("USER")
-source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020-mq-latest/disutility_ext/3_table_6_utils.R'))
+source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
+source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/disutility_ext/3_table_6_utils.R'))
+
+
+DIR_IMPACT_INTERACTED <- paste0(
+  "/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/extracted/",
+  "clim_interacted_model_agnonag_27_28_41"
+)
 
 #==============================================================================#
 # 1. Define EXR values and column sub-headers ----
@@ -71,7 +78,7 @@ exr_cols <- list(
 #==============================================================================#
 
 message("Reading baseline hedonic value from table4 tex ...")
-base_row1 <- read_hedonic_tex("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/tables/table4_hedonic_value.tex")
+base_row1 <- read_hedonic_tex(file.path(DIR_TABLE, "table4_hedonic_value.tex"))
 
 message("Computing baseline disutility RCP8.5 ...")
 base_row2 <- run_disutility("rcp85", 0.5, 0.5)
@@ -195,18 +202,18 @@ r5l2 <- paste(cell(row5, fmt_cell_scc,        2), collapse = " & ")
 # Column 6, row 1: interacted model hedonic value
 # scale_result(..., 0) normalises p5/p95 -> p_lo/p_hi without changing values
 col6_r1   <- scale_result(
-  read_hedonic_tex("/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/tables/table4_hedonic_value_interacted.tex"),
+  read_hedonic_tex(file.path(DIR_TABLE, "table4_hedonic_value_interacted.tex")),
   0
 )
 col6_r1l1 <- fmt_cell_hedonic(col6_r1)[1]
 col6_r1l2 <- fmt_cell_hedonic(col6_r1)[2]
 
 # Column 6, rows 2 & 3: interacted model disutility from GDP-aggregated CSVs
-col6_r2   <- read_disutility_gdp_csv("/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/extracted/clim_interacted_model_agnonag_27_28_41/rcp85/high/SSP3/SSP3-rcp85_high_rebased_fulladapt-gdp-aggregated.csv")
+col6_r2   <- read_disutility_gdp_csv(file.path(DIR_IMPACT_INTERACTED, "rcp85/high/SSP3/SSP3-rcp85_high_rebased_fulladapt-gdp-aggregated.csv"))
 col6_r2l1 <- fmt_cell_disutility(col6_r2)[1]
 col6_r2l2 <- fmt_cell_disutility(col6_r2)[2]
 
-col6_r3   <- read_disutility_gdp_csv("/project/cil/gcp/outputs/labor/impacts-corpsepose/montecarlo/extracted/clim_interacted_model_agnonag_27_28_41/rcp45/high/SSP3/SSP3-rcp45_high_rebased_fulladapt-gdp-aggregated.csv")
+col6_r3   <- read_disutility_gdp_csv(file.path(DIR_IMPACT_INTERACTED, "rcp45/high/SSP3/SSP3-rcp45_high_rebased_fulladapt-gdp-aggregated.csv"))
 col6_r3l1 <- fmt_cell_disutility(col6_r3)[1]
 col6_r3l2 <- fmt_cell_disutility(col6_r3)[2]
 
@@ -280,4 +287,4 @@ latex_table <- paste0(
 )
 
 cat(latex_table)
-writeLines(latex_table, "/project/cil/home_dirs/maiqi/repos/labor-code-release-2020/output/tables/table6_sensitivity_xr.tex")
+writeLines(latex_table, file.path(DIR_TABLE, "table6_sensitivity_xr.tex"))
