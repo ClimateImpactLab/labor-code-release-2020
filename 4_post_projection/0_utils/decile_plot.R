@@ -33,25 +33,25 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
     dplyr::filter(year == !!year_fin)
   
   # loggdppc, climtas and population 
-  cov_path = glue('{ROOT_INT_DATA}/projection_outputs/covariates',
-                  '/{ssp}-{rcp}_{iam}_covariates_decile_plots.csv')
+  cov_data = read_csv(glue('{ROOT_INT_DATA}/projection_outputs/covariates',
+                           '/{ssp}-{rcp}-{iam}_covariates_decile_plots.csv'))
   
   # read population data in baseline year
-  pop.baseline = read_csv(cov_path) %>% 
+  pop.baseline = cov_data %>% 
     dplyr::filter(year == !!baseline) %>% 
     dplyr::select(region, population)
   
   # read population data in final year
-  pop.EOC = read_csv(cov_path) %>%
+  pop.EOC = cov_data %>%
     dplyr::filter(year == !!year_fin) %>% 
     dplyr::select(region, population)
   
-  stopifnot(covar == 'loggdppc' | covar == 'climtas')
+  stopifnot(covar == 'loggdppc' | covar == 'climtas' | covar == 'ag_share')
   
-  # 2015 income and climate
-  covariates = read_csv(cov_path) %>%
+  # 2015 income, climate, and share of ag workers
+  covariates = cov_data %>%
     dplyr::filter(year == !!baseline) %>% 
-    dplyr::select(region, loggdppc, climtas)
+    dplyr::select(region, loggdppc, climtas, ag_share)
   
   # merge in baseline population
   covariates = left_join(covariates, pop.baseline, by = "region")
@@ -86,11 +86,17 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
       decile = factor(c(1, 4, 7, 10)),
       label = c("Mogadishu,\nSomalia", "Kolkata,\nIndia", "Chongqing,\nChina", "Chicago,\nUSA")
     )
-  } else { #share
+  } else if (covar == 'climtas') {
     x_title = "2015 Annual Average Temperature Decile"
     cities = data.frame(
       decile = factor(c(1, 4, 7, 10)),
       label = c("Oslo,\nNorway", "Buenos Aires,\nArgentina", "Orlando,\nUSA", "Khartoum,\nSudan")
+    )
+  } else { 
+    x_title = "2015 Share of Agriculture Workers Decile"
+    cities = data.frame(
+      decile = factor(c(1, 4, 7, 10)),
+      label = c("Illinois,\nUSA", "Sichuan,\nChina", "Haryana,\nIndia", "Zambezia,\nMozambique")
     )
   }
   
@@ -164,22 +170,23 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
       lty = "solid",
       width = 0,
       alpha = 0.5,
-      lwd = 0.5) +
+      lwd = 1) +
     geom_boxplot(
       data = quantiles.df, 
-      aes(group=decile, x=decile, ymin = whisker_min, ymax = whisker_max, 
+      aes(group = decile, x = decile, ymin = whisker_min, ymax = whisker_max, 
           lower = box_lower, upper = box_upper, middle = middle.median), 
-      fill=color.bar, 
-      color="white",
+      fill = color.bar, 
+      color = "white",
       size = 0.2, 
+      median.linewidth = 1,
       stat = "identity") + #boxplot 
     geom_point(
       data = quantiles.df, 
-      aes(x=decile, y = middle.mean, group = 1), 
-      size=0.5, 
-      color="grey88", 
+      aes(x = decile, y = middle.mean, group = 1), 
+      size = 1, 
+      color = "grey88", 
       alpha = 0.9) + 
-    geom_abline(intercept=0, slope=0, lwd=0.1, alpha = 0.5) + 
+    geom_abline(intercept = 0, slope = 0, lwd = 0.1, alpha = 0.5) + 
     scale_fill_gradientn(
       colors = rev(brewer.pal(9, "RdGy"))) + 
     scale_color_gradientn(
@@ -187,13 +194,13 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
     scale_x_discrete(limits=factor(seq(1,10)), breaks=factor(seq(1,10))) +
     geom_segment(
       data = cities,
-      aes(x = decile, xend = decile, y = -4.2, yend = -4.7),
+      aes(x = decile, xend = decile, y = -3.9, yend = -4.4),
       arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
       color = "black",
       lwd = 0.3) +
     geom_text(
       data = cities,
-      aes(x = decile, y = -3.95, label = label),
+      aes(x = decile, y = -3.65, label = label),
       size = 3,
       lineheight = 0.8) +
     theme_classic() +
@@ -203,7 +210,7 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
           axis.title = element_text(size = 15)) +
     xlab(x_title) +
     ylab(y_title) +
-    coord_cartesian(ylim = c(-4, 10), clip = "off") # change this according to the widest y-axis range
+    coord_cartesian(ylim = c(-4, 8), clip = "off") # change this according to the widest y-axis range
   
   # save the plot
   ggsave(p, file = glue("{output.dir}/deciles_{adapt}_{ssp}_{rcp}_{iam}_{covar}.png"), width = 9, height = 7)

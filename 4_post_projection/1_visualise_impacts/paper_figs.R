@@ -137,7 +137,7 @@ if (Part1) {
 
 if (Part2) {
   
-  lapply(c("loggdppc", "climtas"), function(covar) {
+  lapply(c("loggdppc", "climtas", "ag_share"), function(covar) {
     deciles.plot(model.name = "uninteracted_main_model_agnonag_27_28_41", 
                  ssp = ssp_in, 
                  iam = iam_in, 
