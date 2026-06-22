@@ -90,6 +90,20 @@
 DEFAULT_CRS = glue("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84",
                    " +datum=WGS84 +units=m +no_defs")
 
+no_pop_irs = c('ARG.8.244', 'ATA', 'ATF.R3ad2a7b0834665e6', 'AUS.1.1', 'AUS.10.1145',
+               'AUS.11.1345', 'AUS.3.112', 'AUS.5.387', 'AUS.5.400', 'AUS.6.687',
+               'AUS.7.989', 'AUS.7.995', 'BRA.8.836.1993', 'BRA.8.837.1994', 'BVT',
+               'CAN.11.269.4448', 'CAN.2.42.1074', 'CAN.3.58.1374',
+               'CAN.9.148.Rd02357429ca755ba', 'CHN.21.226.1500',
+               'CHN.30.318.2210.R55b41404d256c30a',
+               'CHN.30.318.2210.Rdb1a80fb7e65ef11', 'CL-', 'COL.26.852', 'DOM.19.91',
+               'ESP.6.27.191.4867', 'ESP.6.27.192.4868', 'GRL.1.2', 'GRL.2.9',
+               'GRL.3.18', 'HMD', 'IDN.14.203', 'IND.12.129.431', 'IND.12.129.432',
+               'IND.12.132.460', 'IND.12.134.487', 'IND.2.17.134', 'IND.2.17.135',
+               'IND.2.17.136', 'IND.2.17.138', 'IND.2.17.142', 'IND.2.17.143', 'IOT',
+               'JPN.37.1512', 'MRT.12.38', 'NZL.10.42.253', 'PER.21.169.1647', 'SGS',
+               'SJM.1', 'SP-', 'TWN.2.2', 'ZAF.9.313')
+
 # create plot data
 join.plot.map = function(
   map.df = NULL, df = NULL, df.key = "region", map.key = 'hierid',  
@@ -117,6 +131,8 @@ join.plot.map = function(
                                    "TZA.13.59.1169", "TZA.5.26.564", "TZA.17.86.1759",
                                    "ATA", "PER.8.71.705", "PER.7.67.677",
                                    "ARM.7", "USA.23.1274", "TZA.8.37.779")))
+
+  df = df %>% mutate(mainvar = ifelse(!!sym(map.key) %in% no_pop_irs, NA, mainvar))
   
   message(glue("Joining data to world shapefile by: {map.key} and {df.key}."))
   shp_plot = left_join(map.df, df, by = setNames(nm = map.key, df.key))

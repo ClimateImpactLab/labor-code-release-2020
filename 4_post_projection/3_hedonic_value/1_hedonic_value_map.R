@@ -20,9 +20,9 @@ source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subro
 source(glue('{DIR_REPO_LABOR}/4_post_projection/0_utils/mapping.R'))
 
 # Define spec (cold/hot splits dmgs at 29C)
-spec = "cold" # takes "cold", "hot", "main"
+spec = "hot" # takes "cold", "hot", "main"
 cutoff_temp = 29
-output = glue("{DIR_FIG}/hedonic_value") # maybe change this
+output = glue("{DIR_FIG}/hedonic_value")
 filename = "hedonic_value_map"
 
 #==============================================================================#
@@ -41,7 +41,6 @@ if (spec == "cold"){
                        temp_s= ifelse(temp > cutoff_temp, temp_s, NA))
   suffix="_hot"
 } else {
-  dfb = dfb
   suffix="_main"
 }
 
@@ -111,6 +110,12 @@ map.df = st_read("/project/cil/sacagawea_shares/gcp/regions/world_combo_201710_m
   st_set_crs(4326) %>%
   st_transform(crs = "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
 
+bar_title = switch(spec,
+                   main = "Hedonic value of thermal comfort in a low-risk job (% 2010 Income)",
+                   cold = "Hedonic value of thermal comfort in a low-risk job on days \u2264 29\u00b0C (% 2010 Income)",
+                   hot = "Hedonic value of thermal comfort in a low-risk job on days > 29\u00b0C (% 2010 Income)",
+                   stop("Unknown spec: ", spec))
+
 ub = 70
 lb = 0
 
@@ -125,12 +130,12 @@ p = join.plot.map(map.df = map.df,
                   topcode.lb = lb,
                   topcode.ub = ub,
                   color.scheme = 'seq',
-                  colorbar.title = "Hedonic value of thermal comfort in a low-risk job (% 2010 Income)",
+                  colorbar.title = bar_title,
                   map.title = "",
                   rescale_val = rescale_val,
                   breaks_labels_val = breaks_labels_val,
                   bar.width = unit(130, units = "mm"),
                   plot.lakes = F)
 
-print(p)
-ggsave(glue("{output}/{filename}{suffix}.pdf"), p, bg = "white", width = 8, height = 6)
+#print(p)
+ggsave(glue("{output}/{filename}{suffix}.pdf"), p, device = cairo_pdf, bg = "white", width = 8, height = 6)

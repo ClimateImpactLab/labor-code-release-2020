@@ -25,7 +25,7 @@ basename = 'uninteracted_main_model_agnonag_27_28_41'
 uncertainty = 'montecarlo'  # 'median' 'montecarlo'
 iams = ['high', 'low'] # 'high' 'low'
 rcps = ['rcp45', 'rcp85'] # 'rcp45' 'rcp85'
-ssps = ['SSP2', 'SSP4'] # 'SSP2' 'SSP3' 'SSP4'
+ssps = ['SSP2', 'SSP3', 'SSP4'] # 'SSP2' 'SSP3' 'SSP4'
 
 # batches
 if uncertainty == 'montecarlo':
