@@ -17,7 +17,7 @@ rm(packages)
 USER = Sys.getenv("USER")
 source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
 
-spec = "hot" # "cold" or "hot" or ""
+spec = "cold" # "cold" or "hot" or ""
 cutoff_temp = 29
 
 #==============================================================================#
@@ -144,6 +144,7 @@ dfb$SE = (dfb$Var)^(0.5)
 # take subset of rows for result
 regs = dfa %>% dplyr::select(hierid, diff_dis_p, pop) %>% left_join(dfb %>% dplyr::select(hierid, SE))
 
+# If region has no hot/cold days, sets region disutility to 0
 regs$diff_dis_p = ifelse(is.na(regs$diff_dis_p), 0, regs$diff_dis_p)
 
 # ===== Get global pop weighted mean and standard deviation ===== #

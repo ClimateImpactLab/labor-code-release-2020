@@ -13,7 +13,7 @@ Response functions in STATA .ster format will be stored in `/project/cil/home_di
 
 ### Generate .csvv files
 
-We run two sets of projections for the labor sector, one for each set of regression coefficients. We do this in 3 steps. First, generate the time use .csvv `3_projection/0_prepare_projections/csvv_writer_timeuse.do` (NOTE HERE TO EDIT PATHS TO HOWEVER I STRUCTURE DIRECTORY ONCE INTERACTED IS RUN). Next, generate the employment share .csvv `3_projection/0_prepare_projections/csvv_writer_empshare.do` (PATHS HERE TOO). Finally, combine the individual .csvvs into the projection ready .csvv file (Paper spec response function codes are `uninteracted_main_model` and `<interacted model goes here>`.
+We run two sets of projections for the labor sector, one for each set of regression coefficients. We do this in 3 steps. First, generate the time use .csvv `3_projection/0_prepare_projections/csvv_writer_timeuse.do`. Next, generate the employment share .csvv `3_projection/0_prepare_projections/csvv_writer_empshare.do`. Finally, combine the individual .csvvs into the projection ready .csvv file (Paper spec response function codes are `uninteracted_main_model_agnonag_27_28_41` and `clim_interacted_model_agnonag_27_28_41`.
 
 ## 1. Running a projection
 
@@ -21,27 +21,27 @@ We run two sets of projections for the labor sector, one for each set of regress
 
 We run three kinds of projections: **singles**, **medians** and **montecarlos**.
 
-    - Single:
+- Single:
     
-        Uses .csvv "gammma" coefficients (no draws from vcv matrix) to perform a point estimate per year/IR for each output value. 
+  Uses .csvv "gammma" coefficients (no draws from vcv matrix) to perform a point estimate per year/IR for each output value. 
 
-        Default option is:
-            GCM: CCSM4
-            RCP: rcp85
-            IAM: low
-            SSP: SSP3
+  Default option is:
+     GCM: CCSM4
+     RCP: rcp85
+     IAM: low
+     SSP: SSP3
 
-        You can edit these options in the impact-calculations repo. see `repos/impact-calculations/generate/loadmodels.py`. 
+  You can edit these options in the impact-calculations repo. see `repos/impact-calculations/generate/loadmodels.py`. 
         
-    - Median: 
-    
-        Uses .csvv "gamma" coefficients to perform points estimates for both rcps, every gcm, both iams, one SSP of your choosing (usually SSP3).
+- Median:
 
-        You can edit these parameters in the run configs (more info below)
+  Uses .csvv "gamma" coefficients to perform points estimates for both rcps, every gcm, both iams, one SSP of your choosing (usually SSP3).
 
-    - Montecarlo:
+  You can edit these parameters in the run configs (more info below)
 
-        Takes random draws from the variance-covariance matrix across 15 batches. Batches must be run one at a time the comply with the RCC walltimes. Scripts are located in the projections repo.
+- Montecarlo:
+
+  Takes random draws from the variance-covariance matrix across 15 batches. Batches must be run one at a time the comply with the RCC walltimes. Scripts are located in the projections repo.
 
 ### How to run
 
@@ -59,40 +59,44 @@ View resource use and run times for previous runs in the RA manual [here](https:
 
 There are two options for running a projection on the RCC:
 
-    - sinteractive: This is only really feasible if you are running a single or a similarly limited run (i.e. montecarlo hole filling – more on that later). However, I would recommend doing this if it's your first time running a projection, or if you have doubts about what is actually going on and you want to observe system outputs as the process is active.
+- sinteractive: This is only really feasible if you are running a single or a similarly limited run (i.e. montecarlo hole filling – more on that later). However, I would recommend doing this if it's your first time running a projection, or if you have doubts about what is actually going on and you want to observe system outputs as the process is active.
 
-        (1) Open a tmux window: `tmux new -s <session-name>`. This ensures that if for whatever reason your instance crashes, the process will continue. This step is optional but ***strongly*** recommended.
-        (2) Start your interactive session (these are some suggested parameters, feel free to change based on your needs): `sinteractive --account=cil --partition=<caslake or cil> --time=06:00:00 --mem=50G --ntasks-per-node=1`. Using partition caslake will use a small portion of our service unit allocation, our usage is not tracked on the CIL partition. Both are fine to use.
+  (1) Open a tmux window: `tmux new -s <session-name>`. This ensures that if for whatever reason your instance crashes, the process will continue. This step is optional but ***strongly*** recommended.
+  (2) Start your interactive session (these are some suggested parameters, feel free to change based on your needs): `sinteractive --account=cil --partition=<caslake or cil> --time=06:00:00 --mem=50G --ntasks-per-node=1`. Using partition caslake will use a small portion of our service unit allocation, our usage is not tracked on the CIL partition. Both are fine to use.
 
-        (3) Activate your environment: `source activate impact-env`
+  (3) Activate your environment: `source activate impact-env`
 
-        (4) Navigate to the `impact-calculations` repo and run: `./generate.sh </full/path/to/your/config.yml>`
+  (4) Navigate to the `impact-calculations` repo and run: `./generate.sh </full/path/to/your/config.yml>`
 
-    - SLURM jobs: This is the way we currently run projections on the RCC, all SLURM job scripts can be found in the projections repo. These are built to be easily configurable and to efficiently spread the tasks over the nodes available to us. Make sure you've configured the run as described in step 2. Navigate to the projections repository and run `sbatch <your-run-name>.sbatch`. You can check the status of these runs by running `squeue --user=<userid>`.
+- SLURM jobs: This is the way we currently run projections on the RCC, all SLURM job scripts can be found in the projections repo. These are built to be easily configurable and to efficiently spread the tasks over the nodes available to us. Make sure you've configured the run as described in step 2. Navigate to the projections repository and run `sbatch <your-run-name>.sbatch`. You can check the status of these runs by running `squeue --user=<userid>`.
 
 
 # Post-Projection
 
 ## 2. Create noadapt histclim
 
-***IMPORTANT:*** This must be completed BEFORE aggregation.
+***IMPORTANT:*** This must be completed BEFORE aggregation. 
 
-This is a new step we added to projections during revisions in winter 2026. We create a new histclim product using the share of high risk workers (variable `clip`) from the noadapt projections (instead of incadapt like the default histclim output), and the low and high risk impacts from the default histclim, then recombine them to create a new `rebased` variable. We use this to subtract from noadapt. 
+This is a new step we added to projections during revisions in winter 2026. We create a new histclim product using the share of high risk workers (variable `clip`) from the noadapt projections (instead of incadapt like the default histclim output), and the low and high risk impacts from the default histclim, then recombine them to create a new `rebased` variable. We use this to subtract from noadapt. Run `3_projection/1_run_projections/make_noadapt_histclim.py` from command line after making sure that the parameters at the top of your script correspond to the scenario you are trying to process. Activate a python environment (we have no python environment specific to the labor repo, but I have found `source activate /project/cil/home_dirs/rcc/scc` works fine. Then run the script from command line.
 
 ## 3. Aggregation
 
 There are four types of aggregation. Each type aggregates to ADM levels higher than IRs and to global values allowing us to make time series and transform minutes/worker/day to either minutes/day or some version of valued ($) results.
 
-    - Population: This will give you two outputs per adapation scenario. `pop-levels` and `pop-aggregated`. Levels will give you impacts in minutes/day. Aggregated gives you damages in minutes/worker/day but spatially aggregated.
-    - Wage: Converts minutes to 2005 USD$PPP. These are used as inputs into dscim (so they get used in integration/inequality/local scc). The paper and the config display the conversion formula (also used for gdp and gdppc). Two output files per adaptation scenario: `wage-levels` and `wage-aggregated`.
-    - GDP: Monetized damages in % GDP impacts. Two output files per adaptation scenario: `gdp-levels` and `gdp-aggregated`. 
-    - GDPPC: Monetized damages in % GDP PC. Two output files per adaptation scenario: `gdppc-levels` and `gdppc-aggregated`. This aggregation type isn't used in the paper.
+- Population: This will give you two outputs per adapation scenario. `pop-levels` and `pop-aggregated`. Levels will give you impacts in minutes/day. Aggregated gives you damages in minutes/worker/day but spatially aggregated.
+- Wage: Converts minutes to 2005 USD$PPP. These are used as inputs into dscim (so they get used in integration/inequality/local scc). The paper and the config display the conversion formula (also used for gdp and gdppc). Two output files per adaptation scenario: `wage-levels` and `wage-aggregated`.
+- GDP: Monetized damages in % GDP impacts. Two output files per adaptation scenario: `gdp-levels` and `gdp-aggregated`. 
+- GDPPC: Monetized damages in % GDP PC. Two output files per adaptation scenario: `gdppc-levels` and `gdppc-aggregated`. This aggregation type isn't used in the paper.
 
 Use the SLURM jobs to run these. They take a while so for montecarlos we parallelize across 990 CPUS at a time.
 
 ## 4. Extraction
 
-Scripts to extract projections are in `2_extract_projections/extraction_shells`. For singles, use single.py. For medians and montecarlos, use bash scripts that call quantiles.py.
+Make sure that you have installed James' [Prospectus tools repo](https://github.com/jrising/prospectus-tools/tree/master) and that you have the `risingverse-py27` ([link here](https://github.com/ClimateImpactLab/risingverse-py27)) environment ready. If you are on the RCC, you can load in the python module and `source activate /project/cil/home_dirs/rcc/risingverse-py27`. 
+
+For singles, use `gcp/extract/single.py`. For medians and montecarlos, use bash scripts that call `gcp/extract/quantiles.py`.
+
+
 
 
 

@@ -37,7 +37,7 @@ ADAPTS[histclim]=-histclim
 if [ "$levels" == "TRUE" ]; then
     suffix_list=( "-pop-levels" "-gdp-levels" "-wage-levels" )
 elif [ "$aggregated" == "TRUE" ]; then
-    suffix_list=( "-gdp-aggregated"  ) # "-pop-aggregated" "-wage-aggregated"
+    suffix_list=( "-gdp-aggregated" "-pop-aggregated" "-wage-aggregated" )
 else
     suffix_list=( "" )
 fi
