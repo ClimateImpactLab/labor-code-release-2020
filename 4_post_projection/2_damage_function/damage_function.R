@@ -30,18 +30,8 @@ rm(packages)
 USER = Sys.getenv("USER")
 source(glue("/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R"))
 
-# source labor utils/functions.
-# Rfiles = Sys.glob(glue("{DIR_REPO_LABOR}", "/4_post_projection/0_utils/*.R"))
-# Rfiles = Rfiles[!mapply(x=Rfiles, grepl, MoreArgs=list(pattern='load_utils'))]
-# null = lapply(Rfiles, source)
-
 #==================change this section to customise plots======================#
 # toggles
-# Part1 = TRUE # Impact Map
-# Part2 = TRUE # Decile Plot
-# Part3 = TRUE # Time Series
-# Appendix = TRUE # Appendix F, G figures.
-
 # damage scenario ('adding_up', 'risk_aversion')
 damage_type = 'adding_up'
 
@@ -54,13 +44,13 @@ eta = '2.0'
 # pure rate of time preference (denoted by rho (ρ))
 rho = '0.0'
 
-# # Economic modeling scenario
-# #   'low': "IIASA GDP"
-# #  'high': "OECD Econ Growth"
-# iam = 'OECD Econ Growth'
-# 
-# # SSP ('SSP2', 'SSP3', 'SSP4')
-# ssp = 'SSP3'
+# Economic modeling scenario
+#   'low': "IIASA GDP"
+#  'high': "OECD Econ Growth"
+iam_in = "high"
+
+# SSP ('SSP2', 'SSP3', 'SSP4')
+ssp_in = "SSP3"
 
 # input path to temperature anomalies and damage functions
 root = "/project/cil"
@@ -70,51 +60,89 @@ temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/clim
 output_dir = "/home_dirs/nishkasharma/repos/labor-code-release-2020/output/figures/scc"
 
 #==============================================================================#
-# read csv files
+# process scatter plot data
+df_scatter <- function(rcp, ir){
+  df <- read_csv(glue(root, points_dir, "/{ssp_in}-{rcp}_{iam_in}_rebased_fulladapt-wage-aggregated.csv"))
+  
+  df <- df %>%
+    mutate(region = ifelse(is.na(region), "global", region),
+           rcp = rcp,
+           value = as.numeric(value),
+           damages = -value/1e12) %>% # convert value to damages in trillion USD
+    filter(region == ir)
+  
+  df <- df %>%
+    inner_join(temp_anomaly_2100, by = c("gcm", "year", "rcp"))
+}
+
+# process fit and conficence interval data
+fit_ci_nc <- function(nc_type, ssp){
+  
+  # read nc4
+  nc <- nc_open(glue(root, damages_dir, "/{nc_type}/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
+  # pull the full variables
+  y_hat_raw <- ncvar_get(nc, "y_hat")
+  year <- ncvar_get(nc, "year")
+  anomaly <- ncvar_get(nc, "anomaly")
+  ssp_vals <- ncvar_get(nc, "ssp")
+  if (nc_type == "scc_output_full_uncertainty") {
+    q <- ncvar_get(nc, "q")
+  }
+  # close the nc4 file
+  nc_close(nc)
+  
+  # select SSP
+  ssp_idx <- which(ssp == ssp)
+  
+  if (nc_type == "scc_output") {
+    # now subset
+    y_hat_sub <- y_hat_raw[, , ssp_idx]  # shape: [281 x 100]
+    
+    # build tidy dataframe 
+    df <- expand.grid(year = year, anomaly = anomaly) %>%
+      mutate(y_hat = as.vector(y_hat_sub)/1e12) # convert damages to trillion USD
+    
+  } else if (nc_type == "scc_output_full_uncertainty") {
+    # select confidence interval quantiles
+    q05_idx <- which(q == 0.05)
+    q95_idx <- which(q == 0.95) 
+    
+    # now subset
+    y_hat_q05_sub <- y_hat_raw[, q05_idx, , ssp_idx]
+    y_hat_q95_sub <- y_hat_raw[, q95_idx, , ssp_idx]
+    
+    # build tidy dataframe 
+    df <- expand.grid(year = year, anomaly = anomaly) %>%
+      # convert damages to trillion USD
+      mutate(y_hat_q05 = as.vector(y_hat_q05_sub)/1e12,
+             y_hat_q95 = as.vector(y_hat_q95_sub)/1e12)
+    
+  } else {
+    stop("specify nc_type")
+  }
+  
+}
+#==============================================================================#
+# --- prep data ------
+# 2100 scatter points
 temp_anomaly_2100 <- read_csv(glue(root, temp_anom_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
-# process scatter plot data
-# RCP8.5
-df_scatter_85 <- read_csv(glue(root, points_dir, "/SSP3-rcp85_high_rebased_fulladapt-wage-aggregated.csv"))
+df_scatter_85 <- df_scatter("rcp85", "global")
+df_scatter_45 <- df_scatter("rcp45", "global")
 
-df_scatter_85 <- df_scatter_85 %>%
-  mutate(region = ifelse(is.na(region), "global", region),
-         rcp = "rcp85",
-         value = as.numeric(value),
-         damages = -value/1e12) %>% # convert value to damages in trillion USD
-  filter(region == "global")
-
-df_scatter_85 <- df_scatter_85 %>%
-  inner_join(temp_anomaly_2100, by = c("gcm", "year", "rcp"))
-
-# RCP4.5
-df_scatter_45 <- read_csv(glue(root, points_dir, "/SSP3-rcp45_high_rebased_fulladapt-wage-aggregated.csv"))
-
-df_scatter_45 <- df_scatter_45 %>%
-  mutate(region = ifelse(is.na(region), "global", region),
-         rcp = "rcp45",
-         value = as.numeric(value),
-         damages = -value/1e12) %>% # convert value to damages in trillion USD
-  filter(region == "global")
-
-df_scatter_45 <- df_scatter_45 %>%
-  inner_join(temp_anomaly_2100, by = c("gcm", "year", "rcp"))
-
-# process netcdf files
+# 2200 scatter points
 nc_fair <- nc_open(glue(root, "/gcp/integration/gmst_94k_2025p.nc4"))
-
 # pull the full variables
 fair_years <- ncvar_get(nc_fair, "year")
 fair_rcps  <- ncvar_get(nc_fair, "rcp")
 fair_temps_raw <- ncvar_get(nc_fair, "control_temperature")
-
+# close the file
 nc_close(nc_fair)
 
 # select which years to keep
 year_idx <- which(fair_years %in% c(2180:2200))
 rcp45_idx <- which(fair_rcps == "rcp45")
 rcp85_idx <- which(fair_rcps == "rcp85")
-# years_keep <- year[year_idx]
 
 # FAIR temperatures are relative to preindustrial - convert to 2001-2010 baseline
 # fair_temps_raw dimensions: [year, rcp, simulation]
@@ -136,67 +164,17 @@ fair_2200_rcp85 <- as.vector(fair_temps[year_idx, rcp85_idx, ])
 fair_2200_rcp45 <- fair_2200_rcp45[is.finite(fair_2200_rcp45)]
 fair_2200_rcp85 <- fair_2200_rcp85[is.finite(fair_2200_rcp85)]
 
+# create tidy dataframe
 temp_anomaly_2200 <- bind_rows(
   tibble(temp = fair_2200_rcp45, rcp = "RCP4.5"),
   tibble(temp = fair_2200_rcp85, rcp = "RCP8.5")
 )
 
-# fit data
-nc_mean <- nc_open(glue(root, damages_dir, "/scc_output/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
+# fit and uncertainty data
+df_fit <- fit_ci_nc(nc_type = "scc_output", ssp = ssp_in)
+df_ci <- fit_ci_nc(nc_type = "scc_output_full_uncertainty", ssp = ssp_in)
 
-# check dimensions order
-nc_mean$var$y_hat$dim # array is shaped [year=281, anomaly=100, model=1, ssp=3, discount_type=1]
-
-# pull the full variables
-y_hat_raw <- ncvar_get(nc_mean, "y_hat")
-year <- ncvar_get(nc_mean, "year")
-anomaly <- ncvar_get(nc_mean, "anomaly")
-ssp <- ncvar_get(nc_mean, "ssp")
-
-nc_close(nc_mean)
-
-# select SSP
-ssp_idx <- which(ssp == "SSP3")
-
-# now subset
-y_hat_sub <- y_hat_raw[, , ssp_idx]  # shape: [281 x 100]
-
-# build tidy dataframe 
-df_fit <- expand.grid(year = year, anomaly = anomaly) %>%
-  mutate(y_hat = as.vector(y_hat_sub)/1e12) # convert damages to trillion USD
-
-# confidence interval data
-nc_ci <- nc_open(glue(root, damages_dir, "/scc_output_full_uncertainty/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
-
-# check dimensions order
-nc_ci$var$y_hat$dim # array is shaped [year=281, q=19, anomaly=100, model=1, ssp=3, discount_type=1]
-
-# pull the full variables
-y_hat_raw <- ncvar_get(nc_ci, "y_hat")
-year <- ncvar_get(nc_ci, "year")
-anomaly <- ncvar_get(nc_ci, "anomaly")
-q <- ncvar_get(nc_ci, "q")
-ssp <- ncvar_get(nc_ci, "ssp")
-
-nc_close(nc_ci)
-
-# select SPP and confidence interval quantiles
-ssp_idx <- which(ssp == "SSP3")
-q05_idx <- which(q == 0.05)
-q95_idx <- which(q == 0.95) 
-
-# now subset
-y_hat_q05_sub <- y_hat_raw[, q05_idx, , ssp_idx]
-y_hat_q95_sub <- y_hat_raw[, q95_idx, , ssp_idx]
-
-# build tidy dataframe 
-df_ci <- expand.grid(year = year, anomaly = anomaly) %>%
-  # convert damages to trillion USD
-  mutate(y_hat_q05 = as.vector(y_hat_q05_sub)/1e12,
-         y_hat_q95 = as.vector(y_hat_q95_sub)/1e12)
-
-
-# --- Plot ---
+# --- plot ------
 # panel A
 p_top <- ggplot() +
   # quantile band
