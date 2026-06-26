@@ -200,8 +200,8 @@ deciles.plot = function(model.name, ssp, iam, rcp, adapt, aggregation, covar,
       lwd = 0.3) +
     geom_text(
       data = cities,
-      aes(x = decile, y = -3.65, label = label),
-      size = 3,
+      aes(x = decile, y = -3.45, label = label),
+      size = 4.5,
       lineheight = 0.8) +
     theme_classic() +
     theme(legend.position="none",
