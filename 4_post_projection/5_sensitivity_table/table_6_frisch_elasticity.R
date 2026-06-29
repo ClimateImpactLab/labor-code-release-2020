@@ -1,6 +1,8 @@
 #==============================================================================#
-#  3_table_6_e.R
+#  
 #  Sensitivity table: varying Frisch elasticity (εH, εL).
+#
+# Created by: Maiqi Yu
 #
 #  Rows:
 #    (1) Global avg hedonic value of thermal comfort    [% annual income]

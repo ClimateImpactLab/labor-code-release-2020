@@ -1,6 +1,8 @@
 #==============================================================================#
-#  3_table_6_utils.R
+#  
 #  Shared functions sourced by both 3_table_6_xr.R and 3_table_6_e.R.
+#
+# Created by: Maiqi Yu
 #
 #  Function index:
 #

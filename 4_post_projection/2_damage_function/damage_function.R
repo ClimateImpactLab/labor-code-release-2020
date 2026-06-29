@@ -1,7 +1,7 @@
 #========================================================================================#
 #' Labor Uninteracted Model MC Damage Function figures
 #'
-#' Created By: Nishka Sharma
+#' Created By: Nishka Sharma; Last change: Maiqi Yu (for 2025 $ adjustment)
 #' Date Created: March 13 2026
 #'
 #' Produces:
@@ -11,7 +11,9 @@
 #'                   functions in trillion USD and GMST anomalies in 2200)
 #'
 #' How To Run:
-#'   - Items under "change this section to customise plots" control what is plotted 
+#'   - Items under "change this section to customise plots" control what is plotted
+#'
+#' Note: All dollar values (trillion USD on y-axis) are in 2025 dollars.
 #=========================================================================================#
 
 #==============================================================================#
@@ -57,7 +59,11 @@ root = "/project/cil"
 points_dir = "/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/cloud"
 damages_dir = "/home_dirs/scadavidsanchez/projects/dscim-labor-2025-update2026/results"
 temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/climate"
-output_dir = "/home_dirs/nishkasharma/repos/labor-code-release-2020/output/figures/scc"
+output_dir = "/home_dirs/maiqi/repos/labor-code-release-2020/output/figures/scc"
+
+# CPI-U annual averages (BLS): 2019 = 255.657, 2025 = 319.797
+# underlying damage data is in 2019 USD; multiply by this factor to convert to 2025 USD
+cpi_2019_to_2025 <- 319.797 / 255.657
 
 #==============================================================================#
 # process scatter plot data
@@ -68,7 +74,7 @@ df_scatter <- function(rcp, ir){
     mutate(region = ifelse(is.na(region), "global", region),
            rcp = rcp,
            value = as.numeric(value),
-           damages = -value/1e12) %>% # convert value to damages in trillion USD
+           damages = -value/1e12 * cpi_2019_to_2025) %>% # convert value to damages in trillion 2025 USD
     filter(region == ir)
   
   df <- df %>%
@@ -100,7 +106,7 @@ fit_ci_nc <- function(nc_type, ssp){
     
     # build tidy dataframe 
     df <- expand.grid(year = year, anomaly = anomaly) %>%
-      mutate(y_hat = as.vector(y_hat_sub)/1e12) # convert damages to trillion USD
+      mutate(y_hat = as.vector(y_hat_sub)/1e12 * cpi_2019_to_2025) # convert damages to trillion 2025 USD
     
   } else if (nc_type == "scc_output_full_uncertainty") {
     # select confidence interval quantiles
@@ -113,9 +119,9 @@ fit_ci_nc <- function(nc_type, ssp){
     
     # build tidy dataframe 
     df <- expand.grid(year = year, anomaly = anomaly) %>%
-      # convert damages to trillion USD
-      mutate(y_hat_q05 = as.vector(y_hat_q05_sub)/1e12,
-             y_hat_q95 = as.vector(y_hat_q95_sub)/1e12)
+      # convert damages to trillion 2025 USD
+      mutate(y_hat_q05 = as.vector(y_hat_q05_sub)/1e12 * cpi_2019_to_2025,
+             y_hat_q95 = as.vector(y_hat_q95_sub)/1e12 * cpi_2019_to_2025)
     
   } else {
     stop("specify nc_type")

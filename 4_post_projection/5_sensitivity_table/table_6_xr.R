@@ -1,6 +1,8 @@
 #==============================================================================#
-#  3_table_6_xr.R
+#  
 #  Sensitivity table: varying short-term wage flexibility (exr scaling).
+# 
+# Created by: Maiqi Yu
 #
 #  Rows:
 #    (1) Global avg hedonic value of thermal comfort    [% annual income]
