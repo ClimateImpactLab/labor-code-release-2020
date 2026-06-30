@@ -35,7 +35,7 @@ USER = Sys.getenv("USER")
 source(glue('/project/cil/home_dirs/{USER}/repos/labor-code-release-2020/0_subroutines/paths.R'))
 source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/labor_db_wrapper.R"))
 source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/get_curve_labor.R"))
-source(glue("{DIR_REPO_POST_PROJ}/response_function/yellow_purple_package.R"))
+source(glue("{DIR_REPO_LABOR}/3_projection/3_diagnostics/deltabeta/yellow_purple_package.R"))
 
 #===================================#
 # 1. Set globals ----
