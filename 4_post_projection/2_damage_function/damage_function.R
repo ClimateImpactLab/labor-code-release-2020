@@ -59,7 +59,7 @@ root = "/project/cil"
 points_dir = "/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/cloud"
 damages_dir = "/home_dirs/scadavidsanchez/projects/dscim-labor-2025-update2026/results"
 temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/climate"
-output_dir = "/home_dirs/maiqi/repos/labor-code-release-2020/output/figures/scc"
+output_dir = "/home_dirs/{USER}/repos/labor-code-release-2020/output/figures/scc"
 
 # CPI-U annual averages (BLS): 2019 = 255.657, 2025 = 319.797
 # underlying damage data is in 2019 USD; multiply by this factor to convert to 2025 USD
@@ -130,13 +130,13 @@ fit_ci_nc <- function(nc_type, ssp){
 }
 #==============================================================================#
 # --- prep data ------
-# 2100 scatter points
+## 2100 scatter points ------
 temp_anomaly_2100 <- read_csv(glue(root, temp_anom_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
 df_scatter_85 <- df_scatter("rcp85", "global")
 df_scatter_45 <- df_scatter("rcp45", "global")
 
-# 2200 scatter points
+## 2200 anomalies data ------
 nc_fair <- nc_open(glue(root, "/gcp/integration/gmst_94k_2025p.nc4"))
 # pull the full variables
 fair_years <- ncvar_get(nc_fair, "year")
@@ -176,7 +176,7 @@ temp_anomaly_2200 <- bind_rows(
   tibble(temp = fair_2200_rcp85, rcp = "RCP8.5")
 )
 
-# fit and uncertainty data
+## fit and uncertainty data ------
 df_fit <- fit_ci_nc(nc_type = "scc_output", ssp = ssp_in)
 df_ci <- fit_ci_nc(nc_type = "scc_output_full_uncertainty", ssp = ssp_in)
 
@@ -212,9 +212,9 @@ p_top <- ggplot() +
                      values = c("End of century damage function" = "black")) +
   scale_fill_manual(name = NULL,
                     values = c("5th - 95th percentile range" = "gray75")) +
-  coord_cartesian(xlim = c(0, 10), ylim = c(0,50)) +
+  coord_cartesian(xlim = c(0, 10), ylim = c(0,60)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(breaks = seq(0, 50, by = 10)) +
+  scale_y_continuous(breaks = seq(0, 60, by = 10)) +
   labs(x = NULL,
        y = "Global damages (trillion USD)") +                                                                                  
   theme_classic() +
@@ -286,9 +286,9 @@ p_top <- ggplot() +
             color = "black", linewidth = 1) +
   # reference line
   geom_hline(yintercept = 0, linewidth = 0.2) +
-  coord_cartesian(xlim = c(0, 10), ylim = c(0,50)) +
+  coord_cartesian(xlim = c(0, 10), ylim = c(0,60)) +
   scale_x_continuous(breaks = 0:10) +
-  scale_y_continuous(breaks = seq(0, 50, by = 10)) +
+  scale_y_continuous(breaks = seq(0, 60, by = 10)) +
   labs(x = NULL,
        y = "Global damages (trillion USD)") +                                                                                  
   theme_classic() +
