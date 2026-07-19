@@ -24,12 +24,18 @@ allcalcs_clim <- read_csv(glue('{ROOT_INT_DATA}/projection_outputs/covariates',
   filter(`year...2` == 2015 | `year...2` == 2099) %>%
   select(`year...2`, region, climtas)
 
+# read share of ag workers data
+ag_share <- read_csv(glue('/project/cil/gcp/outputs/labor/impacts-woodwork', 
+                          '/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41', 
+                          '/extracted_clip/rcp85/high/SSP3/SSP3-rcp85_high_clip_fulladapt.csv'))
 # combine the data
 cov_deciles <- inner_join(high_iam, allcalcs_clim, by = c("region", "year" = "year...2"))
+cov_deciles <- inner_join(cov_deciles, ag_share, by = c("region", "year"))
 
 cov_deciles <- cov_deciles %>%
-  rename(population = pop) %>%
-  select(year, region, population, gdppc, loggdppc, climtas)
+  rename(population = pop,
+         ag_share = mean) %>%
+  select(year, region, population, gdppc, loggdppc, climtas, ag_share)
 
 # output the data
 write_csv(cov_deciles, glue('{ROOT_INT_DATA}/projection_outputs/covariates',
