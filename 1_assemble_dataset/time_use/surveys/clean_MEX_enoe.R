@@ -23,7 +23,7 @@
 # first avoids incorrect conversion we also set stringsAsFactors=FALSE in an abundance
 # of caution. see this SO post for more information: 
 # https://stackoverflow.com/questions/6917518/r-as-numeric-function-not-returning-correct-from-data-frame
-source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
@@ -44,7 +44,6 @@ library(foreign)
 ####################
 
 input = glue("{ROOT_INT_DATA}/surveys/MEX_ENOE/raw_data/")
-input = '/project/cil/sacagawea_shares/gcp/estimation/labor/code_release_int_data/surveys/MEX_ENOE/raw_data/'
 # unzip all the zipped files
 files_2004 = list.files(
 	glue('{input}/1987-2004/'), 
@@ -169,6 +168,8 @@ sociodemo = read_data('sdemt') %>%
 		# manuf: mining (2), electricity, water and gas generation (3), construction (4), manufacturing (5), transportation (8)
 		high_risk = ifelse(industry %in% c(1), 1, 0),
     sector = ifelse(high_risk == 1, 1, ifelse(industry %in% c(2, 3, 4, 5, 8), 2, 0)),
+    # 2 is manufacturing/transportation/utilities; 3 is mining/construction.
+    sector2 = ifelse(sector != 2, sector, ifelse(industry %in% c(2, 4), 3, 2)),
     high_risk_old = ifelse(industry %in% c(1, 2, 3, 4, 5, 8), 1, 0),
 		occup_code = case_when(
 		  occ %in% c(10) ~ 1,
@@ -186,7 +187,7 @@ sociodemo = read_data('sdemt') %>%
   dplyr::select(
 		id, CD_A, ENT, CON, V_SEL, N_PRO_VIV, N_ENT, N_HOG, N_REN, H_MUD, UPM, PER,
 		municipality, state, sex, age, industry, occ, sample_wgt, 
-		male, high_risk, sector, high_risk_old, occup_code, self_emp
+		male, high_risk, sector, sector2, high_risk_old, occup_code, self_emp
 		) %>%
 	data.table()
 
@@ -383,10 +384,10 @@ final = outcome %>%
 		ind_id = id
 		) %>% 
   dplyr::select(
-		ind_id, state_name, municipality_name, 
-		prev_sunday, mins_worked, male, age, high_risk, sector, high_risk_old, occup_code, self_emp, hhsize, 
+		ind_id, state_name, municipality_name,
+		prev_sunday, mins_worked, male, age, high_risk, sector, sector2, high_risk_old, occup_code, self_emp, hhsize,
 		sample_wgt
-		) %>% 
+		) %>%
 	mutate(
 		year = year(prev_sunday),
 		month = month(prev_sunday),
@@ -400,6 +401,13 @@ final = final %>%
   filter(!(ind_id == 73997 & sample_wgt == 1876 & month == 4 & day == 10)) %>%
   filter(!(ind_id == 83404 & sample_wgt == 1876 & month == 4 & day == 10))
 
+mex_year_counts = final[, .N, by = year][order(year)]
+print(mex_year_counts)
+# Check that 2007 and 2008 did not get accidentally dropped.
+stopifnot(mex_year_counts[year == 2007, N] > 500000)
+stopifnot(mex_year_counts[year == 2008, N] > 500000)
+stopifnot(nrow(final) > 3000000)
+
 fwrite(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.csv"))
 write.dta(final, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_time_use.dta"))
 
@@ -407,5 +415,3 @@ location_names = final %>%
   dplyr::select(state_name, municipality_name) %>%
 	distinct()
 fwrite(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/MEX_ENOE_location_names.csv"))
-
-

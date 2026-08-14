@@ -52,10 +52,16 @@ drop if missing(economic_activity)
 * maunfacturing/construction/mining/transportation
 gen sector = .
 replace sector = 2 if economic_activity >=10 & economic_activity <= 21
+replace sector = 2 if economic_activity == 22
 replace sector = 2 if economic_activity >= 23 & economic_activity <= 45
-replace sector = 2 if inlist(economic_activity, 60,61,62,92)
+replace sector = 2 if inlist(economic_activity, 60,61,62)
 replace sector = 0 if sector != 2
 replace sector = 1 if high_risk == 1
+
+* Split the existing sector == 2 group:
+* 2 is manufacturing/transportation/utilities/other; 3 is mining/construction.
+gen sector2 = sector
+replace sector2 = 3 if sector == 2 & (inrange(economic_activity, 10, 14) | economic_activity == 45)
 
 * create variable for old high_risk classification
 * (sector == 1 or sector == 2 from above)
@@ -214,7 +220,7 @@ egen ind_id_new = group(ind_id resident_identifier)
 replace ind_id = 2000000 + ind_id_new if ndup > 0
 
 drop ind_id_new
-keep metropolitan_region ind_id year month day mins_worked age male high_risk sector high_risk_old occup_code self_emp hhsize sample_wgt
+keep metropolitan_region ind_id year month day mins_worked age male high_risk sector sector2 high_risk_old occup_code self_emp hhsize sample_wgt
 
 
 save "${ROOT_INT_DATA}/surveys/cleaned_country_data/BRA_PME_time_use.dta", replace

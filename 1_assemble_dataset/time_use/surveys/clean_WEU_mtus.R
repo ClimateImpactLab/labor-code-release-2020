@@ -28,7 +28,7 @@
 # 4. Subset and create variables for estimating dataset
 
 # set up the environment
-source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/paths.R")
 library(tidyverse)
 library(magrittr)
 library(glue)

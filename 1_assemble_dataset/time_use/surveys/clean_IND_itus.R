@@ -25,7 +25,7 @@
 # blocks are cleaned individually and merged together
 
 # set up the environment
-source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(magrittr)
@@ -82,9 +82,20 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
           high_risk == 1,
           1,
           ifelse(
-            (industry > 99 & industry < 200) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740), 
+            (industry > 99 & industry < 400) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740),
             2, 
             0
+          )
+        ),
+        # Split the existing sector == 2 group:
+        # 2 is manufacturing/transportation/other; 3 is mining/construction.
+        sector2 = ifelse(
+          sector != 2,
+          sector,
+          ifelse(
+            (industry > 99 & industry < 200) | (industry >= 500 & industry < 600),
+            3,
+            2
           )
         ),
         high_risk_old = ifelse((industry < 200) | (industry >= 500 & industry < 600) | (industry >= 700 & industry < 740), 
@@ -94,7 +105,7 @@ b2 = read_dta(glue("{input}/Block-2-Particulars-Household-members-records.dta"))
 		) %>%
 	rename(Key_membno = Key_Membno) %>%
   dplyr::select( 
-		Key_hhold, Key_membno, sex, age, male, high_risk, sector, high_risk_old, self_emp, age
+		Key_hhold, Key_membno, sex, age, male, high_risk, sector, sector2, high_risk_old, self_emp, age
 		) %>%
 	distinct() # filter out a handful of duplicated obs
 
@@ -254,7 +265,7 @@ final_dataset = all_geo %>%
 		ind_id = group_indices(., Key_membno, Key_hhold)
 		) %>% 
 	dplyr::select(
-		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, sector, high_risk_old, occup_code, self_emp, hhsize, sample_wgt
+		st_name, district_name, year, month, day, ind_id, mins_worked, age, male, high_risk, sector, sector2, high_risk_old, occup_code, self_emp, hhsize, sample_wgt
 		) %>% 
 	filter(
 		year == 1999 | year == 1998,
@@ -278,5 +289,3 @@ location_names = final_dataset %>%
 		)
 
 write.csv(location_names, glue("{ROOT_INT_DATA}/surveys/cleaned_country_data/IND_ITUS_location_names.csv"))
-
-

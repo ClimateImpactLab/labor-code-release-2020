@@ -49,7 +49,7 @@
 
 #' ELLIOT TO DO: Document new cleaning process and edit above ^
 
-source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/paths.R")
 # set up the environment
 library(tidyverse)
 library(magrittr)
@@ -112,6 +112,8 @@ atusresp = fread(glue("{input}/atusresp_0314/atusresp_0314.dat")) %>%
 	mutate(
 		high_risk = ifelse(TRMJIND1 %in% c(1), 1, 0), 
     sector = ifelse(high_risk == 1, 1, ifelse(TRMJIND1 %in% c(2, 3, 4, 6), 2, 0)),
+    # 2 is manufacturing/transportation/utilities; 3 is mining/construction.
+    sector2 = ifelse(sector != 2, sector, ifelse(TRMJIND1 %in% c(2, 3), 3, 2)),
     high_risk_old = ifelse(TRMJIND1 %in% c(1, 2, 3, 4, 6), 1, 0)   
     )
 
@@ -406,8 +408,8 @@ final = merge(atussum, atusresp, by=c("id")) %>%
 		ind_id = group_indices(., id, hhid, lineno, hhid2) 
 		) %>%
   dplyr::select(
-		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sector, high_risk_old, sample_wgt, w_class1, occ1, id
-		) 
+		ind_id, state, master_county_name, year, month, day, mins_worked, age, male, hhsize, high_risk, sector, sector2, high_risk_old, sample_wgt, w_class1, occ1, id
+		)
 
 # (12) security + armed forces (14) grounds cleaning and maintenance (18) Farming fishing forestry (19) construction + mining (20) installation, maintenance, repair (21) production occups (22) tranportation
 final$occup_code <- ifelse(final$occ1 ==18, 1, 0)
