@@ -1,7 +1,7 @@
 # filter out all countries' holidays
 # author: Simon Greenhill, sgreenhill@uchicago.edu
 # date: 2/27/2020
-source("/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/paths.R")
+source("/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/paths.R")
 
 library(tidyverse)
 library(data.table)
@@ -10,10 +10,9 @@ library(glue)
 library(haven)
 library(foreign)
 library(parallel)
-library(numbers)
 
 # cilpath.r:::cilpath()
-cores = 10
+cores = as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", unset = "10"))
 
 #######################
 # 1. SET UP FUNCTIONS #
@@ -77,11 +76,11 @@ get_last_weekday_v = function(years, month, weekday) {
 get_easter_sunday_v = function(years) {
 	get_easter_sunday = function(year) {
 		# algorithm from here: http://www.maa.clell.de/StarDate/publ_holidays.html
-		a = mod(year, 19)
-		b = mod(year, 4)
-		c = mod(year, 7)
-		d = mod((19 * a + 24), 30)
-		e = mod((2 * b + 4 * c + 6 * d + 5), 7)
+		a = year %% 19
+		b = year %% 4
+		c = year %% 7
+		d = (19 * a + 24) %% 30
+		e = (2 * b + 4 * c + 6 * d + 5) %% 7
 
 		day = 22 + d + e
 		month = 3
@@ -201,6 +200,8 @@ time_use = glue(
 	'/temp/all_time_use_pop_merged_reweighted_clustered.dta') %>%
 	read_dta() %>%
 	data.table()
+
+stopifnot("sector2" %in% names(time_use))
 
 #######
 # BRA #
@@ -474,10 +475,6 @@ final = final %>%
 write.dta(final, glue(
 	'{ROOT_INT_DATA}/temp/',
 	'all_time_use_pop_merged_reweighted_clustered_holidays_marked.dta'))
-
-
-
-
 
 
 

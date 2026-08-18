@@ -1,13 +1,9 @@
 # this file takes the cleaned survey data and match the region names to admin ids using crosswalks
 
 import sys
-sys.path.append('/project/cil/home_dirs/egrenier/repos/labor-code-release-2020/0_subroutines/') 
+sys.path.insert(0, '/project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/0_subroutines/')
 import paths
 import pandas as pd
-import re
-# import cilpath
-import geopandas as gpd
-from pandas import ExcelFile
 
 pd.set_option('display.max_columns', 1000)  # or 1000
 pd.set_option('display.max_rows', 1000)  # or 1000
@@ -15,13 +11,6 @@ pd.set_option('display.max_colwidth', 199)  # or 199
 
 time_use_data_folder = paths.ROOT_INT_DATA + "/surveys/cleaned_country_data/"
 
-adm1_shp_identifiers = {}
-adm2_shp_identifiers = {}
-time_use_identifiers = {}
-
-# read a csv file that contains the paths to adm1 and adm2 shps
-shp_list = pd.read_csv(paths.DIR_REPO_LABOR + "/1_assemble_dataset/time_use/weather/gis_config_lines.csv")
-countries = shp_list.shp_id.unique()
 cw = {}
 
 # for country in countries: 
@@ -34,7 +23,12 @@ surveys = {}
 for s in survey_names:
   surveys[s] = pd.read_csv(time_use_data_folder + s + "_time_use.csv")
 
-columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','sector','high_risk_old','occup_code', 'self_emp','male','sample_wgt']
+# MTUS cannot distinguish the detailed sector groups available in the other
+# surveys, so retain sector2 as missing for the European observations.
+for s in ['GBR_MTUS','ESP_MTUS','FRA_MTUS']:
+  surveys[s]['sector2'] = pd.NA
+
+columns_wanted = ['iso','adm0_id','adm1_id','adm2_id','adm3_id','ind_id','year','month','day','mins_worked','age','hhsize','high_risk','sector','sector2','high_risk_old','occup_code', 'self_emp','male','sample_wgt']
 
 surveys['ESP_MTUS'] = surveys['ESP_MTUS'].merge(
   cw['ESP'],
@@ -92,4 +86,3 @@ for s in ['USA_ATUS','GBR_MTUS','ESP_MTUS','FRA_MTUS','BRA_PME','IND_ITUS','MEX_
 
 
 all_surveys.to_csv(paths.ROOT_INT_DATA + "/temp/all_time_use.csv", index = False)
-
