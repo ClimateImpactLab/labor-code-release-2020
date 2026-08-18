@@ -27,8 +27,9 @@ program define gen_controls_and_FEs
 	global fe_adm3_my	"adm3_id dow_week adm3_id#month#year"
 	global fe_adm0_m_y 	"adm3_id dow_week adm0_id#year adm0_id#month" 
 	global fe_adm1_w_y      "adm3_id dow_week adm1_id#year adm1_id#week_fe"
-        global fe_adm0_y_adm1_w "adm3_id dow_week adm0_id#year adm1_id#week_fe"
+    global fe_adm0_y_adm1_w "adm3_id dow_week adm0_id#year adm1_id#week_fe"
 	global fe_adm1_y_adm0_w "adm3_id dow_week adm1_id#year adm0_id#week_fe"
+	global fe_adm0_wk_country_spec "adm3_id dow_week year week_fe"
 
 end 
 
