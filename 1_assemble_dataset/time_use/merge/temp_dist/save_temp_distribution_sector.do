@@ -8,7 +8,7 @@
 *     - ag     : sector==1  (Agriculture)
 *     - nonag  : sector==2  (Constr. & Manuf.)
 *
-*   Produces ONE output with BOTH:
+*   Produces one output with both:
 *     (A) raw bin sums:
 *         - no_wgt_comm, no_wgt_low, no_wgt_ag, no_wgt_nonag
 *         - pop_wgt_comm
@@ -32,7 +32,8 @@ set more off
 run "/project/cil/home_dirs/`c(username)'/repos/labor-code-release-2020/0_subroutines/paths.do"
 run "${DIR_REPO_LABOR}/2_analysis/0_subroutines/functions.do"
 
-global dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0218.dta"
+* Current rebuilt main spline dataset.
+global dataset "/project/cil/battuta_shares/gcp/estimation/labor/code_release_int_data/regression_ready_data/labor_dataset_splines_nochn_tmax_chn_prev_week_no_ll_0_agnonag_272841_0814.dta"
 
 local output_folder "${DIR_OUTPUT}/temp_dist"
 cap mkdir "`output_folder'"
