@@ -9,28 +9,24 @@ Region knot-search files are under `spline_search/region/`.
 
 ## Context
 
-The region search uses the base dataset built by
-`../global/01_build_global_base.do`. That file starts from
-`temp/all_time_use_pop_merged_reweighted_clustered_holidays_dropped.dta`, the
-last intermediate dataset before the final regression dataset construction merges
-in the spline terms from the climate aggregation. It then adds the variables
-needed to run the knot-search regressions.
+The region search uses the same base dataset as the global knot search, built by
+`../global/01_build_global_base.do`. See the
+[global README](../global/README.md) for the shared spline-search setup.
 
-This matters because the spline terms in the main regression dataset are not
-built inside Stata. They come from the climate aggregation code, where the chosen
-restricted cubic spline terms are computed at the pixel level before aggregation
-to the admin unit level.
+This folder adds the region-specific part: it measures temperature support for
+EuropeUS, LatinAmerica, and SouthAsia, builds a candidate knot list for each
+region, runs the region regressions, and ranks the results by within R2.
 
-For the knot search, we need to try many possible knot triples. Re-running the
-pixel-level climate aggregation for every candidate would be too expensive, so
-this code starts from the admin-level temperature powers already built from the
-climate data. For each candidate knot triple, it builds the spline terms from
-those powers, runs the region regression, and ranks the candidates by within R2.
-
-The selected region knots are used later when building the final regional
-regression datasets.
+The selected region knots are used later in the regressions comparing
+temperature responses across regions.
 
 ## Region Support and Knot Candidates
+
+The three regions are defined as:
+
+- LatinAmerica: MEX and BRA
+- EuropeUS: FRA, GBR, ESP, and USA
+- SouthAsia: IND
 
 The first step measures the temperature range covered by each region. The second
 step uses that range to keep only knot triples that make sense for the data in
@@ -44,8 +40,6 @@ fewer. The current candidate counts are:
 - LatinAmerica: 60
 - SouthAsia: 72
 
-SouthAsia has an extra high-knot check because India has a hot upper tail.
-
 ## Running the Search
 
 The Slurm scripts in `slurm/` call `03_run_region_knots_candidate.do`. Each Slurm
@@ -58,8 +52,7 @@ The row-level CSVs are written to
 and writes one ranked CSV per region under
 `spline_search/region/r2_output/combined/`.
 
-SouthAsia also writes a second set of sidecars using `adj_sample_wgt`. This is a
-check against the main `risk_adj_sample_wgt` version.
+SouthAsia also writes an `adj_sample_wgt` version as a weight check.
 
 ## Files
 
@@ -88,11 +81,11 @@ This file is meant to be called by the Slurm scripts in `slurm/`.
 
 ### `04_merge_region_knots_outputs.R`
 
-Combines the row-level sidecar CSVs, keeps one row per knot triple, ranks the
-candidate triples by within R2, and writes one result file per region.
+Combines the row-level CSVs, keeps one row per knot triple, ranks the candidate
+triples by within R2, and writes one result file per region.
 
 ### `slurm/run_*_region_knots.sbatch`
 
-Slurm wrappers for the three region searches. The EuropeUS search currently runs
-as one task. LatinAmerica and SouthAsia are split into chunks so the candidates
-can run in parallel.
+Slurm wrappers for the three region searches. EuropeUS currently runs as one
+task. LatinAmerica and SouthAsia are split into chunks so the candidates can run
+in parallel.
