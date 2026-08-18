@@ -5,5 +5,5 @@ timeout: 12
 do_historical: true
 do_farmers: true
 only-rcp: rcp85
-only-ssp: SSP3
-only-iam: high
+only-ssp: SSP2
+only-iam: low

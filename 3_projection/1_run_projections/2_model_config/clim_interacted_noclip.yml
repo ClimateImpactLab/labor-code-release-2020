@@ -2,15 +2,17 @@ climcovar:
     class: mean
     length: 30
 econcovar:
-   class: mean
-   length: 15
+    class: mean
+    length: 15
 timerate: day
-climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4  ]
+climate: [ tasmax, tasmax_rcspline, tas, tas-poly-2, tas-poly-3, tas-poly-4 ]
+
 models:
   - csvvs: /project/cil/home_dirs/mdefranciosi/repos/labor-code-release-2020/3_projection/1_run_projections/0_csvv/clim_interacted_model_agnonag_27_28_41.csvv
     covariates: [ loggdppc, climtasmax, climtas, climtas-poly-2, climtas-poly-3, climtas-poly-4 ]
     knots: [ 27, 28, 41 ]
     description: labor productivity
+
     specifications:
         minlost_lo:
             csvv-subset: [0, 2]
@@ -19,11 +21,11 @@ models:
                   new-unit: minutes worked by individual
             description: low-risk labor productivity
             indepunit: C
-            depenunit: minutes worked by individual  
-            description: low-risk labor productivity
+            depenunit: minutes worked by individual
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
+
         minlost_hi:
             csvv-subset: [2, 6]
             csvv-reunit:
@@ -35,11 +37,7 @@ models:
             functionalform: cubicspline
             prefix: tasmax_rcspline
             variable: tasmax
-            clipping: corpsepose
-            clip-mintemp: 27
-            clip-maxtemp: 41
-            clip-model: minlost_lo
-            grounding: max
+
         riskshare_hi:
             csvv-subset: [6, 12]
             csvv-reunit:
@@ -51,33 +49,37 @@ models:
             functionalform: coefficients
             variables:
                 - 1 [scalar]
+
     calculation:
         - FractionSum:
             - Reword:
                 - SpanInstabase:
                     calculation:
-                      YearlyAverageDay:
-                        model: minlost_hi
+                        YearlyAverageDay:
+                            model: minlost_hi
                     year1: 2001
                     year2: 2010
                     func: '-'
                     baseline_diagname: baseline-hi
                 - highriskimpacts
+
             - Clip:
-                - YearlyAverageDay:  # YearlySumDaily triggers RecursionError starting at openest/generate/daily.py", line 308
+                - YearlyAverageDay:
                     model: riskshare_hi
-                - 0.00000000   # Historical clip min value
-                - 0.98816568   # Historical clip max value
+                - 0.00000000
+                - 0.98816568
+
             - Reword:
                 - SpanInstabase:
                     calculation:
-                      YearlyAverageDay:
-                        model: minlost_lo
+                        YearlyAverageDay:
+                            model: minlost_lo
                     year1: 2001
                     year2: 2010
                     func: '-'
                     baseline_diagname: baseline-lo
                 - lowriskimpacts
+
         - Rebase
         - KeepOnly:
             - rebased
