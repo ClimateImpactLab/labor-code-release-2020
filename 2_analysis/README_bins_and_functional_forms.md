@@ -1,4 +1,4 @@
-# Pipeline for Running Bin Regressions
+# Bin Regressions and Functional Forms
 
 ## 1. Constructing 3°C Temperature Bins
 
@@ -24,13 +24,13 @@ For the functional-form comparison, we convert the raw 1°C bins into 3°C bins 
 
 This transformation is implemented in:
 
-`labor-code-release-2020/1_assemble_dataset/time_use/merge/transform_bins.do`
+`labor-code-release-2020/1_assemble_dataset/time_use/merge/bins/transform_bins.do`
 
 Output dataset:
 
 `.../regression_ready_data/labor_dataset_bins_nochn_tmax_chn_prev_week_no_ll_0_0Cto42C_3Cbins_ag.dta`
 
-This baseline dataset uses **index-based bin naming** (e.g., `b3C_14`, `b3C_22`, etc.), inherited from the original pipeline.
+This baseline dataset uses **index-based bin naming** (e.g., `b3C_14`, `b3C_22`, etc.), inherited from the original scripts.
 
 ## 2. Change in High-Risk Definition
 
@@ -50,7 +50,7 @@ Agricultural workers exhibit little to no exposure below ~9°C, unlike the broad
 
 To document how temperature exposure differs across risk definitions and bin structures, we compute weighted temperature-support distributions using:
 
-`labor-code-release-2020/1_assemble_dataset/time_use/merge/temp_support_bins.do`
+`labor-code-release-2020/1_assemble_dataset/time_use/merge/bins/temp_support_bins.do`
 
 This script computes:
 
@@ -78,7 +78,7 @@ The 12°C cutoff collapses too much variation and removes informative structure 
 
 The cold-tail transformation is implemented in:
 
-`labor-code-release-2020/1_assemble_dataset/time_use/merge/transform_bins_ag_coldtail.do`
+`labor-code-release-2020/1_assemble_dataset/time_use/merge/bins/transform_bins_ag_coldtail.do`
 
 This produces temperature-based bin variables:
 
@@ -104,7 +104,7 @@ The only regression specification retained is:
 
 Implemented in: `labor-code-release-2020/2_analysis/1_regresssion/uninteracted_bins_coldtail_reg.do`
 
-This specification is used Appendix D (Robustness to Alternative Functional Forms)
+This specification is used in Appendix D for the functional-form comparison.
 
 ### Other Specifications
 
@@ -163,9 +163,9 @@ All plots are saved to:
 
 - `${DIR_FIG}/uninteracted_bins_plot/`
 
-# Pipeline Functional Forms Comparison (Appendix D)
+# Functional Forms Comparison (Appendix D)
 
-Appendix D evaluates robustness of the labor supply–temperature response to alternative functional forms. It produces:
+Appendix D compares the labor supply-temperature response across alternative functional forms. It produces:
 
 - **Figure D1**: Parametric response functions (poly2, poly3, poly4, RCS) overlaid on the binned benchmark, separately for low- and high-risk workers.
 - **Table D1**: RMSE of each parametric specification relative to the binned benchmark, weighted by 2010 and 2090 temperature distributions.
@@ -174,7 +174,7 @@ Appendix D evaluates robustness of the labor supply–temperature response to al
 
 **Script:** `labor-code-release-2020/2_analysis/3_plotting/figures/figure_D1_functional_form_comparison.R`
 
-- Reads consolidated functional-form RF CSV.
+- Reads consolidated functional-form response CSV.
 - Reads bin-coefficient extract for overlay.
 - Plots 2×4 panel figure:
   - Columns: 2nd poly \| 3rd poly \| 4th poly \| RCS  
@@ -196,8 +196,8 @@ Appendix D evaluates robustness of the labor supply–temperature response to al
 
 **Script:** `labor-code-release-2020/2_analysis/3_plotting/tables/rmse_functional_forms_tableD1.do`
 
-- Uses consolidated RF CSV.
-- Computes RMSE of each parametric RF relative to bins.
+- Uses consolidated response CSV.
+- Computes RMSE of each parametric response relative to bins.
 - Weights errors by:
   - 2010 population-temperature distribution  
   - 2090 population-temperature distribution  
