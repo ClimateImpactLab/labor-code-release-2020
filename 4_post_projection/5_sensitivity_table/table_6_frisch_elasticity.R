@@ -95,23 +95,28 @@ row3 <- lapply(frisch_cols, function(f) {
 # 3. Rows 4–5: partial SCC — hard-coded from final SCC pipeline output ----
 #==============================================================================#
 
-# col1 (baseline) uses full-precision values, same source as table_6_xr.R base_row4/5.
-# cols 2-5 are separate hard-coded runs (frisch elasticity variants); full-precision
-# source for these has not been verified/located, so they remain at 1dp.
+# All columns now use full-precision values.
+# col1 (baseline, eH=eL=0.5): uninteracted model_collapsed, same source as table_6_xr.R.
+# col2 (eH=eL=0.37) and col3 (eH=eL=0.7): baseline rescaled by fsf = 0.5/0.37 and 0.5/0.7
+#   (matches labor_scc_tables_v6.ipynb's "table 6 frisch" cell: cols 1-3 are model_collapsed
+#   rescaled, not independent runs).
+# col4 (eH=0.7, eL=0.37) and col5 (eH=0.37, eL=0.7): independent OECD-only runs from
+#   results_frisch_0p7_0p37 and results_frisch_0p37_0p7 respectively.
+# All CIs are 5th-95th percentile (matches table_6_xr.R convention).
 row4 <- list(
   col1 = list(mean =  6.592657, p_lo = -3.375662,  p_hi = 41.528585),
-  col2 = list(mean =  8.9, p_lo = -4.6,  p_hi = 56.1),
-  col3 = list(mean =  4.7, p_lo = -2.4,  p_hi = 29.7),
-  col4 = list(mean =  8.1, p_lo = -3.1,  p_hi = 46.0),
-  col5 = list(mean =  6.6, p_lo = -4.3,  p_hi = 48.9)
+  col2 = list(mean =  8.908996, p_lo = -4.561705,  p_hi = 56.119710),
+  col3 = list(mean =  4.709041, p_lo = -2.411187,  p_hi = 29.663275),
+  col4 = list(mean =  8.121772, p_lo = -3.093377,  p_hi = 46.006442),
+  col5 = list(mean =  6.581697, p_lo = -4.342922,  p_hi = 48.886600)
 )
 
 row5 <- list(
   col1 = list(mean = 10.647199, p_lo = -0.325399,  p_hi = 56.093764),
-  col2 = list(mean = 14.4, p_lo = -0.4,  p_hi = 75.8),
-  col3 = list(mean =  7.6, p_lo = -0.2,  p_hi = 40.1),
-  col4 = list(mean = 11.7, p_lo = -0.4,  p_hi = 59.5),
-  col5 = list(mean = 12.4, p_lo = -0.7,  p_hi = 70.5)
+  col2 = list(mean = 14.388107, p_lo = -0.439728,  p_hi = 75.802384),
+  col3 = list(mean =  7.605142, p_lo = -0.232428,  p_hi = 40.066975),
+  col4 = list(mean = 11.688828, p_lo = -0.426532,  p_hi = 59.510868),
+  col5 = list(mean = 12.417073, p_lo = -0.719064,  p_hi = 70.474464)
 )
 
 #==============================================================================#

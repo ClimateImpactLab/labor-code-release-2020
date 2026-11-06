@@ -57,13 +57,14 @@ ssp_in = "SSP3"
 # input path to temperature anomalies and damage functions
 root = "/project/cil"
 points_dir = "/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted/uninteracted_main_model_agnonag_27_28_41/cloud"
-damages_dir = "/home_dirs/scadavidsanchez/projects/dscim-labor-2025-update2026/results"
+# dscim output: code-release copy on battuta (paths.R)
+damages_dir = glue("{ROOT_INT_DATA}/dscim-labor")
 temp_anom_dir = "/sacagawea_shares/gcp/integration/float32/dscim_input_data/climate"
-output_dir = "/home_dirs/{USER}/repos/labor-code-release-2020/output/figures/scc"
+output_dir = glue("{DIR_FIG}/scc")
 
-# CPI-U annual averages (BLS): 2019 = 255.657, 2025 = 319.797
+# CPI-U annual averages (BLS, official, via API v2 annualaverage=True): 2019 = 255.657, 2025 = 321.943
 # underlying damage data is in 2019 USD; multiply by this factor to convert to 2025 USD
-cpi_2019_to_2025 <- 319.797 / 255.657
+cpi_2019_to_2025 <- 321.943 / 255.657
 
 #==============================================================================#
 # process scatter plot data
@@ -85,7 +86,7 @@ df_scatter <- function(rcp, ir){
 fit_ci_nc <- function(nc_type, ssp){
   
   # read nc4
-  nc <- nc_open(glue(root, damages_dir, "/{nc_type}/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
+  nc <- nc_open(glue(damages_dir, "/{nc_type}/AR6_ssp/labor/2020/unmasked/{damage_type}_{discount}_model_collapsed_eta{eta}_rho{rho}_damage_function_fit.nc4"))
   # pull the full variables
   y_hat_raw <- ncvar_get(nc, "y_hat")
   year <- ncvar_get(nc, "year")
@@ -324,4 +325,4 @@ panel_B <- p_top / p_bottom + plot_layout(heights = c(5, 1))
 
 figH1 <- wrap_elements(panel_A) + wrap_elements(panel_B)
 
-ggsave(glue(root, output_dir, "/damage_functions.png"), figH1, width = 12, height = 6, dpi = 300)
+ggsave(glue(output_dir, "/damage_functions.png"), figH1, width = 12, height = 6, dpi = 300)
