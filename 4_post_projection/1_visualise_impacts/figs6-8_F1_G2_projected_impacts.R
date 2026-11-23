@@ -1,20 +1,29 @@
 #========================================================================================#
-#' Labor Uninteracted Model Post-projection Figures
+#' Projected Labor Impacts: Figures 6-8, Appendix F.1, G.2 (Uninteracted Main Model, MC)
 #'
 #' Latest Edits By: Nishka Sharma; Created By: Elliot Grenier 
 #' Date Created: June 6 2025
 #' Last Modified: Feb 23 2026
 #'
 #' Produces:
+#'   [Need Illustrator]
 #'   - Figure 6A | Impact Map (Minutes/worker/day, rcp85/high/SSP3, 2099)
 #'   - Figure 6B | Impact Map (% GDP, rcp85/high/SSP3, 2099)
+#'   
+#'   [Do not need Illustrator]
 #'   - Figure 7 | Decile Plots (% GDP, rcp85/high/SSP3, 2099, income deciles + temp deciles)
+#'   
+#'   [Need Illustrator]
 #'   - Figure 8A | Time Series (% GDP, rcp85/high/SSP3, 2000-2099)
 #'   - Figure 8B | Time Series w/ CI (% GDP, rcp85/high/SSP3, 2000-2099)
+#'   
+#'   [Need Illustrator]
 #'   - Appendix F.1A | Impact Map (Minutes/worker/day, rcp85/high/SSP3, 2099)
 #'   - Appendix F.1B | Impact Map (% GDP, rcp85/high/SSP3, 2099)
 #'   - Appendix F.1C | Impact Map (Minutes/worker/day, rcp45/high/SSP3, 2099)
 #'   - Appendix F.1D | Impact Map (% GDP, rcp45/high/SSP3, 2099)
+#'   
+#'   [Do not need Illustrator]
 #'   - Figure G.2A | Time Series w/ multicolor CI (% GDP, rcp85/high/SSP3, 2000-2099)
 #'   - Figure G.2B | Time Series w/ multicolor CI (% GDP, rcp45/high/SSP3, 2000-2099)
 #'   
@@ -45,10 +54,11 @@ null = lapply(Rfiles, source)
 
 #==================change this section to customise plots======================#
 # toggles
-Part1 = TRUE # Impact Map
-Part2 = TRUE # Decile Plot
-Part3 = TRUE # Time Series
-Appendix = TRUE # Appendix F, G figures.
+Fig6 = TRUE # Impact Map (6A, 6B) + IR density plots; also Appendix F.1A, F.1B
+Fig7 = TRUE # Decile Plot
+Fig8 = TRUE # Time Series (8A, 8B)
+FigF1 = TRUE # Appendix F.1C, F.1D (rcp45 maps); F.1A, F.1B come from Fig6
+FigG2 = TRUE # Appendix G.2 (time series w/ multicolor CI)
 
 # RCP scenario ('rcp85', 'rcp45')
 rcp_in = 'rcp85' 
@@ -73,7 +83,7 @@ adapt_in = 'fulladapt'
 input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extracted"
 
 #==============================================================================#
-# Part 1: End of century mortality risk of climate change maps and density
+# Fig 6: End of century mortality risk of climate change maps and density
 # plots.
 # 
 # This section generates the following plots in Carleton et al. (2019):
@@ -91,7 +101,7 @@ input_path = "/project/cil/gcp/outputs/labor/impacts-woodwork/montecarlo/extract
 #     GCMs and Monte Carlo draws. Solid lines indiciate mean estimate with shading
 #     at one, two, and three standard deviations from the mean.
 
-if (Part1) {
+if (Fig6) {
   
   # figure 6A
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
@@ -132,10 +142,10 @@ if (Part1) {
   
 }
 
-# Part 2: Future disutility costs are correlated with present-day income and 
+# Fig 7: Future disutility costs are correlated with present-day income and 
 # climate.
 
-if (Part2) {
+if (Fig7) {
   
   lapply(c("loggdppc", "climtas", "ag_share"), function(covar) {
     deciles.plot(model.name = "uninteracted_main_model_agnonag_27_28_41", 
@@ -151,7 +161,7 @@ if (Part2) {
 }
 
 
-# Part 3: Time series of projected disutility cost of climate change.
+# Fig 8: Time series of projected disutility cost of climate change.
 # 
 #   - Time series (Figure 8A): Comparison of disutility costs under different 
 #     adaptation scenarios - without adaptation, with only the benefits of 
@@ -162,7 +172,7 @@ if (Part2) {
 #     10th-90th percentile range of the Monte Carlo simulations. Boxplots show 
 #     the distribution of impacts at end of century for both RCPs.
 
-if (Part3) {
+if (Fig8) {
   
   # Time series comparison of adaptation scenarios (Figure 8 Panel A)
   plot.ts(model.name = "uninteracted_main_model_agnonag_27_28_41",
@@ -198,11 +208,11 @@ if (Part3) {
 }
 
 
-if (Appendix) {
-  
-  # Appendix time series all account for adaptation costs.
-  
-  # Figure F.1 A, B, C, D: Projected impact in labor supply and disutility costs 
+# Appendix time series all account for adaptation costs.
+
+if (FigF1) {
+
+  # Figure F.1 A, B, C, D: Projected impact in labor supply and disutility costs
   # by RCPs
   plot.impact.map(model.name = "uninteracted_main_model_agnonag_27_28_41",
                   rcp="rcp45",
@@ -223,7 +233,11 @@ if (Appendix) {
                   aggregation="-gdp-levels", 
                   year=2099,
                   output.folder = glue("{DIR_FIG}/mc/maps"))
-  
+
+}
+
+if (FigG2) {
+
   # Figure G.2 A, B: Projected disutility costs by RCPs under the benefits of
   # income growth and adaptation while additionally accounting for the
   # temperature sensitivity of high-risk labor supply
