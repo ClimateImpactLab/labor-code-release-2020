@@ -1,10 +1,12 @@
 #========================================================================================#
 #' Labor Uninteracted Model MC Damage Function figures
+#' NEED TO CONFIRM: now nc using 2020 pulse, should we use 2025?
 #'
 #' Created By: Nishka Sharma; Last change: Maiqi Yu (for 2025 $ adjustment)
 #' Date Created: March 13 2026
 #'
 #' Produces:
+#'   Fig H1: Global labor disutility damages
 #'   - Figure H.1A | Damage Function (2099 damages function in trillion USD, 
 #'                   their spread, and GMST anomalies in 2100)
 #'   - Figure H.1B | Damage Function (pre-2099, 2099, and post-2099 damage 
